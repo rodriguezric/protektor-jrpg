@@ -22,6 +22,7 @@ func start() -> void:
 	ship.modulate = Color(0.1, 0.1, 0.16)
 	ship.scale = Vector2(0.5, 0.5)
 	c.create_tween().tween_property(ship, "position:x", 380.0, 14.0)
+	c.sprite(Art.cine("city_frame"), Vector2(160, 90))
 	Sfx.music("letter_discussion", 2.0)
 	await m.fade_in(1.4)
 	await s.say("", ["Home is one narrow kitchen, a fold-out bed, and a window that makes the whole block look cleaner than it is.",

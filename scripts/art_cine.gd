@@ -13,6 +13,7 @@ static func make(name: String, frame: int) -> PixBuf:
 		"letter": return letter(frame)
 		"hands": return hands()
 		"city": return city(frame)
+		"city_frame": return city_frame()
 		"palm": return palm()
 		"badge": return badge(frame)
 		"horizon": return horizon()
@@ -139,7 +140,13 @@ static func city(frame: int) -> PixBuf:
 			for wx in range(bx + 2, bx + bw - 2, 3):
 				if Pal.hash2(wx, wy, k) > 0.6:
 					b.pset(wx, wy, Pal.LEMON.lerp(Pal.HONEY, Pal.hash2(wx, wy) * 0.6))
-	# window frame
+	return b
+
+
+static func city_frame() -> PixBuf:
+	## The window frame alone, layered over the view so things outside pass
+	## behind it.
+	var b := PixBuf.new(W, H)
 	b.rect(0, 0, W, 10, Pal.WOOD)
 	b.rect(0, H - 14, W, 14, Pal.WOOD)
 	b.rect(0, 0, 10, H, Pal.WOOD)
