@@ -1,0 +1,5 @@
+#!/bin/bash
+
+godot --headless --export-release "web" exports/index.html
+scp exports/index* rohins@rohins.com:/home/rohins/web/sites/rodriguezric.com/protektor_rpg
+
