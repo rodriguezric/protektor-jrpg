@@ -1,0 +1,898 @@
+{
+  "format_version": 1,
+  "level_id": "umbra_vacua_level_01",
+  "planet_type": "umbra_vacua",
+  "level_index": 1,
+  "target_duration_sec": 70,
+  "enemy_pool_override": [
+    "drone_sine",
+    "spiral_drone_clock",
+    "spiral_drone_counter",
+    "spiral_drone_random"
+  ],
+  "completion": {
+    "message_text": "Umbra Vacua 01 clear: Wave Convergence.",
+    "message_hold_sec": 1.8,
+    "scene_handoff": {
+      "enabled": true,
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2
+    }
+  },
+  "boss_phase": {
+    "enabled": false,
+    "music_file_path": "",
+    "music_volume_db": -6,
+    "crossfade_sec": 1.2,
+    "warning_text": ""
+  },
+  "header": {
+    "background_color": "black",
+    "planet_texture": "umbra_vacua_planet",
+    "planet_name": "Umbra Vacua",
+    "music": {
+      "file_path": "res://music/umbra_vacua.mp3",
+      "volume_db": -9
+    }
+  },
+  "phases": [
+    {
+      "phase_id": "sine_opening",
+      "duration_sec": 20,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "wave_motion"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "spiral_stream",
+      "duration_sec": 20,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "spiral_motion"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "sine_return_and_overlap",
+      "duration_sec": 20,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "wave_motion",
+        "convergence"
+      ],
+      "patterns": []
+    }
+  ],
+  "authoring": {
+    "summary": "Umbra Vacua 01 teaches flowing movement through alternating sine and spiral streams before combining both families.",
+    "boss_replaces_signature_phase": false,
+    "generation_notes": [
+      "Run sine drones continuously for the opening 20 seconds with varied speed, lateral strength, wave speed, and entry angle.",
+      "Stream one spiral each second for the middle 20 seconds, rotating through clockwise, counter-clockwise, and random variants.",
+      "Return to the sine stream for the final 20 seconds and add a simultaneous one-per-second spiral stream after 10 seconds."
+    ],
+    "compiled_from_phases": true,
+    "compiled_event_count": 2,
+    "preserved_timeline_event_count": 80,
+    "preserved_trigger_event_count": 0
+  },
+  "events": [
+    {
+      "id": "umbra_vacua_level_01_opening_sine_01",
+      "type": "spawn_enemy",
+      "time": 0.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_02",
+      "type": "spawn_enemy",
+      "time": 1.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 67,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_03",
+      "type": "spawn_enemy",
+      "time": 1.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 134,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_04",
+      "type": "spawn_enemy",
+      "time": 2.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 201,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_05",
+      "type": "spawn_enemy",
+      "time": 3.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 268,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_06",
+      "type": "spawn_enemy",
+      "time": 4.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 335,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_07",
+      "type": "spawn_enemy",
+      "time": 5.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 42,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_08",
+      "type": "spawn_enemy",
+      "time": 5.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 109,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_09",
+      "type": "spawn_enemy",
+      "time": 6.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 176,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_10",
+      "type": "spawn_enemy",
+      "time": 7.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 243,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_11",
+      "type": "spawn_enemy",
+      "time": 8.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 310,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_12",
+      "type": "spawn_enemy",
+      "time": 9.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 17,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_13",
+      "type": "spawn_enemy",
+      "time": 9.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 84,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_14",
+      "type": "spawn_enemy",
+      "time": 10.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 151,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_15",
+      "type": "spawn_enemy",
+      "time": 11.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 218,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_16",
+      "type": "spawn_enemy",
+      "time": 12.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 285,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_17",
+      "type": "spawn_enemy",
+      "time": 13.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 352,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_18",
+      "type": "spawn_enemy",
+      "time": 13.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 59,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_19",
+      "type": "spawn_enemy",
+      "time": 14.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 126,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_20",
+      "type": "spawn_enemy",
+      "time": 15.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 193,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_21",
+      "type": "spawn_enemy",
+      "time": 16.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 260,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_22",
+      "type": "spawn_enemy",
+      "time": 17.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 327,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_23",
+      "type": "spawn_enemy",
+      "time": 17.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 34,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_24",
+      "type": "spawn_enemy",
+      "time": 18.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 101,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_opening_sine_25",
+      "type": "spawn_enemy",
+      "time": 19.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 168,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_01",
+      "type": "spawn_enemy",
+      "time": 20.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 23
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_02",
+      "type": "spawn_enemy",
+      "time": 21.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 160
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_03",
+      "type": "spawn_enemy",
+      "time": 22.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 298
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_04",
+      "type": "spawn_enemy",
+      "time": 23.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 75
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_05",
+      "type": "spawn_enemy",
+      "time": 24.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 213
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_06",
+      "type": "spawn_enemy",
+      "time": 25.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 350
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_07",
+      "type": "spawn_enemy",
+      "time": 26.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 128
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_08",
+      "type": "spawn_enemy",
+      "time": 27.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 265
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_09",
+      "type": "spawn_enemy",
+      "time": 28.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 43
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_10",
+      "type": "spawn_enemy",
+      "time": 29.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 180
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_11",
+      "type": "spawn_enemy",
+      "time": 30.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 318
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_12",
+      "type": "spawn_enemy",
+      "time": 31.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 95
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_13",
+      "type": "spawn_enemy",
+      "time": 32.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 233
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_14",
+      "type": "spawn_enemy",
+      "time": 33.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 10
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_15",
+      "type": "spawn_enemy",
+      "time": 34.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 148
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_16",
+      "type": "spawn_enemy",
+      "time": 35.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 285
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_17",
+      "type": "spawn_enemy",
+      "time": 36.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 63
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_18",
+      "type": "spawn_enemy",
+      "time": 37.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 200
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_19",
+      "type": "spawn_enemy",
+      "time": 38.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 338
+    },
+    {
+      "id": "umbra_vacua_level_01_middle_spiral_20",
+      "type": "spawn_enemy",
+      "time": 39.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 115
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_01",
+      "type": "spawn_enemy",
+      "time": 40.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_02",
+      "type": "spawn_enemy",
+      "time": 41.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 67,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_03",
+      "type": "spawn_enemy",
+      "time": 41.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 134,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_04",
+      "type": "spawn_enemy",
+      "time": 42.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 201,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_05",
+      "type": "spawn_enemy",
+      "time": 43.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 268,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_06",
+      "type": "spawn_enemy",
+      "time": 44.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 335,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_07",
+      "type": "spawn_enemy",
+      "time": 45.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 42,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_08",
+      "type": "spawn_enemy",
+      "time": 45.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 109,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_09",
+      "type": "spawn_enemy",
+      "time": 46.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 176,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_10",
+      "type": "spawn_enemy",
+      "time": 47.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 243,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_11",
+      "type": "spawn_enemy",
+      "time": 48.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 310,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_12",
+      "type": "spawn_enemy",
+      "time": 49.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 17,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_13",
+      "type": "spawn_enemy",
+      "time": 49.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 84,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_01",
+      "type": "spawn_enemy",
+      "time": 50.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 23
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_14",
+      "type": "spawn_enemy",
+      "time": 50.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 151,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_15",
+      "type": "spawn_enemy",
+      "time": 51.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 218,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_02",
+      "type": "spawn_enemy",
+      "time": 51.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 160
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_16",
+      "type": "spawn_enemy",
+      "time": 52.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 285,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_03",
+      "type": "spawn_enemy",
+      "time": 52.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 298
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_17",
+      "type": "spawn_enemy",
+      "time": 53.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 352,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_04",
+      "type": "spawn_enemy",
+      "time": 53.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 75
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_18",
+      "type": "spawn_enemy",
+      "time": 53.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 59,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_05",
+      "type": "spawn_enemy",
+      "time": 54.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 213
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_19",
+      "type": "spawn_enemy",
+      "time": 54.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 126,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_20",
+      "type": "spawn_enemy",
+      "time": 55.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 193,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_06",
+      "type": "spawn_enemy",
+      "time": 55.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 350
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_21",
+      "type": "spawn_enemy",
+      "time": 56.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 260,
+      "move_speed": 78,
+      "sine_lateral_strength": 0.45,
+      "sine_wave_speed": 3.6
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_07",
+      "type": "spawn_enemy",
+      "time": 56.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 128
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_22",
+      "type": "spawn_enemy",
+      "time": 57.05,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 327,
+      "move_speed": 90,
+      "sine_lateral_strength": 0.85,
+      "sine_wave_speed": 6
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_08",
+      "type": "spawn_enemy",
+      "time": 57.5,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 265
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_23",
+      "type": "spawn_enemy",
+      "time": 57.85,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 34,
+      "move_speed": 102,
+      "sine_lateral_strength": 1.25,
+      "sine_wave_speed": 4.4
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_09",
+      "type": "spawn_enemy",
+      "time": 58.5,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "degrees",
+      "degrees": 43
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_24",
+      "type": "spawn_enemy",
+      "time": 58.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 101,
+      "move_speed": 114,
+      "sine_lateral_strength": 0.65,
+      "sine_wave_speed": 6.8
+    },
+    {
+      "id": "umbra_vacua_level_01_return_sine_25",
+      "type": "spawn_enemy",
+      "time": 59.45,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 168,
+      "move_speed": 126,
+      "sine_lateral_strength": 1.05,
+      "sine_wave_speed": 5.2
+    },
+    {
+      "id": "umbra_vacua_level_01_overlap_spiral_10",
+      "type": "spawn_enemy",
+      "time": 59.5,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 180
+    },
+    {
+      "id": "umbra_vacua_level_01_completion_message",
+      "type": "fx_async_message",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "text": "Umbra Vacua 01 clear: Wave Convergence.",
+      "type_speed_cps": 26,
+      "hold_sec": 1.8
+    },
+    {
+      "id": "umbra_vacua_level_01_completion_handoff",
+      "type": "scene_handoff",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2.0
+    }
+  ]
+}

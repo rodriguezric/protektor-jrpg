@@ -1,0 +1,328 @@
+{
+  "format_version": 1,
+  "level_id": "mechanon_ascens_level_01",
+  "planet_type": "mechanon_ascens",
+  "level_index": 1,
+  "target_duration_sec": 91,
+  "enemy_pool_override": [],
+  "completion": {
+    "message_text": "Mechanon Ascens 01 clear: Mirror Setup.",
+    "message_hold_sec": 1.8,
+    "scene_handoff": {
+      "enabled": true,
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2
+    }
+  },
+  "boss_phase": {
+    "enabled": false,
+    "music_file_path": "",
+    "music_volume_db": -6,
+    "crossfade_sec": 1.2,
+    "warning_text": ""
+  },
+  "header": {
+    "background_color": "black",
+    "planet_texture": "metal_planet",
+    "planet_name": "Mechanon Ascens",
+    "music": {
+      "file_path": "res://music/mechanon_ascens.mp3",
+      "volume_db": -8
+    }
+  },
+  "phases": [
+    {
+      "phase_id": "intro_teach",
+      "duration_sec": 18,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "mirror_delay_lock"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "development",
+      "duration_sec": 26,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "zoom_reframe"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "final_clear",
+      "duration_sec": 18,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "mirror_delay_lock"
+      ],
+      "patterns": []
+    }
+  ],
+  "authoring": {
+    "summary": "Mechanon Ascens 01 retains its teachable mirror-and-echo structure while introducing one shifter in each major section.",
+    "boss_replaces_signature_phase": false,
+    "generation_notes": [
+      "The executable timeline is hand-authored; keep phase patterns empty to prevent duplicate compiler spawns.",
+      "Use three isolated shifters so their lane change can be learned without increasing the original contact count."
+    ],
+    "compiled_from_phases": true,
+    "compiled_event_count": 2,
+    "preserved_timeline_event_count": 32,
+    "preserved_trigger_event_count": 0
+  },
+  "events": [
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_start_message",
+      "type": "fx_async_message",
+      "time": 0.15,
+      "text": "Pattern initialization in progress.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_close_range_mirror_spawn_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 1.5,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_close_range_mirror_spawn_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 3,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_close_range_mirror_spawn_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 4.5,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_close_range_mirror_spawn_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 6,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_close_range_mirror_spawn_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 7.5,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_delayed_rotation_echo_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 10.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_delayed_rotation_echo_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 12,
+      "enemy_type": "drone_fast",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_delayed_rotation_echo_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 13.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_delayed_rotation_echo_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 15,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_intro_teach_delayed_rotation_echo_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 16.5,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_start_message",
+      "type": "fx_async_message",
+      "time": 18.15,
+      "text": "Threat complexity rising.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_zoom_shift_pressure_wave_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 19.86,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_zoom_shift_pressure_wave_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 21.71,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_zoom_shift_pressure_wave_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 23.57,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_zoom_shift_pressure_wave_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 25.43,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_zoom_shift_pressure_wave_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 27.29,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_zoom_shift_pressure_wave_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 29.14,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_symmetry_break_test_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 32.86,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_symmetry_break_test_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 34.71,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_symmetry_break_test_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 36.57,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_symmetry_break_test_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 38.43,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_symmetry_break_test_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 40.29,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_development_symmetry_break_test_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 42.14,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_start_message",
+      "type": "fx_async_message",
+      "time": 44.15,
+      "text": "Final contact sweep.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_delayed_rotation_echo_02_spawn_01",
+      "type": "spawn_enemy",
+      "time": 46.25,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_delayed_rotation_echo_02_spawn_02",
+      "type": "spawn_enemy",
+      "time": 48.5,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_delayed_rotation_echo_02_spawn_03",
+      "type": "spawn_enemy",
+      "time": 50.75,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_delayed_rotation_echo_02_spawn_04",
+      "type": "spawn_enemy",
+      "time": 53,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_delayed_rotation_echo_02_spawn_05",
+      "type": "spawn_enemy",
+      "time": 55.25,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_delayed_rotation_echo_02_spawn_06",
+      "type": "spawn_enemy",
+      "time": 57.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_01_final_clear_delayed_rotation_echo_02_spawn_07",
+      "type": "spawn_enemy",
+      "time": 59.75,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_01_completion_message",
+      "type": "fx_async_message",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "text": "Mechanon Ascens 01 clear: Mirror Setup.",
+      "type_speed_cps": 26,
+      "hold_sec": 1.8
+    },
+    {
+      "id": "mechanon_ascens_level_01_completion_handoff",
+      "type": "scene_handoff",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2.0
+    }
+  ]
+}

@@ -1,0 +1,1406 @@
+{
+  "format_version": 1,
+  "level_id": "tempestris_level_03",
+  "planet_type": "tempestris",
+  "level_index": 3,
+  "target_duration_sec": 103,
+  "enemy_pool_override": [],
+  "completion": {
+    "message_text": "Tempestris 03 clear: Eye-Wall Read.",
+    "message_hold_sec": 1.8,
+    "scene_handoff": {
+      "enabled": true,
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2
+    }
+  },
+  "boss_phase": {
+    "enabled": false,
+    "music_file_path": "",
+    "music_volume_db": -6,
+    "crossfade_sec": 1.2,
+    "warning_text": ""
+  },
+  "header": {
+    "background_color": "black",
+    "planet_texture": "tempestris_planet",
+    "planet_name": "Tempestris",
+    "music": {
+      "file_path": "res://music/tempestris.mp3",
+      "volume_db": -8
+    }
+  },
+  "phases": [
+    {
+      "phase_id": "intro_teach",
+      "duration_sec": 16,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "quadrant_rotation"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "development",
+      "duration_sec": 24,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "storm_cycle_shift"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "compression",
+      "duration_sec": 18,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "quadrant_rotation",
+        "storm_cycle_shift"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "final_clear",
+      "duration_sec": 14,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "quadrant_rotation"
+      ],
+      "patterns": []
+    }
+  ],
+  "authoring": {
+    "summary": "Tempestris 03 layers 6 spiral and 6 sine drones beneath persistent eight-direction asteroid and charger pressure across the full 103-second mission.",
+    "boss_replaces_signature_phase": false,
+    "generation_notes": [
+      "The executable timeline is hand-authored; keep phase patterns empty to prevent duplicate compiler spawns.",
+      "Replace all phase-specific asteroid and charger contacts with full-mission persistent streams.",
+      "Spawn one asteroid every second from 0.5 through 102.5 seconds and one charger every three seconds from 0.75 through 102.75 seconds.",
+      "Choose asteroid and charger entry sides from independently shuffled bags containing all four cardinal and all four diagonal directions.",
+      "Use clockwise, counter-clockwise, and random-direction spirals at the trilogy peak."
+    ],
+    "compiled_from_phases": true,
+    "compiled_event_count": 2,
+    "preserved_timeline_event_count": 184,
+    "preserved_trigger_event_count": 0
+  },
+  "events": [
+    {
+      "id": "tempestris_level_03_intro_teach_start_message",
+      "type": "fx_async_message",
+      "time": 0.15,
+      "text": "Pattern initialization in progress.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_001",
+      "type": "spawn_enemy",
+      "time": 0.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_001",
+      "type": "spawn_enemy",
+      "time": 0.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_002",
+      "type": "spawn_enemy",
+      "time": 1.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_rotating_safe_quadrants_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 1.64,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_195"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_003",
+      "type": "spawn_enemy",
+      "time": 2.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_rotating_safe_quadrants_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 2.73,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "angle_285"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_rotating_safe_quadrants_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 3.28,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_330"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_004",
+      "type": "spawn_enemy",
+      "time": 3.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_002",
+      "type": "spawn_enemy",
+      "time": 3.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_005",
+      "type": "spawn_enemy",
+      "time": 4.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_rotating_safe_quadrants_01_spawn_09",
+      "type": "spawn_enemy",
+      "time": 4.92,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_255"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_006",
+      "type": "spawn_enemy",
+      "time": 5.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_rotating_safe_quadrants_01_spawn_11",
+      "type": "spawn_enemy",
+      "time": 6.01,
+      "enemy_type": "drone_sine",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_007",
+      "type": "spawn_enemy",
+      "time": 6.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_rotating_safe_quadrants_01_spawn_12",
+      "type": "spawn_enemy",
+      "time": 6.56,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_30"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_003",
+      "type": "spawn_enemy",
+      "time": 6.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_008",
+      "type": "spawn_enemy",
+      "time": 7.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_009",
+      "type": "spawn_enemy",
+      "time": 8.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 9.28,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_157"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_010",
+      "type": "spawn_enemy",
+      "time": 9.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_004",
+      "type": "spawn_enemy",
+      "time": 9.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_011",
+      "type": "spawn_enemy",
+      "time": 10.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 10.56,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_312"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 10.56,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "angle_132"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_012",
+      "type": "spawn_enemy",
+      "time": 11.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 11.84,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_287"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 11.84,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_107"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_013",
+      "type": "spawn_enemy",
+      "time": 12.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_005",
+      "type": "spawn_enemy",
+      "time": 12.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_07",
+      "type": "spawn_enemy",
+      "time": 13.12,
+      "enemy_type": "drone_sine",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_08",
+      "type": "spawn_enemy",
+      "time": 13.12,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_82"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_014",
+      "type": "spawn_enemy",
+      "time": 13.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_intro_teach_mirrored_storm_arcs_01_spawn_10",
+      "type": "spawn_enemy",
+      "time": 14.4,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_57"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_015",
+      "type": "spawn_enemy",
+      "time": 14.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_016",
+      "type": "spawn_enemy",
+      "time": 15.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_006",
+      "type": "spawn_enemy",
+      "time": 15.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_development_start_message",
+      "type": "fx_async_message",
+      "time": 16.15,
+      "text": "Threat complexity rising.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_017",
+      "type": "spawn_enemy",
+      "time": 16.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_018",
+      "type": "spawn_enemy",
+      "time": 17.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_development_false_scramble_into_gap_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 18.08,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_164"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_019",
+      "type": "spawn_enemy",
+      "time": 18.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_007",
+      "type": "spawn_enemy",
+      "time": 18.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_020",
+      "type": "spawn_enemy",
+      "time": 19.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_development_false_scramble_into_gap_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 20.16,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "angle_214"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_021",
+      "type": "spawn_enemy",
+      "time": 20.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_022",
+      "type": "spawn_enemy",
+      "time": 21.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_008",
+      "type": "spawn_enemy",
+      "time": 21.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_development_false_scramble_into_gap_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 22.24,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_269"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_023",
+      "type": "spawn_enemy",
+      "time": 22.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_024",
+      "type": "spawn_enemy",
+      "time": 23.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_025",
+      "type": "spawn_enemy",
+      "time": 24.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_009",
+      "type": "spawn_enemy",
+      "time": 24.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_development_false_scramble_into_gap_01_spawn_08",
+      "type": "spawn_enemy",
+      "time": 24.78,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_351"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_026",
+      "type": "spawn_enemy",
+      "time": 25.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_development_false_scramble_into_gap_01_spawn_10",
+      "type": "spawn_enemy",
+      "time": 25.65,
+      "enemy_type": "drone_sine",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_027",
+      "type": "spawn_enemy",
+      "time": 26.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_028",
+      "type": "spawn_enemy",
+      "time": 27.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_010",
+      "type": "spawn_enemy",
+      "time": 27.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_029",
+      "type": "spawn_enemy",
+      "time": 28.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_development_drifting_quadrant_collapse_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 28.87,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_45"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_030",
+      "type": "spawn_enemy",
+      "time": 29.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_031",
+      "type": "spawn_enemy",
+      "time": 30.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_011",
+      "type": "spawn_enemy",
+      "time": 30.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_development_drifting_quadrant_collapse_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 31.48,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_351"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_032",
+      "type": "spawn_enemy",
+      "time": 31.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_033",
+      "type": "spawn_enemy",
+      "time": 32.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_development_drifting_quadrant_collapse_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 33.22,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_315"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_034",
+      "type": "spawn_enemy",
+      "time": 33.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_012",
+      "type": "spawn_enemy",
+      "time": 33.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_development_drifting_quadrant_collapse_01_spawn_07",
+      "type": "spawn_enemy",
+      "time": 34.09,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "angle_297"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_035",
+      "type": "spawn_enemy",
+      "time": 34.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_036",
+      "type": "spawn_enemy",
+      "time": 35.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_037",
+      "type": "spawn_enemy",
+      "time": 36.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_013",
+      "type": "spawn_enemy",
+      "time": 36.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_development_drifting_quadrant_collapse_01_spawn_09",
+      "type": "spawn_enemy",
+      "time": 36.98,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_109"
+    },
+    {
+      "id": "tempestris_level_03_development_drifting_quadrant_collapse_01_spawn_10",
+      "type": "spawn_enemy",
+      "time": 37.31,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_134"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_038",
+      "type": "spawn_enemy",
+      "time": 37.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_development_drifting_quadrant_collapse_01_spawn_12",
+      "type": "spawn_enemy",
+      "time": 37.98,
+      "enemy_type": "drone_sine",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_039",
+      "type": "spawn_enemy",
+      "time": 38.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_040",
+      "type": "spawn_enemy",
+      "time": 39.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_014",
+      "type": "spawn_enemy",
+      "time": 39.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_compression_start_message",
+      "type": "fx_async_message",
+      "time": 40.15,
+      "text": "Pressure increasing.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_041",
+      "type": "spawn_enemy",
+      "time": 40.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_042",
+      "type": "spawn_enemy",
+      "time": 41.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_compression_rotating_safe_quadrants_02_spawn_03",
+      "type": "spawn_enemy",
+      "time": 41.84,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_15"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_043",
+      "type": "spawn_enemy",
+      "time": 42.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_015",
+      "type": "spawn_enemy",
+      "time": 42.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_044",
+      "type": "spawn_enemy",
+      "time": 43.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_compression_rotating_safe_quadrants_02_spawn_06",
+      "type": "spawn_enemy",
+      "time": 43.69,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_150"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_045",
+      "type": "spawn_enemy",
+      "time": 44.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_046",
+      "type": "spawn_enemy",
+      "time": 45.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_compression_rotating_safe_quadrants_02_spawn_09",
+      "type": "spawn_enemy",
+      "time": 45.53,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_75"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_016",
+      "type": "spawn_enemy",
+      "time": 45.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_047",
+      "type": "spawn_enemy",
+      "time": 46.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_compression_rotating_safe_quadrants_02_spawn_11",
+      "type": "spawn_enemy",
+      "time": 46.77,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "angle_165"
+    },
+    {
+      "id": "tempestris_level_03_compression_rotating_safe_quadrants_02_spawn_12",
+      "type": "spawn_enemy",
+      "time": 47.38,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_210"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_048",
+      "type": "spawn_enemy",
+      "time": 47.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_049",
+      "type": "spawn_enemy",
+      "time": 48.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_017",
+      "type": "spawn_enemy",
+      "time": 48.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_050",
+      "type": "spawn_enemy",
+      "time": 49.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_051",
+      "type": "spawn_enemy",
+      "time": 50.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_compression_false_scramble_into_gap_02_spawn_02",
+      "type": "spawn_enemy",
+      "time": 50.56,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_208"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_052",
+      "type": "spawn_enemy",
+      "time": 51.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_018",
+      "type": "spawn_enemy",
+      "time": 51.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_compression_false_scramble_into_gap_02_spawn_04",
+      "type": "spawn_enemy",
+      "time": 52.12,
+      "enemy_type": "drone_sine",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_053",
+      "type": "spawn_enemy",
+      "time": 52.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_054",
+      "type": "spawn_enemy",
+      "time": 53.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_compression_false_scramble_into_gap_02_spawn_06",
+      "type": "spawn_enemy",
+      "time": 53.68,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_313"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_055",
+      "type": "spawn_enemy",
+      "time": 54.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_019",
+      "type": "spawn_enemy",
+      "time": 54.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_056",
+      "type": "spawn_enemy",
+      "time": 55.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_compression_false_scramble_into_gap_02_spawn_10",
+      "type": "spawn_enemy",
+      "time": 56.24,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_51"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_057",
+      "type": "spawn_enemy",
+      "time": 56.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_058",
+      "type": "spawn_enemy",
+      "time": 57.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_020",
+      "type": "spawn_enemy",
+      "time": 57.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_start_message",
+      "type": "fx_async_message",
+      "time": 58.15,
+      "text": "Final contact sweep.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_059",
+      "type": "spawn_enemy",
+      "time": 58.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_drifting_quadrant_collapse_02_spawn_01",
+      "type": "spawn_enemy",
+      "time": 59.02,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_225"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_060",
+      "type": "spawn_enemy",
+      "time": 59.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_061",
+      "type": "spawn_enemy",
+      "time": 60.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_021",
+      "type": "spawn_enemy",
+      "time": 60.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_drifting_quadrant_collapse_02_spawn_03",
+      "type": "spawn_enemy",
+      "time": 61.05,
+      "enemy_type": "spiral_drone_random",
+      "spawn_side": "angle_261"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_062",
+      "type": "spawn_enemy",
+      "time": 61.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_drifting_quadrant_collapse_02_spawn_04",
+      "type": "spawn_enemy",
+      "time": 62.06,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_279"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_063",
+      "type": "spawn_enemy",
+      "time": 62.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_064",
+      "type": "spawn_enemy",
+      "time": 63.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_022",
+      "type": "spawn_enemy",
+      "time": 63.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_drifting_quadrant_collapse_02_spawn_06",
+      "type": "spawn_enemy",
+      "time": 64.09,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_315"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_065",
+      "type": "spawn_enemy",
+      "time": 64.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_drifting_quadrant_collapse_02_spawn_07",
+      "type": "spawn_enemy",
+      "time": 65.11,
+      "enemy_type": "drone_sine",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_066",
+      "type": "spawn_enemy",
+      "time": 65.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_067",
+      "type": "spawn_enemy",
+      "time": 66.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_023",
+      "type": "spawn_enemy",
+      "time": 66.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_068",
+      "type": "spawn_enemy",
+      "time": 67.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_drifting_quadrant_collapse_02_spawn_09",
+      "type": "spawn_enemy",
+      "time": 68.47,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_181"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_069",
+      "type": "spawn_enemy",
+      "time": 68.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_070",
+      "type": "spawn_enemy",
+      "time": 69.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_final_clear_drifting_quadrant_collapse_02_spawn_12",
+      "type": "spawn_enemy",
+      "time": 69.65,
+      "enemy_type": "drone_fast",
+      "spawn_side": "angle_251"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_024",
+      "type": "spawn_enemy",
+      "time": 69.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_071",
+      "type": "spawn_enemy",
+      "time": 70.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_072",
+      "type": "spawn_enemy",
+      "time": 71.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_073",
+      "type": "spawn_enemy",
+      "time": 72.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_025",
+      "type": "spawn_enemy",
+      "time": 72.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_074",
+      "type": "spawn_enemy",
+      "time": 73.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_075",
+      "type": "spawn_enemy",
+      "time": 74.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_076",
+      "type": "spawn_enemy",
+      "time": 75.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_026",
+      "type": "spawn_enemy",
+      "time": 75.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_077",
+      "type": "spawn_enemy",
+      "time": 76.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_078",
+      "type": "spawn_enemy",
+      "time": 77.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_079",
+      "type": "spawn_enemy",
+      "time": 78.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_027",
+      "type": "spawn_enemy",
+      "time": 78.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_080",
+      "type": "spawn_enemy",
+      "time": 79.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_081",
+      "type": "spawn_enemy",
+      "time": 80.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_082",
+      "type": "spawn_enemy",
+      "time": 81.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_028",
+      "type": "spawn_enemy",
+      "time": 81.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_083",
+      "type": "spawn_enemy",
+      "time": 82.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_084",
+      "type": "spawn_enemy",
+      "time": 83.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_085",
+      "type": "spawn_enemy",
+      "time": 84.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_029",
+      "type": "spawn_enemy",
+      "time": 84.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_086",
+      "type": "spawn_enemy",
+      "time": 85.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_087",
+      "type": "spawn_enemy",
+      "time": 86.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_088",
+      "type": "spawn_enemy",
+      "time": 87.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_030",
+      "type": "spawn_enemy",
+      "time": 87.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_089",
+      "type": "spawn_enemy",
+      "time": 88.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_090",
+      "type": "spawn_enemy",
+      "time": 89.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_091",
+      "type": "spawn_enemy",
+      "time": 90.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_031",
+      "type": "spawn_enemy",
+      "time": 90.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_092",
+      "type": "spawn_enemy",
+      "time": 91.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_093",
+      "type": "spawn_enemy",
+      "time": 92.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_094",
+      "type": "spawn_enemy",
+      "time": 93.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_032",
+      "type": "spawn_enemy",
+      "time": 93.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_095",
+      "type": "spawn_enemy",
+      "time": 94.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_096",
+      "type": "spawn_enemy",
+      "time": 95.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_097",
+      "type": "spawn_enemy",
+      "time": 96.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_033",
+      "type": "spawn_enemy",
+      "time": 96.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_098",
+      "type": "spawn_enemy",
+      "time": 97.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_099",
+      "type": "spawn_enemy",
+      "time": 98.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_100",
+      "type": "spawn_enemy",
+      "time": 99.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_034",
+      "type": "spawn_enemy",
+      "time": 99.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_101",
+      "type": "spawn_enemy",
+      "time": 100.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_102",
+      "type": "spawn_enemy",
+      "time": 101.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "tempestris_level_03_persistent_asteroid_103",
+      "type": "spawn_enemy",
+      "time": 102.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "tempestris_level_03_persistent_charger_035",
+      "type": "spawn_enemy",
+      "time": 102.75,
+      "enemy_type": "charger_drone",
+      "spawn_side": "east"
+    },
+    {
+      "id": "tempestris_level_03_completion_message",
+      "type": "fx_async_message",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "text": "Tempestris 03 clear: Eye-Wall Read.",
+      "type_speed_cps": 26,
+      "hold_sec": 1.8
+    },
+    {
+      "id": "tempestris_level_03_completion_handoff",
+      "type": "scene_handoff",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2
+    }
+  ]
+}

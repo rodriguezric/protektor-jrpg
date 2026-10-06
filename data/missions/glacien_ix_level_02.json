@@ -1,0 +1,451 @@
+{
+  "format_version": 1,
+  "level_id": "glacien_ix_level_02",
+  "planet_type": "glacien_ix",
+  "level_index": 2,
+  "target_duration_sec": 94,
+  "enemy_pool_override": [
+    "drone_basic",
+    "drone_tank",
+    "drone_sine"
+  ],
+  "completion": {
+    "message_text": "Glacien IX 02 clear: Whiteout Hold.",
+    "message_hold_sec": 1.8,
+    "scene_handoff": {
+      "enabled": true,
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2
+    }
+  },
+  "boss_phase": {
+    "enabled": false,
+    "music_file_path": "",
+    "music_volume_db": -6,
+    "crossfade_sec": 1.2,
+    "warning_text": ""
+  },
+  "header": {
+    "background_color": "black",
+    "planet_texture": "cold_planet",
+    "planet_name": "Glacien IX",
+    "music": {
+      "file_path": "res://music/ice_planet.mp3",
+      "volume_db": -9
+    }
+  },
+  "phases": [
+    {
+      "phase_id": "intro_teach",
+      "duration_sec": 18.75,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "screen_flash"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "development",
+      "duration_sec": 22.15,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "slow_swarm"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "final_clear",
+      "duration_sec": 5.6,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "screen_flash"
+      ],
+      "patterns": []
+    }
+  ],
+  "authoring": {
+    "summary": "Glacien IX 02 cycles staggered and triple-tank formations into its rotating tank wall, with five sine drones curving through the supporting lanes.",
+    "boss_replaces_signature_phase": false,
+    "generation_notes": [
+      "The executable timeline is hand-authored; keep phase patterns empty to prevent duplicate compiler spawns.",
+      "Sine drones replace selected basic drones at cardinal lanes so curved movement remains readable."
+    ],
+    "compiled_from_phases": true,
+    "compiled_event_count": 2,
+    "preserved_timeline_event_count": 49,
+    "preserved_trigger_event_count": 0
+  },
+  "events": [
+    {
+      "id": "glacien_ix_level_02_intro_teach_start_message",
+      "type": "fx_async_message",
+      "time": 0.15,
+      "text": "Pattern initialization in progress.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 0.75,
+      "enemy_type": "drone_tank",
+      "spawn_side": "west"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 1.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_140"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 2.25,
+      "enemy_type": "drone_sine",
+      "spawn_side": "west"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 3,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_220"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 4.05,
+      "enemy_type": "drone_tank",
+      "spawn_side": "north"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 4.8,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_230"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_07",
+      "type": "spawn_enemy",
+      "time": 5.55,
+      "enemy_type": "drone_sine",
+      "spawn_side": "north"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_01_spawn_08",
+      "type": "spawn_enemy",
+      "time": 6.3,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_310"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_triple_tank_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 7.2,
+      "enemy_type": "drone_tank",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_triple_tank_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 8.25,
+      "enemy_type": "drone_tank",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_triple_tank_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 9.3,
+      "enemy_type": "drone_tank",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_01",
+      "type": "spawn_enemy",
+      "time": 10.2,
+      "enemy_type": "drone_tank",
+      "spawn_side": "east"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_02",
+      "type": "spawn_enemy",
+      "time": 10.95,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_320"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_03",
+      "type": "spawn_enemy",
+      "time": 11.7,
+      "enemy_type": "drone_sine",
+      "spawn_side": "east"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_04",
+      "type": "spawn_enemy",
+      "time": 12.45,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_40"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_05",
+      "type": "spawn_enemy",
+      "time": 13.5,
+      "enemy_type": "drone_tank",
+      "spawn_side": "south"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_06",
+      "type": "spawn_enemy",
+      "time": 14.25,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_50"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_07",
+      "type": "spawn_enemy",
+      "time": 15,
+      "enemy_type": "drone_sine",
+      "spawn_side": "south"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_teach_staggered_lane_freeze_02_spawn_08",
+      "type": "spawn_enemy",
+      "time": 15.75,
+      "enemy_type": "drone_basic",
+      "spawn_side": "angle_130"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_triple_tank_02_spawn_01",
+      "type": "spawn_enemy",
+      "time": 16.65,
+      "enemy_type": "drone_tank",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_triple_tank_02_spawn_02",
+      "type": "spawn_enemy",
+      "time": 17.7,
+      "enemy_type": "drone_tank",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "glacien_ix_level_02_intro_triple_tank_02_spawn_03",
+      "type": "spawn_enemy",
+      "time": 18.75,
+      "enemy_type": "drone_tank",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "glacien_ix_level_02_development_start_message",
+      "type": "fx_async_message",
+      "time": 19,
+      "text": "Threat complexity rising.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 19.65,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_292.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 20.9,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_112.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 22.15,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_302.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 23.4,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_122.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 24.65,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_312.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 25.9,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_132.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_07",
+      "type": "spawn_enemy",
+      "time": 27.15,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_322.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_08",
+      "type": "spawn_enemy",
+      "time": 28.4,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_142.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_09",
+      "type": "spawn_enemy",
+      "time": 29.65,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_332.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_10",
+      "type": "spawn_enemy",
+      "time": 30.9,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_152.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_11",
+      "type": "spawn_enemy",
+      "time": 32.15,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_342.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_12",
+      "type": "spawn_enemy",
+      "time": 33.4,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_162.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_13",
+      "type": "spawn_enemy",
+      "time": 34.65,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_352.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_14",
+      "type": "spawn_enemy",
+      "time": 35.9,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_172.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_15",
+      "type": "spawn_enemy",
+      "time": 37.15,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_2.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_16",
+      "type": "spawn_enemy",
+      "time": 38.4,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_182.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_17",
+      "type": "spawn_enemy",
+      "time": 39.65,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_12.50"
+    },
+    {
+      "id": "glacien_ix_level_02_development_accumulation_wall_01_spawn_18",
+      "type": "spawn_enemy",
+      "time": 40.9,
+      "enemy_type": "drone_tank",
+      "spawn_side": "angle_192.50"
+    },
+    {
+      "id": "glacien_ix_level_02_final_clear_start_message",
+      "type": "fx_async_message",
+      "time": 41.15,
+      "text": "Final contact sweep.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "glacien_ix_level_02_final_clear_delayed_release_window_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 41.85,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "glacien_ix_level_02_final_clear_delayed_release_window_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 42.75,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "glacien_ix_level_02_final_clear_delayed_release_window_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 43.65,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "glacien_ix_level_02_final_clear_delayed_release_window_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 44.7,
+      "enemy_type": "drone_tank",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "glacien_ix_level_02_final_clear_delayed_release_window_01_spawn_05",
+      "type": "spawn_enemy",
+      "time": 45.6,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "glacien_ix_level_02_final_clear_delayed_release_window_01_spawn_06",
+      "type": "spawn_enemy",
+      "time": 46.5,
+      "enemy_type": "drone_sine",
+      "spawn_side": "south"
+    },
+    {
+      "id": "glacien_ix_level_02_completion_message",
+      "type": "fx_async_message",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "text": "Glacien IX 02 clear: Whiteout Hold.",
+      "type_speed_cps": 26,
+      "hold_sec": 1.8
+    },
+    {
+      "id": "glacien_ix_level_02_completion_handoff",
+      "type": "scene_handoff",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2.0
+    }
+  ]
+}

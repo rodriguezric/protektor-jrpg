@@ -1,0 +1,2530 @@
+{
+  "format_version": 1,
+  "level_id": "mechanon_ascens_level_03",
+  "planet_type": "mechanon_ascens",
+  "level_index": 3,
+  "target_duration_sec": 131,
+  "enemy_pool_override": [],
+  "completion": {
+    "message_text": "Mechanon Ascens 03 clear: Machine Storm.",
+    "message_hold_sec": 1.8,
+    "scene_handoff": {
+      "enabled": true,
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2
+    }
+  },
+  "boss_phase": {
+    "enabled": false,
+    "music_file_path": "",
+    "music_volume_db": -6,
+    "crossfade_sec": 1.2,
+    "warning_text": ""
+  },
+  "header": {
+    "background_color": "black",
+    "planet_texture": "metal_planet",
+    "planet_name": "Mechanon Ascens",
+    "music": {
+      "file_path": "res://music/mechanon_ascens.mp3",
+      "volume_db": -8
+    }
+  },
+  "phases": [
+    {
+      "phase_id": "intro_teach_opening",
+      "duration_sec": 18,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "mirror_delay_lock"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_01_buffer_in",
+      "duration_sec": 1,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "pressure_release"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_01",
+      "duration_sec": 5,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "danger_flash",
+        "asteroid_barrage"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_01_buffer_out",
+      "duration_sec": 1,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "pressure_release"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "intro_teach_resume",
+      "duration_sec": 6,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "mirror_delay_lock"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "development_opening",
+      "duration_sec": 18,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "zoom_reframe"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_02_buffer_in",
+      "duration_sec": 1,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "pressure_release"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_02",
+      "duration_sec": 5,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "danger_flash",
+        "asteroid_barrage"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_02_buffer_out",
+      "duration_sec": 1,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "pressure_release"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "development_resume",
+      "duration_sec": 6,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "zoom_reframe"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "compression_opening",
+      "duration_sec": 12,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "mirror_delay_lock",
+        "zoom_reframe"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_03_buffer_in",
+      "duration_sec": 1,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "pressure_release"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_03",
+      "duration_sec": 5,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "danger_flash",
+        "asteroid_barrage"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "flashing_asteroid_03_buffer_out",
+      "duration_sec": 1,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "pressure_release"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "compression_resume",
+      "duration_sec": 6,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "mirror_delay_lock",
+        "zoom_reframe"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "final_clear",
+      "duration_sec": 6.9,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "mirror_delay_lock"
+      ],
+      "patterns": []
+    }
+  ],
+  "authoring": {
+    "summary": "Mechanon Ascens 03 maintains its machine storm while interrupting it with three red-flashing fast-asteroid barrages.",
+    "boss_replaces_signature_phase": false,
+    "generation_notes": [
+      "The executable timeline is hand-authored; keep phase patterns empty to prevent duplicate compiler spawns.",
+      "Preserve the existing 0.9-second drone cadence between injected flashing phases.",
+      "Replace each original asteroid with a three-shot cardinal burst at 0.12-second spacing and move_speed 390.",
+      "Each flashing phase has one empty second before and after it and equalizes travel time so spawn gaps are preserved at player arrival while every asteroid starts at the normal arena margin. Phase 1 fires every 0.3 seconds, phase 2 every 0.25 seconds, and phase 3 every 0.2 seconds. Every phase uses all eight cardinal and diagonal directions from 0 through 315 degrees in 45-degree increments, and no direction may repeat either of the previous two entries. The background transitions gradually between red and black every 0.2 seconds and fades back to black before normal gameplay resumes."
+    ],
+    "compiled_from_phases": true,
+    "compiled_event_count": 2,
+    "preserved_timeline_event_count": 279,
+    "preserved_trigger_event_count": 0
+  },
+  "events": [
+    {
+      "id": "mechanon_ascens_level_03_intro_teach_start_message",
+      "type": "fx_async_message",
+      "time": 0.15,
+      "text": "Pattern initialization in progress.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_001_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 0.9,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_001_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 1.02,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_001_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 1.14,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_002",
+      "type": "spawn_enemy",
+      "time": 1.8,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_003_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 2.7,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_003_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 2.82,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_003_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 2.94,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_004",
+      "type": "spawn_enemy",
+      "time": 3.6,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_005",
+      "type": "spawn_enemy",
+      "time": 4.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_006_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 5.4,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_006_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 5.52,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_006_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 5.64,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_007",
+      "type": "spawn_enemy",
+      "time": 6.3,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_008",
+      "type": "spawn_enemy",
+      "time": 7.2,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_009",
+      "type": "spawn_enemy",
+      "time": 8.1,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_010_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 9,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_010_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 9.12,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_010_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 9.24,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_011",
+      "type": "spawn_enemy",
+      "time": 9.9,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_012_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 10.8,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_012_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 10.92,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_012_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 11.04,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_013",
+      "type": "spawn_enemy",
+      "time": 11.7,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_014",
+      "type": "spawn_enemy",
+      "time": 12.6,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_015_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 13.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_015_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 13.62,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_015_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 13.74,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_016",
+      "type": "spawn_enemy",
+      "time": 14.4,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_017",
+      "type": "spawn_enemy",
+      "time": 15.3,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_018",
+      "type": "spawn_enemy",
+      "time": 16.2,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_019_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 17.1,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_019_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 17.22,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_019_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 17.34,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_020",
+      "type": "spawn_enemy",
+      "time": 18,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_01",
+      "type": "fx_background_color",
+      "time": 19,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_01",
+      "type": "spawn_enemy",
+      "time": 19.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_02",
+      "type": "fx_background_color",
+      "time": 19.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_02",
+      "type": "spawn_enemy",
+      "time": 19.35,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_03",
+      "type": "fx_background_color",
+      "time": 19.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_04",
+      "type": "fx_background_color",
+      "time": 19.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_03",
+      "type": "spawn_enemy",
+      "time": 19.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_05",
+      "type": "fx_background_color",
+      "time": 19.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_04",
+      "type": "spawn_enemy",
+      "time": 19.95,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_06",
+      "type": "fx_background_color",
+      "time": 20,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_07",
+      "type": "fx_background_color",
+      "time": 20.2,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_05",
+      "type": "spawn_enemy",
+      "time": 20.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_08",
+      "type": "fx_background_color",
+      "time": 20.4,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_06",
+      "type": "spawn_enemy",
+      "time": 20.55,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_09",
+      "type": "fx_background_color",
+      "time": 20.6,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_10",
+      "type": "fx_background_color",
+      "time": 20.8,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_07",
+      "type": "spawn_enemy",
+      "time": 20.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_11",
+      "type": "fx_background_color",
+      "time": 21,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_08",
+      "type": "spawn_enemy",
+      "time": 21.15,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_12",
+      "type": "fx_background_color",
+      "time": 21.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_13",
+      "type": "fx_background_color",
+      "time": 21.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_09",
+      "type": "spawn_enemy",
+      "time": 21.45,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_14",
+      "type": "fx_background_color",
+      "time": 21.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_10",
+      "type": "spawn_enemy",
+      "time": 21.75,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_15",
+      "type": "fx_background_color",
+      "time": 21.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_16",
+      "type": "fx_background_color",
+      "time": 22,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_11",
+      "type": "spawn_enemy",
+      "time": 22.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_17",
+      "type": "fx_background_color",
+      "time": 22.2,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_12",
+      "type": "spawn_enemy",
+      "time": 22.35,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_18",
+      "type": "fx_background_color",
+      "time": 22.4,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_19",
+      "type": "fx_background_color",
+      "time": 22.6,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_13",
+      "type": "spawn_enemy",
+      "time": 22.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_20",
+      "type": "fx_background_color",
+      "time": 22.8,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_14",
+      "type": "spawn_enemy",
+      "time": 22.95,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_21",
+      "type": "fx_background_color",
+      "time": 23,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_22",
+      "type": "fx_background_color",
+      "time": 23.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_15",
+      "type": "spawn_enemy",
+      "time": 23.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_23",
+      "type": "fx_background_color",
+      "time": 23.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_16",
+      "type": "spawn_enemy",
+      "time": 23.55,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_24",
+      "type": "fx_background_color",
+      "time": 23.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_25",
+      "type": "fx_background_color",
+      "time": 23.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_asteroid_17",
+      "type": "spawn_enemy",
+      "time": 23.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_1_background_reset",
+      "type": "fx_background_color",
+      "time": 24,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_021_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 25.9,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_021_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 26.02,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_021_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 26.14,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_022",
+      "type": "spawn_enemy",
+      "time": 26.8,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_023",
+      "type": "spawn_enemy",
+      "time": 27.7,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_024_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 28.6,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_024_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 28.72,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_024_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 28.84,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_025",
+      "type": "spawn_enemy",
+      "time": 29.5,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_026",
+      "type": "spawn_enemy",
+      "time": 30.4,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_development_start_message",
+      "type": "fx_async_message",
+      "time": 31.15,
+      "text": "Threat complexity rising.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_027",
+      "type": "spawn_enemy",
+      "time": 31.3,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_028_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 32.2,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_028_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 32.32,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_028_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 32.44,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_029",
+      "type": "spawn_enemy",
+      "time": 33.1,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_030_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 34,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_030_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 34.12,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_030_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 34.24,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_031",
+      "type": "spawn_enemy",
+      "time": 34.9,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_032",
+      "type": "spawn_enemy",
+      "time": 35.8,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_033_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 36.7,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_033_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 36.82,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_033_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 36.94,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_034",
+      "type": "spawn_enemy",
+      "time": 37.6,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_035",
+      "type": "spawn_enemy",
+      "time": 38.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_036",
+      "type": "spawn_enemy",
+      "time": 39.4,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_037_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 40.3,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_037_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 40.42,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_037_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 40.54,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_038",
+      "type": "spawn_enemy",
+      "time": 41.2,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_039_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 42.1,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_039_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 42.22,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_039_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 42.34,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_040",
+      "type": "spawn_enemy",
+      "time": 43,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_041",
+      "type": "spawn_enemy",
+      "time": 43.9,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_042_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 44.8,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_042_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 44.92,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_042_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 45.04,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_043",
+      "type": "spawn_enemy",
+      "time": 45.7,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_044",
+      "type": "spawn_enemy",
+      "time": 46.6,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_045",
+      "type": "spawn_enemy",
+      "time": 47.5,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_046_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 48.4,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_046_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 48.52,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_046_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 48.64,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_01",
+      "type": "fx_background_color",
+      "time": 50,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_01",
+      "type": "spawn_enemy",
+      "time": 50.025,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_02",
+      "type": "fx_background_color",
+      "time": 50.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_02",
+      "type": "spawn_enemy",
+      "time": 50.275,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_03",
+      "type": "fx_background_color",
+      "time": 50.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_03",
+      "type": "spawn_enemy",
+      "time": 50.525,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_04",
+      "type": "fx_background_color",
+      "time": 50.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_04",
+      "type": "spawn_enemy",
+      "time": 50.775,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_05",
+      "type": "fx_background_color",
+      "time": 50.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_06",
+      "type": "fx_background_color",
+      "time": 51,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_05",
+      "type": "spawn_enemy",
+      "time": 51.025,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_07",
+      "type": "fx_background_color",
+      "time": 51.2,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_06",
+      "type": "spawn_enemy",
+      "time": 51.275,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_08",
+      "type": "fx_background_color",
+      "time": 51.4,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_07",
+      "type": "spawn_enemy",
+      "time": 51.525,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_09",
+      "type": "fx_background_color",
+      "time": 51.6,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_08",
+      "type": "spawn_enemy",
+      "time": 51.775,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_10",
+      "type": "fx_background_color",
+      "time": 51.8,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_11",
+      "type": "fx_background_color",
+      "time": 52,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_09",
+      "type": "spawn_enemy",
+      "time": 52.025,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_12",
+      "type": "fx_background_color",
+      "time": 52.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_10",
+      "type": "spawn_enemy",
+      "time": 52.275,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_13",
+      "type": "fx_background_color",
+      "time": 52.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_11",
+      "type": "spawn_enemy",
+      "time": 52.525,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_14",
+      "type": "fx_background_color",
+      "time": 52.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_12",
+      "type": "spawn_enemy",
+      "time": 52.775,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_15",
+      "type": "fx_background_color",
+      "time": 52.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_16",
+      "type": "fx_background_color",
+      "time": 53,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_13",
+      "type": "spawn_enemy",
+      "time": 53.025,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_17",
+      "type": "fx_background_color",
+      "time": 53.2,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_14",
+      "type": "spawn_enemy",
+      "time": 53.275,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_18",
+      "type": "fx_background_color",
+      "time": 53.4,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_15",
+      "type": "spawn_enemy",
+      "time": 53.525,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_19",
+      "type": "fx_background_color",
+      "time": 53.6,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_16",
+      "type": "spawn_enemy",
+      "time": 53.775,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_20",
+      "type": "fx_background_color",
+      "time": 53.8,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_21",
+      "type": "fx_background_color",
+      "time": 54,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_17",
+      "type": "spawn_enemy",
+      "time": 54.025,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_22",
+      "type": "fx_background_color",
+      "time": 54.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_18",
+      "type": "spawn_enemy",
+      "time": 54.275,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_23",
+      "type": "fx_background_color",
+      "time": 54.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_19",
+      "type": "spawn_enemy",
+      "time": 54.525,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_24",
+      "type": "fx_background_color",
+      "time": 54.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_asteroid_20",
+      "type": "spawn_enemy",
+      "time": 54.775,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_25",
+      "type": "fx_background_color",
+      "time": 54.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_2_background_reset",
+      "type": "fx_background_color",
+      "time": 55,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_047",
+      "type": "spawn_enemy",
+      "time": 56.3,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_048_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 57.2,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_048_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 57.32,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_048_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 57.44,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_049",
+      "type": "spawn_enemy",
+      "time": 58.1,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_050",
+      "type": "spawn_enemy",
+      "time": 59,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_051_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 59.9,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_051_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 60.02,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_051_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 60.14,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_052",
+      "type": "spawn_enemy",
+      "time": 60.8,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_053",
+      "type": "spawn_enemy",
+      "time": 61.7,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_compression_start_message",
+      "type": "fx_async_message",
+      "time": 62.15,
+      "text": "Pressure increasing.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_054",
+      "type": "spawn_enemy",
+      "time": 62.6,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_055_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 63.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_055_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 63.62,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_055_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 63.74,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_056",
+      "type": "spawn_enemy",
+      "time": 64.4,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_057_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 65.3,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_057_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 65.42,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_057_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 65.54,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_058",
+      "type": "spawn_enemy",
+      "time": 66.2,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_059",
+      "type": "spawn_enemy",
+      "time": 67.1,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_060_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 68,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_060_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 68.12,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_060_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 68.24,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_061",
+      "type": "spawn_enemy",
+      "time": 68.9,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_062",
+      "type": "spawn_enemy",
+      "time": 69.8,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_063",
+      "type": "spawn_enemy",
+      "time": 70.7,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_064_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 71.6,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_064_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 71.72,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_064_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 71.84,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_065",
+      "type": "spawn_enemy",
+      "time": 72.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_066_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 73.4,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_066_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 73.52,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_066_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 73.64,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_01",
+      "type": "fx_background_color",
+      "time": 75,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_01",
+      "type": "spawn_enemy",
+      "time": 75.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_02",
+      "type": "fx_background_color",
+      "time": 75.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_02",
+      "type": "spawn_enemy",
+      "time": 75.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_03",
+      "type": "fx_background_color",
+      "time": 75.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_03",
+      "type": "spawn_enemy",
+      "time": 75.45,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_04",
+      "type": "fx_background_color",
+      "time": 75.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_04",
+      "type": "spawn_enemy",
+      "time": 75.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_05",
+      "type": "fx_background_color",
+      "time": 75.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_05",
+      "type": "spawn_enemy",
+      "time": 75.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_06",
+      "type": "fx_background_color",
+      "time": 76,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_06",
+      "type": "spawn_enemy",
+      "time": 76.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_07",
+      "type": "fx_background_color",
+      "time": 76.2,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_07",
+      "type": "spawn_enemy",
+      "time": 76.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_08",
+      "type": "fx_background_color",
+      "time": 76.4,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_08",
+      "type": "spawn_enemy",
+      "time": 76.45,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_09",
+      "type": "fx_background_color",
+      "time": 76.6,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_09",
+      "type": "spawn_enemy",
+      "time": 76.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_10",
+      "type": "fx_background_color",
+      "time": 76.8,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_10",
+      "type": "spawn_enemy",
+      "time": 76.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_11",
+      "type": "fx_background_color",
+      "time": 77,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_11",
+      "type": "spawn_enemy",
+      "time": 77.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_12",
+      "type": "fx_background_color",
+      "time": 77.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_12",
+      "type": "spawn_enemy",
+      "time": 77.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_13",
+      "type": "fx_background_color",
+      "time": 77.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_13",
+      "type": "spawn_enemy",
+      "time": 77.45,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_14",
+      "type": "fx_background_color",
+      "time": 77.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_14",
+      "type": "spawn_enemy",
+      "time": 77.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_15",
+      "type": "fx_background_color",
+      "time": 77.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_15",
+      "type": "spawn_enemy",
+      "time": 77.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_16",
+      "type": "fx_background_color",
+      "time": 78,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_16",
+      "type": "spawn_enemy",
+      "time": 78.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_17",
+      "type": "fx_background_color",
+      "time": 78.2,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_17",
+      "type": "spawn_enemy",
+      "time": 78.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_18",
+      "type": "fx_background_color",
+      "time": 78.4,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_18",
+      "type": "spawn_enemy",
+      "time": 78.45,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_19",
+      "type": "fx_background_color",
+      "time": 78.6,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_19",
+      "type": "spawn_enemy",
+      "time": 78.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_20",
+      "type": "fx_background_color",
+      "time": 78.8,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_20",
+      "type": "spawn_enemy",
+      "time": 78.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_21",
+      "type": "fx_background_color",
+      "time": 79,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_21",
+      "type": "spawn_enemy",
+      "time": 79.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_22",
+      "type": "fx_background_color",
+      "time": 79.2,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_22",
+      "type": "spawn_enemy",
+      "time": 79.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_23",
+      "type": "fx_background_color",
+      "time": 79.4,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_23",
+      "type": "spawn_enemy",
+      "time": 79.45,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_24",
+      "type": "fx_background_color",
+      "time": 79.6,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_24",
+      "type": "spawn_enemy",
+      "time": 79.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_25",
+      "type": "fx_background_color",
+      "time": 79.8,
+      "color": "danger_red",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_asteroid_25",
+      "type": "spawn_enemy",
+      "time": 79.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "move_speed": 390,
+      "equalize_arrival_time": true
+    },
+    {
+      "id": "mechanon_ascens_level_03_flashing_3_background_reset",
+      "type": "fx_background_color",
+      "time": 80,
+      "color": "black",
+      "duration_sec": 0.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_067",
+      "type": "spawn_enemy",
+      "time": 81.3,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_068",
+      "type": "spawn_enemy",
+      "time": 82.2,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_069_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 83.1,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_069_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 83.22,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_069_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 83.34,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_070",
+      "type": "spawn_enemy",
+      "time": 84,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_071",
+      "type": "spawn_enemy",
+      "time": 84.9,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_072",
+      "type": "spawn_enemy",
+      "time": 85.8,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_073_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 86.7,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_073_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 86.82,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_073_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 86.94,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_final_clear_start_message",
+      "type": "fx_async_message",
+      "time": 87.15,
+      "text": "Final contact sweep.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_074",
+      "type": "spawn_enemy",
+      "time": 87.6,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_075_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 88.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_075_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 88.62,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_075_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 88.74,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_076",
+      "type": "spawn_enemy",
+      "time": 89.4,
+      "enemy_type": "drone_fast",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_077",
+      "type": "spawn_enemy",
+      "time": 90.3,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_078_fast_burst_01",
+      "type": "spawn_enemy",
+      "time": 91.2,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_078_fast_burst_02",
+      "type": "spawn_enemy",
+      "time": 91.32,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_078_fast_burst_03",
+      "type": "spawn_enemy",
+      "time": 91.44,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "move_speed": 390
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_079",
+      "type": "spawn_enemy",
+      "time": 92.1,
+      "enemy_type": "drone_shifter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_080",
+      "type": "spawn_enemy",
+      "time": 93,
+      "enemy_type": "drone_basic",
+      "spawn_side": "west"
+    },
+    {
+      "id": "mechanon_ascens_level_03_continuous_spawn_081",
+      "type": "spawn_enemy",
+      "time": 93.9,
+      "enemy_type": "drone_fast",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "mechanon_ascens_level_03_completion_message",
+      "type": "fx_async_message",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "text": "Mechanon Ascens 03 clear: Machine Storm.",
+      "type_speed_cps": 26,
+      "hold_sec": 1.8
+    },
+    {
+      "id": "mechanon_ascens_level_03_completion_handoff",
+      "type": "scene_handoff",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2.0
+    }
+  ]
+}

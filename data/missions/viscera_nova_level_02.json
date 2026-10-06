@@ -1,0 +1,498 @@
+{
+  "format_version": 1,
+  "level_id": "viscera_nova_level_02",
+  "planet_type": "viscera_nova",
+  "level_index": 2,
+  "target_duration_sec": 85,
+  "enemy_pool_override": [],
+  "completion": {
+    "message_text": "Viscera Nova 02 clear: Spiral Barrage.",
+    "message_hold_sec": 1.8,
+    "scene_handoff": {
+      "enabled": true,
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2
+    }
+  },
+  "boss_phase": {
+    "enabled": false,
+    "music_file_path": "res://music/viscera_nova.mp3",
+    "music_volume_db": -6,
+    "crossfade_sec": 1.2,
+    "warning_text": ""
+  },
+  "header": {
+    "background_color": "black",
+    "planet_texture": "viscera_nova_planet",
+    "planet_name": "Viscera Nova",
+    "music": {
+      "file_path": "res://music/viscera_nova.mp3",
+      "volume_db": -8
+    }
+  },
+  "phases": [
+    {
+      "phase_id": "intro_teach",
+      "duration_sec": 5.75,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "curved_motion"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "development",
+      "duration_sec": 9,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "behavior_phase_change"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "compression",
+      "duration_sec": 13,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "curved_motion",
+        "behavior_phase_change"
+      ],
+      "patterns": []
+    },
+    {
+      "phase_id": "final_clear",
+      "duration_sec": 11.2,
+      "allow_wave_overlap": true,
+      "fx_tags": [
+        "behavior_phase_change"
+      ],
+      "patterns": []
+    }
+  ],
+  "authoring": {
+    "summary": "Viscera Nova 02 sustains paired spiral pressure, introduces a circle shooter after two clusters, layers in slow asteroids, then phases spirals out for three chargers and an asteroid barrage.",
+    "boss_replaces_signature_phase": false,
+    "generation_notes": [
+      "The executable timeline is hand-authored; keep phase patterns empty to prevent duplicate compiler spawns.",
+      "Spiral drones arrive as clockwise/counter-clockwise pairs until the final phase.",
+      "Slow asteroids overlap the late spiral phase before the charger barrage takes over."
+    ],
+    "compiled_from_phases": true,
+    "compiled_event_count": 2,
+    "preserved_timeline_event_count": 51,
+    "preserved_trigger_event_count": 0
+  },
+  "events": [
+    {
+      "id": "viscera_nova_level_02_intro_teach_start_message",
+      "type": "fx_async_message",
+      "time": 0.15,
+      "text": "Spiral organisms entering in pairs.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_01_clock",
+      "type": "spawn_enemy",
+      "time": 1,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "north"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_01_counter",
+      "type": "spawn_enemy",
+      "time": 1.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_02_clock",
+      "type": "spawn_enemy",
+      "time": 4,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_02_counter",
+      "type": "spawn_enemy",
+      "time": 4.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "viscera_nova_level_02_development_start_message",
+      "type": "fx_async_message",
+      "time": 5.75,
+      "text": "Circle shooter joining the flow.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "viscera_nova_level_02_circle_shooter",
+      "type": "spawn_enemy",
+      "time": 6,
+      "enemy_type": "circle_shooter_drone",
+      "spawn_side": "north"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_03_clock",
+      "type": "spawn_enemy",
+      "time": 7,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "east"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_03_counter",
+      "type": "spawn_enemy",
+      "time": 7.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "west"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_04_clock",
+      "type": "spawn_enemy",
+      "time": 10,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_04_counter",
+      "type": "spawn_enemy",
+      "time": 10.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_05_clock",
+      "type": "spawn_enemy",
+      "time": 13,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "south"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_05_counter",
+      "type": "spawn_enemy",
+      "time": 13.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "north"
+    },
+    {
+      "id": "viscera_nova_level_02_compression_start_message",
+      "type": "fx_async_message",
+      "time": 14.75,
+      "text": "Slow debris entering the spiral field.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "viscera_nova_level_02_slow_asteroid_01",
+      "type": "spawn_enemy",
+      "time": 15,
+      "enemy_type": "asteroid",
+      "spawn_side": "west",
+      "move_speed": 170
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_06_clock",
+      "type": "spawn_enemy",
+      "time": 16,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "south_west"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_06_counter",
+      "type": "spawn_enemy",
+      "time": 16.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "viscera_nova_level_02_slow_asteroid_02",
+      "type": "spawn_enemy",
+      "time": 18,
+      "enemy_type": "asteroid",
+      "spawn_side": "north",
+      "move_speed": 170
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_07_clock",
+      "type": "spawn_enemy",
+      "time": 19,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "west"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_07_counter",
+      "type": "spawn_enemy",
+      "time": 19.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "east"
+    },
+    {
+      "id": "viscera_nova_level_02_slow_asteroid_03",
+      "type": "spawn_enemy",
+      "time": 21,
+      "enemy_type": "asteroid",
+      "spawn_side": "east",
+      "move_speed": 170
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_08_clock",
+      "type": "spawn_enemy",
+      "time": 22,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "north_west"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_08_counter",
+      "type": "spawn_enemy",
+      "time": 22.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "viscera_nova_level_02_slow_asteroid_04",
+      "type": "spawn_enemy",
+      "time": 24,
+      "enemy_type": "asteroid",
+      "spawn_side": "south",
+      "move_speed": 170
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_09_clock",
+      "type": "spawn_enemy",
+      "time": 25,
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "north"
+    },
+    {
+      "id": "viscera_nova_level_02_spiral_cluster_09_counter",
+      "type": "spawn_enemy",
+      "time": 25.35,
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "south"
+    },
+    {
+      "id": "viscera_nova_level_02_slow_asteroid_05",
+      "type": "spawn_enemy",
+      "time": 27,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west",
+      "move_speed": 170
+    },
+    {
+      "id": "viscera_nova_level_02_final_clear_start_message",
+      "type": "fx_async_message",
+      "time": 27.75,
+      "text": "Spiral field collapsing. Charge signatures detected.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "viscera_nova_level_02_final_charger_01",
+      "type": "spawn_enemy",
+      "time": 28,
+      "enemy_type": "charger_drone",
+      "spawn_side": "east"
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_01",
+      "type": "spawn_enemy",
+      "time": 28.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "north",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_02",
+      "type": "spawn_enemy",
+      "time": 29.05,
+      "enemy_type": "asteroid",
+      "spawn_side": "south",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_03",
+      "type": "spawn_enemy",
+      "time": 29.6,
+      "enemy_type": "asteroid",
+      "spawn_side": "east",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_04",
+      "type": "spawn_enemy",
+      "time": 30.15,
+      "enemy_type": "asteroid",
+      "spawn_side": "west",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_05",
+      "type": "spawn_enemy",
+      "time": 30.7,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_06",
+      "type": "spawn_enemy",
+      "time": 31.25,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_07",
+      "type": "spawn_enemy",
+      "time": 31.8,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_charger_02",
+      "type": "spawn_enemy",
+      "time": 32,
+      "enemy_type": "charger_drone",
+      "spawn_side": "south"
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_08",
+      "type": "spawn_enemy",
+      "time": 32.35,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_09",
+      "type": "spawn_enemy",
+      "time": 32.9,
+      "enemy_type": "asteroid",
+      "spawn_side": "north",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_10",
+      "type": "spawn_enemy",
+      "time": 33.45,
+      "enemy_type": "asteroid",
+      "spawn_side": "south",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_11",
+      "type": "spawn_enemy",
+      "time": 34,
+      "enemy_type": "asteroid",
+      "spawn_side": "east",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_12",
+      "type": "spawn_enemy",
+      "time": 34.55,
+      "enemy_type": "asteroid",
+      "spawn_side": "west",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_13",
+      "type": "spawn_enemy",
+      "time": 35.1,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_14",
+      "type": "spawn_enemy",
+      "time": 35.65,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_west",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_charger_03",
+      "type": "spawn_enemy",
+      "time": 36,
+      "enemy_type": "charger_drone",
+      "spawn_side": "west"
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_15",
+      "type": "spawn_enemy",
+      "time": 36.2,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_west",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_16",
+      "type": "spawn_enemy",
+      "time": 36.75,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_17",
+      "type": "spawn_enemy",
+      "time": 37.3,
+      "enemy_type": "asteroid",
+      "spawn_side": "north",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_18",
+      "type": "spawn_enemy",
+      "time": 37.85,
+      "enemy_type": "asteroid",
+      "spawn_side": "south",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_19",
+      "type": "spawn_enemy",
+      "time": 38.4,
+      "enemy_type": "asteroid",
+      "spawn_side": "east",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_final_barrage_asteroid_20",
+      "type": "spawn_enemy",
+      "time": 38.95,
+      "enemy_type": "asteroid",
+      "spawn_side": "west",
+      "move_speed": 390
+    },
+    {
+      "id": "viscera_nova_level_02_completion_message",
+      "type": "fx_async_message",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "text": "Viscera Nova 02 clear: Spiral Barrage.",
+      "type_speed_cps": 26,
+      "hold_sec": 1.8
+    },
+    {
+      "id": "viscera_nova_level_02_completion_handoff",
+      "type": "scene_handoff",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 2.0
+    }
+  ]
+}

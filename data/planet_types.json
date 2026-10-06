@@ -1,0 +1,356 @@
+[
+  {
+    "planet_type": "terra_virex",
+    "display_name": "Terra Virex",
+    "theme": "earth_descendant_baseline_defense",
+    "core_skill": "block_then_shoot",
+    "emotion": "clarity_under_pressure",
+    "enemy_pool": ["asteroid", "drone_basic", "charger_drone", "drone_sine"],
+    "rhythm_profile": {
+      "level_1": "teach_cleanly",
+      "level_2": "steady_layering",
+      "level_3": "compressed_but_readable"
+    },
+    "difficulty_axes": [
+      "timing_window",
+      "lane_count",
+      "transition_speed"
+    ],
+    "pattern_vocabulary": [
+      "single_lane_block",
+      "block_then_shoot",
+      "alternating_lane_swap",
+      "drone_cleanup_window"
+    ],
+    "signature_event_tags": [
+      "clean_transition",
+      "timing_test"
+    ],
+    "boss": {
+      "enabled": true,
+      "boss_id": "aegis_relay",
+      "replaces_signature_phase": true
+    },
+    "generation_rules": {
+      "allow_wave_overlap": false,
+      "allow_spawn_randomization": "low",
+      "max_pattern_overlap": 2,
+      "teaching_priority": [
+        "rear_blocking",
+        "safe_shoot_window",
+        "swap_discipline"
+      ]
+    },
+    "presentation": {
+      "planet_texture": "green_planet",
+      "music_tag": "baseline_defense"
+    }
+  },
+  {
+    "planet_type": "glacien_ix",
+    "display_name": "Glacien IX",
+    "theme": "frozen_silence_delayed_danger",
+    "core_skill": "calm_under_accumulation",
+    "emotion": "crowding_dread",
+    "enemy_pool": ["asteroid", "drone_basic", "drone_tank", "drone_sine"],
+    "rhythm_profile": {
+      "level_1": "slow_and_readable",
+      "level_2": "crowding_build",
+      "level_3": "oppressive_accumulation"
+    },
+    "difficulty_axes": [
+      "screen_occupancy",
+      "formation_size",
+      "release_window_density"
+    ],
+    "pattern_vocabulary": [
+      "slow_encircle",
+      "staggered_lane_freeze",
+      "accumulation_wall",
+      "delayed_release_window",
+      "sine_intro",
+      "sine_pressure"
+    ],
+    "signature_event_tags": [
+      "screen_flash",
+      "slow_swarm"
+    ],
+    "boss": {
+      "enabled": true,
+      "boss_id": "boreal_colossus",
+      "replaces_signature_phase": true
+    },
+    "generation_rules": {
+      "allow_wave_overlap": false,
+      "allow_spawn_randomization": "low",
+      "max_pattern_overlap": 2,
+      "teaching_priority": [
+        "hold_position",
+        "do_not_panic_rotate",
+        "clear_crowding_safely"
+      ]
+    },
+    "presentation": {
+      "planet_texture": "cold_planet",
+      "music_tag": "frozen_pressure"
+    }
+  },
+  {
+    "planet_type": "ignara_prime",
+    "display_name": "Ignara Prime",
+    "theme": "heat_aggression_overload",
+    "core_skill": "rapid_defensive_rotation",
+    "emotion": "urgent_overwhelm",
+    "enemy_pool": ["asteroid", "drone_fast", "drone_basic"],
+    "rhythm_profile": {
+      "level_1": "burst_with_breathers",
+      "level_2": "reduced_recovery",
+      "level_3": "relentless_pressure"
+    },
+    "difficulty_axes": [
+      "enemy_speed",
+      "simultaneous_lanes",
+      "recovery_gap"
+    ],
+    "pattern_vocabulary": [
+      "double_lane_rush",
+      "rapid_projectile_burst",
+      "chain_lane_ignition",
+      "alternating_fast_side_pressure"
+    ],
+    "signature_event_tags": [
+      "heat_burst",
+      "warning_spike"
+    ],
+    "boss": {
+      "enabled": true,
+      "boss_id": "solar_crucible",
+      "replaces_signature_phase": true
+    },
+    "generation_rules": {
+      "allow_wave_overlap": true,
+      "allow_spawn_randomization": "medium",
+      "max_pattern_overlap": 3,
+      "teaching_priority": [
+        "rapid_blocking",
+        "recover_without_resting",
+        "read_two_lanes_at_once"
+      ]
+    },
+    "presentation": {
+      "planet_texture": "hot_planet",
+      "music_tag": "heat_assault"
+    }
+  },
+  {
+    "planet_type": "tempestris",
+    "display_name": "Tempestris",
+    "theme": "storm_chaos_hidden_structure",
+    "core_skill": "implicit_pattern_recognition",
+    "emotion": "controlled_disorientation",
+    "enemy_pool": ["asteroid", "drone_basic", "drone_fast", "drone_sine", "charger_drone", "spiral_drone_clock", "spiral_drone_counter", "spiral_drone_random"],
+    "rhythm_profile": {
+      "level_1": "structured_noise",
+      "level_2": "obscured_cycle",
+      "level_3": "intuitive_safe_zone_reading"
+    },
+    "difficulty_axes": [
+      "safe_quadrant_rotation_speed",
+      "visual_noise",
+      "pattern_disguise"
+    ],
+    "pattern_vocabulary": [
+      "rotating_safe_quadrants",
+      "mirrored_storm_arcs",
+      "false_scramble_into_gap",
+      "drifting_quadrant_collapse",
+      "spiral_random",
+      "sine_intro",
+      "sine_pressure",
+      "asteroid_cardinal",
+      "asteroid_diagonal",
+      "sine_cardinal",
+      "sine_diagonal",
+      "fast_cardinal",
+      "fast_diagonal",
+      "charger_cardinal",
+      "charger_diagonal",
+      "spiral_cardinal",
+      "spiral_diagonal"
+    ],
+    "signature_event_tags": [
+      "storm_cycle_shift",
+      "quadrant_rotation"
+    ],
+    "boss": {
+      "enabled": true,
+      "boss_id": "cyclarch",
+      "replaces_signature_phase": true
+    },
+    "generation_rules": {
+      "allow_wave_overlap": true,
+      "allow_spawn_randomization": "medium",
+      "max_pattern_overlap": 3,
+      "teaching_priority": [
+        "trust_recurring_structure",
+        "follow_safe_quadrants",
+        "avoid_reading_noise_as_randomness"
+      ]
+    },
+    "presentation": {
+      "planet_texture": "tempestris_planet",
+      "music_tag": "storm_tension"
+    }
+  },
+  {
+    "planet_type": "viscera_nova",
+    "display_name": "Viscera Nova",
+    "theme": "living_planet_behavioral_combat",
+    "core_skill": "read_enemy_intent",
+    "emotion": "uneasy_adaptation",
+    "enemy_pool": ["asteroid", "drone_basic", "drone_fast", "drone_tank", "charger_drone", "drone_shifter", "drone_sine", "circle_shooter_drone", "spiral_drone_clock", "spiral_drone_counter", "spiral_drone_random"],
+    "rhythm_profile": {
+      "level_1": "clear_behavior_teaching",
+      "level_2": "reactive_mixups",
+      "level_3": "complex_behavioral_pressure"
+    },
+    "difficulty_axes": [
+      "tell_duration",
+      "behavior_complexity",
+      "reaction_combinations"
+    ],
+    "pattern_vocabulary": [
+      "color_tell_lunge",
+      "retaliate_on_shot",
+      "bait_on_rotation",
+      "calm_until_blocked",
+      "mixed_intent_formation",
+      "lane_shifter",
+      "spawn_one_circle_drone",
+      "spiral_flower_clockwise",
+      "spiral_flower_counter",
+      "spiral_flower_random",
+      "spiral_random",
+      "sine_intro",
+      "sine_pressure"
+    ],
+    "signature_event_tags": [
+      "color_shift_warning",
+      "behavior_phase_change"
+    ],
+    "boss": {
+      "enabled": true,
+      "boss_id": "gestalt_heart",
+      "replaces_signature_phase": true
+    },
+    "generation_rules": {
+      "allow_wave_overlap": false,
+      "allow_spawn_randomization": "low",
+      "max_pattern_overlap": 2,
+      "teaching_priority": [
+        "learn_color_meanings",
+        "notice_reactivity",
+        "separate_real_threat_from_bait"
+      ]
+    },
+    "presentation": {
+      "planet_texture": "viscera_nova_planet",
+      "music_tag": "living_tension"
+    }
+  },
+  {
+    "planet_type": "umbra_vacua",
+    "display_name": "Umbra Vacua",
+    "theme": "void_restraint_panic_punishment",
+    "core_skill": "disciplined_inaction",
+    "emotion": "tense_silence",
+    "enemy_pool": ["asteroid", "drone_basic", "drone_fast", "drone_sine", "drone_shifter", "charger_drone", "circle_shooter_drone", "spiral_drone_clock", "spiral_drone_counter", "spiral_drone_random"],
+    "rhythm_profile": {
+      "level_1": "continuous_wave_motion",
+      "level_2": "rotating_formation_pressure",
+      "level_3": "mirrored_spirals_and_rotating_barrages"
+    },
+    "difficulty_axes": [
+      "empty_gap_length",
+      "rotation_punishment",
+      "lethal_commitment_frequency"
+    ],
+    "pattern_vocabulary": [
+      "empty_gap_feint",
+      "punish_on_rotation",
+      "sparse_lethal_lane",
+      "delayed_void_commitment"
+    ],
+    "signature_event_tags": [
+      "silence_hold",
+      "panic_check"
+    ],
+    "boss": {
+      "enabled": true,
+      "boss_id": "observer",
+      "replaces_signature_phase": true
+    },
+    "generation_rules": {
+      "allow_wave_overlap": false,
+      "allow_spawn_randomization": "low",
+      "max_pattern_overlap": 2,
+      "teaching_priority": [
+        "wait_before_turning",
+        "respect_single_threats",
+        "avoid_self_created_errors"
+      ]
+    },
+    "presentation": {
+      "planet_texture": "umbra_vacua_planet",
+      "music_tag": "void_restraint"
+    }
+  },
+  {
+    "planet_type": "mechanon_ascens",
+    "display_name": "Mechanon Ascens",
+    "theme": "machine_perfection_delayed_mirroring",
+    "core_skill": "break_learned_rhythm",
+    "emotion": "fair_but_alien",
+    "enemy_pool": ["drone_basic", "drone_fast", "drone_tank", "drone_shifter", "asteroid"],
+    "rhythm_profile": {
+      "level_1": "alien_but_teachable",
+      "level_2": "spatial_disruption",
+      "level_3": "compressed_mirror_pressure"
+    },
+    "difficulty_axes": [
+      "spawn_proximity",
+      "mirror_delay",
+      "zoom_shift_intensity"
+    ],
+    "pattern_vocabulary": [
+      "close_range_mirror_spawn",
+      "delayed_rotation_echo",
+      "zoom_shift_pressure_wave",
+      "symmetry_break_test",
+      "lane_shifter"
+    ],
+    "signature_event_tags": [
+      "zoom_reframe",
+      "mirror_delay_lock"
+    ],
+    "boss": {
+      "enabled": true,
+      "boss_id": "paragon_protektor",
+      "replaces_signature_phase": true
+    },
+    "generation_rules": {
+      "allow_wave_overlap": true,
+      "allow_spawn_randomization": "medium",
+      "max_pattern_overlap": 3,
+      "teaching_priority": [
+        "reject_old_spacing_assumptions",
+        "read_delayed_mirroring",
+        "adapt_to_scale_changes"
+      ]
+    },
+    "presentation": {
+      "planet_texture": "metal_planet",
+      "music_tag": "machine_precision"
+    }
+  }
+]

@@ -1,0 +1,359 @@
+{
+  "format_version": 1,
+  "level_id": "terra_virex_level_01",
+  "planet_type": "terra_virex",
+  "level_index": 1,
+  "target_duration_sec": 78,
+  "enemy_pool_override": [],
+  "completion": {
+    "message_text": "Terra Virex 01 clear: First Watch.",
+    "message_hold_sec": 1.8,
+    "scene_handoff": {
+      "enabled": true,
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 5
+    }
+  },
+  "boss_phase": {
+    "enabled": false,
+    "music_file_path": "",
+    "music_volume_db": -6,
+    "crossfade_sec": 1.2,
+    "warning_text": ""
+  },
+  "header": {
+    "background_color": "black",
+    "planet_texture": "green_planet",
+    "planet_name": "Terra Virex",
+    "music": {
+      "file_path": "res://music/academy_battle.mp3",
+      "volume_db": -8
+    }
+  },
+  "phases": [
+    {
+      "phase_id": "intro_teach",
+      "duration_sec": 22,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "clean_warning"
+      ],
+      "patterns": [
+        {
+          "pattern_id": "single_lane_block",
+          "intensity": "low",
+          "notes": "Teach one rear-block lane with no competing target."
+        },
+        {
+          "pattern_id": "single_lane_block",
+          "intensity": "medium",
+          "notes": "Repeat on a new lane with one additional beat."
+        },
+        {
+          "pattern_id": "single_lane_block",
+          "intensity": "medium",
+          "notes": "Confirm the block timing once from a third direction."
+        }
+      ]
+    },
+    {
+      "phase_id": "development",
+      "duration_sec": 28,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "timing_prompt",
+        "lane_shift"
+      ],
+      "patterns": [
+        {
+          "pattern_id": "block_then_shoot",
+          "intensity": "low",
+          "notes": "Introduce the safe transition from blocking into fire."
+        },
+        {
+          "pattern_id": "alternating_lane_swap",
+          "intensity": "medium",
+          "notes": "Ask for one readable controlled rotation sequence."
+        },
+        {
+          "pattern_id": "block_then_shoot",
+          "intensity": "medium",
+          "notes": "Confirm the core defense-to-attack rhythm."
+        },
+        {
+          "pattern_id": "block_then_shoot",
+          "intensity": "medium",
+          "notes": "Repeat the transition on a different axis before the final clear."
+        }
+      ]
+    },
+    {
+      "phase_id": "final_clear",
+      "duration_sec": 18,
+      "allow_wave_overlap": false,
+      "fx_tags": [
+        "score_window"
+      ],
+      "patterns": [
+        {
+          "pattern_id": "drone_cleanup_window",
+          "intensity": "low",
+          "notes": "Finish with an open, low-pressure accuracy check."
+        }
+      ]
+    }
+  ],
+  "authoring": {
+    "summary": "Terra Virex 01 is a clean fundamentals lesson: block one lane, rotate with purpose, then use a safe firing window.",
+    "boss_replaces_signature_phase": false,
+    "generation_notes": [
+      "Match Mechanon Ascens 01's overall workload while remaining the clearest baseline mission.",
+      "Never layer the teaching beats; each response should be readable before the next begins.",
+      "Use isolated chargers as readable rotation checks without disrupting the teaching cadence."
+    ],
+    "compiled_from_phases": true,
+    "compiled_event_count": 30,
+    "preserved_timeline_event_count": 2,
+    "preserved_trigger_event_count": 0
+  },
+  "events": [
+    {
+      "id": "terra_virex_level_01_intro_teach_start_message",
+      "type": "fx_async_message",
+      "time": 0.15,
+      "text": "Pattern initialization in progress.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 2.44,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 4.89,
+      "enemy_type": "asteroid",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_02_spawn_01",
+      "type": "spawn_enemy",
+      "time": 9.17,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_02_spawn_02",
+      "type": "spawn_enemy",
+      "time": 11.0,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_02_spawn_03",
+      "type": "spawn_enemy",
+      "time": 12.83,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_03_spawn_01",
+      "type": "spawn_enemy",
+      "time": 16.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_03_spawn_02",
+      "type": "spawn_enemy",
+      "time": 18.33,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "terra_virex_level_01_intro_teach_single_lane_block_03_spawn_03",
+      "type": "spawn_enemy",
+      "time": 20.17,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "terra_virex_level_01_development_start_message",
+      "type": "fx_async_message",
+      "time": 22.15,
+      "text": "Threat complexity rising.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 24.33,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 26.67,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "terra_virex_level_01_development_alternating_lane_swap_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 30.4,
+      "enemy_type": "asteroid",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "terra_virex_level_01_development_alternating_lane_swap_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 31.8,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "terra_virex_level_01_development_alternating_lane_swap_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 33.2,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "terra_virex_level_01_charger_01",
+      "type": "spawn_enemy",
+      "time": 34.0,
+      "enemy_type": "charger_drone",
+      "spawn_side": "west"
+    },
+    {
+      "id": "terra_virex_level_01_development_alternating_lane_swap_01_spawn_04",
+      "type": "spawn_enemy",
+      "time": 34.6,
+      "enemy_type": "asteroid",
+      "spawn_side": "north"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_02_spawn_01",
+      "type": "spawn_enemy",
+      "time": 37.4,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_02_spawn_02",
+      "type": "spawn_enemy",
+      "time": 38.8,
+      "enemy_type": "asteroid",
+      "spawn_side": "south"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_02_spawn_03",
+      "type": "spawn_enemy",
+      "time": 40.2,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_02_spawn_04",
+      "type": "spawn_enemy",
+      "time": 41.6,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_03_spawn_01",
+      "type": "spawn_enemy",
+      "time": 44.4,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_03_spawn_02",
+      "type": "spawn_enemy",
+      "time": 45.8,
+      "enemy_type": "asteroid",
+      "spawn_side": "west"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_03_spawn_03",
+      "type": "spawn_enemy",
+      "time": 47.2,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "terra_virex_level_01_development_block_then_shoot_03_spawn_04",
+      "type": "spawn_enemy",
+      "time": 48.6,
+      "enemy_type": "drone_basic",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "terra_virex_level_01_final_clear_start_message",
+      "type": "fx_async_message",
+      "time": 50.15,
+      "text": "Final contact sweep.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.2
+    },
+    {
+      "id": "terra_virex_level_01_final_clear_drone_cleanup_window_01_spawn_01",
+      "type": "spawn_enemy",
+      "time": 50.63,
+      "enemy_type": "drone_basic",
+      "spawn_side": "east"
+    },
+    {
+      "id": "terra_virex_level_01_final_clear_drone_cleanup_window_01_spawn_02",
+      "type": "spawn_enemy",
+      "time": 51.26,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south_east"
+    },
+    {
+      "id": "terra_virex_level_01_final_clear_drone_cleanup_window_01_spawn_03",
+      "type": "spawn_enemy",
+      "time": 51.89,
+      "enemy_type": "drone_basic",
+      "spawn_side": "south"
+    },
+    {
+      "id": "terra_virex_level_01_charger_02",
+      "type": "spawn_enemy",
+      "time": 55.0,
+      "enemy_type": "charger_drone",
+      "spawn_side": "north_east"
+    },
+    {
+      "id": "terra_virex_level_01_completion_message",
+      "type": "fx_async_message",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "text": "Terra Virex 01 clear: First Watch.",
+      "type_speed_cps": 26,
+      "hold_sec": 1.8
+    },
+    {
+      "id": "terra_virex_level_01_completion_handoff",
+      "type": "scene_handoff",
+      "trigger": {
+        "type": "all_enemies_destroyed",
+        "repeat": false,
+        "params": {}
+      },
+      "scene_path": "res://scenes/dialog_driver/DialogDriver.tscn",
+      "dialog_path": "res://dialog/scene_2_5.dialog.json",
+      "delay_sec": 5.0
+    }
+  ]
+}

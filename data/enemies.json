@@ -1,0 +1,136 @@
+{
+  "drone_basic": {
+    "is_asteroid": false,
+    "drone_type": "drone_basic",
+    "move_speed": 110.0,
+    "max_hp": 2.0,
+    "color": [0.7, 0.74, 0.79, 1.0]
+  },
+  "drone_fast": {
+    "is_asteroid": false,
+    "drone_type": "drone_fast",
+    "move_speed": 250.0,
+    "max_hp": 1.0,
+    "color": [0.66, 0.72, 0.78, 1.0]
+  },
+  "drone_tank": {
+    "is_asteroid": false,
+    "drone_type": "drone_tank",
+    "move_speed": 75.0,
+    "size": 40.0,
+    "max_hp": 5.0,
+    "tank_move_interval_sec": 2.0,
+    "tank_tell_sec": 0.8,
+    "tank_flash_hz": 11.0,
+    "tank_projectile_speed": 290.0,
+    "tank_projectile_damage": 1.0,
+    "tank_projectile_radius": 8.0,
+    "color": [0.6, 0.64, 0.7, 1.0]
+  },
+  "charger_drone": {
+    "is_asteroid": false,
+    "drone_type": "charger_drone",
+    "behavior_type": "charger",
+    "move_speed": 320.0,
+    "charger_approach_speed": 68.0,
+    "charger_stop_distance": 180.0,
+    "charger_hold_sec": 0.5,
+    "charger_tell_sec": 0.7,
+    "charger_flash_hz": 11.0,
+    "charger_shake_amplitude": 4.2,
+    "size": 30.0,
+    "max_hp": 3.0,
+    "color": [0.88, 0.74, 0.68, 1.0]
+  },
+  "drone_shifter": {
+    "is_asteroid": false,
+    "drone_type": "drone_shifter",
+    "behavior_type": "shifter",
+    "move_speed": 92.0,
+    "max_hp": 2.0,
+    "shifter_trigger_distance": 185.0,
+    "shifter_turn_speed": 4.8,
+    "color": [0.68, 0.83, 0.86, 1.0]
+  },
+  "drone_sine": {
+    "is_asteroid": false,
+    "drone_type": "drone_sine",
+    "behavior_type": "sine",
+    "move_speed": 96.0,
+    "max_hp": 1.0,
+    "sine_lateral_strength": 0.82,
+    "sine_wave_speed": 5.4,
+    "color": [0.78, 0.72, 0.9, 1.0]
+  },
+  "circle_shooter_drone": {
+    "is_asteroid": false,
+    "drone_type": "circle_shooter_drone",
+    "behavior_type": "circle_shooter",
+    "move_speed": 145.0,
+    "size": 42.0,
+    "max_hp": 6.0,
+    "circle_shooter_hover_distance": 190.0,
+    "circle_shooter_hold_sec": 1.15,
+    "circle_shooter_post_shot_wait_sec": 0.7,
+    "circle_shooter_turn_speed": 4.5,
+    "circle_shooter_shoot_chance": 0.7,
+    "circle_shooter_projectile_speed": 310.0,
+    "circle_shooter_projectile_damage": 1.0,
+    "circle_shooter_projectile_radius": 7.0,
+    "color": [0.76, 0.82, 0.9, 1.0]
+  },
+  "spiral_drone_clock": {
+    "is_asteroid": false,
+    "drone_type": "spiral_drone",
+    "behavior_type": "spiral",
+    "move_speed": 72.0,
+    "size": 26.0,
+    "max_hp": 1.0,
+    "spiral_turn_speed": 2.6,
+    "spiral_turn_direction": 1,
+    "spiral_trail_intensity": 1.2,
+    "color": [0.72, 0.86, 0.96, 1.0]
+  },
+  "spiral_drone_counter": {
+    "is_asteroid": false,
+    "drone_type": "spiral_drone",
+    "behavior_type": "spiral",
+    "move_speed": 72.0,
+    "size": 26.0,
+    "max_hp": 1.0,
+    "spiral_turn_speed": 2.6,
+    "spiral_turn_direction": -1,
+    "spiral_trail_intensity": 1.2,
+    "color": [0.72, 0.86, 0.96, 1.0]
+  },
+  "spiral_drone_random": {
+    "is_asteroid": false,
+    "drone_type": "spiral_drone",
+    "behavior_type": "spiral",
+    "move_speed": 72.0,
+    "size": 26.0,
+    "max_hp": 1.0,
+    "spiral_turn_speed": 2.6,
+    "spiral_turn_direction": 0,
+    "spiral_trail_intensity": 1.2,
+    "color": [0.72, 0.86, 0.96, 1.0]
+  },
+  "asteroid": {
+    "is_asteroid": true,
+    "drone_type": "drone_basic",
+    "move_speed": 300.0,
+    "size": 18.0,
+    "max_hp": 99.0,
+    "contact_damage": 1.0,
+    "color": [0.56, 0.58, 0.62, 1.0]
+  },
+  "asteroid_slow": {
+    "is_asteroid": true,
+    "drone_type": "drone_basic",
+    "move_speed": 190.0,
+    "size": 18.0,
+    "max_hp": 99.0,
+    "contact_damage": 1.0,
+    "color": [0.56, 0.58, 0.62, 1.0]
+  }
+}
