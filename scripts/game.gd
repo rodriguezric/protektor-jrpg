@@ -21,11 +21,16 @@ var chapter := "prologue"
 var rng := RandomNumberGenerator.new()
 ## Set by ./run_mission: nothing is written to the save file.
 var testing := false
+## Achievements and their running stats outlive any one playthrough.
+const ACH_PATH := "user://protektor_achievements.json"
+var achieved := {}
+var achv_stats := {}
 
 
 func _ready() -> void:
 	rng.randomize()
 	new_game()
+	load_achievements()
 
 
 func new_game() -> void:
@@ -143,6 +148,7 @@ func mark_completed(planet: String, level: int, arcade_mode: bool = false) -> Ar
 	if arcade_mode:
 		arcade[planet] = maxi(int(arcade.get(planet, 0)), level)
 		save()
+		Achievements.check()
 		return []
 	story.completed_levels[planet] = maxi(highest(planet), level)
 	var before := unlocked.duplicate()
@@ -158,6 +164,7 @@ func mark_completed(planet: String, level: int, arcade_mode: bool = false) -> Ar
 		if not before.has(p):
 			fresh.append(p)
 	save()
+	Achievements.check()
 	return fresh
 
 
@@ -173,6 +180,7 @@ func _unlock(planet: String) -> bool:
 func unlock_planet(planet: String) -> bool:
 	var r := _unlock(planet)
 	save()
+	Achievements.check()
 	return r
 
 
@@ -236,6 +244,10 @@ func complete_story(ending: String) -> void:
 	games_completed += 1
 	chapter = "done"
 	save()
+	if not bool(story.get("bought", false)):
+		achv_stats.clean_endings = int(achv_stats.get("clean_endings", 0)) + 1
+	save_achievements()
+	Achievements.check()
 
 
 # --------------------------------------------------------------- loadout ---
@@ -292,6 +304,44 @@ func use_medicine() -> bool:
 	story.missions_failed = int(story.missions_failed) - 1
 	save()
 	return true
+
+
+# ----------------------------------------------------------- achievements ---
+
+func has_achievement(id: String) -> bool:
+	return achieved.has(id)
+
+
+func unlock_achievement(id: String) -> void:
+	if testing or achieved.has(id):
+		return
+	achieved[id] = int(Time.get_unix_time_from_system())
+	save_achievements()
+	if main and main.has_method("toast_achievement"):
+		main.toast_achievement(Achievements.find(id))
+
+
+func _ach_path() -> String:
+	## Test runs can point achievements at a scratch file (PK_ACH).
+	return OS.get_environment("PK_ACH") if OS.get_environment("PK_ACH") != "" else ACH_PATH
+
+
+func save_achievements() -> void:
+	if testing:
+		return
+	var f := FileAccess.open(_ach_path(), FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify({"achieved": achieved, "stats": achv_stats}))
+
+
+func load_achievements() -> void:
+	if not FileAccess.file_exists(_ach_path()):
+		return
+	var f := FileAccess.open(_ach_path(), FileAccess.READ)
+	var d = JSON.parse_string(f.get_as_text()) if f else null
+	if d is Dictionary:
+		achieved = d.get("achieved", {})
+		achv_stats = d.get("stats", {})
 
 
 # ------------------------------------------------------------------- save ---

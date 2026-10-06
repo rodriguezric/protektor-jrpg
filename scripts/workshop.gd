@@ -271,6 +271,9 @@ func _act(r: Dictionary, i: int) -> void:
 
 
 func _bought(p: Vector2, text: String) -> void:
+	Game.story.bought = true
+	Game.save()
+	Achievements.check()
 	Sfx.play("buy", 1.0, -4.0)
 	_burst(p, Pal.LEMON)
 	_popup(p, text, Pal.LEMON)

@@ -187,6 +187,8 @@ func _make(name: String) -> PackedFloat32Array:
 			return _tone(1046, 1046, 0.07, "sq", 0.18)
 		"badge":
 			return _cat([_noise(0.12, 0.15, 0.6, false, true), _tone(1568, 1568, 0.2, "sin", 0.2)])
+		"levelup":
+			return _cat([_tone(523, 523, 0.06, "sq", 0.2), _tone(659, 659, 0.06, "sq", 0.2), _tone(784, 784, 0.06, "sq", 0.2), _tone(1047, 1047, 0.06, "sq", 0.2), _tone(1319, 1319, 0.25, "sq", 0.2)])
 		"coin":
 			return _cat([_tone(988, 988, 0.05, "sq", 0.18), _tone(1319, 1319, 0.12, "sq", 0.18)])
 		"buy":

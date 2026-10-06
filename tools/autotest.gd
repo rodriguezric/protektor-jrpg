@@ -508,6 +508,48 @@ func _run(scenario: String) -> void:
 					break
 			print("after drill: credits=", Game.credits(), " training=", Game.story.training)
 			get_tree().quit()
+		"achscreen":
+			auto_talk = false
+			Game.testing = true
+			var now := int(Time.get_unix_time_from_system())
+			for id in ["aim_10", "aim_25", "block_10", "flawless_1", "unlock_glacien_ix", "clear_terra_virex", "ending_partial_pala", "ending_ascended", "all_training"]:
+				Game.achieved[id] = now
+			Game.achv_stats = {"best_shot_streak": 37, "best_block_chain": 18, "flawless_count": 3}
+			var scr := AchievementsScreen.new()
+			main.cine_layer.add_child(scr)
+			scr.run()
+			await wait(1.0)
+			await shot("ach_all")
+			await tap("right", 0.3)
+			await tap("right", 0.3)
+			await tap("down", 0.5)
+			await shot("ach_scrolled")
+			await tap("down", 0.3)
+			await tap("down", 0.6)
+			await shot("ach_down")
+			for k in 6:
+				await tap("up", 0.15)
+			await tap("right", 0.2)
+			await tap("right", 0.6)
+			await shot("ach_tab")
+			main.toast_achievement(Achievements.find("clear_glacien_ix"))
+			await wait(0.8)
+			await shot("ach_toast")
+			get_tree().quit()
+		"achplay":
+			# real play with achievements live (PK_ACH points at a scratch file)
+			Game.testing = false
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			bot = true
+			auto_talk = false
+			main.start_mission("terra_virex_level_01", false, false)
+			for i in 110:
+				await wait(1.0)
+				if main.mission_layer.get_child_count() == 0:
+					break
+			print("achieved: ", Game.achieved.keys(), " stats: ", Game.achv_stats)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

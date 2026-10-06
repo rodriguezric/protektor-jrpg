@@ -112,6 +112,10 @@ func light(r: int, c: Color) -> Texture2D:
 		return b)
 
 
+func achievement(a: Dictionary, unlocked: bool) -> Texture2D:
+	return _cached("ach:%s:%d" % [a.get("id", ""), int(unlocked)], func(): return ArtAchieve.icon(a, unlocked))
+
+
 func ui(name: String) -> Texture2D:
 	return _cached("ui:" + name, func(): return ArtUI.make(name))
 
