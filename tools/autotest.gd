@@ -248,6 +248,18 @@ func _run(scenario: String) -> void:
 			await shot("loop_back")
 			print("rel pala=", Game.relationship("pala"), " completed=", Game.completed_count(), " interval=", Game.story.interval_count)
 			get_tree().quit()
+		"introcheck":
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			if OS.get_environment("PK_DEPLOY") != "":
+				main.load_map(Maps.commons(), Vector2i(12, 12), 1)
+				main.story.hub.deploy("terra_virex_level_01")
+			else:
+				main.start_mission("terra_virex_level_01", false, true)
+			for i in 45:
+				await get_tree().create_timer(0.1).timeout
+				await shot("intro_%02d" % i)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

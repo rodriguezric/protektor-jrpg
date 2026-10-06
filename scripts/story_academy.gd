@@ -460,11 +460,9 @@ func deploy_first() -> void:
 	var big := c.sprite(Art.planet("green_planet", 150, 0), Vector2(160, 100))
 	await s.say("", ["Everything stops.", "A planet fills your vision.", "Terra Virex. Whole. Fragile."])
 	await s.say("~", "I am it.")
-	await m.fade_out(0.4, Pal.WHITE)
-	c.queue_free()
 	if m.world:
 		m.world.visible = false
-	var res: Dictionary = await m.start_mission("terra_virex_level_01", false, true)
+	var res: Dictionary = await m.start_mission("terra_virex_level_01", false, true, c)
 	await aftermath(res)
 
 

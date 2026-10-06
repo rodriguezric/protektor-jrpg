@@ -116,6 +116,8 @@ func setup(p_level: String, p_arcade: bool, p_intro: bool) -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_load()
 	_build()
+	if play_intro:
+		_intro_prep()
 
 
 # ------------------------------------------------------------------ load ---
@@ -353,24 +355,31 @@ func _iw(t: float) -> void:
 		await get_tree().process_frame
 
 
-func _intro() -> void:
-	Sfx.stop_music(0.8)
-	core.visible = false
+func _intro_prep() -> void:
+	## Applied in setup, before the first frame is drawn, so the finished arena
+	## never shows through before the warp.
+	core.modulate.a = 0.0
+	core.planet_scale = 6.0
 	left_panel.position.x = -80
 	right_panel.position.x = 330
 	frame_box.modulate.a = 0.0
 	space.modulate = Color(0.4, 0.4, 0.5)
 	stars.warp = 1.0
+
+
+func _intro() -> void:
+	Sfx.stop_music(0.8)
 	Sfx.play("warp", 1.0, -4.0)
-	await _iw(1.6)
-	stars.warp = 0.0
-	Sfx.play("warp_hit", 1.0, -6.0)
-	await _arena_flash(Pal.WHITE, 0.25)
-	space.modulate = Color.WHITE
-	core.visible = true
-	core.planet_scale = 6.0
-	var tw := create_tween()
-	tw.tween_property(core, "planet_scale", 1.0, 1.3 if not _skip else 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	await _iw(1.3)
+	# Hand off from the streaks to the planet in one continuous move: the warp
+	# decelerates while the planet fades in and pulls back out of it.
+	Sfx.play("warp_hit", 1.0, -10.0)
+	var zoom := 1.3 if not _skip else 0.2
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(stars, "warp", 0.0, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(space, "modulate", Color.WHITE, 0.6)
+	tw.tween_property(core, "modulate:a", 1.0, 0.35)
+	tw.tween_property(core, "planet_scale", 1.0, zoom).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	var name_l := Art.shadow_label(str(header.get("planet_name", planet_type)).to_upper(), Pal.TEXT, 2)
 	overlay.add_child(name_l)
 	name_l.position = Vector2(88 - Art.text_width(name_l.text, 2) / 2.0, 30)

@@ -193,8 +193,10 @@ func wipe_out() -> void:
     await tw.finished
 
 
-func start_mission(level_id: String, arcade_mode: bool = false, intro: bool = true) -> Dictionary:
+func start_mission(level_id: String, arcade_mode: bool = false, intro: bool = true, cover: CanvasItem = null) -> Dictionary:
     ## Plays one mission JSON. Returns {result, score, ...}.
+    ## cover: a cinematic still on screen; the mission starts beneath it and the
+    ## cover dissolves away, so there is no cut or flash into the warp.
     if world:
         world.visible = false
         world.paused = true
@@ -202,7 +204,12 @@ func start_mission(level_id: String, arcade_mode: bool = false, intro: bool = tr
     mission_layer.add_child(m)
     m.setup(level_id, arcade_mode, intro)
     await get_tree().process_frame
-    await fade_in(0.2)
+    if cover:
+        var ct := cover.create_tween()
+        ct.tween_property(cover, "modulate:a", 0.0, 0.5)
+        ct.tween_callback(cover.queue_free)
+    if fade_rect.color.a > 0.0:
+        await fade_in(0.2)
     var res: Dictionary = await m.run()
     await fade_out(0.6)
     m.queue_free()

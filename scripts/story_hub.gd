@@ -510,8 +510,6 @@ func deploy(level_id: String) -> Dictionary:
 	c.set_vignette(0.6, 0.5)
 	Sfx.play("warp", 1.1, -6.0)
 	await s.wait(0.9)
-	await m.fade_out(0.3, Pal.WHITE)
-	c.queue_free()
 	if m.world:
 		m.world.visible = false
-	return await m.start_mission(level_id, false, true)
+	return await m.start_mission(level_id, false, true, c)
