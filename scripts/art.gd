@@ -38,8 +38,8 @@ func person(spec: Dictionary, dir: int, frame: int, mood: String = "", pose: Str
 	return _cached("p:%s:%d:%d:%s:%s" % [_spec_key(spec), dir, frame, mood, pose], func(): return ArtPeople.render(spec, dir, frame, mood, pose))
 
 
-func portrait(spec: Dictionary, mood: String = "") -> Texture2D:
-	return _cached("pt:%s:%s" % [_spec_key(spec), mood], func(): return ArtPortraits.render(spec, mood))
+func portrait(spec: Dictionary, mood: String = "", blink: bool = false, open: bool = false, zoom: int = 3) -> Texture2D:
+	return _cached("pt:%s:%s:%d%d:%d" % [_spec_key(spec), mood, int(blink), int(open), zoom], func(): return ArtPortraits.from_sprite(spec, mood, blink, open, zoom))
 
 
 func system_portrait(frame: int) -> Texture2D:

@@ -24,14 +24,20 @@ var _anim_portrait := ""
 var _box_tween: Tween
 var _open := false
 var skip_all := false
+## The speaker on show, so the face can blink and talk.
+var _face_spec = null
+var _face_mood := ""
+var _blink_in := 2.5
+var _blink_left := 0.0
+var _face_state := ""
 
 
 func _init() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pframe = Art.make_box("box")
-	pframe.size = Vector2(54, 54)
-	pframe.position = Vector2(8, 60)
+	pframe.size = Vector2(78, 78)
+	pframe.position = Vector2(8, 40)
 	add_child(pframe)
 	pic = TextureRect.new()
 	pic.position = Vector2(3, 3)
@@ -64,6 +70,19 @@ func _process(delta: float) -> void:
 		arrow.position.y = 35 + (1 if fmod(Time.get_ticks_msec() / 1000.0, 0.6) < 0.3 else 0)
 	_anim_t += delta
 	if pframe.visible:
+		# the speaker blinks now and then, and their mouth moves while text types
+		if _face_spec != null:
+			_blink_in -= delta
+			if _blink_in <= 0.0:
+				_blink_left = 0.12
+				_blink_in = randf_range(1.8, 4.0)
+			_blink_left = maxf(0.0, _blink_left - delta)
+			var blink := _blink_left > 0.0
+			var open := _talking and fmod(_anim_t, 0.2) < 0.1
+			var state := "%d%d" % [int(blink), int(open)]
+			if state != _face_state:
+				_face_state = state
+				pic.texture = Art.portrait(_face_spec, _face_mood, blink, open)
 		# the system eye / comm waveform animate
 		if _anim_portrait == "system":
 			pic.texture = Art.system_portrait(int(_anim_t * 8.0) % 48)
@@ -102,6 +121,7 @@ func _set_portrait(opts: Dictionary) -> void:
 		pframe.visible = false
 		_portrait_key = ""
 		_anim_portrait = ""
+		_face_spec = null
 		return
 	var side: String = opts.get("side", "left")
 	var key := ""
@@ -109,20 +129,26 @@ func _set_portrait(opts: Dictionary) -> void:
 		_anim_portrait = p
 		key = p
 		pic.texture = Art.system_portrait(0) if p == "system" else Art.comm_portrait(0)
+		pic.position = Vector2(7, 7)
+		_face_spec = null
 		pframe.texture = Art.ui("sys_box" if p == "system" else "bar_box")
 	else:
 		_anim_portrait = ""
 		var mood: String = opts.get("mood", "")
 		pic.texture = Art.portrait(p, mood)
+		pic.position = Vector2(3, 3)
+		_face_spec = p
+		_face_mood = mood
+		_face_state = "00"
 		pframe.texture = Art.ui("box")
 		key = "%s:%s" % [p.get("id", ""), p.get("variant", "")]
-	var x := 8.0 if side == "left" else 258.0
+	var x := 8.0 if side == "left" else 234.0
 	var changed := key != _portrait_key or side != _portrait_side or not pframe.visible
 	_portrait_key = key
 	_portrait_side = side
 	pframe.visible = true
 	if changed:
-		pframe.position = Vector2(x + (-30 if side == "left" else 30), 60)
+		pframe.position = Vector2(x + (-30 if side == "left" else 30), 40)
 		pframe.modulate.a = 0.0
 		var t := create_tween().set_parallel(true)
 		t.tween_property(pframe, "position:x", x, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

@@ -218,6 +218,27 @@ static func _hair(b: PixBuf, s: Dictionary, style: String, hair: Color, dir: int
 			b.tri(hx + 0, hy - 5.5, hx + 3, hy - 5.5, hx + 2.5, hy - 8.5, hair)
 
 
+static func _flatten_face(b: PixBuf, skin: Color, ey: int) -> void:
+	## Faces stay the bright skin colour: no shading at all above the eye line,
+	## and below it only a soft shade along the jaw (never the deep band).
+	var tones := [skin, Pal.shade(skin), Pal.deep(skin), Pal.hi(skin)]
+	var is_skin := func(c: Color) -> bool:
+		if c.a < 0.5:
+			return false
+		for t: Color in tones:
+			if absf(c.r - t.r) < 0.01 and absf(c.g - t.g) < 0.01 and absf(c.b - t.b) < 0.01:
+				return true
+		return false
+	var src := b.img.duplicate() as Image
+	for y in b.h:
+		for x in b.w:
+			var c := src.get_pixel(x, y)
+			if not is_skin.call(c):
+				continue
+			var jaw_edge: bool = y >= ey + 3 and (y + 1 >= b.h or not is_skin.call(src.get_pixel(x, y + 1)))
+			b.pset(x, y, Pal.shade(skin) if jaw_edge else skin)
+
+
 static func _hair_front(b: PixBuf, s: Dictionary, style: String, hair: Color, dir: int, hx: float, hy: float, head: Array) -> void:
 	## Fringes and the like that fall over the face.
 	if dir == 1:
@@ -246,12 +267,20 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 	var side := dir == 2
 	var fx := hx + (1.8 if side else 0.0)
 	var fy := hy + 1.4
-	b.ball(fx, fy, 4.6 if side else 5.3, 4.2, skin, head[0], head[1], head[2], head[3])
+	# Light the face as a taller form centred above it, so shadow only reaches
+	# the chin and jaw line instead of crossing the cheeks and mouth.
+	b.ball(fx, fy, 4.6 if side else 5.3, 4.2, skin, fx - 0.6, fy - 2.6, 7.2, 7.4)
 	# Big chibi eyes, drawn at 1:1 so every eye pixel stays crisp.
 	b.scale_about(Vector2.ZERO, 1.0)
 	var ix := int(hx)
 	var ey := int(hy) + 1
+	_flatten_face(b, skin, ey)
 	var iris: Color = s.get("eye", Pal.INK2.lerp(Pal.SKY, 0.5))
+	# Talking variants ride along on the mood: "sad+blink", "+open", ...
+	var flags := mood.split("+")
+	mood = flags[0]
+	var blink := flags.has("blink")
+	var open := flags.has("open")
 	if s.get("hollow", false) and mood == "":
 		mood = "hollow"
 	var eyes: Array = [ix + 3] if side else [ix - 4, ix + 2]
@@ -263,7 +292,7 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 			b.pset(ex - 1, ey + 1, Pal.INK2)
 			b.pset(ex + 1, ey, Pal.SLATE)
 			continue
-		match mood:
+		match "closed" if blink else mood:
 			"closed":
 				b.rect(ex, ey + 2, 2, 1, Pal.INK)
 			"hollow":
@@ -318,6 +347,10 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 			b.rect(ix - 1, ey + 4, 2, 2, Pal.INK2)
 		else:
 			b.pset(ix, ey + 4, mouth)
+		if open:
+			var my := ey + (5 if s.get("mustache", false) else 4)
+			b.rect(ix - 1, my, 2, 2, Pal.INK2)
+			b.pset(ix - 1, my + 1, Pal.ROSE)
 		if s.get("scar", false):
 			b.pset(ix + 4, ey + 1, Pal.ROSE.lerp(skin, 0.4))
 			b.pset(ix + 5, ey + 2, Pal.ROSE.lerp(skin, 0.4))

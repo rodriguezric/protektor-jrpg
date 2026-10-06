@@ -32,20 +32,20 @@ func _init() -> void:
 	head.add_child(q)
 	var pb := Art.make_box("box")
 	pb.position = Vector2(10, 32)
-	pb.size = Vector2(80, 96)
+	pb.size = Vector2(80, 112)
 	add_child(pb)
 	pic = TextureRect.new()
-	pic.position = Vector2(16, 4)
+	pic.position = Vector2(16, 6)
 	pb.add_child(pic)
 	sprite = TextureRect.new()
-	sprite.position = Vector2(24, 56)
+	sprite.position = Vector2(24, 66)
 	pb.add_child(sprite)
 	look_l = Art.label("", Pal.TEXT)
-	look_l.position = Vector2(8, 84)
+	look_l.position = Vector2(8, 98)
 	pb.add_child(look_l)
 	var gb := Art.make_box("box")
 	gb.position = Vector2(96, 32)
-	gb.size = Vector2(214, 96)
+	gb.size = Vector2(214, 112)
 	add_child(gb)
 	var nl := Art.label("Name:", Pal.TEXT_DIM)
 	nl.position = Vector2(8, 5)
@@ -57,7 +57,7 @@ func _init() -> void:
 		var row := []
 		for c in ROWS[r].length():
 			var l := Art.label(ROWS[r][c], Pal.TEXT)
-			l.position = Vector2(14 + c * 15, 22 + r * 13)
+			l.position = Vector2(14 + c * 15, 24 + r * 15)
 			gb.add_child(l)
 			row.append(l)
 		grid.append(row)
@@ -65,7 +65,7 @@ func _init() -> void:
 	var row := []
 	for i in extras.size():
 		var l := Art.label(extras[i], Pal.SYNC)
-		l.position = Vector2(14 + i * 60, 76)
+		l.position = Vector2(14 + i * 60, 90)
 		gb.add_child(l)
 		row.append(l)
 	grid.append(row)
@@ -73,10 +73,10 @@ func _init() -> void:
 	cursor.texture = Art.ui("cursor")
 	gb.add_child(cursor)
 	var help := Art.label("Z type   X erase   Left/Right on Look to change", Pal.TEXT_DIM)
-	help.position = Vector2(12, 134)
+	help.position = Vector2(12, 148)
 	add_child(help)
 	var tip := Art.label("Your name will be etched into your badge.", Pal.CREAM)
-	tip.position = Vector2(12, 150)
+	tip.position = Vector2(12, 162)
 	add_child(tip)
 	name_text = Game.player_name
 
@@ -84,7 +84,7 @@ func _init() -> void:
 func _process(delta: float) -> void:
 	t += delta
 	var spec := Game.player_spec("home")
-	pic.texture = Art.portrait(spec, "")
+	pic.texture = Art.portrait(spec, "", false, false, 2)
 	sprite.texture = Art.person(spec, 0, [0, 1, 0, 3][int(t * 6.0) % 4])
 	look_l.text = "Look %d/%d" % [Game.look + 1, Data.LOOKS.size()]
 	name_l.text = name_text + ("_" if fmod(t, 0.8) < 0.4 and name_text.length() < MAXLEN else "")

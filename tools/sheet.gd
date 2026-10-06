@@ -38,14 +38,19 @@ func _init() -> void:
 			for s in Data.EXTRAS:
 				put(ArtPeople.render(s, 0, 0).img)
 		"portraits":
+			out = Image.create_empty(66 * 8 + 2, 66 * 7 + 2, false, Image.FORMAT_RGBA8)
+			out.fill(Color("1a1622"))
 			for id in ["hiro", "pala", "midas", "instructor", "mother", "father"]:
 				var s: Dictionary = Data.CAST[id]
 				for m in ["", "smile", "sad", "hollow", "shock", "cry", "angry", "closed"]:
-					put(ArtPortraits.render(s, m).img)
+					put(ArtPortraits.from_sprite(s, m).img)
 			for l in Data.LOOKS:
 				var s: Dictionary = l.duplicate()
 				s.merge({"top": Pal.TEAL, "hood": true, "hoodc": Pal.TEAL, "jacket": Data.JACKET, "badge": true})
-				put(ArtPortraits.render(s, "").img)
+				put(ArtPortraits.from_sprite(s, "").img)
+			put(ArtPortraits.from_sprite(Data.CAST.hiro, "", true).img)
+			put(ArtPortraits.from_sprite(Data.CAST.hiro, "", false, true).img)
+			put(ArtPortraits.from_sprite(Data.CAST.father, "", false, true).img)
 			put(ArtPortraits.system_icon(0).img)
 			put(ArtPortraits.comm(0).img)
 		"mission":

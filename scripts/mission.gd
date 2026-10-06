@@ -210,18 +210,18 @@ func _build_left() -> void:
 	left_panel = Control.new()
 	add_child(left_panel)
 	var pbox := Art.make_box("bar_box")
-	pbox.position = Vector2(8, 3)
-	pbox.size = Vector2(54, 54)
+	pbox.position = Vector2(0, 2)
+	pbox.size = Vector2(70, 70)
 	left_panel.add_child(pbox)
 	portrait = TextureRect.new()
-	portrait.position = Vector2(3, 3)
+	portrait.position = Vector2(11, 11)
 	pbox.add_child(portrait)
 	var nm := Art.label(Game.player_name if not arcade else "PILOT", Pal.SYNC)
-	nm.position = Vector2(8, 57)
+	nm.position = Vector2(4, 72)
 	left_panel.add_child(nm)
 	var cbox := Art.make_box("sys_box")
-	cbox.position = Vector2(2, 70)
-	cbox.size = Vector2(68, 106)
+	cbox.position = Vector2(2, 84)
+	cbox.size = Vector2(68, 92)
 	left_panel.add_child(cbox)
 	var hd := Art.label("COMMS", Pal.TEXT_DIM)
 	hd.position = Vector2(5, 3)
@@ -231,7 +231,7 @@ func _build_left() -> void:
 	cbox.add_child(comms_name)
 	comms_text = Label.new()
 	comms_text.position = Vector2(5, 26)
-	comms_text.size = Vector2(60, 76)
+	comms_text.size = Vector2(60, 62)
 	comms_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	comms_text.add_theme_color_override("font_color", Pal.TEXT)
 	cbox.add_child(comms_text)
@@ -909,7 +909,7 @@ func _set_mood(mood: String, t: float = 0.0) -> void:
 	var spec := Game.player_spec()
 	if mood == "" and Game.sync_percent() >= 55:
 		mood = "flat"
-	portrait.texture = Art.portrait(spec, mood)
+	portrait.texture = Art.portrait(spec, mood, false, false, 2)
 
 
 # ------------------------------------------------------------------- hud ---

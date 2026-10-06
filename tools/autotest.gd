@@ -260,6 +260,45 @@ func _run(scenario: String) -> void:
 				await get_tree().create_timer(0.1).timeout
 				await shot("intro_%02d" % i)
 			get_tree().quit()
+		"portraits":
+			auto_talk = false
+			Game.chapter = "hub"
+			Game.player_name = "Ari"
+			main.load_map(Maps.commons(), Vector2i(12, 8), 1)
+			for who in ["hiro", "you", "instructor", "pala"]:
+				main.story.say(who, "Checking how this portrait sits in the dialog box.", "")
+				await wait(1.6)
+				await shot("pt_" + who)
+				await tap("accept", 0.4)
+			get_tree().quit()
+		"facecheck":
+			auto_talk = false
+			Game.chapter = "hub"
+			main.load_map(Maps.commons(), Vector2i(12, 8), 1)
+			main.story.say("pala", "This is a long line of dialog so that the typewriter keeps running for a good few seconds while we watch her mouth move and wait for a blink to happen.", "")
+			var states := []
+			for i in 160:
+				await get_tree().process_frame
+				await get_tree().process_frame
+				await get_tree().process_frame
+				states.append("%s talking=%s" % [main.dialog._face_state, main.dialog._talking])
+			var c := {}
+			for st in states:
+				c[st] = c.get(st, 0) + 1
+			print("face states: ", c)
+			get_tree().quit()
+		"looks":
+			var img := Image.create_empty(4 * 76, 2 * 76, false, Image.FORMAT_RGBA8)
+			img.fill(Color("1a1622"))
+			for i in Data.LOOKS.size():
+				Game.look = i
+				for j in 2:
+					var sp := Game.player_spec("home" if j == 0 else "academy")
+					var im := ArtPortraits.from_sprite(sp, "").img
+					img.blend_rect(im, Rect2i(Vector2i.ZERO, im.get_size()), Vector2i(i * 76 + 2, j * 76 + 2))
+			img.resize(img.get_width() * 2, img.get_height() * 2, Image.INTERPOLATE_NEAREST)
+			img.save_png(out + "/looks.png")
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world
