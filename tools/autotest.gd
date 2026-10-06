@@ -96,9 +96,8 @@ func _bot() -> void:
 		var to: Vector2 = (best.lp - m.CENTER).normalized()
 		m.facing = -to if best.rock else to
 		if not best.rock:
-			m._fire_cd = 0.0
 			m._aim_mode = "mouse"
-			m._try_fire()
+			m._try_fire(true)
 
 
 func _run(scenario: String) -> void:
@@ -368,6 +367,30 @@ func _run(scenario: String) -> void:
 			await wait(1.5)
 			await shot("endflow")
 			print("returned to title: ", got, " chapter=", Game.chapter)
+			get_tree().quit()
+		"firecheck":
+			auto_talk = false
+			main.start_mission("terra_virex_level_01", true, false)
+			await wait(1.0)
+			var m: Mission = main.mission_layer.get_child(0)
+			var mx := 0
+			# hold fire
+			_send("accept", true)
+			for i in 90:
+				await get_tree().process_frame
+				mx = maxi(mx, m.bolts.size())
+			_send("accept", false)
+			print("held fire, max in flight: ", mx)
+			await wait(1.0)
+			mx = 0
+			# mash fire as fast as possible (a press every 2 frames)
+			for i in 30:
+				_send("accept", true)
+				await get_tree().process_frame
+				_send("accept", false)
+				await get_tree().process_frame
+				mx = maxi(mx, m.bolts.size())
+			print("mashed fire, max in flight: ", mx)
 			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)

@@ -15,6 +15,9 @@ const PLAYER_RADIUS := 19.5
 const BLOCK_RADIUS := 23.0
 const CANNON_LEN := 18.0
 const MAX_BULLETS := 3
+## Auto-fire rate while the fire button is held: fast enough that all three
+## shots can be in the air at once (a shot crosses the arena in ~0.43s).
+const FIRE_REPEAT := 0.12
 const BULLET_SPEED := 560.0
 const BULLET_R := 5.0
 const BULLET_DMG := 1.0
@@ -487,7 +490,7 @@ func _input(event: InputEvent) -> void:
 		_aim_mode = "stick"
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 		_aim_mode = "mouse"
-		_try_fire()
+		_try_fire(true)
 
 
 func _handle_aim() -> void:
@@ -504,16 +507,23 @@ func _handle_aim() -> void:
 
 func _handle_fire(delta: float) -> void:
 	_fire_cd -= delta
-	if Input.is_action_just_pressed("accept") or (Input.is_action_pressed("accept") and _fire_cd <= 0.0):
+	if Input.is_action_just_pressed("accept"):
+		_try_fire(true)
+		return
+	var held := Input.is_action_pressed("accept") or (_aim_mode == "mouse" and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT))
+	if held and _fire_cd <= 0.0:
 		_try_fire()
 
 
-func _try_fire() -> void:
-	if not running or not alive or finished or paused or _fire_cd > 0.0 and not Input.is_action_just_pressed("accept"):
+func _try_fire(fresh_press: bool = false) -> void:
+	## A fresh press always fires (up to the 3-shot cap); holding repeats.
+	if not running or not alive or finished or paused:
+		return
+	if _fire_cd > 0.0 and not fresh_press:
 		return
 	if bolts.size() >= MAX_BULLETS:
 		return
-	_fire_cd = 0.17
+	_fire_cd = FIRE_REPEAT
 	var dirv := facing
 	if _aim_mode != "mouse":
 		dirv = _assist(facing)
