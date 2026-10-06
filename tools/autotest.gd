@@ -248,6 +248,21 @@ func _run(scenario: String) -> void:
 			await shot("loop_back")
 			print("rel pala=", Game.relationship("pala"), " completed=", Game.completed_count(), " interval=", Game.story.interval_count)
 			get_tree().quit()
+		"walkcheck":
+			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
+			var w = main.world
+			w.busy = true
+			var act: Actor = w.actor("instructor")
+			var frames := {}
+			act.walk_to([w.tile_center(Vector2i(10, 12))], 40.0)
+			var pf := {}
+			w.player.walk_to([w.tile_center(Vector2i(1, 9))], 40.0)
+			for i in 60:
+				await get_tree().process_frame
+				frames[act.frame] = true
+				pf[w.player.frame] = true
+			print("npc frames seen: ", frames.keys(), " player frames seen: ", pf.keys())
+			get_tree().quit()
 		"escape":
 			var e := Escape.new()
 			main.cine_layer.add_child(e)

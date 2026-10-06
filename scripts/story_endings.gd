@@ -54,6 +54,7 @@ func _escape_walk() -> void:
 
 func _follow() -> void:
 	var pala := s.a("pala")
+	pala.scripted = true
 	var trail: Array = []
 	while is_instance_valid(pala) and is_instance_valid(s.w) and s.w.def.id == "launch_wing":
 		trail.append(s.w.player.position)

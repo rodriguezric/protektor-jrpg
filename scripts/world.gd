@@ -254,7 +254,8 @@ func _process(delta: float) -> void:
 	cam.position = cam.position.lerp(target, minf(1.0, delta * 8.0)) if not cam_follow else target
 	cam.position = cam.position.round()
 	if busy or paused or Game.main.dialog.visible or not player.visible:
-		player.moving = false
+		if not player.scripted:
+			player.moving = false
 		return
 	var v := Input.get_vector("left", "right", "up", "down")
 	if v.length() > 0.2:
@@ -343,7 +344,8 @@ func run(co: Callable) -> void:
 	if busy:
 		return
 	busy = true
-	player.moving = false
+	if not player.scripted:
+		player.moving = false
 	await co.call()
 	if is_instance_valid(self):
 		busy = false
@@ -352,6 +354,8 @@ func run(co: Callable) -> void:
 
 func _update_npcs(delta: float) -> void:
 	for n: Actor in npcs:
+		if n.scripted:
+			continue
 		if not n.info.get("wander", false) or busy or paused:
 			if n.walk_target == null:
 				n.moving = false

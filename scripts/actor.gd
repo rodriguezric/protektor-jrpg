@@ -23,6 +23,8 @@ var lift := 0.0
 var walk_speed := 50.0
 var bot := false
 var walk_id := 0
+## True while a script is walking this actor; the field leaves its animation alone.
+var scripted := false
 
 
 func _init(p_spec: Dictionary = {}) -> void:
@@ -106,6 +108,7 @@ func _process(delta: float) -> void:
 func stop_walk() -> void:
 	walk_id += 1
 	moving = false
+	scripted = false
 
 
 func walk_to(points: Array, speed: float = -1.0) -> bool:
@@ -115,10 +118,13 @@ func walk_to(points: Array, speed: float = -1.0) -> bool:
 		speed = walk_speed
 	walk_id += 1
 	var my := walk_id
+	scripted = true
 	for p in points:
 		var target: Vector2 = p
 		while position.distance_to(target) > 0.5:
 			if my != walk_id or not is_inside_tree():
+				if my == walk_id:
+					scripted = false
 				return false
 			var v := target - position
 			if absf(v.x) > absf(v.y):
@@ -133,6 +139,7 @@ func walk_to(points: Array, speed: float = -1.0) -> bool:
 			return false
 		position = target
 	moving = false
+	scripted = false
 	return true
 
 
