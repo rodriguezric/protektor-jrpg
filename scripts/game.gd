@@ -19,6 +19,8 @@ var games_completed := 0
 var history: Array = []
 var chapter := "prologue"
 var rng := RandomNumberGenerator.new()
+## Set by ./run_mission: nothing is written to the save file.
+var testing := false
 
 
 func _ready() -> void:
@@ -237,6 +239,8 @@ func complete_story(ending: String) -> void:
 # ------------------------------------------------------------------- save ---
 
 func save() -> void:
+	if testing:
+		return
 	var data := {"player_name": player_name, "look": look, "vars": vars, "story": story, "unlocked": unlocked,
 		"arcade": arcade, "seen": seen, "games_completed": games_completed, "history": history, "chapter": chapter}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)

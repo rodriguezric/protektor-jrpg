@@ -64,7 +64,38 @@ func _ready() -> void:
     if OS.get_environment("PK_TEST") != "":
         add_child(load("res://tools/autotest.gd").new())
         return
+    var test_mission := _arg("--mission=")
+    if test_mission != "":
+        test_level(test_mission)
+        return
     title()
+
+
+func _arg(prefix: String) -> String:
+    for a in OS.get_cmdline_user_args():
+        if a.begins_with(prefix):
+            return a.substr(prefix.length())
+    return ""
+
+
+func test_level(level_id: String) -> void:
+    ## ./run_mission <name>: play one mission straight away, again and again.
+    ## Esc > Abort mission quits. Nothing is saved.
+    Game.testing = true
+    Game.player_name = "Tester"
+    Game.chapter = "hub"
+    if not FileAccess.file_exists("res://data/missions/%s.json" % level_id):
+        push_error("No mission named '%s' in data/missions/" % level_id)
+        get_tree().quit(1)
+        return
+    var intro := _arg("--intro=") != "off"
+    print("[run_mission] playing %s (intro %s). Esc > Abort mission to quit." % [level_id, "on" if intro else "off"])
+    while true:
+        var res: Dictionary = await start_mission(level_id, true, intro)
+        print("[run_mission] %s: %s  score=%s" % [level_id, res.get("result", "?"), res.get("score", 0)])
+        if res.get("result", "") == "retreat":
+            break
+    get_tree().quit()
 
 
 func _setup_input() -> void:

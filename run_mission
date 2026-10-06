@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Play a single mission straight away, for testing levels.
+#
+#   ./run_mission viscera_nova_level_01            # with the warp-in intro
+#   ./run_mission viscera_nova_level_01 --no-intro # skip the intro
+#   ./run_mission                                  # list the missions
+#
+# Win or lose, the mission restarts. Esc > "Abort mission" quits.
+# Nothing is written to your save file.
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GODOT="${GODOT:-godot}"
+
+if [[ $# -lt 1 ]]; then
+	echo "usage: ./run_mission <mission_name> [--no-intro]"
+	echo
+	echo "missions:"
+	for f in "$DIR"/data/missions/*.json; do
+		echo "  $(basename "$f" .json)"
+	done
+	exit 1
+fi
+
+NAME="${1%.json}"
+if [[ ! -f "$DIR/data/missions/$NAME.json" ]]; then
+	echo "no mission named '$NAME' (looked for data/missions/$NAME.json)" >&2
+	echo "run ./run_mission with no arguments to list them" >&2
+	exit 1
+fi
+
+INTRO="on"
+if [[ "${2:-}" == "--no-intro" ]]; then
+	INTRO="off"
+fi
+
+exec "$GODOT" --path "$DIR" -- --mission="$NAME" --intro="$INTRO"
