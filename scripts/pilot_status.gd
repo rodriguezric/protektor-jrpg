@@ -92,9 +92,16 @@ func _process(delta: float) -> void:
 
 
 func run() -> String:
-	var m := Menu.make(self, ["Close", "Controls", "Title"], Vector2(6, 6), Vector2(70, 37))
+	var m := Menu.make(self, ["Close", "Save", "Controls", "Title"], Vector2(6, 6), Vector2(70, 47))
 	while true:
 		var r := await m.ask()
+		if r == 1:
+			Game.save()
+			Sfx.play("chime", 1.2, -6.0)
+			await Game.main.dialog.say(["Saved to Slot %d." % Game.slot, "Loading resumes from your last checkpoint: the start of this chapter, or the Commons between missions."], "", {"sys": true, "voice": "system"})
+			continue
+		if r >= 2:
+			r -= 1
 		if r == 1:
 			await Game.main.dialog.say(["Arrows/WASD walk. Shift runs. Z talks, examines and confirms. X opens this menu.",
 				"In a deployment, turn with the arrows, WASD, the mouse or a stick. Z, Space or left-click fires the beam from your FRONT.",

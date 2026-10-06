@@ -215,6 +215,10 @@ func _draw_preview() -> void:
 
 func run() -> void:
 	Sfx.play("beep", 0.9, -6.0)
+	if bool(Game.story.get("stripped", false)):
+		var note := Art.label("STRIPPED PLAYTHROUGH: upgrades stay offline in deployments.", Pal.BLOOD.lerp(Pal.WHITE, 0.3))
+		note.position = Vector2(6, 168)
+		add_child(note)
 	rows = _build_rows()
 	menu = Menu.make(self, _entries(), Vector2(6, 24), Vector2(186, rows.size() * 10 + 7))
 	menu.moved.connect(_describe)
@@ -259,14 +263,12 @@ func _act(r: Dictionary, i: int) -> void:
 				_bought(where, "INSTALLED")
 		"weapon":
 			if r.owned:
-				Game.story.weapon = r.id
-				Game.save()
+				Game.set_weapon(r.id)
 				Sfx.play("plate", 1.2, -6.0)
 				_burst(where, Pal.SYNC)
 			elif Game.spend(r.cost):
 				Game.story.weapons.append(r.id)
-				Game.story.weapon = r.id
-				Game.save()
+				Game.set_weapon(r.id)
 				_bought(where, "EQUIPPED")
 
 

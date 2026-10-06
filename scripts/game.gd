@@ -2,7 +2,11 @@ extends Node
 ## Game state autoload: the pilot, story choices and Protektor's progression rules
 ## (ported from MissionProgress: unlocks, relationships, Midas, endings).
 
-const SAVE_PATH := "user://protektor_jrpg_save.json"
+## Three save slots hold playthroughs; the profile holds what carries over
+## between them (planet unlocks, Protektor upgrades, Free Missions, endings).
+const SLOTS := 3
+const LEGACY_SAVE_PATH := "user://protektor_jrpg_save.json"
+const PROFILE_PATH := "user://protektor_profile.json"
 const PILOTS := ["hiro", "pala", "midas"]
 const LEVELS := 3
 const FAILURE_ENDING_COUNT := 3
@@ -18,6 +22,9 @@ var arcade := {}
 var games_completed := 0
 var history: Array = []
 var chapter := "prologue"
+var slot := 1
+## Carried between playthroughs. story.upgrades/specials/weapons point into it.
+var profile := {}
 var rng := RandomNumberGenerator.new()
 ## Set by ./run_mission: nothing is written to the save file.
 var testing := false
@@ -29,6 +36,8 @@ var achv_stats := {}
 
 func _ready() -> void:
 	rng.randomize()
+	_migrate_legacy_save()
+	load_profile()
 	new_game()
 	load_achievements()
 
@@ -41,11 +50,32 @@ func new_game() -> void:
 		"missions_failed": 0, "home_unavailable": false, "pala_unavailable": false, "pala_escape_chosen": false,
 		"story_ending_requested": false, "interval_used": false, "interval_count": 0, "last_mission": "",
 		"terminal_seen": false, "deployments": 0,
-		"credits": 0, "upgrades": {"cooldown": 0, "armor": 0}, "medicine": 0,
-		"specials": [], "weapons": ["basic"], "weapon": "basic", "training": {"block": 0, "shoot": 0, "combo": 0},
+		"credits": 0, "medicine": 0, "training": {"block": 0, "shoot": 0, "combo": 0},
+		"stripped": false, "bought": false,
 	}
 	chapter = "prologue"
-	unlocked = ["terra_virex"]
+	_link_profile()
+
+
+func _link_profile() -> void:
+	## Upgrades live in the profile; the story just points at them, so a
+	## purchase in any playthrough carries into the next.
+	if profile.is_empty():
+		profile = _default_profile()
+	story.upgrades = profile.upgrades
+	story.specials = profile.specials
+	story.weapons = profile.weapons
+	story.weapon = profile.weapon
+	unlocked = profile.unlocked
+	seen = profile.unlocked
+	arcade = profile.arcade
+	history = profile.history
+	games_completed = int(profile.games_completed)
+
+
+func _default_profile() -> Dictionary:
+	return {"unlocked": ["terra_virex"], "upgrades": {"cooldown": 0, "armor": 0}, "specials": [], "weapons": ["basic"],
+		"weapon": "basic", "arcade": {}, "history": [], "games_completed": 0}
 
 
 # ------------------------------------------------------------------ pilot ---
@@ -242,9 +272,12 @@ func automatic_ending_type() -> String:
 func complete_story(ending: String) -> void:
 	history.append({"ending": ending, "missions": completed_count(), "failed": story.missions_failed, "at": int(Time.get_unix_time_from_system())})
 	games_completed += 1
+	profile.games_completed = games_completed
 	chapter = "done"
 	save()
-	if not bool(story.get("bought", false)):
+	var lo := loadout()
+	var bare: bool = int(lo.cooldown) == 0 and int(lo.armor) == 0 and lo.weapon == "basic" and not lo.missile and not lo.ext_shield
+	if bare and not bool(story.get("bought", false)):
 		achv_stats.clean_endings = int(achv_stats.get("clean_endings", 0)) + 1
 	save_achievements()
 	Achievements.check()
@@ -282,12 +315,22 @@ func has_weapon(id: String) -> bool:
 
 
 func equipped_weapon() -> String:
+	if bool(story.get("stripped", false)):
+		return "basic"
 	var w := str(story.get("weapon", "basic"))
 	return w if has_weapon(w) else "basic"
 
 
+func set_weapon(w: String) -> void:
+	story.weapon = w
+	profile.weapon = w
+	save()
+
+
 func loadout() -> Dictionary:
 	## What the Protektor takes into a deployment.
+	if bool(story.get("stripped", false)):
+		return {"cooldown": 0, "armor": 0, "weapon": "basic", "missile": false, "ext_shield": false}
 	return {"cooldown": upgrade_level("cooldown"), "armor": upgrade_level("armor"), "weapon": equipped_weapon(),
 		"missile": has_special("missile"), "ext_shield": has_special("ext_shield")}
 
@@ -346,61 +389,151 @@ func load_achievements() -> void:
 
 # ------------------------------------------------------------------- save ---
 
+func slot_path(n: int) -> String:
+	return "user://protektor_slot_%d.json" % n
+
+
 func save() -> void:
+	## Autosaves the active slot and the shared profile.
 	if testing:
 		return
-	var data := {"player_name": player_name, "look": look, "vars": vars, "story": story, "unlocked": unlocked,
-		"arcade": arcade, "seen": seen, "games_completed": games_completed, "history": history, "chapter": chapter}
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	profile.weapon = story.get("weapon", "basic")
+	var data := {"player_name": player_name, "look": look, "vars": vars, "story": story, "chapter": chapter,
+		"saved_at": int(Time.get_unix_time_from_system())}
+	var f := FileAccess.open(slot_path(slot), FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(data))
+	save_profile()
 
 
-func has_save() -> bool:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return false
-	var d = _read()
-	return d is Dictionary and str(d.get("chapter", "")) not in ["", "done", "prologue"]
+func save_profile() -> void:
+	if testing:
+		return
+	var f := FileAccess.open(PROFILE_PATH, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(profile))
 
 
-func has_any_save() -> bool:
-	return FileAccess.file_exists(SAVE_PATH)
+func load_profile() -> void:
+	profile = _default_profile()
+	var d = _read(PROFILE_PATH)
+	if d is Dictionary:
+		for k in d:
+			profile[k] = d[k]
+	if not profile.unlocked.has("terra_virex"):
+		profile.unlocked.push_front("terra_virex")
+	if not profile.weapons.has("basic"):
+		profile.weapons.push_front("basic")
+	for k in ["cooldown", "armor"]:
+		profile.upgrades[k] = int(profile.upgrades.get(k, 0))
 
 
-func _read():
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
+func _read(path: String):
+	if not FileAccess.file_exists(path):
+		return null
+	var f := FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return null
 	return JSON.parse_string(f.get_as_text())
 
 
-func load_save() -> bool:
-	var d = _read()
+func slot_info(n: int) -> Dictionary:
+	## A summary for the slot picker, or {} if the slot is empty.
+	var d = _read(slot_path(n))
+	if not (d is Dictionary):
+		return {}
+	var st: Dictionary = d.get("story", {})
+	var done := 0
+	for v in st.get("completed_levels", {}).values():
+		done += int(v)
+	return {"name": str(d.get("player_name", "?")), "look": int(d.get("look", 0)), "chapter": str(d.get("chapter", "prologue")),
+		"missions": done, "credits": int(st.get("credits", 0)), "saved_at": int(d.get("saved_at", 0)), "stripped": bool(st.get("stripped", false))}
+
+
+func most_recent_slot() -> int:
+	var best := 0
+	var best_t := -1
+	for n in range(1, SLOTS + 1):
+		var info := slot_info(n)
+		if info.is_empty() or info.chapter == "done":
+			continue
+		if int(info.saved_at) > best_t:
+			best_t = int(info.saved_at)
+			best = n
+	return best
+
+
+func has_save() -> bool:
+	return most_recent_slot() > 0
+
+
+func has_any_save() -> bool:
+	for n in range(1, SLOTS + 1):
+		if not slot_info(n).is_empty():
+			return true
+	return false
+
+
+func load_slot(n: int) -> bool:
+	var d = _read(slot_path(n))
 	if not (d is Dictionary):
 		return false
+	slot = n
 	new_game()
 	player_name = str(d.get("player_name", "Ari"))
 	look = int(d.get("look", 0))
 	vars = d.get("vars", {})
 	var st: Dictionary = d.get("story", {})
 	for k in st:
+		if k in ["upgrades", "specials", "weapons"]:
+			continue
 		story[k] = st[k]
 	for k in ["hiro", "pala", "midas"]:
 		story.relationships[k] = int(story.relationships.get(k, 0))
-	unlocked = d.get("unlocked", ["terra_virex"])
-	arcade = d.get("arcade", {})
-	seen = d.get("seen", ["terra_virex"])
-	games_completed = int(d.get("games_completed", 0))
-	history = d.get("history", [])
 	chapter = str(d.get("chapter", "prologue"))
+	_link_profile()
+	story.weapon = str(st.get("weapon", profile.weapon))
 	return true
 
 
+func start_new_game(n: int, stripped: bool) -> void:
+	slot = n
+	new_game()
+	story.stripped = stripped
+
+
 func load_meta_only() -> void:
-	## Keeps cross-playthrough data (arcade unlocks, endings seen) for a new game.
-	var d = _read()
-	if d is Dictionary:
-		arcade = d.get("arcade", {})
-		seen = d.get("seen", ["terra_virex"])
-		games_completed = int(d.get("games_completed", 0))
-		history = d.get("history", [])
+	## Free Missions and the title use the profile only.
+	load_profile()
+	new_game()
+
+
+func _migrate_legacy_save() -> void:
+	## Saves from before slots become Slot 1, and seed the profile.
+	if not FileAccess.file_exists(LEGACY_SAVE_PATH) or FileAccess.file_exists(PROFILE_PATH):
+		return
+	var d = _read(LEGACY_SAVE_PATH)
+	if not (d is Dictionary):
+		return
+	var st: Dictionary = d.get("story", {})
+	var pr := _default_profile()
+	pr.unlocked = d.get("unlocked", ["terra_virex"])
+	for p in d.get("seen", []):
+		if not pr.unlocked.has(p):
+			pr.unlocked.append(p)
+	pr.arcade = d.get("arcade", {})
+	pr.history = d.get("history", [])
+	pr.games_completed = int(d.get("games_completed", 0))
+	pr.upgrades = st.get("upgrades", pr.upgrades)
+	pr.specials = st.get("specials", [])
+	pr.weapons = st.get("weapons", ["basic"])
+	pr.weapon = str(st.get("weapon", "basic"))
+	var f := FileAccess.open(PROFILE_PATH, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(pr))
+	if not FileAccess.file_exists(slot_path(1)):
+		d["saved_at"] = int(Time.get_unix_time_from_system())
+		var g := FileAccess.open(slot_path(1), FileAccess.WRITE)
+		if g:
+			g.store_string(JSON.stringify(d))
+	DirAccess.rename_absolute(ProjectSettings.globalize_path(LEGACY_SAVE_PATH), ProjectSettings.globalize_path(LEGACY_SAVE_PATH + ".migrated"))
