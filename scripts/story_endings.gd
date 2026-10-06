@@ -248,10 +248,12 @@ func _end_card(c: Cinema) -> void:
 	var seen := Art.label("Endings seen: %d" % _endings_seen(), Pal.TEXT_DIM)
 	seen.position = Vector2(160 - Art.text_width(seen.text) / 2.0, 112)
 	c.add_child(seen)
-	var press := Art.shadow_label("Press Z", Pal.TEXT)
-	press.position = Vector2(160 - Art.text_width("Press Z") / 2.0, 150)
+	var press := Art.shadow_label("Press Z to return to the title", Pal.TEXT)
+	press.position = Vector2(160 - Art.text_width(press.text) / 2.0, 150)
 	c.add_child(press)
-	while not Input.is_action_just_pressed("accept"):
+	await m.get_tree().process_frame
+	while not (Input.is_action_just_pressed("accept") or Input.is_action_just_pressed("cancel")
+			or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)):
 		press.visible = fmod(Time.get_ticks_msec() / 1000.0, 1.0) < 0.65
 		await m.get_tree().process_frame
 	Sfx.play("confirm")

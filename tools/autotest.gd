@@ -299,6 +299,76 @@ func _run(scenario: String) -> void:
 			img.resize(img.get_width() * 2, img.get_height() * 2, Image.INTERPOLATE_NEAREST)
 			img.save_png(out + "/looks.png")
 			get_tree().quit()
+		"planetcheck":
+			var img := Image.create_empty(4 * 92, 92, false, Image.FORMAT_RGBA8)
+			img.fill(Color("0e1119"))
+			for f in 4:
+				var im := ArtMission.planet("green_planet", 84, f * 8).img
+				img.blend_rect(im, Rect2i(Vector2i.ZERO, im.get_size()), Vector2i(f * 92 + 2, 2))
+			img.resize(img.get_width() * 2, img.get_height() * 2, Image.INTERPOLATE_NEAREST)
+			img.save_png(out + "/planet.png")
+			get_tree().quit()
+		"titlefade":
+			main.title()
+			for i in 6:
+				await wait(0.5)
+				await shot("tf_%d" % i)
+			get_tree().quit()
+		"endtitle":
+			Game.new_game()
+			Game.player_name = "Ari"
+			main.load_map(Maps.commons(), Vector2i(12, 12), 1)
+			main.story.endings.play(OS.get_environment("PK_END"))
+			var got := false
+			for i in 120:
+				await wait(1.0)
+				var w = main.world
+				if w and w.def.id == "launch_wing" and w.marker and w.marker.visible and not w.busy:
+					w.player.position = w.tile_center(Vector2i(22, 3))
+					await hold("right", 0.6)
+				for c in main.cine_layer.get_children():
+					if c is TitleScreen:
+						got = true
+				if got:
+					break
+				if not main.dialog.visible:
+					await tap("accept", 0.2)
+			await wait(1.0)
+			await shot("endtitle")
+			print("returned to title: ", got)
+			get_tree().quit()
+		"endflow":
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			Game.mark_completed("terra_virex", 1)
+			Game.story.relationships.pala = 3
+			main.story.begin("hub")
+			await wait(5.0)
+			var w0 = main.world
+			var pala: Actor = w0.actor("pala")
+			w0.player.position = pala.position + Vector2(0, 14)
+			w0.player.face(1)
+			await wait(0.3)
+			await tap("accept", 0.5)
+			var got := false
+			for i in 150:
+				await wait(1.0)
+				var w = main.world
+				if is_instance_valid(w) and w.def.id == "launch_wing" and w.marker and w.marker.visible and not w.busy:
+					w.player.position = w.tile_center(Vector2i(22, 3))
+					await hold("right", 0.6)
+				for c in main.cine_layer.get_children():
+					if c is TitleScreen:
+						got = true
+				if got:
+					break
+				if not main.dialog.visible:
+					await tap("accept", 0.2)
+			await wait(1.5)
+			await shot("endflow")
+			print("returned to title: ", got, " chapter=", Game.chapter)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

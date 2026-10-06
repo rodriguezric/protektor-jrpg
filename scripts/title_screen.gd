@@ -25,8 +25,8 @@ func _init() -> void:
 	var x := 18.0
 	for i in word.length():
 		var l := Art.shadow_label(word[i], Pal.SYNC.lerp(Pal.WHITE, 0.2), 3)
-		l.position = Vector2(x, -40)
-		l.set_meta("y", 30.0)
+		l.position = Vector2(x, 30)
+		l.modulate.a = 0.0
 		add_child(l)
 		letters.append(l)
 		x += Art.text_width(word[i], 3) + 3
@@ -35,7 +35,7 @@ func _init() -> void:
 	sub.modulate.a = 0.0
 	sub.name = "sub"
 	add_child(sub)
-	var v := Art.label("a JRPG retelling, drawn entirely in code", Pal.TEXT_DIM)
+	var v := Art.label("v" + str(ProjectSettings.get_setting("application/config/version", "0.0.0")), Pal.TEXT_DIM)
 	v.position = Vector2(22, 168)
 	add_child(v)
 
@@ -71,13 +71,14 @@ func _draw_fx() -> void:
 
 
 func run() -> String:
+	# The title surfaces slowly, letter by letter, over a low hum.
+	Sfx.play("hum", 1.0, -4.0)
 	for i in letters.size():
 		var l: Label = letters[i]
 		var tw := create_tween()
-		tw.tween_interval(0.08 * i)
-		tw.tween_property(l, "position:y", l.get_meta("y"), 0.35).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
-		tw.tween_callback(func() -> void: Sfx.play("plate", 0.8 + i * 0.05, -12.0))
-	await get_tree().create_timer(0.08 * letters.size() + 0.3).timeout
+		tw.tween_interval(0.2 * i)
+		tw.tween_property(l, "modulate:a", 1.0, 0.9).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await get_tree().create_timer(0.2 * letters.size() + 0.6).timeout
 	var sub: Label = get_node("sub")
 	create_tween().tween_property(sub, "modulate:a", 1.0, 0.6)
 	var opts := []
