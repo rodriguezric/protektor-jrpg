@@ -392,6 +392,14 @@ func _run(scenario: String) -> void:
 				mx = maxi(mx, m.bolts.size())
 			print("mashed fire, max in flight: ", mx)
 			get_tree().quit()
+		"opening":
+			auto_talk = false
+			Game.new_game()
+			main.story.begin("prologue")
+			for i in 5:
+				await wait(1.6)
+				await shot("open_%d" % i)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world
