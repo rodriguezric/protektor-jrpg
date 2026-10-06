@@ -116,7 +116,8 @@ static func _surface(key: String, x: float, y: float, z: float, frame: int) -> C
 			c = Pal.DIRT.lerp(Pal.SAGE, 0.3)
 	elif n > 0.05:
 		c = Pal.SKY.lerp(Pal.BLUE, 0.3)
-	if absf(y) > 0.82:
+	# Patchy polar ice: only where the noise allows, so the poles never read as stripes.
+	if absf(y) > 0.8 and _n3(x, y, z, 2.6, 31.0) > 0.25:
 		c = Pal.FROST
 	var cloud := _n3(x + 0.3, y, z, 1.8, 20.0)
 	if cloud > 0.48:

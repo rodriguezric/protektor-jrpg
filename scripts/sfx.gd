@@ -187,6 +187,8 @@ func _make(name: String) -> PackedFloat32Array:
 			return _tone(1046, 1046, 0.07, "sq", 0.18)
 		"badge":
 			return _cat([_noise(0.12, 0.15, 0.6, false, true), _tone(1568, 1568, 0.2, "sin", 0.2)])
+		"hum":
+			return _hum(3.6)
 		"heartbeat":
 			return _cat([_tone(70, 40, 0.1, "sin", 0.9), _tone(0, 0, 0.12, "sin", 0.0), _tone(65, 40, 0.12, "sin", 0.7)])
 		"pop":
@@ -243,6 +245,26 @@ func _noise(dur: float, vol: float, bright: float, sweep: bool = false, swell: b
 		lp += (_rng.randf_range(-1.0, 1.0) - lp) * clampf(k, 0.01, 1.0)
 		var env := sin(t * PI) if swell else pow(1.0 - t, 2.0)
 		out[i] = lp * vol * env
+	return out
+
+
+func _hum(dur: float) -> PackedFloat32Array:
+	## A low machine drone: a root, its fifth and a soft octave, swelling in
+	## and fading out, with a slow beat between slightly detuned partials.
+	var n := int(dur * RATE)
+	var out := PackedFloat32Array()
+	out.resize(n)
+	var ph := [0.0, 0.0, 0.0, 0.0]
+	var freqs := [55.0, 55.6, 82.4, 110.0]
+	var vols := [0.32, 0.22, 0.16, 0.07]
+	for i in n:
+		var t := float(i) / n
+		var env := pow(sin(t * PI), 0.7) * minf(1.0, (1.0 - t) * 4.0)
+		var v := 0.0
+		for k in 4:
+			ph[k] += freqs[k] / RATE
+			v += sin(ph[k] * TAU) * vols[k]
+		out[i] = v * env
 	return out
 
 
