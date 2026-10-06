@@ -853,6 +853,7 @@ func _update_bolts(delta: float) -> void:
 		b.lp += b.dir * float(wstat.speed) * sd
 		if not area.has_point(b.lp):
 			bolts.erase(b)
+			Achievements.shot_missed()
 			continue
 		for th in threats:
 			if not th.can_be_hit():
@@ -917,6 +918,7 @@ func _nearest_threat(from: Vector2):
 
 
 func _bolt_hit(th: Threat, b: Dictionary) -> void:
+	Achievements.shot_hit()
 	var p: Vector2 = (b.lp * K).round()
 	if th.is_asteroid and th.max_hp > 5.0:
 		fx.burst(p, 6, [Pal.STONE, Pal.WHITE, Pal.LEMON], Vector2(20, 60), Vector2(0.1, 0.25), {"dir": (-b.dir).angle(), "spread": 0.9})
@@ -953,6 +955,7 @@ func on_block(th: Threat) -> void:
 
 
 func _block_fx(p: Vector2, is_shot: bool) -> void:
+	Achievements.blocked()
 	_shield_pulse = 1.0
 	fx.ring(p, 1, 9, 0.25, Pal.SYNC, 1.0, 1.0)
 	fx.burst(p, 10, [Pal.SYNC, Pal.WHITE, Pal.TEAL], Vector2(25, 80), Vector2(0.12, 0.3), {"dir": (p - core.position).angle(), "spread": 1.0})
@@ -1071,6 +1074,7 @@ func damage_player(amount: float, _src) -> bool:
 	if not alive or finished or amount <= 0.0 or hp <= 0.0:
 		return false
 	hits_taken += 1
+	Achievements.took_damage()
 	streak = 0
 	streak_label.text = ""
 	if red_hp > 0.0:
@@ -1261,6 +1265,8 @@ func _begin_victory() -> void:
 			credits_earned = Data.mission_reward(planet_type, level_index)
 	if credits_earned > 0:
 		Game.add_credits(credits_earned)
+	if not training:
+		Achievements.mission_cleared(level_index, hits_taken)
 	var after := Game.sync_percent()
 	var banner := Art.shadow_label("SIMULATION CLEARED" if training else "THREATS NEUTRALIZED", Pal.SYNC)
 	overlay.add_child(banner)

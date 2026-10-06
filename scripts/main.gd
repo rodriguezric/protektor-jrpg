@@ -186,6 +186,14 @@ func title() -> void:
         "arcade":
             Game.load_meta_only()
             await arcade()
+        "achievements":
+            var a := AchievementsScreen.new()
+            cine_layer.add_child(a)
+            await fade_in(0.4)
+            await a.run()
+            await fade_out(0.4)
+            a.queue_free()
+            title()
 
 
 func name_entry() -> void:
@@ -286,6 +294,7 @@ func training() -> void:
         if res.get("result", "") == "win":
             Game.story.training[pick.module] = maxi(Game.training_level(pick.module), int(pick.tier) + 1)
             Game.save()
+            Achievements.check()
     if world:
         world.paused = false
         world.visible = true
@@ -337,6 +346,47 @@ func fade_in(t: float = 0.3) -> void:
     var tw := create_tween()
     tw.tween_property(fade_rect, "color:a", 0.0, t)
     await tw.finished
+
+
+var _toasts: Array = []
+var _toasting := false
+
+
+func toast_achievement(a: Dictionary) -> void:
+    ## A card slides in at the top right whenever an achievement unlocks.
+    if a.is_empty():
+        return
+    _toasts.append(a)
+    if not _toasting:
+        _show_toasts()
+
+
+func _show_toasts() -> void:
+    _toasting = true
+    while not _toasts.is_empty():
+        var a: Dictionary = _toasts.pop_front()
+        var box := Art.make_box("gold_box")
+        box.size = Vector2(156, 30)
+        box.position = Vector2(330, 4)
+        ui.add_child(box)
+        var ic := TextureRect.new()
+        ic.texture = Art.achievement(a, true)
+        ic.position = Vector2(4, 3)
+        box.add_child(ic)
+        var h := Art.label("ACHIEVEMENT UNLOCKED", Pal.TEXT_DIM)
+        h.position = Vector2(32, 3)
+        box.add_child(h)
+        var n := Art.label(a.name, Pal.LEMON)
+        n.position = Vector2(32, 15)
+        box.add_child(n)
+        Sfx.play("levelup", 1.0, -6.0)
+        var tw := box.create_tween()
+        tw.tween_property(box, "position:x", 158.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+        tw.tween_interval(2.6)
+        tw.tween_property(box, "position:x", 330.0, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+        await tw.finished
+        box.queue_free()
+    _toasting = false
 
 
 func flash(c: Color, t: float, a: float = 0.85) -> void:

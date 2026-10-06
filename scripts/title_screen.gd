@@ -86,6 +86,7 @@ func run() -> String:
 	opts.append({"text": "Continue", "enabled": has})
 	opts.append("New Game")
 	opts.append("Free Missions")
+	opts.append("Achievements")
 	opts.append("Quit")
 	menu = Menu.make(self, opts, Vector2(22, 186), Vector2(84, opts.size() * 10 + 7))
 	menu.cancellable = false
@@ -107,5 +108,7 @@ func run() -> String:
 			2:
 				return "arcade"
 			3:
+				return "achievements"
+			4:
 				get_tree().quit()
 	return "new"

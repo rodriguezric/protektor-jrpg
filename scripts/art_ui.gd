@@ -10,6 +10,8 @@ static func make(name: String) -> PixBuf:
 			return _box(Pal.TEAL, Pal.PANEL2)
 		"sys_box":
 			return _box(Pal.SYNC.lerp(Pal.TEAL, 0.45), Pal.NAVY.lerp(Pal.INK, 0.55))
+		"gold_box":
+			return _box(Pal.HONEY.lerp(Pal.LEMON, 0.3), Pal.PANEL)
 		"red_box":
 			return _box(Pal.BLOOD.lerp(Pal.ROSE, 0.3), Pal.PANEL2)
 		"cursor":
