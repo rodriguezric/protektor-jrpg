@@ -48,6 +48,7 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"window_rail": return rail()
 		"cup": return cup()
 		"quilt": return quilt()
+		"workshop": return workshop(v)
 		"memorial": return memorial()
 	return crate()
 
@@ -269,6 +270,29 @@ static func memorial() -> PixBuf:
 	b.rect(16, 3, 1, 3, Pal.WHITE)
 	b.pset(16, 2, Pal.LEMON)
 	b.pset(16, 1, Pal.EMBER)
+	b.outline()
+	return b
+
+
+static func workshop(v: int) -> PixBuf:
+	## The upgrade terminal: an amber screen on a squat engineering kiosk.
+	var b := PixBuf.new(24, 32)
+	var c := Pal.STEEL.lerp(Pal.HONEY, 0.15)
+	b.rect(3, 14, 18, 16, Pal.shade(c))
+	b.rect(3, 14, 18, 2, c)
+	b.rect(2, 1, 20, 15, c)
+	b.rect(2, 1, 20, 1, Pal.hi(c))
+	b.rect(4, 3, 16, 11, Pal.PANEL2)
+	var glow := Pal.LEMON.lerp(Pal.HONEY, 0.3 + 0.3 * (v % 2))
+	b.rect(6, 5, 7, 1, glow)
+	b.rect(6, 7, 10, 1, glow.lerp(Pal.PANEL2, 0.4))
+	b.rect(6, 9, 5, 1, glow.lerp(Pal.PANEL2, 0.4))
+	b.rect(14, 9, 4, 3, glow)
+	b.rect(5, 18, 3, 2, Pal.BLOOD)
+	b.rect(10, 18, 3, 2, Pal.GLOW)
+	b.rect(15, 18, 3, 2, Pal.SYNC)
+	for k in 3:
+		b.rect(5 + k * 5, 23, 4, 1, Pal.SLATE)
 	b.outline()
 	return b
 

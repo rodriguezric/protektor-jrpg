@@ -462,8 +462,14 @@ func can_be_blocked() -> bool:
 
 
 func _handle_target_contact() -> void:
+	var dist := lp.distance_to(target())
+	# The Extended Shield upgrade catches blockable threats further out.
+	if m.block_reach > m.PLAYER_RADIUS and dist <= m.block_reach + hit_radius() and _is_blocked():
+		m.on_block(self)
+		die(true)
+		return
 	var contact: float = m.PLAYER_RADIUS + hit_radius()
-	if lp.distance_to(target()) > contact:
+	if dist > contact:
 		return
 	if _is_blocked():
 		m.on_block(self)

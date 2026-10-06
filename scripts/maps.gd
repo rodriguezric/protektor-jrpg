@@ -299,6 +299,7 @@ static func commons() -> Dictionary:
 	]
 	var props := [
 		p("simpod", 2, 3, {"anim": 2, "fps": 1.0, "area": Rect2i(2, 2, 2, 2), "offset": Vector2(8, 0), "light": Pal.SYNC, "lr": 14, "pulse": 2.0, "event": {"id": "simpod"}}),
+		p("workshop", 6, 11, {"anim": 2, "fps": 1.5, "area": Rect2i(6, 11, 1, 1), "light": Pal.LEMON, "lr": 16, "pulse": 2.0, "event": {"id": "workshop"}, "id": "workshop"}),
 		p("couch", 4, 5, {"offset": Vector2(8, 0), "area": Rect2i(4, 5, 2, 1)}),
 		p("couch", 4, 8, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(4, 8, 2, 1)}),
 		p("vending", 21, 2, {"anim": 2, "fps": 1.5, "event": {"id": "vending"}, "light": Pal.GLOW, "lr": 10}),

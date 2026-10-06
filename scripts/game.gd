@@ -36,6 +36,8 @@ func new_game() -> void:
 		"missions_failed": 0, "home_unavailable": false, "pala_unavailable": false, "pala_escape_chosen": false,
 		"story_ending_requested": false, "interval_used": false, "interval_count": 0, "last_mission": "",
 		"terminal_seen": false, "deployments": 0,
+		"credits": 0, "upgrades": {"cooldown": 0, "armor": 0}, "medicine": 0,
+		"specials": [], "weapons": ["basic"], "weapon": "basic", "training": {"block": 0, "shoot": 0, "combo": 0},
 	}
 	chapter = "prologue"
 	unlocked = ["terra_virex"]
@@ -234,6 +236,62 @@ func complete_story(ending: String) -> void:
 	games_completed += 1
 	chapter = "done"
 	save()
+
+
+# --------------------------------------------------------------- loadout ---
+
+func credits() -> int:
+	return int(story.get("credits", 0))
+
+
+func add_credits(n: int) -> void:
+	story.credits = credits() + n
+	save()
+
+
+func spend(n: int) -> bool:
+	if credits() < n:
+		return false
+	story.credits = credits() - n
+	save()
+	return true
+
+
+func upgrade_level(id: String) -> int:
+	return int(story.get("upgrades", {}).get(id, 0))
+
+
+func has_special(id: String) -> bool:
+	return story.get("specials", []).has(id)
+
+
+func has_weapon(id: String) -> bool:
+	return id == "basic" or story.get("weapons", []).has(id)
+
+
+func equipped_weapon() -> String:
+	var w := str(story.get("weapon", "basic"))
+	return w if has_weapon(w) else "basic"
+
+
+func loadout() -> Dictionary:
+	## What the Protektor takes into a deployment.
+	return {"cooldown": upgrade_level("cooldown"), "armor": upgrade_level("armor"), "weapon": equipped_weapon(),
+		"missile": has_special("missile"), "ext_shield": has_special("ext_shield")}
+
+
+func training_level(module: String) -> int:
+	return int(story.get("training", {}).get(module, 0))
+
+
+func use_medicine() -> bool:
+	## A stabilizer wipes one failure from the record.
+	if int(story.get("medicine", 0)) <= 0 or int(story.missions_failed) <= 0:
+		return false
+	story.medicine = int(story.medicine) - 1
+	story.missions_failed = int(story.missions_failed) - 1
+	save()
+	return true
 
 
 # ------------------------------------------------------------------- save ---

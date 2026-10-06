@@ -28,6 +28,14 @@ static func make(name: String) -> PixBuf:
 			var b := PixBuf.new(7, 9)
 			b.ascii([".XXXXX.", "XWSSSSX", "XSSSSSX", "XSSSSSX", "XSSSSSX", "XSSSSSX", "XSSSTSX", "XTTTTTX", ".XXXXX."], {"X": Pal.INK, "W": Pal.WHITE, "S": Pal.SYNC, "T": Pal.TEAL})
 			return b
+		"cell_red":
+			var b := PixBuf.new(7, 9)
+			b.ascii([".XXXXX.", "XWRRRRX", "XRRRRRX", "XRRRRRX", "XRRRRRX", "XRRRRRX", "XRRRDRX", "XDDDDDX", ".XXXXX."], {"X": Pal.INK, "W": Pal.WHITE, "R": Pal.BLOOD, "D": Pal.RED.lerp(Pal.INK, 0.3)})
+			return b
+		"credit":
+			var b := PixBuf.new(9, 9)
+			b.ascii(["..XXXX.", ".XHHHHX", "XHLLLHX", "XHLHLHX", "XHLLLHX", ".XHHHHX", "..XXXX."], {"X": Pal.INK, "H": Pal.HONEY, "L": Pal.LEMON}, 1, 1)
+			return b
 		"cell_off":
 			var b := PixBuf.new(7, 9)
 			b.ascii([".XXXXX.", "XSSSSSX", "XSSSSSX", "XSSSSSX", "XSSSSSX", "XSSSSSX", "XSSSSSX", "XSSSSSX", ".XXXXX."], {"X": Pal.INK, "S": Pal.INK2})
