@@ -255,8 +255,10 @@ func _run(scenario: String) -> void:
 				main.story.hub.deploy("terra_virex_level_01")
 			else:
 				main.start_mission("terra_virex_level_01", false, true)
-			for i in 45:
-				await get_tree().create_timer(0.1).timeout
+			var n := int(OS.get_environment("PK_N")) if OS.get_environment("PK_N") != "" else 45
+			var step := float(OS.get_environment("PK_STEP")) if OS.get_environment("PK_STEP") != "" else 0.1
+			for i in n:
+				await get_tree().create_timer(step).timeout
 				await shot("intro_%02d" % i)
 			get_tree().quit()
 		"portraits":

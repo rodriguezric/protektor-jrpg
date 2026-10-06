@@ -348,84 +348,151 @@ func run() -> Dictionary:
 	return _result
 
 
-func _iw(t: float) -> void:
-	## Intro wait that a press of Z fast-forwards.
-	var left := t
-	while left > 0.0:
-		if Input.is_action_just_pressed("accept"):
-			_skip = true
-		left -= get_process_delta_time() * (6.0 if _skip else 1.0)
-		await get_tree().process_frame
+## Intro pacing, from Protektor's MissionDriver.
+const INTRO_BLACK_HOLD_SEC := 0.08
+const INTRO_STAR_WARP_SEC := 3.0
+const INTRO_WARP_TO_PLANET_SEC := 4.0
+const INTRO_NAME_FLASH_IN_SEC := 0.05
+const INTRO_NAME_FLASH_OUT_SEC := 0.15
+const INTRO_NAME_FADE_IN_SEC := 0.51
+const INTRO_NAME_HOLD_SEC := 2.0
+const INTRO_NAME_FADE_OUT_SEC := 1.0
+const INTRO_PLANET_ZOOM_OUT_SEC := 2.4
+const INTRO_COMPONENT_BUILD_SEC := 1.15
+const INTRO_HUD_FADE_SEC := 1.2
+const INTRO_PLANET_START_SCALE := 0.16
+const INTRO_PLANET_SCREEN_FILL := 0.70
+const INTRO_ZOOM_LOOP_FADE_OUT_SEC := 12.0
+
+var _zoom_loop: AudioStreamPlayer
+var _intro_black: ColorRect
 
 
 func _intro_prep() -> void:
 	## Applied in setup, before the first frame is drawn, so the finished arena
 	## never shows through before the warp.
 	core.modulate.a = 0.0
-	core.planet_scale = 6.0
-	left_panel.position.x = -80
-	right_panel.position.x = 330
+	core.planet_scale = INTRO_PLANET_START_SCALE
+	left_panel.modulate.a = 0.0
+	right_panel.modulate.a = 0.0
 	frame_box.modulate.a = 0.0
-	space.modulate = Color(0.4, 0.4, 0.5)
-	stars.warp = 1.0
+	stars.warp = 0.0
+	_intro_black = ColorRect.new()
+	_intro_black.size = ARENA.size
+	_intro_black.color = Color(0, 0, 0, 1)
+	overlay.add_child(_intro_black)
+	# The zoom loop starts the moment the mission loads, like the original.
+	_zoom_loop = AudioStreamPlayer.new()
+	var stream = load("res://music/zooming_loop2.mp3")
+	if stream:
+		stream = stream.duplicate()
+		stream.loop = true
+		_zoom_loop.stream = stream
+		_zoom_loop.volume_db = 0.0 if not Sfx.muted_music else -80.0
+		add_child(_zoom_loop)
+		_zoom_loop.play()
+
+
+func _watch_skip() -> void:
+	## Z fast-forwards the intro.
+	while _intro_running:
+		if Input.is_action_just_pressed("accept"):
+			_skip = true
+			Engine.time_scale = 6.0
+		await get_tree().process_frame
+	Engine.time_scale = 1.0
+
+
+var _intro_running := false
+
+
+func _exit_tree() -> void:
+	Engine.time_scale = 1.0
 
 
 func _intro() -> void:
+	_intro_running = true
+	_watch_skip()
 	Sfx.stop_music(0.8)
-	Sfx.play("warp", 1.0, -4.0)
-	await _iw(1.3)
-	# Hand off from the streaks to the planet in one continuous move: the warp
-	# decelerates while the planet fades in and pulls back out of it.
-	Sfx.play("warp_hit", 1.0, -10.0)
-	var zoom := 1.3 if not _skip else 0.2
-	var tw := create_tween().set_parallel(true)
-	tw.tween_property(stars, "warp", 0.0, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tw.tween_property(space, "modulate", Color.WHITE, 0.6)
-	tw.tween_property(core, "modulate:a", 1.0, 0.35)
-	tw.tween_property(core, "planet_scale", 1.0, zoom).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	var max_scale := ARENA.size.x * INTRO_PLANET_SCREEN_FILL / 16.0
+	await get_tree().create_timer(INTRO_BLACK_HOLD_SEC).timeout
+	# 1. Star warp: the streaks accelerate while the black lifts (the zoom
+	# loop is the only sound here).
+	var t1 := create_tween().set_parallel(true)
+	t1.tween_property(stars, "warp", 0.68, INTRO_STAR_WARP_SEC).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	t1.tween_property(_intro_black, "color:a", 0.0, INTRO_STAR_WARP_SEC * 0.68)
+	t1.tween_property(space, "modulate", Color(0.55, 0.55, 0.65), INTRO_STAR_WARP_SEC)
+	await t1.finished
+	# 2. Warp to the planet: it rushes up out of the tunnel to fill the view.
+	var t2 := create_tween().set_parallel(true)
+	t2.tween_property(stars, "warp", 1.0, INTRO_WARP_TO_PLANET_SEC).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	t2.tween_property(core, "planet_scale", max_scale, INTRO_WARP_TO_PLANET_SEC).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	t2.tween_property(core, "modulate:a", 1.0, INTRO_WARP_TO_PLANET_SEC * 0.78).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	await t2.finished
+	stars.warp = 0.0
+	space.modulate = Color.WHITE
+	# 3. The planet's name, after a white flash; the zoom loop begins its long fade.
+	if _zoom_loop and _zoom_loop.playing:
+		var zf := _zoom_loop.create_tween()
+		zf.tween_property(_zoom_loop, "volume_db", -60.0, INTRO_ZOOM_LOOP_FADE_OUT_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		zf.tween_callback(_zoom_loop.stop)
+	var flash := ColorRect.new()
+	flash.size = ARENA.size
+	flash.color = Color(1, 1, 1, 0)
+	overlay.add_child(flash)
+	var tf := create_tween()
+	tf.tween_property(flash, "color:a", 1.0, INTRO_NAME_FLASH_IN_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tf.tween_property(flash, "color:a", 0.0, INTRO_NAME_FLASH_OUT_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	await tf.finished
+	flash.queue_free()
 	var name_l := Art.shadow_label(str(header.get("planet_name", planet_type)).to_upper(), Pal.TEXT, 2)
 	overlay.add_child(name_l)
-	name_l.position = Vector2(88 - Art.text_width(name_l.text, 2) / 2.0, 30)
+	name_l.position = Vector2(88 - Art.text_width(name_l.text, 2) / 2.0, 14)
 	name_l.modulate.a = 0.0
 	var sub := Art.shadow_label("DEFENSE LEVEL %02d" % level_index, Pal.SYNC)
 	overlay.add_child(sub)
-	sub.position = Vector2(88 - Art.text_width(sub.text) / 2.0, 52)
+	sub.position = Vector2(88 - Art.text_width(sub.text) / 2.0, 36)
 	sub.modulate.a = 0.0
-	var t2 := create_tween().set_parallel(true)
-	t2.tween_property(name_l, "modulate:a", 1.0, 0.3)
-	t2.tween_property(sub, "modulate:a", 1.0, 0.3).set_delay(0.2)
-	await _iw(1.5)
 	var t3 := create_tween().set_parallel(true)
-	t3.tween_property(name_l, "modulate:a", 0.0, 0.4)
-	t3.tween_property(sub, "modulate:a", 0.0, 0.4)
-	# Plates of light interlock around the planet.
-	for i in 8:
-		var a := i * TAU / 8.0
-		var from := core.position + Vector2.from_angle(a) * 70.0
-		var to := core.position + Vector2.from_angle(a) * 11.0
-		fx.line(from, to, 0.18, Pal.SYNC, 1.0)
-		fx.burst(to, 4, [Pal.SYNC, Pal.WHITE], Vector2(10, 30), Vector2(0.15, 0.3))
-		Sfx.play("plate", 1.0 + i * 0.07, -10.0)
-		shield_k = (i + 1) / 8.0
-		await _iw(0.09)
-	Sfx.play("assemble", 1.0, -8.0)
-	fx.ring(core.position, 4, 30, 0.5, Pal.SYNC, 1.0, 1.0)
-	var t4 := create_tween()
-	t4.tween_property(self, "cannon_k", 1.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	var t5 := create_tween().set_parallel(true)
-	t5.tween_property(left_panel, "position:x", 0.0, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	t5.tween_property(right_panel, "position:x", 250.0, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	t5.tween_property(frame_box, "modulate:a", 1.0, 0.4)
-	var online := Art.shadow_label("PROTEKTOR ONLINE", Pal.SYNC)
-	overlay.add_child(online)
-	online.position = Vector2(88 - Art.text_width(online.text) / 2.0, 120)
-	_comms("SYSTEM", "Planetary defense active. Orientation control enabled.", 40.0, 1.6)
-	await _iw(1.0)
-	var t6 := create_tween()
-	t6.tween_property(online, "modulate:a", 0.0, 0.3)
-	t6.tween_callback(online.queue_free)
+	t3.tween_property(name_l, "modulate:a", 1.0, INTRO_NAME_FADE_IN_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	t3.tween_property(sub, "modulate:a", 1.0, INTRO_NAME_FADE_IN_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await t3.finished
+	await get_tree().create_timer(INTRO_NAME_HOLD_SEC).timeout
+	var t4 := create_tween().set_parallel(true)
+	t4.tween_property(name_l, "modulate:a", 0.0, INTRO_NAME_FADE_OUT_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	t4.tween_property(sub, "modulate:a", 0.0, INTRO_NAME_FADE_OUT_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	await t4.finished
 	name_l.queue_free()
 	sub.queue_free()
+	# 4. Pull back out to defense distance.
+	var t5 := create_tween()
+	t5.tween_property(core, "planet_scale", 1.0, INTRO_PLANET_ZOOM_OUT_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await t5.finished
+	# 5. The Protektor forms: the shield grows in, then the cannon extends.
+	var shield_up := AudioStreamPlayer.new()
+	shield_up.stream = load("res://sfx/shield_up.wav")
+	add_child(shield_up)
+	shield_up.play()
+	var t6 := create_tween()
+	t6.tween_method(func(p: float) -> void:
+		shield_k = clampf(p * 1.2, 0.0, 1.0)
+		cannon_k = clampf((p - 0.3) / 0.7, 0.0, 1.0), 0.0, 1.0, INTRO_COMPONENT_BUILD_SEC).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	await t6.finished
+	shield_up.stop()
+	shield_up.queue_free()
+	shield_k = 1.0
+	cannon_k = 1.0
+	fx.ring(core.position, 4, 30, 0.5, Pal.SYNC, 1.0, 1.0)
+	# 6. The HUD columns fade in, then the level begins.
+	_comms("SYSTEM", "Planetary defense active. Orientation control enabled.", 40.0, 1.6)
+	var t7 := create_tween().set_parallel(true)
+	t7.tween_property(left_panel, "modulate:a", 1.0, INTRO_HUD_FADE_SEC)
+	t7.tween_property(right_panel, "modulate:a", 1.0, INTRO_HUD_FADE_SEC)
+	t7.tween_property(frame_box, "modulate:a", 1.0, INTRO_HUD_FADE_SEC)
+	await t7.finished
+	_intro_black.queue_free()
+	_intro_running = false
+	Engine.time_scale = 1.0
 
 
 func _arena_flash(c: Color, t: float) -> void:
@@ -1282,6 +1349,10 @@ class PlayerCore extends Node2D:
 	func _draw() -> void:
 		var tex: Texture2D = Art.planet(m.planet_key, 16, int(m._planet_frame))
 		var sz := tex.get_size() * planet_scale
+		if planet_scale > 1.5:
+			# close up: draw a detailed render so the zoom isn't a blur of big pixels
+			tex = Art.planet(m.planet_key, 128, 0)
+			sz = tex.get_size() * (planet_scale * 16.0 / 128.0)
 		var mod := Color(1, 0.45, 0.45) if hurt_t > 0.0 and int(hurt_t * 30) % 2 == 0 else Color.WHITE
 		draw_texture_rect(tex, Rect2((-sz / 2.0).round(), sz), false, mod)
 		if planet_scale > 1.05:
