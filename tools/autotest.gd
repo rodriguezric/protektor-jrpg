@@ -402,6 +402,16 @@ func _run(scenario: String) -> void:
 				await wait(1.6)
 				await shot("open_%d" % i)
 			get_tree().quit()
+		"warpcine":
+			auto_talk = false
+			var c := Cinema.open()
+			c.effect = "warp"
+			c.effect_k = 1.0
+			c.set_vignette(0.75, 0.0)
+			for i in 4:
+				await wait(0.5)
+				await shot("warpcine_%d" % i)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

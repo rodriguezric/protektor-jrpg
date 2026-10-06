@@ -31,6 +31,9 @@ var particles: Array = []
 var anim_bg := ""
 var anim_frames := 0
 var anim_fps := 0.0
+## Warp field for the "warp" effect: lights stream out from the centre in every
+## direction, like the stars when a mission begins. effect_k is the warp speed.
+var stars: Array = []
 
 
 static func open(color: Color = Pal.INK) -> Cinema:
@@ -155,9 +158,34 @@ func _process(delta: float) -> void:
 		p.pos += p.vel * delta
 		if p.t > p.life:
 			particles.remove_at(i)
-	if effect == "warp" or effect == "stars" or effect == "embers":
+	if effect == "warp":
+		_update_warp(delta)
+	elif effect == "stars" or effect == "embers":
 		_spawn_particles(delta)
 	drawer.queue_redraw()
+
+
+func _update_warp(delta: float) -> void:
+	var c := Vector2(160, 90)
+	if stars.is_empty():
+		for i in 140:
+			stars.append(_new_star(c, true))
+	for st in stars:
+		var v: Vector2 = st.p - c
+		var spd: float = (6.0 + effect_k * 300.0) * st.z * (0.35 + v.length() / 90.0)
+		st.p += v.normalized() * spd * delta
+		if not Rect2(-20, -20, 360, 220).has_point(st.p):
+			var fresh: Dictionary = _new_star(c, false)
+			st.p = fresh.p
+			st.z = fresh.z
+			st.c = fresh.c
+
+
+func _new_star(c: Vector2, anywhere: bool) -> Dictionary:
+	var cols := [Pal.SYNC.lerp(Pal.BLUE, 0.3), Pal.SYNC, Pal.LEMON, Pal.WHITE, Pal.WHITE]
+	var a := randf() * TAU
+	var r := randf_range(4.0, 170.0) if anywhere else randf_range(2.0, 24.0)
+	return {"p": c + Vector2(cos(a), sin(a)) * r, "z": randf_range(0.25, 1.0), "c": cols[randi() % cols.size()]}
 
 
 func _spawn_particles(delta: float) -> void:
@@ -176,6 +204,20 @@ func _spawn_particles(delta: float) -> void:
 
 
 func _draw_fx() -> void:
+	if effect == "warp":
+		var c := Vector2(160, 90)
+		for st in stars:
+			var p: Vector2 = st.p
+			var dirv: Vector2 = (p - c).normalized()
+			var dist := (p - c).length()
+			var length: float = (1.0 + effect_k * 22.0 * st.z) * clampf(dist / 60.0, 0.2, 1.6)
+			var col: Color = st.c
+			col.a = clampf(0.25 + st.z * 0.75, 0.0, 1.0) * clampf(dist / 20.0, 0.0, 1.0)
+			var n := maxi(1, int(length))
+			for k in n:
+				var q := (p - dirv * k).round()
+				var fade := 1.0 - float(k) / n
+				drawer.draw_rect(Rect2(q, Vector2.ONE), Color(col, col.a * fade))
 	for p in particles:
 		var k: float = p.t / p.life
 		var c: Color = p.c
