@@ -550,6 +550,61 @@ func _run(scenario: String) -> void:
 					break
 			print("achieved: ", Game.achieved.keys(), " stats: ", Game.achv_stats)
 			get_tree().quit()
+		"slots":
+			auto_talk = false
+			print("after migration: slot1=", Game.slot_info(1), " profile unlocked=", Game.profile.unlocked, " upgrades=", Game.profile.upgrades, " weapons=", Game.profile.weapons)
+			main.title()
+			await wait(5.0)
+			await tap("down", 0.4)
+			await shot("slots_title")
+			await tap("accept", 1.2)
+			await shot("slots_new")
+			await tap("down", 0.3)
+			await tap("accept", 1.5)
+			await shot("slots_keep")
+			await tap("accept", 0.3)
+			await tap("accept", 1.5)
+			for k in 4:
+				await tap("down", 0.1)
+			await tap("right", 0.1)
+			await tap("right", 0.1)
+			await tap("accept", 2.0)
+			auto_talk = true
+			await wait(4.0)
+			print("slot2 after new game=", Game.slot_info(2), " active slot=", Game.slot, " loadout=", Game.loadout())
+			auto_talk = false
+			main.dialog.close()
+			for c in main.cine_layer.get_children():
+				c.queue_free()
+			if main.world:
+				main.world.queue_free()
+				main.world = null
+			var s2 := SlotScreen.new()
+			s2.setup("load")
+			main.cine_layer.add_child(s2)
+			main.fade_rect.color.a = 0.0
+			await wait(1.0)
+			await shot("slots_load")
+			get_tree().quit()
+		"slotlogic":
+			auto_talk = true
+			Game.player_name = "Kai"
+			Game.start_new_game(2, false)
+			main.story.begin("prologue")
+			await wait(2.0)
+			print("A slot2=", Game.slot_info(2))
+			# buy an upgrade in slot 2: it should carry over to every slot
+			Game.story.specials.append("missile")
+			Game.save()
+			Game.start_new_game(3, true)
+			Game.player_name = "Rin"
+			Game.save()
+			print("B stripped slot3 loadout=", Game.loadout(), " info=", Game.slot_info(3))
+			Game.load_slot(1)
+			print("C slot1 chapter=", Game.chapter, " name=", Game.player_name, " credits=", Game.credits(), " loadout=", Game.loadout())
+			Game.load_profile()
+			print("D profile specials=", Game.profile.specials, " unlocked=", Game.profile.unlocked, " most recent=", Game.most_recent_slot())
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

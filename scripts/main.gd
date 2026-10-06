@@ -177,11 +177,24 @@ func title() -> void:
     match choice:
         "new":
             Game.load_meta_only()
-            Game.new_game()
+            var n := await pick_slot("new")
+            if n == 0:
+                title()
+                return
+            Game.start_new_game(n, _new_stripped)
             await name_entry()
             story.begin("prologue")
         "continue":
-            Game.load_save()
+            Game.load_slot(Game.most_recent_slot())
+            story.begin(Game.chapter)
+        "load":
+            Game.load_meta_only()
+            var n := await pick_slot("load")
+            if n == 0:
+                title()
+                return
+            Game.load_slot(n)
+            await fade_out(0.3)
             story.begin(Game.chapter)
         "arcade":
             Game.load_meta_only()
@@ -194,6 +207,38 @@ func title() -> void:
             await fade_out(0.4)
             a.queue_free()
             title()
+
+
+var _new_stripped := false
+
+
+func pick_slot(mode: String) -> int:
+    ## Slot picker. For a new game, an occupied slot asks before it's overwritten.
+    var s := SlotScreen.new()
+    s.setup(mode)
+    cine_layer.add_child(s)
+    await fade_in(0.3)
+    var n := 0
+    while true:
+        n = await s.run()
+        if n == 0 or mode == "load" or Game.slot_info(n).is_empty():
+            break
+        var c: int = await dialog.ask("Slot %d already holds %s. Overwrite it?" % [n, Game.slot_info(n).name], ["Keep it", "Overwrite"], "", {"sys": true, "voice": "system"})
+        if c == 1:
+            break
+    _new_stripped = false
+    if mode == "new" and n > 0 and _profile_has_upgrades():
+        var c2: int = await dialog.ask("Your Protektor remembers its upgrades. Bring them into this playthrough?",
+            ["Keep my upgrades", "Start stripped"], "", {"sys": true, "voice": "system"})
+        _new_stripped = c2 == 1
+    await fade_out(0.3)
+    s.queue_free()
+    return n
+
+
+func _profile_has_upgrades() -> bool:
+    var p: Dictionary = Game.profile
+    return int(p.upgrades.get("cooldown", 0)) + int(p.upgrades.get("armor", 0)) > 0 or not p.specials.is_empty() or p.weapons.size() > 1
 
 
 func name_entry() -> void:

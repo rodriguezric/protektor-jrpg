@@ -85,6 +85,7 @@ func run() -> String:
 	var has := Game.has_save()
 	opts.append({"text": "Continue", "enabled": has})
 	opts.append("New Game")
+	opts.append({"text": "Load Game", "enabled": Game.has_any_save()})
 	opts.append("Free Missions")
 	opts.append("Achievements")
 	opts.append("Quit")
@@ -93,10 +94,10 @@ func run() -> String:
 	menu.index = 0 if has else 1
 	menu.set_entries(opts)
 	var mt := create_tween()
-	mt.tween_property(menu, "position:y", 92.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	mt.tween_property(menu, "position:y", 84.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await mt.finished
 	var keys := Art.label("Arrows move  Z ok  X back  Shift run", Pal.TEXT_DIM)
-	keys.position = Vector2(22, 150)
+	keys.position = Vector2(22, 156)
 	add_child(keys)
 	while true:
 		var r := await menu.ask()
@@ -106,9 +107,11 @@ func run() -> String:
 			1:
 				return "new"
 			2:
-				return "arcade"
+				return "load"
 			3:
-				return "achievements"
+				return "arcade"
 			4:
+				return "achievements"
+			5:
 				get_tree().quit()
 	return "new"
