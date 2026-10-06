@@ -15,9 +15,18 @@ const PLAYER_RADIUS := 19.5
 const BLOCK_RADIUS := 23.0
 const CANNON_LEN := 18.0
 const MAX_BULLETS := 3
-## Auto-fire rate while the fire button is held: fast enough that all three
-## shots can be in the air at once (a shot crosses the arena in ~0.43s).
-const FIRE_REPEAT := 0.12
+## Weapons: shots in flight, speed, hit radius, damage, cooldown multiplier.
+const WEAPON_STATS := {
+	"basic": {"max": 3, "speed": 560.0, "r": 5.0, "dmg": 1.0, "cd": 1.0},
+	"wave": {"max": 3, "speed": 470.0, "r": 14.0, "dmg": 1.0, "cd": 1.15},
+	"beam": {"max": 3, "speed": 820.0, "r": 4.0, "dmg": 3.0, "cd": 1.35},
+	"auto": {"max": 5, "speed": 600.0, "r": 5.0, "dmg": 1.0, "cd": 0.6},
+}
+const EXT_SHIELD_REACH := 14.0
+const MISSILE_INTERVAL := 2.6
+const MISSILE_SPEED := 300.0
+const MISSILE_TURN := 6.0
+const MISSILE_LIFE := 3.0
 const BULLET_SPEED := 560.0
 const BULLET_R := 5.0
 const BULLET_DMG := 1.0
@@ -46,6 +55,18 @@ var alive := true
 var finished := false
 var paused := false
 var hp := MAX_HP
+var red_hp := 0.0
+var training := false
+var lo := {}
+var wstat := {}
+var fire_cd_base := 0.14
+var block_reach := PLAYER_RADIUS
+var shot_block_r := BLOCK_RADIUS
+var missiles: Array = []
+var _missile_t := 1.5
+var _fire_buffer := 0.0
+var red_cells: Array = []
+var credits_earned := 0
 var facing := Vector2.UP
 var speed_scale := 1.0
 var _hitstun_until := 0.0
@@ -111,12 +132,21 @@ var _comms_busy := false
 signal mission_done
 
 
-func setup(p_level: String, p_arcade: bool, p_intro: bool) -> void:
+func setup(p_level: String, p_arcade: bool, p_intro: bool, p_data: Dictionary = {}, p_training: bool = false) -> void:
 	level_id = p_level
 	arcade = p_arcade
-	play_intro = p_intro
+	play_intro = p_intro and not p_training
+	training = p_training
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lo = Game.loadout()
+	wstat = WEAPON_STATS.get(lo.weapon, WEAPON_STATS.basic)
+	fire_cd_base = Data.FIRE_COOLDOWN[clampi(int(lo.cooldown), 0, 3)] * float(wstat.cd)
+	red_hp = float(lo.armor)
+	if lo.ext_shield:
+		block_reach = PLAYER_RADIUS + EXT_SHIELD_REACH
+		shot_block_r = BLOCK_RADIUS + EXT_SHIELD_REACH
+	data = p_data
 	_load()
 	_build()
 	if play_intro:
@@ -126,8 +156,9 @@ func setup(p_level: String, p_arcade: bool, p_intro: bool) -> void:
 # ------------------------------------------------------------------ load ---
 
 func _load() -> void:
-	var f := FileAccess.open("res://data/missions/%s.json" % level_id, FileAccess.READ)
-	data = JSON.parse_string(f.get_as_text()) if f else {}
+	if data.is_empty():
+		var f := FileAccess.open("res://data/missions/%s.json" % level_id, FileAccess.READ)
+		data = JSON.parse_string(f.get_as_text()) if f else {}
 	header = data.get("header", {})
 	planet_type = str(data.get("planet_type", level_id.split("_level_")[0]))
 	level_index = int(data.get("level_index", 1))
@@ -277,6 +308,13 @@ func _build_right() -> void:
 		c.position = Vector2(5 + i * 12, 15)
 		ib.add_child(c)
 		cells.append(c)
+	# Red integrity sits on top of the normal cells and is spent first.
+	for i in int(red_hp):
+		var c := TextureRect.new()
+		c.texture = Art.ui("cell_red")
+		c.position = Vector2(5 + i * 12, 15)
+		ib.add_child(c)
+		red_cells.append(c)
 	var sb := Art.make_box("box")
 	sb.position = Vector2(0, 73)
 	sb.size = Vector2(68, 44)
@@ -339,6 +377,8 @@ func run() -> Dictionary:
 	else:
 		shield_k = 1.0
 		cannon_k = 1.0
+		if training:
+			await _sim_banner()
 	if music_path != "":
 		Sfx.music(music_path.get_file().get_basename(), 0.6)
 	running = true
@@ -495,6 +535,23 @@ func _intro() -> void:
 	Engine.time_scale = 1.0
 
 
+func _sim_banner() -> void:
+	var t := Art.shadow_label("SIMULATION", Pal.SYNC, 2)
+	t.position = Vector2(88 - Art.text_width(t.text, 2) / 2.0, 60)
+	overlay.add_child(t)
+	var sub_l := Art.shadow_label(str(header.get("planet_name", "")), Pal.TEXT)
+	sub_l.position = Vector2(88 - Art.text_width(sub_l.text) / 2.0, 84)
+	overlay.add_child(sub_l)
+	Sfx.play("beep", 0.8, -6.0)
+	await get_tree().create_timer(1.4).timeout
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(t, "modulate:a", 0.0, 0.4)
+	tw.tween_property(sub_l, "modulate:a", 0.0, 0.4)
+	await tw.finished
+	t.queue_free()
+	sub_l.queue_free()
+
+
 func _arena_flash(c: Color, t: float) -> void:
 	var r := ColorRect.new()
 	r.size = ARENA.size
@@ -539,6 +596,7 @@ func _process(delta: float) -> void:
 			th.tick(delta)
 	_update_shots(delta)
 	_update_bolts(delta)
+	_update_missiles(delta)
 	_chatter(delta)
 	if hp <= 1.0 and alive:
 		_heart_t -= delta
@@ -557,7 +615,7 @@ func _input(event: InputEvent) -> void:
 		_aim_mode = "stick"
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 		_aim_mode = "mouse"
-		_try_fire(true)
+		_press_fire()
 
 
 func _handle_aim() -> void:
@@ -574,31 +632,49 @@ func _handle_aim() -> void:
 
 func _handle_fire(delta: float) -> void:
 	_fire_cd -= delta
+	_fire_buffer -= delta
 	if Input.is_action_just_pressed("accept"):
-		_try_fire(true)
-		return
+		_press_fire()
+	elif _fire_buffer > 0.0 and _fire_cd <= 0.0:
+		_fire_buffer = 0.0
+		_try_fire()
 	var held := Input.is_action_pressed("accept") or (_aim_mode == "mouse" and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT))
 	if held and _fire_cd <= 0.0:
 		_try_fire()
 
 
-func _try_fire(fresh_press: bool = false) -> void:
-	## A fresh press always fires (up to the 3-shot cap); holding repeats.
+func _press_fire() -> void:
+	## A press during the cooldown is remembered briefly, so taps never get eaten.
+	if not _try_fire():
+		_fire_buffer = 0.15
+
+
+func _try_fire(_unused: bool = false) -> bool:
+	## The cooldown (upgradeable) gates every shot; the weapon sets how many
+	## can be in the air at once.
 	if not running or not alive or finished or paused:
-		return
-	if _fire_cd > 0.0 and not fresh_press:
-		return
-	if bolts.size() >= MAX_BULLETS:
-		return
-	_fire_cd = FIRE_REPEAT
+		return false
+	if _fire_cd > 0.0:
+		return false
+	if bolts.size() >= int(wstat.max):
+		return false
+	_fire_cd = fire_cd_base
 	var dirv := facing
 	if _aim_mode != "mouse":
 		dirv = _assist(facing)
 	var tip := CENTER + facing * (PLAYER_CORE + CANNON_LEN)
-	bolts.append({"lp": tip, "dir": dirv, "trail": []})
+	bolts.append({"lp": tip, "dir": dirv, "trail": [], "w": str(lo.weapon)})
 	_recoil = 3.0
 	fx.burst(core.position + facing * 15.0, 5, [Pal.LEMON, Pal.WHITE, Pal.SYNC], Vector2(20, 60), Vector2(0.06, 0.16), {"dir": facing.angle(), "spread": 0.5})
-	Sfx.play("shoot", randf_range(0.95, 1.08), -9.0)
+	match str(lo.weapon):
+		"beam":
+			Sfx.play("shoot", 0.7, -6.0)
+			shake(1.0, 0.06)
+		"wave":
+			Sfx.play("shoot", 0.85, -8.0)
+		_:
+			Sfx.play("shoot", randf_range(0.95, 1.08), -9.0)
+	return true
 
 
 func _assist(f: Vector2) -> Vector2:
@@ -755,9 +831,9 @@ func _update_shots(delta: float) -> void:
 			shots.erase(s)
 			continue
 		var dist: float = s.lp.distance_to(CENTER)
-		if dist > maxf(PLAYER_RADIUS, BLOCK_RADIUS) + r or not alive:
+		if dist > maxf(PLAYER_RADIUS, shot_block_r) + r or not alive:
 			continue
-		if dist <= BLOCK_RADIUS + r and (s.lp - CENTER).dot(-facing) >= -r:
+		if dist <= shot_block_r + r and (s.lp - CENTER).dot(-facing) >= -r:
 			shots.erase(s)
 			_block_fx((s.lp * K).round(), true)
 			continue
@@ -768,22 +844,76 @@ func _update_shots(delta: float) -> void:
 
 func _update_bolts(delta: float) -> void:
 	var sd := delta * speed_scale
-	var area := Rect2(Vector2.ZERO, Vector2(L, L)).grow(BULLET_R)
+	var r: float = wstat.r
+	var area := Rect2(Vector2.ZERO, Vector2(L, L)).grow(r)
 	for b in bolts.duplicate():
 		b.trail.push_front(b.lp)
 		if b.trail.size() > 3:
 			b.trail.pop_back()
-		b.lp += b.dir * BULLET_SPEED * sd
+		b.lp += b.dir * float(wstat.speed) * sd
 		if not area.has_point(b.lp):
 			bolts.erase(b)
 			continue
 		for th in threats:
 			if not th.can_be_hit():
 				continue
-			if th.lp.distance_to(b.lp) <= th.hit_radius() + BULLET_R:
+			if th.lp.distance_to(b.lp) <= th.hit_radius() + r:
 				bolts.erase(b)
 				_bolt_hit(th, b)
 				break
+
+
+func _update_missiles(delta: float) -> void:
+	## Auto Missile: launches on a timer and homes on the nearest thing it can
+	## see, rocks included (which it can't break).
+	if not lo.get("missile", false):
+		return
+	var sd := delta * speed_scale
+	_missile_t -= sd
+	if _missile_t <= 0.0 and not threats.is_empty():
+		_missile_t = MISSILE_INTERVAL
+		var a := facing.angle() + PI * (0.5 if randf() < 0.5 else -0.5)
+		missiles.append({"lp": CENTER + Vector2.from_angle(a) * 20.0, "dir": Vector2.from_angle(a), "t": 0.0, "trail": []})
+		Sfx.play("portal", 1.6, -12.0)
+	for ms in missiles.duplicate():
+		ms.t += sd
+		var target = _nearest_threat(ms.lp)
+		if target != null:
+			var want: Vector2 = (target.lp - ms.lp).normalized()
+			var ang: float = ms.dir.angle_to(want)
+			ms.dir = ms.dir.rotated(clampf(ang, -MISSILE_TURN * sd, MISSILE_TURN * sd))
+		ms.lp += ms.dir * MISSILE_SPEED * sd
+		ms.trail.push_front(ms.lp)
+		if ms.trail.size() > 6:
+			ms.trail.pop_back()
+		if int(ms.t * 30.0) % 2 == 0:
+			fx.particle((ms.lp * K).round(), Vector2.ZERO, 0.35, Pal.STONE.lerp(Pal.WHITE, 0.3), {"size": 2.0, "size_end": 0.5})
+		var hit = null
+		for th in threats:
+			if th.can_be_hit() and th.lp.distance_to(ms.lp) <= th.hit_radius() + 4.0:
+				hit = th
+				break
+		if hit != null or ms.t > MISSILE_LIFE or not Rect2(Vector2.ZERO, Vector2(L, L)).grow(40).has_point(ms.lp):
+			missiles.erase(ms)
+			var p: Vector2 = (ms.lp * K).round()
+			fx.burst(p, 10, [Pal.EMBER, Pal.LEMON, Pal.WHITE], Vector2(20, 70), Vector2(0.15, 0.35))
+			fx.ring(p, 1, 8, 0.25, Pal.EMBER, 1.0, 1.0)
+			Sfx.play("enemy_hit", 0.8, -10.0)
+			if hit != null and not (hit.is_asteroid and hit.max_hp > 5.0):
+				hit.apply_damage(1.0)
+
+
+func _nearest_threat(from: Vector2):
+	var best = null
+	var bd := INF
+	for th in threats:
+		if not th.can_be_hit():
+			continue
+		var d: float = th.lp.distance_to(from)
+		if d < bd:
+			bd = d
+			best = th
+	return best
 
 
 func _bolt_hit(th: Threat, b: Dictionary) -> void:
@@ -791,9 +921,9 @@ func _bolt_hit(th: Threat, b: Dictionary) -> void:
 	if th.is_asteroid and th.max_hp > 5.0:
 		fx.burst(p, 6, [Pal.STONE, Pal.WHITE, Pal.LEMON], Vector2(20, 60), Vector2(0.1, 0.25), {"dir": (-b.dir).angle(), "spread": 0.9})
 		Sfx.play("block", 1.6, -16.0)
-		th.apply_damage(BULLET_DMG)
+		th.apply_damage(float(wstat.dmg))
 		return
-	var died := th.apply_damage(BULLET_DMG)
+	var died := th.apply_damage(float(wstat.dmg))
 	fx.burst(p, 8, [Pal.LEMON, Pal.WHITE, Pal.EMBER], Vector2(20, 70), Vector2(0.1, 0.3), {"dir": (-b.dir).angle(), "spread": 1.1})
 	if not died:
 		Sfx.play("enemy_hit", randf_range(0.95, 1.1), -8.0)
@@ -940,15 +1070,24 @@ func _check_all_destroyed() -> void:
 func damage_player(amount: float, _src) -> bool:
 	if not alive or finished or amount <= 0.0 or hp <= 0.0:
 		return false
-	hp = maxf(0.0, hp - amount)
 	hits_taken += 1
 	streak = 0
 	streak_label.text = ""
-	var idx := int(hp)
-	if idx < cells.size():
-		var c: TextureRect = cells[idx]
-		c.texture = Art.ui("cell_off")
-		hud_fx.burst(right_panel.position + Vector2(5 + idx * 12, 55) + Vector2(3, 4), 10, [Pal.SYNC, Pal.WHITE, Pal.TEAL], Vector2(20, 60), Vector2(0.2, 0.5), {"up": 20.0, "acc": Vector2(0, 120)})
+	if red_hp > 0.0:
+		# red integrity takes the hit first
+		red_hp = maxf(0.0, red_hp - amount)
+		var ridx := int(red_hp)
+		if ridx < red_cells.size():
+			var rc: TextureRect = red_cells[ridx]
+			rc.visible = false
+			hud_fx.burst(right_panel.position + Vector2(5 + ridx * 12, 55) + Vector2(3, 4), 10, [Pal.BLOOD, Pal.WHITE, Pal.EMBER], Vector2(20, 60), Vector2(0.2, 0.5), {"up": 20.0, "acc": Vector2(0, 120)})
+	else:
+		hp = maxf(0.0, hp - amount)
+		var idx := int(hp)
+		if idx < cells.size():
+			var c: TextureRect = cells[idx]
+			c.texture = Art.ui("cell_off")
+			hud_fx.burst(right_panel.position + Vector2(5 + idx * 12, 55) + Vector2(3, 4), 10, [Pal.SYNC, Pal.WHITE, Pal.TEAL], Vector2(20, 60), Vector2(0.2, 0.5), {"up": 20.0, "acc": Vector2(0, 120)})
 	Sfx.play("hurt", 1.0, -3.0)
 	core.hurt_t = 0.3
 	shake(4.0, 0.25)
@@ -1053,7 +1192,7 @@ func _comms_pump() -> void:
 
 
 func _chatter(delta: float) -> void:
-	if arcade:
+	if arcade or training:
 		return
 	_chatter_t -= delta
 	if _chatter_t > 0.0:
@@ -1111,12 +1250,19 @@ func _begin_victory() -> void:
 	fx.ring(core.position, 6, 90, 0.8, Pal.WHITE, 1.0, 1.0)
 	_set_mood("smile" if Game.sync_percent() < 55 else "flat")
 	var before := Game.sync_percent()
-	var unlocks := Game.mark_completed(planet_type, level_index, arcade)
-	if not arcade:
-		Game.story.last_mission = level_id
-		Game.story.deployments = int(Game.story.get("deployments", 0)) + 1
+	var unlocks := []
+	if training:
+		credits_earned = int(data.get("reward", 0))
+	else:
+		unlocks = Game.mark_completed(planet_type, level_index, arcade)
+		if not arcade:
+			Game.story.last_mission = level_id
+			Game.story.deployments = int(Game.story.get("deployments", 0)) + 1
+			credits_earned = Data.mission_reward(planet_type, level_index)
+	if credits_earned > 0:
+		Game.add_credits(credits_earned)
 	var after := Game.sync_percent()
-	var banner := Art.shadow_label("THREATS NEUTRALIZED", Pal.SYNC)
+	var banner := Art.shadow_label("SIMULATION CLEARED" if training else "THREATS NEUTRALIZED", Pal.SYNC)
 	overlay.add_child(banner)
 	banner.position = Vector2(-120, 18)
 	var tw := create_tween()
@@ -1124,12 +1270,15 @@ func _begin_victory() -> void:
 	await get_tree().create_timer(0.6).timeout
 	var panel := Art.make_box("sys_box")
 	panel.position = Vector2(26, 36)
-	panel.size = Vector2(124, 108)
+	panel.size = Vector2(124, 119 if credits_earned > 0 else 108)
 	panel.scale = Vector2(1, 0)
 	panel.pivot_offset = panel.size / 2.0
 	overlay.add_child(panel)
 	await create_tween().tween_property(panel, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).finished
 	var rows := [["SCORE", score], ["DESTROYED", defeated_n], ["BLOCKED", blocks], ["BEST STREAK", best_streak], ["INTEGRITY", "%d/%d" % [int(hp), int(MAX_HP)]]]
+	if credits_earned > 0:
+		rows.append(["CREDITS", credits_earned])
+	var sy := 5 + rows.size() * 11
 	for i in rows.size():
 		var l := Art.label(rows[i][0], Pal.TEXT_DIM)
 		l.position = Vector2(6, 5 + i * 11)
@@ -1149,35 +1298,43 @@ func _begin_victory() -> void:
 			await tt.finished
 		else:
 			v.text = rows[i][1]
-		Sfx.play("score", 1.0 + i * 0.05, -10.0)
+		Sfx.play("coin" if rows[i][0] == "CREDITS" else "score", 1.0 + i * 0.05, -10.0)
+		if rows[i][0] == "CREDITS":
+			v.add_theme_color_override("font_color", Pal.GLOW)
+			v.text = "+" + v.text
 		await get_tree().create_timer(0.08).timeout
 	var sl := Art.label("SYNCHRONIZATION", Pal.SYNC)
-	sl.position = Vector2(6, 62)
+	sl.position = Vector2(6, sy + 2)
 	panel.add_child(sl)
 	var bb := ColorRect.new()
 	bb.color = Pal.INK
-	bb.position = Vector2(6, 74)
+	bb.position = Vector2(6, sy + 14)
 	bb.size = Vector2(112, 6)
 	panel.add_child(bb)
 	var fill := ColorRect.new()
 	fill.color = Pal.SYNC
-	fill.position = Vector2(7, 75)
+	fill.position = Vector2(7, sy + 15)
 	fill.size = Vector2(110.0 * before / 100.0, 4)
 	panel.add_child(fill)
 	var pl := Art.label("%d%%" % before, Pal.TEXT)
-	pl.position = Vector2(92, 62)
+	pl.position = Vector2(92, sy + 2)
 	panel.add_child(pl)
+	if training:
+		sl.visible = false
+		bb.visible = false
+		fill.visible = false
+		pl.visible = false
 	await get_tree().create_timer(0.25).timeout
-	if after != before and not arcade:
+	if after != before and not arcade and not training:
 		Sfx.play("sync", 1.2, -8.0)
 		var ft := create_tween()
 		ft.tween_property(fill, "size:x", 110.0 * after / 100.0, 0.8).set_trans(Tween.TRANS_SINE)
 		ft.parallel().tween_method(func(x: float) -> void: pl.text = "%d%%" % int(x), float(before), float(after), 0.8)
 		await ft.finished
 		var up := Art.label("+%d" % (after - before), Pal.LEMON)
-		up.position = Vector2(70, 62)
+		up.position = Vector2(70, sy + 2)
 		panel.add_child(up)
-	var y := 84
+	var y := sy + 24
 	for p in unlocks:
 		var u := Art.label("NEW: " + str(Data.PLANET_INFO[p].name), Pal.GLOW)
 		u.position = Vector2(6, y)
@@ -1192,7 +1349,7 @@ func _begin_victory() -> void:
 		await get_tree().process_frame
 	Sfx.play("confirm")
 	_result = {"result": "win", "score": score, "defeated": defeated_n, "blocks": blocks, "best_streak": best_streak,
-		"planet": planet_type, "level": level_index, "unlocks": unlocks, "hits": hits_taken}
+		"planet": planet_type, "level": level_index, "unlocks": unlocks, "hits": hits_taken, "credits": credits_earned}
 	_done_sig = true
 	mission_done.emit()
 
@@ -1221,10 +1378,10 @@ func _begin_death() -> void:
 	c1.tween_property(arena, "scale", Vector2(0.0, 0.01), 0.22)
 	await c1.finished
 	Sfx.stop_music(0.2)
-	var lost := Art.shadow_label("SYNCHRONIZATION LOST", Pal.BLOOD.lerp(Pal.WHITE, 0.2))
+	var lost := Art.shadow_label("SIMULATION ENDED" if training else "SYNCHRONIZATION LOST", Pal.BLOOD.lerp(Pal.WHITE, 0.2))
 	lost.position = Vector2(160 - Art.text_width(lost.text) / 2.0, 70)
 	add_child(lost)
-	var sub := Art.label("Deployment failed." if not arcade else "Mission failed.", Pal.TEXT_DIM)
+	var sub := Art.label("No credits awarded." if training else ("Deployment failed." if not arcade else "Mission failed."), Pal.TEXT_DIM)
 	sub.position = Vector2(160 - Art.text_width(sub.text) / 2.0, 84)
 	add_child(sub)
 	await get_tree().create_timer(1.0).timeout
@@ -1238,7 +1395,7 @@ func _begin_death() -> void:
 
 
 func _finish(result: String) -> void:
-	if result != "win" and not arcade:
+	if result != "win" and not arcade and not training:
 		Game.record_failure()
 	_result = {"result": result, "score": score, "planet": planet_type, "level": level_index, "unlocks": []}
 	_done_sig = true
@@ -1303,11 +1460,33 @@ class ShotLayer extends Node2D:
 		var K: float = m.K
 		for b in m.bolts:
 			var p: Vector2 = (b.lp * K).round()
-			for i in b.trail.size():
-				var q: Vector2 = (b.trail[i] * K).round()
-				draw_line(q, p, Color(Pal.LEMON, 0.5 - i * 0.15), 3.0 - i)
-			draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Pal.LEMON)
-			draw_rect(Rect2(p, Vector2(1, 1)), Pal.WHITE)
+			match str(b.get("w", "basic")):
+				"wave":
+					# a wide crescent bowed forward
+					var nrm := Vector2(-b.dir.y, b.dir.x)
+					for k in range(-5, 6):
+						var q: Vector2 = p + nrm * k - b.dir * (absf(k) * absf(k) * 0.09)
+						var col := Pal.SYNC.lerp(Pal.WHITE, 0.5 if absi(k) < 2 else 0.0)
+						draw_rect(Rect2(q.round(), Vector2.ONE), col)
+						draw_rect(Rect2((q - b.dir).round(), Vector2.ONE), Color(Pal.SYNC, 0.45))
+				"beam":
+					var tail: Vector2 = p - b.dir * 9.0
+					draw_line(tail, p, Color(Pal.VOID.lerp(Pal.WHITE, 0.3), 0.55), 3.0)
+					draw_line(tail, p, Pal.WHITE, 1.0)
+					draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Pal.WHITE)
+				_:
+					for i in b.trail.size():
+						var q: Vector2 = (b.trail[i] * K).round()
+						draw_line(q, p, Color(Pal.LEMON, 0.5 - i * 0.15), 3.0 - i)
+					draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Pal.LEMON)
+					draw_rect(Rect2(p, Vector2(1, 1)), Pal.WHITE)
+		for ms in m.missiles:
+			var p: Vector2 = (ms.lp * K).round()
+			var back: Vector2 = -ms.dir
+			draw_line(p, (p + back * 3.0).round(), Pal.STONE, 2.0)
+			draw_rect(Rect2(p - Vector2(1, 1), Vector2(2, 2)), Pal.EMBER)
+			var flame: Vector2 = (p + back * (4.0 + randf() * 2.0)).round()
+			draw_rect(Rect2(flame, Vector2.ONE), Pal.LEMON)
 		for s in m.shots:
 			var p: Vector2 = (s.lp * K).round()
 			var col: Color = Pal.EMBER if s.kind == "tank" else Pal.VOID
@@ -1362,7 +1541,8 @@ class PlayerCore extends Node2D:
 		var pulse: float = m._shield_pulse
 		if k > 0.0:
 			var col := Pal.SYNC.lerp(Pal.WHITE, pulse)
-			for r in [11 + int(pulse * 2.0), 12 + int(pulse * 2.0)]:
+			var rb: int = 11 + (5 if m.lo.get("ext_shield", false) else 0)
+			for r in [rb + int(pulse * 2.0), rb + 1 + int(pulse * 2.0)]:
 				for e in _ring(r):
 					var da := absf(wrapf(e[1] - back, -PI, PI))
 					if da > PI * 0.5 * k:
@@ -1371,7 +1551,7 @@ class PlayerCore extends Node2D:
 					var gap := absf(fmod(e[1] - back + PI + 100.0 * TAU, PI / 5.0) - PI / 10.0) > PI / 10.0 - 0.05
 					if gap:
 						continue
-					var a := (0.95 if r == 11 + int(pulse * 2.0) else 0.55) * (0.85 + 0.15 * sin(Time.get_ticks_msec() / 90.0 + seg))
+					var a := (0.95 if r == rb + int(pulse * 2.0) else 0.55) * (0.85 + 0.15 * sin(Time.get_ticks_msec() / 90.0 + seg))
 					draw_rect(Rect2(Vector2(e[0]), Vector2.ONE), Color(col, a))
 		var ck: float = m.cannon_k
 		if ck > 0.0:

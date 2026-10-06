@@ -37,6 +37,11 @@ func enter(res: Dictionary) -> void:
 	var r := str(res.get("result", ""))
 	if r == "lose" or r == "retreat":
 		await s.say("system", ["Deployment failed. Recovery protocol complete.", "Failed deployments are recorded. Readiness is not optional."])
+		if Game.use_medicine():
+			s.w.player.emote("sync")
+			await s.say("", "You take a Neural Stabilizer. The cold settles. The failure is cleared from your record.")
+	elif r == "win" and int(res.get("credits", 0)) > 0 and int(Game.story.interval_count) <= 2:
+		await s.say("system", "Deployment credits issued. Engineering will accept them at the terminal by the lockers.")
 	if int(Game.story.interval_count) == 1:
 		await s.say("", ["They don't send you back to the dorms right away.", "There's time.", "Not much. But enough."])
 	if Game.midas_dead() and not bool(Game.story.midas_death_announced):
@@ -447,7 +452,12 @@ func examine(ev: Dictionary) -> void:
 			if Game.relationship("hiro") >= 2:
 				await s.say("", "The sim pod is still warm. Hiro's handprint is on the glass, at the exact same height, again and again.")
 			else:
-				await s.say("", "A simulation pod. Optional. The sign says: OPTIONAL. Someone has underlined it twice.")
+				await s.say("", "TRAINING MODULES. Optional. Someone has underlined OPTIONAL twice.")
+			var c := await s.ask("Run a training module? Clears pay a few credits.", ["Train", "Not now"], "system")
+			if c == 0:
+				await s.m.training()
+		"workshop":
+			await s.m.workshop()
 		"vending":
 			Sfx.play("beep", 1.3, -8.0)
 			await s.say("", "NUTRITION PASTE, flavor: BLUE. The machine thanks you for your service.")

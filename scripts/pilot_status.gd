@@ -33,7 +33,7 @@ func _init() -> void:
 	st.position = Vector2(76, 20)
 	box.add_child(st)
 	labels.append(st)
-	var ms := Art.label("Missions %d   Failed %d" % [Game.completed_count(), int(Game.story.missions_failed)], Pal.TEXT_DIM)
+	var ms := Art.label("Missions %d  Failed %d  %dc" % [Game.completed_count(), int(Game.story.missions_failed), Game.credits()], Pal.TEXT_DIM)
 	ms.position = Vector2(76, 32)
 	box.add_child(ms)
 	var stats := [

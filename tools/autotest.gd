@@ -50,6 +50,23 @@ func hold(action: String, t: float) -> void:
 	_send(action, false)
 
 
+func _apply_loadout() -> void:
+	var w := OS.get_environment("PK_WEAPON")
+	if w != "":
+		Game.story.weapons = ["basic", "wave", "beam", "auto"]
+		Game.story.weapon = w
+	if OS.get_environment("PK_UP") == "max":
+		Game.story.upgrades = {"cooldown": 3, "armor": 3}
+		Game.story.specials = ["missile", "ext_shield"]
+
+
+func _has_training() -> bool:
+	for c in main.cine_layer.get_children():
+		if c is Training:
+			return true
+	return false
+
+
 func _has_starmap() -> bool:
 	for c in main.cine_layer.get_children():
 		if c is StarMap:
@@ -121,7 +138,14 @@ func _run(scenario: String) -> void:
 			auto_talk = false
 			Game.player_name = "Ari"
 			Game.chapter = "hub"
-			main.start_mission(lv, false, true)
+			Game.testing = true
+			_apply_loadout()
+			if lv.begins_with("training_"):
+				var bits := lv.split("_")
+				var td := Training.build(bits[1], int(bits[2]) - 1)
+				main.start_mission(td.level_id, false, false, null, td, true)
+			else:
+				main.start_mission(lv, false, OS.get_environment("PK_INTRO") != "off")
 			var n := int(OS.get_environment("PK_N")) if OS.get_environment("PK_N") != "" else 14
 			for i in n:
 				await wait(1.6 if i < 4 else 3.0)
@@ -245,7 +269,7 @@ func _run(scenario: String) -> void:
 					break
 			await wait(4.0)
 			await shot("loop_back")
-			print("rel pala=", Game.relationship("pala"), " completed=", Game.completed_count(), " interval=", Game.story.interval_count)
+			print("rel pala=", Game.relationship("pala"), " completed=", Game.completed_count(), " interval=", Game.story.interval_count, " credits=", Game.credits())
 			get_tree().quit()
 		"introcheck":
 			Game.player_name = "Ari"
@@ -411,6 +435,78 @@ func _run(scenario: String) -> void:
 			for i in 4:
 				await wait(0.5)
 				await shot("warpcine_%d" % i)
+			get_tree().quit()
+		"screens":
+			auto_talk = false
+			Game.testing = true
+			Game.story.credits = 420
+			Game.mark_completed("terra_virex", 3)
+			Game.mark_completed("glacien_ix", 1)
+			Game.story.training = {"block": 2, "shoot": 1, "combo": 0}
+			main.load_map(Maps.commons(), Vector2i(6, 12), 1)
+			main.workshop()
+			await wait(1.2)
+			await shot("workshop")
+			await tap("down", 0.2)
+			await tap("down", 0.2)
+			await tap("accept", 1.0)
+			await shot("workshop_bought")
+			for i in 9:
+				await tap("down", 0.15)
+			await shot("workshop_weapons")
+			await tap("cancel", 1.2)
+			main.training()
+			await wait(1.5)
+			await shot("training")
+			await tap("right", 0.3)
+			await tap("accept", 0.5)
+			await shot("training_tiers")
+			print("credits now ", Game.credits(), " upgrades ", Game.story.upgrades)
+			get_tree().quit()
+		"weaponshot":
+			auto_talk = false
+			Game.testing = true
+			var img := Image.create_empty(4 * 90, 90, false, Image.FORMAT_RGBA8)
+			var col := 0
+			for w in ["basic", "wave", "beam", "auto"]:
+				Game.story.weapons = ["basic", "wave", "beam", "auto"]
+				Game.story.weapon = w
+				var td := Training.build("block", 0)
+				main.start_mission(td.level_id, false, false, null, td, true)
+				await wait(2.4)
+				var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+				m._aim_mode = "key"
+				m.facing = Vector2(1, -1).normalized()
+				for k in 3:
+					m._fire_cd = 0.0
+					m._try_fire()
+					await wait(0.04)
+				await RenderingServer.frame_post_draw
+				var full := get_viewport().get_texture().get_image()
+				full.convert(Image.FORMAT_RGBA8)
+				img.blit_rect(full, Rect2i(150, 10, 90, 90), Vector2i(col * 90, 0))
+				print(w, " in flight: ", m.bolts.size())
+				col += 1
+				m.queue_free()
+				await wait(0.3)
+			img.resize(img.get_width() * 3, img.get_height() * 3, Image.INTERPOLATE_NEAREST)
+			img.save_png(out + "/weapons.png")
+			get_tree().quit()
+		"trainlap":
+			Game.testing = true
+			Game.story.credits = 0
+			main.load_map(Maps.commons(), Vector2i(6, 12), 1)
+			main.training()
+			await wait(1.5)
+			auto_talk = false
+			await tap("accept", 0.6)
+			await tap("accept", 0.6)
+			bot = true
+			for i in 60:
+				await wait(1.0)
+				if _has_training():
+					break
+			print("after drill: credits=", Game.credits(), " training=", Game.story.training)
 			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)

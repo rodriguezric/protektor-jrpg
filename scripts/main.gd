@@ -84,14 +84,30 @@ func test_level(level_id: String) -> void:
     Game.testing = true
     Game.player_name = "Tester"
     Game.chapter = "hub"
-    if not FileAccess.file_exists("res://data/missions/%s.json" % level_id):
+    # loadout flags: --weapon=beam --cooldown=3 --armor=2 --missile --shield, or --upgrades=max
+    var user_args := OS.get_cmdline_user_args()
+    var maxed := _arg("--upgrades=") == "max"
+    Game.story.weapons = ["basic", "wave", "beam", "auto"]
+    Game.story.weapon = _arg("--weapon=") if _arg("--weapon=") != "" else ("basic")
+    Game.story.upgrades.cooldown = 3 if maxed else int(_arg("--cooldown=")) if _arg("--cooldown=") != "" else 0
+    Game.story.upgrades.armor = 3 if maxed else int(_arg("--armor=")) if _arg("--armor=") != "" else 0
+    if maxed or user_args.has("--missile"):
+        Game.story.specials.append("missile")
+    if maxed or user_args.has("--shield"):
+        Game.story.specials.append("ext_shield")
+    var tdata := {}
+    if level_id.begins_with("training_"):
+        var bits := level_id.split("_")
+        if bits.size() == 3 and Data.TRAINING.has(bits[1]) and bits[2].is_valid_int():
+            tdata = Training.build(bits[1], clampi(int(bits[2]) - 1, 0, 2))
+    if tdata.is_empty() and not FileAccess.file_exists("res://data/missions/%s.json" % level_id):
         push_error("No mission named '%s' in data/missions/" % level_id)
         get_tree().quit(1)
         return
     var intro := _arg("--intro=") != "off"
     print("[run_mission] playing %s (intro %s). Esc > Abort mission to quit." % [level_id, "on" if intro else "off"])
     while true:
-        var res: Dictionary = await start_mission(level_id, true, intro)
+        var res: Dictionary = await start_mission(level_id, true, intro and tdata.is_empty(), null, tdata, not tdata.is_empty())
         print("[run_mission] %s: %s  score=%s" % [level_id, res.get("result", "?"), res.get("score", 0)])
         if res.get("result", "") == "retreat":
             break
@@ -224,7 +240,7 @@ func wipe_out() -> void:
     await tw.finished
 
 
-func start_mission(level_id: String, arcade_mode: bool = false, intro: bool = true, cover: CanvasItem = null) -> Dictionary:
+func start_mission(level_id: String, arcade_mode: bool = false, intro: bool = true, cover: CanvasItem = null, data: Dictionary = {}, training_mode: bool = false) -> Dictionary:
     ## Plays one mission JSON. Returns {result, score, ...}.
     ## cover: a cinematic still on screen; the mission starts beneath it and the
     ## cover dissolves away, so there is no cut or flash into the warp.
@@ -233,7 +249,7 @@ func start_mission(level_id: String, arcade_mode: bool = false, intro: bool = tr
         world.paused = true
     var m := Mission.new()
     mission_layer.add_child(m)
-    m.setup(level_id, arcade_mode, intro)
+    m.setup(level_id, arcade_mode, intro, data, training_mode)
     await get_tree().process_frame
     if cover:
         var ct := cover.create_tween()
@@ -248,6 +264,48 @@ func start_mission(level_id: String, arcade_mode: bool = false, intro: bool = tr
         world.visible = true
         world.paused = false
     return res
+
+
+func training() -> void:
+    ## The sim pods: pick a drill, run it, come back to the module select.
+    if world:
+        world.paused = true
+    while true:
+        await fade_out(0.35)
+        var tr := Training.new()
+        cine_layer.add_child(tr)
+        Sfx.music("level_select", 1.0)
+        await fade_in(0.35)
+        var pick: Dictionary = await tr.run()
+        await fade_out(0.35)
+        tr.queue_free()
+        if pick.is_empty():
+            break
+        var data := Training.build(pick.module, pick.tier)
+        var res: Dictionary = await start_mission(data.level_id, false, false, null, data, true)
+        if res.get("result", "") == "win":
+            Game.story.training[pick.module] = maxi(Game.training_level(pick.module), int(pick.tier) + 1)
+            Game.save()
+    if world:
+        world.paused = false
+        world.visible = true
+    Sfx.music("low_mechanical_ambient", 1.0)
+    await fade_in(0.35)
+
+
+func workshop() -> void:
+    if world:
+        world.paused = true
+    await fade_out(0.3)
+    var w := Workshop.new()
+    ui.add_child(w)
+    await fade_in(0.3)
+    await w.run()
+    await fade_out(0.3)
+    w.queue_free()
+    if world:
+        world.paused = false
+    await fade_in(0.3)
 
 
 func starmap(arcade_mode: bool = false, first_time: bool = false) -> String:
