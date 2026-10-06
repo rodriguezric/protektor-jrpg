@@ -453,6 +453,8 @@ func field_menu() -> void:
     Sfx.play("confirm")
     var panel := PilotStatus.new()
     ui.add_child(panel)
+    # beneath the dialog box, so text it brings up (Controls, Save) reads on top
+    ui.move_child(panel, dialog.get_index())
     var r: String = await panel.run()
     panel.queue_free()
     if r == "title":
