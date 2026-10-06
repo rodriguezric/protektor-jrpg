@@ -605,6 +605,17 @@ func _run(scenario: String) -> void:
 			Game.load_profile()
 			print("D profile specials=", Game.profile.specials, " unlocked=", Game.profile.unlocked, " most recent=", Game.most_recent_slot())
 			get_tree().quit()
+		"menutext":
+			Game.testing = true
+			auto_talk = false
+			main.load_map(Maps.commons(), Vector2i(12, 8), 1)
+			await wait(0.5)
+			await tap("cancel", 0.6)
+			await tap("down", 0.2)
+			await tap("down", 0.2)
+			await tap("accept", 1.5)
+			await shot("menutext")
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world
