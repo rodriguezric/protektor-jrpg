@@ -772,6 +772,20 @@ func _run(scenario: String) -> void:
 			await tap("accept", 1.5)
 			await shot("menutext")
 			get_tree().quit()
+		"victory":
+			# Results panel straight after a clear; PK_LEVEL picks the level so
+			# unlocks can be included (level 3 of a world unlocks the next).
+			Game.testing = true
+			var lv := OS.get_environment("PK_LEVEL") if OS.get_environment("PK_LEVEL") != "" else "terra_virex_level_01"
+			main.start_mission(lv, false, false)
+			await wait(1.5)
+			var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+			m.score = 1234
+			m._begin_victory()
+			for i in 4:
+				await wait(1.5)
+				await shot("victory_%d" % i)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

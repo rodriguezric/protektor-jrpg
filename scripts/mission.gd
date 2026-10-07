@@ -1276,7 +1276,8 @@ func _begin_victory() -> void:
 	await get_tree().create_timer(0.6).timeout
 	var panel := Art.make_box("sys_box")
 	panel.position = Vector2(26, 36)
-	panel.size = Vector2(124, 119 if credits_earned > 0 else 108)
+	var n_rows := 6 if credits_earned > 0 else 5
+	panel.size = Vector2(124, 5 + n_rows * 11 + 25 + unlocks.size() * 10 + 4)
 	panel.scale = Vector2(1, 0)
 	panel.pivot_offset = panel.size / 2.0
 	overlay.add_child(panel)
@@ -1309,22 +1310,26 @@ func _begin_victory() -> void:
 			v.add_theme_color_override("font_color", Pal.GLOW)
 			v.text = "+" + v.text
 		await get_tree().create_timer(0.08).timeout
+	# Synchronization: the heading (and any gain) on one line, the bar with
+	# its percentage on the next, so nothing shares space with the long word.
 	var sl := Art.label("SYNCHRONIZATION", Pal.SYNC)
 	sl.position = Vector2(6, sy + 2)
 	panel.add_child(sl)
 	var bb := ColorRect.new()
 	bb.color = Pal.INK
-	bb.position = Vector2(6, sy + 14)
-	bb.size = Vector2(112, 6)
+	bb.position = Vector2(6, sy + 15)
+	bb.size = Vector2(84, 6)
 	panel.add_child(bb)
 	var fill := ColorRect.new()
 	fill.color = Pal.SYNC
-	fill.position = Vector2(7, sy + 15)
-	fill.size = Vector2(110.0 * before / 100.0, 4)
+	fill.position = Vector2(7, sy + 16)
+	fill.size = Vector2(82.0 * before / 100.0, 4)
 	panel.add_child(fill)
 	var pl := Art.label("%d%%" % before, Pal.TEXT)
-	pl.position = Vector2(92, sy + 2)
 	panel.add_child(pl)
+	var place_pct := func() -> void:
+		pl.position = Vector2(118 - Art.text_width(pl.text), sy + 13)
+	place_pct.call()
 	if training:
 		sl.visible = false
 		bb.visible = false
@@ -1334,13 +1339,19 @@ func _begin_victory() -> void:
 	if after != before and not arcade and not training:
 		Sfx.play("sync", 1.2, -8.0)
 		var ft := create_tween()
-		ft.tween_property(fill, "size:x", 110.0 * after / 100.0, 0.8).set_trans(Tween.TRANS_SINE)
-		ft.parallel().tween_method(func(x: float) -> void: pl.text = "%d%%" % int(x), float(before), float(after), 0.8)
+		ft.tween_property(fill, "size:x", 82.0 * after / 100.0, 0.8).set_trans(Tween.TRANS_SINE)
+		ft.parallel().tween_method(func(x: float) -> void:
+			pl.text = "%d%%" % int(x)
+			place_pct.call(), float(before), float(after), 0.8)
 		await ft.finished
-		var up := Art.label("+%d" % (after - before), Pal.LEMON)
-		up.position = Vector2(70, sy + 2)
+		# the gain pops in at the end of the heading line
+		var up := Art.label("%+d" % (after - before), Pal.LEMON)
+		up.position = Vector2(118 - Art.text_width(up.text), sy + 2)
+		up.pivot_offset = Vector2(Art.text_width(up.text) / 2.0, 5)
+		up.scale = Vector2(1.6, 1.6)
 		panel.add_child(up)
-	var y := sy + 24
+		create_tween().tween_property(up, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK)
+	var y := sy + 25
 	for p in unlocks:
 		var u := Art.label("NEW: " + str(Data.PLANET_INFO[p].name), Pal.GLOW)
 		u.position = Vector2(6, y)
