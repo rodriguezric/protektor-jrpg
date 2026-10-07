@@ -772,6 +772,32 @@ func _run(scenario: String) -> void:
 			await tap("accept", 1.5)
 			await shot("menutext")
 			get_tree().quit()
+		"victory":
+			# Results panel straight after a clear; PK_LEVEL picks the level so
+			# unlocks can be included (level 3 of a world unlocks the next).
+			Game.testing = true
+			var lv := OS.get_environment("PK_LEVEL") if OS.get_environment("PK_LEVEL") != "" else "terra_virex_level_01"
+			main.start_mission(lv, false, false)
+			await wait(1.5)
+			var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+			m.score = 1234
+			m._begin_victory()
+			for i in 4:
+				await wait(1.5)
+				await shot("victory_%d" % i)
+			get_tree().quit()
+		"comms":
+			# A long transmission in the comms pane, shot as it types and scrolls.
+			Game.testing = true
+			main.start_mission("terra_virex_level_01", false, false)
+			await wait(1.0)
+			var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+			m._comms_queue.clear()
+			m._comms("SYSTEM", "Multiple hostile signatures converging on the northern hemisphere. Shield harmonics unstable. Recalibrating the defensive lattice now, stand by for further instructions, pilot.", 30.0, 3.0)
+			for i in 6:
+				await wait(1.2)
+				await shot("comms_%d" % i)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

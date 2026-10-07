@@ -120,6 +120,9 @@ var right_panel: Control
 var portrait: TextureRect
 var comms_name: Label
 var comms_text: Label
+var comms_clip: Control
+var _comms_scroll: Tween
+const COMMS_W := 60.0
 var score_label: Label
 var streak_label: Label
 var cells: Array = []
@@ -263,12 +266,15 @@ func _build_left() -> void:
 	comms_name = Art.label("", Pal.SYNC)
 	comms_name.position = Vector2(5, 15)
 	cbox.add_child(comms_name)
+	# the message window clips, and the text inside scrolls like a terminal
+	comms_clip = Control.new()
+	comms_clip.position = Vector2(5, 26)
+	comms_clip.size = Vector2(COMMS_W, 62)
+	comms_clip.clip_contents = true
+	cbox.add_child(comms_clip)
 	comms_text = Label.new()
-	comms_text.position = Vector2(5, 26)
-	comms_text.size = Vector2(60, 62)
-	comms_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	comms_text.add_theme_color_override("font_color", Pal.TEXT)
-	cbox.add_child(comms_text)
+	comms_clip.add_child(comms_text)
 	_set_mood("closed")
 
 
@@ -1170,29 +1176,81 @@ func _comms_pump() -> void:
 		var msg: Dictionary = _comms_queue.pop_front()
 		comms_name.text = msg.who
 		comms_name.add_theme_color_override("font_color", Pal.SYNC if msg.who == "SYSTEM" else Pal.LEMON)
-		comms_text.text = msg.text
-		comms_text.visible_characters = 0
+		var lines := _comms_wrap(msg.text)
+		var total := 0
+		for ln: String in lines:
+			total += ln.length()
+		_comms_show(lines, 0, true)
 		var n := 0
 		var t := 0.0
-		while n < msg.text.length():
+		while n < total:
 			await get_tree().process_frame
 			if not is_inside_tree():
 				return
 			t += get_process_delta_time() * maxf(8.0, msg.cps) * 1.6
-			var nn := mini(int(t), msg.text.length())
+			var nn := mini(int(t), total)
 			if nn != n:
 				n = nn
 				if n % 3 == 0:
 					Sfx.voice("system" if msg.who == "SYSTEM" else "boy", n)
-				comms_text.visible_characters = n
-		comms_text.visible_characters = -1
+				_comms_show(lines, n, true)
 		var hold: float = msg.hold
+		var blink := 0.0
 		while hold > 0.0 and _comms_queue.is_empty():
 			await get_tree().process_frame
 			if not is_inside_tree():
 				return
 			hold -= get_process_delta_time()
+			blink += get_process_delta_time()
+			_comms_show(lines, n, fmod(blink, 0.8) < 0.4)
 	_comms_busy = false
+
+
+func _comms_wrap(text: String) -> PackedStringArray:
+	## Word-wrap to the pane in the pixel font; words wider than a line break
+	## where they must.
+	var out := PackedStringArray()
+	var cur := ""
+	for word in text.split(" ", false):
+		var trial := word if cur == "" else cur + " " + word
+		# leave room for the cursor at the end of the line
+		if Art.text_width(trial + "_") <= COMMS_W:
+			cur = trial
+			continue
+		if cur != "":
+			out.append(cur)
+		cur = ""
+		for ch in word:
+			if Art.text_width(cur + ch + "_") > COMMS_W and cur != "":
+				out.append(cur)
+				cur = ""
+			cur += ch
+	if cur != "":
+		out.append(cur)
+	return out
+
+
+func _comms_show(lines: PackedStringArray, n: int, cursor: bool) -> void:
+	## Show the first n characters as a terminal would: finished lines above,
+	## the line being typed at the bottom with a cursor, scrolling up a line
+	## whenever the window is full.
+	var shown := PackedStringArray()
+	var left := n
+	for ln: String in lines:
+		if left <= 0 and not shown.is_empty():
+			break
+		shown.append(ln.substr(0, left))
+		left -= ln.length()
+	comms_text.text = "\n".join(shown) + ("_" if cursor else " ")
+	var lh: float = comms_text.get_line_height() + comms_text.get_theme_constant("line_spacing")
+	var fit := int(comms_clip.size.y / lh)
+	var target := -maxf(0.0, shown.size() - fit) * lh
+	if not is_equal_approx(target, comms_text.position.y) and (_comms_scroll == null or not _comms_scroll.is_running()):
+		if target < comms_text.position.y:
+			_comms_scroll = create_tween()
+			_comms_scroll.tween_property(comms_text, "position:y", target, 0.12).set_trans(Tween.TRANS_SINE)
+		else:
+			comms_text.position.y = target
 
 
 func _chatter(delta: float) -> void:
@@ -1276,7 +1334,8 @@ func _begin_victory() -> void:
 	await get_tree().create_timer(0.6).timeout
 	var panel := Art.make_box("sys_box")
 	panel.position = Vector2(26, 36)
-	panel.size = Vector2(124, 119 if credits_earned > 0 else 108)
+	var n_rows := 6 if credits_earned > 0 else 5
+	panel.size = Vector2(124, 5 + n_rows * 11 + 25 + unlocks.size() * 10 + 4)
 	panel.scale = Vector2(1, 0)
 	panel.pivot_offset = panel.size / 2.0
 	overlay.add_child(panel)
@@ -1309,22 +1368,26 @@ func _begin_victory() -> void:
 			v.add_theme_color_override("font_color", Pal.GLOW)
 			v.text = "+" + v.text
 		await get_tree().create_timer(0.08).timeout
+	# Synchronization: the heading (and any gain) on one line, the bar with
+	# its percentage on the next, so nothing shares space with the long word.
 	var sl := Art.label("SYNCHRONIZATION", Pal.SYNC)
 	sl.position = Vector2(6, sy + 2)
 	panel.add_child(sl)
 	var bb := ColorRect.new()
 	bb.color = Pal.INK
-	bb.position = Vector2(6, sy + 14)
-	bb.size = Vector2(112, 6)
+	bb.position = Vector2(6, sy + 15)
+	bb.size = Vector2(84, 6)
 	panel.add_child(bb)
 	var fill := ColorRect.new()
 	fill.color = Pal.SYNC
-	fill.position = Vector2(7, sy + 15)
-	fill.size = Vector2(110.0 * before / 100.0, 4)
+	fill.position = Vector2(7, sy + 16)
+	fill.size = Vector2(82.0 * before / 100.0, 4)
 	panel.add_child(fill)
 	var pl := Art.label("%d%%" % before, Pal.TEXT)
-	pl.position = Vector2(92, sy + 2)
 	panel.add_child(pl)
+	var place_pct := func() -> void:
+		pl.position = Vector2(118 - Art.text_width(pl.text), sy + 13)
+	place_pct.call()
 	if training:
 		sl.visible = false
 		bb.visible = false
@@ -1334,13 +1397,19 @@ func _begin_victory() -> void:
 	if after != before and not arcade and not training:
 		Sfx.play("sync", 1.2, -8.0)
 		var ft := create_tween()
-		ft.tween_property(fill, "size:x", 110.0 * after / 100.0, 0.8).set_trans(Tween.TRANS_SINE)
-		ft.parallel().tween_method(func(x: float) -> void: pl.text = "%d%%" % int(x), float(before), float(after), 0.8)
+		ft.tween_property(fill, "size:x", 82.0 * after / 100.0, 0.8).set_trans(Tween.TRANS_SINE)
+		ft.parallel().tween_method(func(x: float) -> void:
+			pl.text = "%d%%" % int(x)
+			place_pct.call(), float(before), float(after), 0.8)
 		await ft.finished
-		var up := Art.label("+%d" % (after - before), Pal.LEMON)
-		up.position = Vector2(70, sy + 2)
+		# the gain pops in at the end of the heading line
+		var up := Art.label("%+d" % (after - before), Pal.LEMON)
+		up.position = Vector2(118 - Art.text_width(up.text), sy + 2)
+		up.pivot_offset = Vector2(Art.text_width(up.text) / 2.0, 5)
+		up.scale = Vector2(1.6, 1.6)
 		panel.add_child(up)
-	var y := sy + 24
+		create_tween().tween_property(up, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK)
+	var y := sy + 25
 	for p in unlocks:
 		var u := Art.label("NEW: " + str(Data.PLANET_INFO[p].name), Pal.GLOW)
 		u.position = Vector2(6, y)
