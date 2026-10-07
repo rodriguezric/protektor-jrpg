@@ -176,7 +176,9 @@ static func badge(frame: int) -> PixBuf:
 		var a := k * TAU / 24.0
 		b.rect(36 + cos(a) * 30 - 1, 36 + sin(a) * 30 - 1, 2, 2, Pal.SYNC if glow and k % 2 == 0 else Pal.deep(Pal.STEEL))
 	b.ascii(["..XXX..", ".X...X.", "X..S..X", "X.SSS.X", "X..S..X", ".X...X.", "..XXX.."], {"X": Pal.deep(Pal.STEEL), "S": Pal.SYNC if glow else Pal.SLATE}, 33, 14)
-	b.rect(16, 44, 40, 10, Pal.deep(Pal.STEEL))
+	# nameplate: wide enough for an eight-letter name, recessed into the metal
+	b.rect(9, 44, 54, 11, Pal.deep(Pal.STEEL))
+	b.rect(9, 54, 54, 1, Pal.hi(Pal.STEEL))
 	if glow:
 		b.circ(36, 36, 4, Pal.SYNC)
 	b.outline()

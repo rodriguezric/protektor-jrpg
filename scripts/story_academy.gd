@@ -141,9 +141,10 @@ func badge() -> void:
 	c.modulate.a = 0.0
 	c.show_tex(Art.cine("badge_bg"), 0.0)
 	var bs := c.sprite(Art.cine("badge", 0), Vector2(160, 104), 1.0)
-	var nm := Art.label(Game.player_name.to_upper(), Pal.deep(Pal.STEEL))
-	nm.position = Vector2(160 - Art.text_width(nm.text) / 2.0, 113)
-	c.add_child(nm)
+	# the etched name rides on the badge's nameplate
+	var nm := Art.shadow_label(Game.player_name.to_upper(), Pal.FROST)
+	nm.position = Vector2(-Art.text_width(nm.text) / 2.0, 8)
+	bs.add_child(nm)
 	await c.create_tween().tween_property(c, "modulate:a", 1.0, 0.4).finished
 	await s.say("", ["The badge stops in front of you.", "Your name is etched into the surface."])
 	await s.say("instructor", ["When instructed, place your thumb on the badge.", "Maintain contact."])
