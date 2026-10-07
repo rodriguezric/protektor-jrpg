@@ -110,7 +110,6 @@ func _trailer(seg: String) -> void:
 			c.modulate.a = 0.0
 			c.show_tex(Art.cine("table"), 0.0)
 			c.sprite(Art.cine("letter", 0), Vector2(160, 92), 1.0)
-			c.sprite(Art.cine("hands"), Vector2(160, 90), 1.0)
 			c.create_tween().tween_property(c, "modulate:a", 1.0, 0.5)
 			caption("YOUR CHILD HAS BEEN SELECTED.", 1.8, 2.2, 150)
 			await wait(4.6)
@@ -140,7 +139,7 @@ func _trailer(seg: String) -> void:
 			w.cam.position = w.cam_focus
 			await wait(1.6)
 			var c := Cinema.open()
-			c.show_tex(Art.cine("palm", Game.look), 0.0)
+			c.show_tex(Art.cine("badge_bg"), 0.0)
 			var bs := c.sprite(Art.cine("badge", 0), Vector2(160, 104), 1.0)
 			var nm := Art.label("ARI", Pal.deep(Pal.STEEL))
 			nm.position = Vector2(160 - Art.text_width("ARI") / 2.0, 113)

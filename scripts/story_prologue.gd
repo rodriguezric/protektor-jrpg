@@ -107,7 +107,6 @@ func _letter_open() -> void:
 	letter_c.show_tex(Art.cine("table"), 0.0)
 	var l := letter_c.sprite(Art.cine("letter", 0), Vector2(160, 92), 1.0)
 	l.set_meta("letter", true)
-	letter_c.sprite(Art.cine("hands"), Vector2(160, 90), 1.0)
 	await letter_c.create_tween().tween_property(letter_c, "modulate:a", 1.0, 0.5).finished
 
 
