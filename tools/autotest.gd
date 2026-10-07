@@ -786,6 +786,18 @@ func _run(scenario: String) -> void:
 				await wait(1.5)
 				await shot("victory_%d" % i)
 			get_tree().quit()
+		"comms":
+			# A long transmission in the comms pane, shot as it types and scrolls.
+			Game.testing = true
+			main.start_mission("terra_virex_level_01", false, false)
+			await wait(1.0)
+			var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+			m._comms_queue.clear()
+			m._comms("SYSTEM", "Multiple hostile signatures converging on the northern hemisphere. Shield harmonics unstable. Recalibrating the defensive lattice now, stand by for further instructions, pilot.", 30.0, 3.0)
+			for i in 6:
+				await wait(1.2)
+				await shot("comms_%d" % i)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world

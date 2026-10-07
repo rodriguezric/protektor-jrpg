@@ -120,6 +120,9 @@ var right_panel: Control
 var portrait: TextureRect
 var comms_name: Label
 var comms_text: Label
+var comms_clip: Control
+var _comms_scroll: Tween
+const COMMS_W := 60.0
 var score_label: Label
 var streak_label: Label
 var cells: Array = []
@@ -263,12 +266,15 @@ func _build_left() -> void:
 	comms_name = Art.label("", Pal.SYNC)
 	comms_name.position = Vector2(5, 15)
 	cbox.add_child(comms_name)
+	# the message window clips, and the text inside scrolls like a terminal
+	comms_clip = Control.new()
+	comms_clip.position = Vector2(5, 26)
+	comms_clip.size = Vector2(COMMS_W, 62)
+	comms_clip.clip_contents = true
+	cbox.add_child(comms_clip)
 	comms_text = Label.new()
-	comms_text.position = Vector2(5, 26)
-	comms_text.size = Vector2(60, 62)
-	comms_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	comms_text.add_theme_color_override("font_color", Pal.TEXT)
-	cbox.add_child(comms_text)
+	comms_clip.add_child(comms_text)
 	_set_mood("closed")
 
 
@@ -1170,29 +1176,81 @@ func _comms_pump() -> void:
 		var msg: Dictionary = _comms_queue.pop_front()
 		comms_name.text = msg.who
 		comms_name.add_theme_color_override("font_color", Pal.SYNC if msg.who == "SYSTEM" else Pal.LEMON)
-		comms_text.text = msg.text
-		comms_text.visible_characters = 0
+		var lines := _comms_wrap(msg.text)
+		var total := 0
+		for ln: String in lines:
+			total += ln.length()
+		_comms_show(lines, 0, true)
 		var n := 0
 		var t := 0.0
-		while n < msg.text.length():
+		while n < total:
 			await get_tree().process_frame
 			if not is_inside_tree():
 				return
 			t += get_process_delta_time() * maxf(8.0, msg.cps) * 1.6
-			var nn := mini(int(t), msg.text.length())
+			var nn := mini(int(t), total)
 			if nn != n:
 				n = nn
 				if n % 3 == 0:
 					Sfx.voice("system" if msg.who == "SYSTEM" else "boy", n)
-				comms_text.visible_characters = n
-		comms_text.visible_characters = -1
+				_comms_show(lines, n, true)
 		var hold: float = msg.hold
+		var blink := 0.0
 		while hold > 0.0 and _comms_queue.is_empty():
 			await get_tree().process_frame
 			if not is_inside_tree():
 				return
 			hold -= get_process_delta_time()
+			blink += get_process_delta_time()
+			_comms_show(lines, n, fmod(blink, 0.8) < 0.4)
 	_comms_busy = false
+
+
+func _comms_wrap(text: String) -> PackedStringArray:
+	## Word-wrap to the pane in the pixel font; words wider than a line break
+	## where they must.
+	var out := PackedStringArray()
+	var cur := ""
+	for word in text.split(" ", false):
+		var trial := word if cur == "" else cur + " " + word
+		# leave room for the cursor at the end of the line
+		if Art.text_width(trial + "_") <= COMMS_W:
+			cur = trial
+			continue
+		if cur != "":
+			out.append(cur)
+		cur = ""
+		for ch in word:
+			if Art.text_width(cur + ch + "_") > COMMS_W and cur != "":
+				out.append(cur)
+				cur = ""
+			cur += ch
+	if cur != "":
+		out.append(cur)
+	return out
+
+
+func _comms_show(lines: PackedStringArray, n: int, cursor: bool) -> void:
+	## Show the first n characters as a terminal would: finished lines above,
+	## the line being typed at the bottom with a cursor, scrolling up a line
+	## whenever the window is full.
+	var shown := PackedStringArray()
+	var left := n
+	for ln: String in lines:
+		if left <= 0 and not shown.is_empty():
+			break
+		shown.append(ln.substr(0, left))
+		left -= ln.length()
+	comms_text.text = "\n".join(shown) + ("_" if cursor else " ")
+	var lh: float = comms_text.get_line_height() + comms_text.get_theme_constant("line_spacing")
+	var fit := int(comms_clip.size.y / lh)
+	var target := -maxf(0.0, shown.size() - fit) * lh
+	if not is_equal_approx(target, comms_text.position.y) and (_comms_scroll == null or not _comms_scroll.is_running()):
+		if target < comms_text.position.y:
+			_comms_scroll = create_tween()
+			_comms_scroll.tween_property(comms_text, "position:y", target, 0.12).set_trans(Tween.TRANS_SINE)
+		else:
+			comms_text.position.y = target
 
 
 func _chatter(delta: float) -> void:
