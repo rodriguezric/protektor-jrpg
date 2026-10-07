@@ -1,13 +1,16 @@
 class_name ArtPeople
 ## One renderer for every humanoid (Greywater's chibi rig). Recruits, parents and
 ## officers are just data: colours + a hair style + clothes + accessories.
-## dir: 0 = down, 1 = up, 2 = side (facing right). frame: 0..3 walk cycle.
+## dir: 0 = down, 1 = up, 2 = side: a three-quarter view turned to the right
+## (flipped for left). frame: 0..3 walk cycle.
 ## mood changes only the face: "", smile, sad, hollow, closed, shock, cry, angry.
 ## pose: walk (default), sit (legs tucked behind a seat), lie (flat, for pods).
 
 const W := 32
 const H := 32
 const HEAD_K := 1.28
+## Hair cut close enough to show the head's shape from every side.
+const SHORT_STYLES := ["short", "spiky", "messy", "slick", "bun"]
 
 
 static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose: String = "walk") -> PixBuf:
@@ -47,7 +50,7 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 	# --- behind the body -------------------------------------------------
 	b.scale_about(Vector2(hx, hy), HEAD_K)
 	if style == "long":
-		b.ball(hx - (1.5 if side else 0.0), hy + 3.5, 6.4, 6.0, Pal.shade(hair))
+		b.ball(hx - (1.0 if side else 0.0), hy + 3.5, 6.4, 6.0, Pal.shade(hair))
 	if style == "curly":
 		for i in 5:
 			var a := PI * 0.1 + i * PI * 0.8 / 4.0
@@ -59,19 +62,23 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 	b.scale_about(Vector2.ZERO, 1.0)
 	if s.get("hood", false) and back:
 		b.ball(cx, by - 9.0 + bob, 4.6, 2.4, s.get("hoodc", top))
-	if side:
-		b.cap(cx - 1, by - 7 + bob, cx - 2 - swing, by - 4 + bob, 1.2, Pal.shade(jacket if jacket != null else top))
+	if side and not sit:
+		# far arm, half hidden behind the body, swinging against the near one
+		b.cap(cx + 2.8, by - 7 + bob, cx + 3.4 - swing, by - 4.5 + bob, 1.2, Pal.shade(jacket if jacket != null else top))
+		b.circ(cx + 3.4 - swing, by - 3.8 + bob, 1.2, Pal.shade(s.get("skin", Pal.SKIN)))
 
 	# --- legs --------------------------------------------------------------
 	if sit:
 		b.rect(cx - 3, by - 3, 2, 2, bottom)
 		b.rect(cx + 1, by - 3, 2, 2, bottom)
 	elif side:
-		var la := -1.0 if frame == 1 else (1.0 if frame == 3 else 0.0)
-		b.rect(cx - 2 - la, by - 3, 2, 3, bottom)
-		b.rect(cx - 2 - la, by - 1, 3, 1, shoes)
-		b.rect(cx + 0 + la, by - 3, 2, 3, Pal.shade(bottom))
-		b.rect(cx + 0 + la, by - 1, 3, 1, Pal.shade(shoes))
+		# both legs show; the stride reaches toward the walking direction and
+		# the lifted foot rises a pixel, so the step reads with depth
+		var la := 1.0 if frame == 1 else (-1.0 if frame == 3 else 0.0)
+		b.rect(cx + 0.5 - la, by - 3, 2, 3 + rstep, Pal.shade(bottom))
+		b.rect(cx + 0.5 - la, by - 1 + rstep, 3, 1, Pal.shade(shoes))
+		b.rect(cx - 2.5 + la, by - 3, 2, 3 + lstep, bottom)
+		b.rect(cx - 2.5 + la, by - 1 + lstep, 3, 1, shoes)
 	else:
 		b.rect(cx - 3, by - 3, 2, 3 + lstep, bottom)
 		b.rect(cx - 3, by - 1 + lstep, 2, 1, shoes)
@@ -85,7 +92,8 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 		b.ball(tx, ty, 4.0, 3.2, jacket)
 		if not back:
 			if side:
-				b.rect(tx + 1.5, ty - 2.5, 2.5, 4.5, top)
+				b.rect(tx, ty - 3, 2, 5, top)
+				b.pset(int(tx) - 1, int(ty) - 2, Pal.shade(jacket))
 			else:
 				b.rect(tx - 1, ty - 3, 2, 5, top)
 				b.pset(int(tx) - 2, int(ty) - 2, Pal.shade(jacket))
@@ -110,9 +118,9 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 		b.rect(tx - 4.5, ty - 3, 2, 1.2, Pal.LEMON)
 		b.rect(tx + 2.5, ty - 3, 2, 1.2, Pal.LEMON)
 	if s.get("apron", false) and not back:
-		b.rect(tx - 2 + (1.5 if side else 0.0), ty - 1, 4, 4.5, Pal.WHITE)
+		b.rect(tx - 2 + (0.5 if side else 0.0), ty - 1, 4, 4.5, Pal.WHITE)
 	if s.get("badge", false) and not back:
-		b.pset(int(tx) + (2 if side else -2), int(ty) - 1, Pal.SYNC)
+		b.pset(int(tx) - (1 if side else 2), int(ty) - 1, Pal.SYNC)
 	if s.get("hood", false) and not back:
 		b.rect(tx - 3.5, ty - 3.2, 7, 1.4, s.get("hoodc", top))
 
@@ -136,16 +144,32 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 	_hair(b, s, style, hair, dir, hx, hy, head)
 	if not back:
 		_face(b, s, dir, mood, hx, hy, skin, head)
+		if side:
+			# the near ear, where the hair stops at the back of the head
+			b.ball(hx - 5.4, hy + 1.2, 1.3, 1.6, skin)
+			b.rect(hx - 5.6, hy + 0.9, 0.8, 1.0, Pal.shade(skin))
 	b.scale_about(Vector2(hx, hy), HEAD_K)
 	_hair_front(b, s, style, hair, dir, hx, hy, head)
+	if style != "curly" and style != "bald":
+		_soften_hair(b, hair)
+		# one small sheen on the crown instead of a broad highlight slab
+		var sheen := hair.lerp(Pal.hi(hair), 0.6)
+		var so := -0.6 if side else 0.0
+		b.rect(hx - 3.6 + so, hy - 5.8, 3.0, 0.9, sheen)
+		b.rect(hx - 5.0 + so, hy - 4.9, 1.2, 0.9, sheen)
 	b.scale_about(Vector2.ZERO, 1.0)
 
 	if side:
+		# near arm, in front of the body
 		var hand_y := by - 4.5 + bob
+		var hand_x := cx - 3.6 + swing
 		if sit:
 			hand_y = by - 4.0
-		b.cap(cx + 1, by - 7 + bob, cx + 1.5 + swing, hand_y, 1.2, sleeve)
-		b.circ(cx + 1.5 + swing, hand_y + 0.7, 1.2, skin)
+			hand_x = cx - 1.5
+		b.cap(cx - 3.2, by - 7 + bob, hand_x, hand_y, 1.2, sleeve)
+		b.circ(hand_x, hand_y + 0.7, 1.2, skin)
+		if sit:
+			b.circ(cx + 2.6, by - 3.6, 1.2, Pal.shade(skin))
 
 	b.outline()
 	if pose == "lie":
@@ -159,8 +183,16 @@ static func _hair(b: PixBuf, s: Dictionary, style: String, hair: Color, dir: int
 	var side := dir == 2
 	if dir == 1:
 		b.ball(hx, hy - 0.5, 6.7, 6.0, hair, head[0], head[1], head[2], head[3])
+	elif style in SHORT_STYLES:
+		# short cuts follow the head's own outline all the way down the back and
+		# sides; the face is cut out of it afterwards, so the silhouette stays round
+		b.ball(hx, hy, 6.4, 5.8, hair, head[0], head[1], head[2], head[3])
+		b.ball(hx - (0.2 if side else 0.0), hy - 0.9, 6.6, 5.4, hair, head[0], head[1], head[2], head[3])
 	elif side:
-		b.ball(hx - 0.8, hy - 1.2, 6.6, 5.2, hair, head[0], head[1], head[2], head[3])
+		# crown plus the back of the head wrapping round the far-left side, kept
+		# inside the head's curve so nothing juts out at the back
+		b.ball(hx - 0.2, hy - 1.2, 6.6, 5.2, hair, head[0], head[1], head[2], head[3])
+		b.ball(hx - 4.4, hy - 0.6, 2.0, 3.2, hair, head[0], head[1], head[2], head[3])
 	else:
 		b.ball(hx, hy - 1.4, 6.8, 5.0, hair, head[0], head[1], head[2], head[3])
 	match style:
@@ -184,11 +216,15 @@ static func _hair(b: PixBuf, s: Dictionary, style: String, hair: Color, dir: int
 				b.ball(hx - 7.2, hy + 2.5, 2.4, 3.2, hair)
 				b.ball(hx + 7.2, hy + 2.5, 2.4, 3.2, hair)
 			else:
-				b.ball(hx - 6.5, hy + 2.5, 2.4, 3.2, hair)
+				b.ball(hx - 7.4, hy + 2.5, 2.4, 3.2, hair)
+				b.ball(hx + 6.8, hy + 2.5, 1.8, 3.0, Pal.shade(hair))
 		"long":
 			if dir == 0:
 				b.rect(hx - 6.5, hy - 1, 2, 7, hair)
 				b.rect(hx + 4.5, hy - 1, 2, 7, hair)
+			elif side:
+				b.rect(hx - 7.0, hy - 1, 3, 7, hair)
+				b.rect(hx + 5.5, hy - 1, 1.5, 6, hair)
 			elif dir == 1:
 				b.ball(hx, hy + 3, 6.5, 6, hair)
 		"ponytail":
@@ -199,6 +235,9 @@ static func _hair(b: PixBuf, s: Dictionary, style: String, hair: Color, dir: int
 			elif dir == 0:
 				b.rect(hx - 6.6, hy - 1, 1.8, 5, hair)
 				b.rect(hx + 4.8, hy - 1, 1.8, 5, hair)
+			else:
+				b.rect(hx - 6.8, hy - 1, 2.2, 5, hair)
+				b.rect(hx + 5.6, hy - 1, 1.4, 4, hair)
 		"curly":
 			for i in 6:
 				var a := PI + 0.1 + i * (PI - 0.2) / 5.0
@@ -216,6 +255,23 @@ static func _hair(b: PixBuf, s: Dictionary, style: String, hair: Color, dir: int
 		"messy":
 			b.tri(hx - 4, hy - 5, hx - 1, hy - 5, hx - 3.5, hy - 8, hair)
 			b.tri(hx + 0, hy - 5.5, hx + 3, hy - 5.5, hx + 2.5, hy - 8.5, hair)
+
+
+static func _soften_hair(b: PixBuf, hair: Color) -> void:
+	## Hair keeps its base colour with only a gentle shade: the dome lighting's
+	## bright band read as a pale slab against the forehead. Tails and buns
+	## drawn in the darker tone get the same treatment.
+	var dark := Pal.shade(hair)
+	var swap := [[Pal.hi(hair), hair], [Pal.deep(hair), dark], [Pal.hi(dark), dark], [Pal.deep(dark), Pal.shade(dark)]]
+	var same := func(a: Color, c: Color) -> bool:
+		return a.a > 0.5 and absf(a.r - c.r) < 0.01 and absf(a.g - c.g) < 0.01 and absf(a.b - c.b) < 0.01
+	for y in b.h:
+		for x in b.w:
+			var c := b.img.get_pixel(x, y)
+			for sw in swap:
+				if same.call(c, sw[0]):
+					b.pset(x, y, sw[1])
+					break
 
 
 static func _flatten_face(b: PixBuf, skin: Color, ey: int) -> void:
@@ -246,30 +302,40 @@ static func _hair_front(b: PixBuf, s: Dictionary, style: String, hair: Color, di
 	var side := dir == 2
 	match style:
 		"hiro":
+			b.ball(hx + (0.8 if side else 0.0), hy - 4.2, 5.6, 1.3, hair, head[0], head[1], head[2], head[3])
 			if side:
-				b.tri(hx + 1, hy - 4.5, hx + 6, hy - 4, hx + 5.5, hy - 1.0, hair)
+				b.tri(hx - 5.0, hy - 3.5, hx + 2.5, hy - 4.5, hx - 2.5, hy + 0.2, hair)
+				b.tri(hx + 2.0, hy - 4.5, hx + 6.5, hy - 3.5, hx + 5.5, hy - 1.8, hair)
 			else:
 				b.tri(hx - 6.5, hy - 3.5, hx + 1.5, hy - 4.5, hx - 4.5, hy + 0.2, hair)
 				b.tri(hx + 0.5, hy - 4.5, hx + 5.5, hy - 3.5, hx + 3.5, hy - 1.8, hair)
 		"ponytail":
-			if not side:
-				b.tri(hx - 6, hy - 3.5, hx - 0.5, hy - 4.2, hx - 4.8, hy - 0.5, hair)
+			var o := 1.5 if side else 0.0
+			b.tri(hx - 6 + o, hy - 3.5, hx - 0.5 + o, hy - 4.2, hx - 4.8 + o, hy - 0.5, hair)
 		"curly":
-			if not side:
-				b.ball(hx - 3.5, hy - 3.6, 2.2, 1.6, hair)
-				b.ball(hx + 1.5, hy - 3.9, 2.4, 1.6, hair)
+			var o := 1.0 if side else 0.0
+			b.ball(hx - 3.5 + o, hy - 3.6, 2.2, 1.6, hair)
+			b.ball(hx + 1.5 + o, hy - 3.9, 2.4, 1.6, hair)
+		"short", "bun", "twin", "long", "spiky", "slick":
+			# a soft hairline: a band across the top of the forehead with a few
+			# swept locks dipping onto it, turned with the head in the side view
+			var o := 1.4 if side else 0.0
+			b.ball(hx + o * 0.5, hy - 3.8, 5.8 if not side else 5.4, 1.5, hair, head[0], head[1], head[2], head[3])
+			b.tri(hx - 5.8 + o, hy - 3.6, hx - 1.8 + o, hy - 3.8, hx - 4.6 + o, hy - 1.4, hair)
+			b.tri(hx - 2.2 + o, hy - 3.8, hx + 2.4 + o, hy - 3.8, hx - 0.6 + o, hy - 2.0, hair)
+			b.tri(hx + 2.0 + o, hy - 3.8, hx + 5.8 + o * 0.6, hy - 3.6, hx + 4.6 + o * 0.6, hy - 1.8, hair)
 		"messy":
-			if not side:
-				b.tri(hx - 2.5, hy - 4.6, hx + 2.0, hy - 4.6, hx - 0.5, hy - 2.4, hair)
+			var o := 1.0 if side else 0.0
+			b.tri(hx - 2.5 + o, hy - 4.6, hx + 2.0 + o, hy - 4.6, hx - 0.5 + o, hy - 2.4, hair)
 
 
 static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, hy: float, skin: Color, head: Array) -> void:
 	var side := dir == 2
-	var fx := hx + (1.8 if side else 0.0)
+	var fx := hx + (1.2 if side else 0.0)
 	var fy := hy + 1.4
 	# Light the face as a taller form centred above it, so shadow only reaches
 	# the chin and jaw line instead of crossing the cheeks and mouth.
-	b.ball(fx, fy, 4.6 if side else 5.3, 4.2, skin, fx - 0.6, fy - 2.6, 7.2, 7.4)
+	b.ball(fx, fy, 5.0 if side else 5.3, 4.2, skin, fx - 0.6, fy - 2.6, 7.2, 7.4)
 	# Big chibi eyes, drawn at 1:1 so every eye pixel stays crisp.
 	b.scale_about(Vector2.ZERO, 1.0)
 	var ix := int(hx)
@@ -283,10 +349,11 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 	var open := flags.has("open")
 	if s.get("hollow", false) and mood == "":
 		mood = "hollow"
-	var eyes: Array = [ix + 3] if side else [ix - 4, ix + 2]
+	# three-quarter: both eyes, the face's centre line turned toward the right
+	var eyes: Array = [ix - 1, ix + 4] if side else [ix - 4, ix + 2]
 	for i in eyes.size():
 		var ex: int = eyes[i]
-		var patched: bool = s.get("patch", false) and (side or i == 0)
+		var patched: bool = s.get("patch", false) and i == 0
 		if patched:
 			b.rect(ex, ey, 2, 3, Pal.INK2)
 			b.pset(ex - 1, ey + 1, Pal.INK2)
@@ -321,36 +388,37 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 			b.rect(ex - 1, ey - 1, 4, 1, Pal.INK2)
 			b.pset(ex - 1, ey + 2, Pal.INK2)
 			b.pset(ex + 2, ey + 2, Pal.INK2)
-	if s.get("patch", false) and not side:
-		b.line(ix - 6, ey - 2, ix + 4, ey - 5, Pal.INK2)
+	if s.get("patch", false):
+		var po := 3 if side else 0
+		b.line(ix - 6 + po, ey - 2, ix + 4 + po, ey - 5, Pal.INK2)
 	var blush := Pal.PINK.lerp(Pal.ROSE, 0.3)
 	var mouth := Pal.shade(skin).lerp(Pal.INK2, 0.4)
-	if side:
-		if mood != "hollow":
-			b.rect(ix + 1, ey + 3, 2, 1, blush)
-		b.pset(ix + 6, ey + 2, Pal.shade(skin))
-		if s.get("mustache", false):
-			b.rect(ix + 4, ey + 3, 3, 1, Pal.deep(s.get("hair", Pal.BARK)))
-	else:
-		if mood != "hollow" and not s.get("adult", false):
+	# the mouth sits on the face's centre line, which turns with the head
+	var mx := ix + 2 if side else ix - 1
+	if mood != "hollow" and not s.get("adult", false):
+		if side:
+			b.rect(ix - 3, ey + 3, 2, 1, blush)
+			b.pset(ix + 6, ey + 3, blush)
+		else:
 			b.rect(ix - 6, ey + 3, 2, 1, blush)
 			b.rect(ix + 4, ey + 3, 2, 1, blush)
-		if s.get("mustache", false):
-			b.rect(ix - 2, ey + 4, 4, 1, Pal.deep(s.get("hair", Pal.BARK)))
-		elif mood == "smile" or (mood == "" and s.get("smile", false)):
-			b.pset(ix - 1, ey + 4, Pal.INK2)
-			b.pset(ix, ey + 4, Pal.INK2)
-		elif mood == "sad" or mood == "cry":
-			b.pset(ix - 1, ey + 5, Pal.INK2)
-			b.pset(ix, ey + 4, mouth)
-		elif mood == "shock":
-			b.rect(ix - 1, ey + 4, 2, 2, Pal.INK2)
-		else:
-			b.pset(ix, ey + 4, mouth)
-		if open:
-			var my := ey + (5 if s.get("mustache", false) else 4)
-			b.rect(ix - 1, my, 2, 2, Pal.INK2)
-			b.pset(ix - 1, my + 1, Pal.ROSE)
-		if s.get("scar", false):
-			b.pset(ix + 4, ey + 1, Pal.ROSE.lerp(skin, 0.4))
-			b.pset(ix + 5, ey + 2, Pal.ROSE.lerp(skin, 0.4))
+	if s.get("mustache", false):
+		b.rect(mx - 1, ey + 4, 4, 1, Pal.deep(s.get("hair", Pal.BARK)))
+	elif mood == "smile" or (mood == "" and s.get("smile", false)):
+		b.pset(mx, ey + 4, Pal.INK2)
+		b.pset(mx + 1, ey + 4, Pal.INK2)
+	elif mood == "sad" or mood == "cry":
+		b.pset(mx, ey + 5, Pal.INK2)
+		b.pset(mx + 1, ey + 4, mouth)
+	elif mood == "shock":
+		b.rect(mx, ey + 4, 2, 2, Pal.INK2)
+	else:
+		b.pset(mx + 1, ey + 4, mouth)
+	if open:
+		var my := ey + (5 if s.get("mustache", false) else 4)
+		b.rect(mx, my, 2, 2, Pal.INK2)
+		b.pset(mx, my + 1, Pal.ROSE)
+	if s.get("scar", false):
+		var so := -4 if side else 0
+		b.pset(ix + 4 + so, ey + 1, Pal.ROSE.lerp(skin, 0.4))
+		b.pset(ix + 5 + so, ey + 2, Pal.ROSE.lerp(skin, 0.4))

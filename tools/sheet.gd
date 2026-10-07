@@ -37,6 +37,43 @@ func _init() -> void:
 				put(ArtPeople.render(s, 0, 0, "", "sit").img)
 			for s in Data.EXTRAS:
 				put(ArtPeople.render(s, 0, 0).img)
+		"faces":
+			# close-up of front and side heads for hairline / eye work
+			out = Image.create_empty(34 * 8 + 2, 34 * 3 + 2, false, Image.FORMAT_RGBA8)
+			out.fill(Color("3a3548"))
+			var fs: Array = Data.LOOKS.duplicate()
+			for id in ["hiro", "pala", "midas", "father", "officer", "mother"]:
+				fs.append(Data.CAST[id])
+			for x in Data.EXTRAS:
+				if x.style in ["spiky", "messy", "bun"]:
+					fs.append(x)
+					break
+			for s in fs:
+				put(ArtPeople.render(s, 0, 0).img)
+				put(ArtPeople.render(s, 2, 0).img)
+			save("faces", 7)
+			quit()
+			return
+		"sides":
+			# side walk cycle (both facings) next to the front view, for every look
+			out = Image.create_empty(34 * 10 + 2, 34 * 15 + 2, false, Image.FORMAT_RGBA8)
+			out.fill(Color("3a3548"))
+			var specs: Array = []
+			for id in Data.CAST:
+				specs.append(Data.CAST[id])
+			for l in Data.LOOKS:
+				var s2: Dictionary = l.duplicate()
+				s2.merge({"top": Pal.TEAL, "hood": true, "hoodc": Pal.TEAL, "jacket": Data.JACKET, "badge": true})
+				specs.append(s2)
+			for s in specs:
+				put(ArtPeople.render(s, 0, 0).img)
+				for f in 4:
+					put(ArtPeople.render(s, 2, f).img)
+				for f in 4:
+					var im: Image = ArtPeople.render(s, 2, f).img
+					im.flip_x()
+					put(im)
+				put(ArtPeople.render(s, 2, 0, "smile+open").img)
 		"portraits":
 			out = Image.create_empty(66 * 8 + 2, 66 * 7 + 2, false, Image.FORMAT_RGBA8)
 			out.fill(Color("1a1622"))

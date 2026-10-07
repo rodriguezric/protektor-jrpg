@@ -60,6 +60,160 @@ func _apply_loadout() -> void:
 		Game.story.specials = ["missile", "ext_shield"]
 
 
+# ------------------------------------------------------------- trailer ---
+
+func caption(text: String, at: float, hold: float, y: float = 132.0) -> void:
+	## Trailer caption in the game's pixel font, faded in and out.
+	await wait(at)
+	var layer := CanvasLayer.new()
+	layer.layer = 30
+	add_child(layer)
+	var l := Art.shadow_label(text, Pal.TEXT, 2)
+	l.position = Vector2(160 - Art.text_width(text, 2) / 2.0, y)
+	l.modulate.a = 0.0
+	layer.add_child(l)
+	var tw := l.create_tween()
+	tw.tween_property(l, "modulate:a", 1.0, 0.35)
+	tw.tween_interval(hold)
+	tw.tween_property(l, "modulate:a", 0.0, 0.35)
+	tw.tween_callback(layer.queue_free)
+
+
+func _trailer(seg: String) -> void:
+	Game.testing = true
+	Game.player_name = "Ari"
+	auto_talk = false
+	main.fade_rect.color.a = 0.0
+	match seg:
+		"city":
+			var c := Cinema.open()
+			c.animate_bg("city", 8, 3.0)
+			var ship := c.sprite(Art.prop("shuttle", 0), Vector2(-40, 42))
+			ship.modulate = Color(0.1, 0.1, 0.16)
+			ship.scale = Vector2(0.5, 0.5)
+			c.create_tween().tween_property(ship, "position:x", 200.0, 6.0)
+			c.sprite(Art.cine("city_frame"), Vector2(160, 90))
+			caption("PARTICIPATION IS VOLUNTARY.", 0.8, 3.4, 140)
+			await wait(6.0)
+		"home":
+			var mp := Maps.home()
+			mp.npcs = [{"id": "mother", "who": "mother", "tile": Vector2i(3, 7), "dir": 2, "mood": "sad"}, {"id": "father", "who": "father", "tile": Vector2i(6, 7), "dir": 3}]
+			var w = main.load_map(mp, Vector2i(5, 9), 1)
+			w.busy = true
+			w.player.spec = Game.player_spec("home")
+			w.player.refresh()
+			w.cam_follow = false
+			w.cam_focus = w.tile_center(Vector2i(6, 5))
+			w.cam.position = w.cam_focus
+			await wait(1.6)
+			var c := Cinema.open(Color(0, 0, 0, 0))
+			c.modulate.a = 0.0
+			c.show_tex(Art.cine("table"), 0.0)
+			c.sprite(Art.cine("letter", 0), Vector2(160, 92), 1.0)
+			c.sprite(Art.cine("hands"), Vector2(160, 90), 1.0)
+			c.create_tween().tween_property(c, "modulate:a", 1.0, 0.5)
+			caption("YOUR CHILD HAS BEEN SELECTED.", 1.8, 2.2, 150)
+			await wait(4.6)
+		"parade":
+			var w = main.load_map(Maps.parade(), Vector2i(17, 9), 1)
+			w.busy = true
+			w.cam_follow = false
+			w.cam_focus = w.tile_center(Vector2i(8, 7))
+			w.cam.position = w.cam_focus
+			w.tint.color = Color(1.05, 1.02, 0.95)
+			w.pan_to(w.tile_center(Vector2i(21, 7)), 5.0)
+			main.story.confetti(w.tile_center(Vector2i(14, 4)), 60)
+			for i in 16:
+				var cr = w.actor("crowd%d" % i)
+				if cr:
+					cr.hop(3.0, 0.35)
+			caption("THE COLONIES NEED PROTEKTORS.", 0.6, 3.2, 150)
+			await wait(1.8)
+			main.story.confetti(w.tile_center(Vector2i(18, 5)), 50)
+			await wait(3.4)
+		"badge":
+			var w = main.load_map(Maps.hall(), Vector2i(5, 9), 1)
+			w.busy = true
+			w.player.set_pose("sit")
+			w.cam_follow = false
+			w.cam_focus = w.tile_center(Vector2i(9, 7))
+			w.cam.position = w.cam_focus
+			await wait(1.6)
+			var c := Cinema.open()
+			c.show_tex(Art.cine("palm", Game.look), 0.0)
+			var bs := c.sprite(Art.cine("badge", 0), Vector2(160, 104), 1.0)
+			var nm := Art.label("ARI", Pal.deep(Pal.STEEL))
+			nm.position = Vector2(160 - Art.text_width("ARI") / 2.0, 113)
+			c.add_child(nm)
+			caption("ONE TOUCH.", 0.4, 1.0, 30)
+			await wait(1.7)
+			bs.texture = Art.cine("badge", 1)
+			await main.flash(Pal.SYNC, 0.25, 0.9)
+			nm.queue_free()
+			c.clear_sprites()
+			c.show_tex(null, 0.0)
+			c.effect = "warp"
+			c.effect_k = 1.0
+			c.set_vignette(0.8, 0.0)
+			caption("EVERYTHING RUSHES FORWARD.", 0.2, 1.6, 82)
+			await wait(2.4)
+		"intro":
+			main.start_mission("terra_virex_level_02", false, true)
+			await wait(16.5)
+		"play":
+			bot = true
+			OS.set_environment("PK_GOD", "1")
+			var lv := OS.get_environment("PK_LEVEL")
+			Game.story.weapons = ["basic", "wave", "beam", "auto"]
+			Game.story.weapon = OS.get_environment("PK_WEAPON") if OS.get_environment("PK_WEAPON") != "" else "basic"
+			if OS.get_environment("PK_UP") == "max":
+				Game.story.upgrades = {"cooldown": 3, "armor": 3}
+				Game.story.specials = ["missile", "ext_shield"]
+			main.start_mission(lv, false, false)
+			var cap := OS.get_environment("PK_CAP")
+			if cap != "":
+				caption(cap, float(OS.get_environment("PK_CAP_AT")), 2.6, 150)
+			await wait(float(OS.get_environment("PK_LEN")) if OS.get_environment("PK_LEN") != "" else 14.0)
+		"hub":
+			Game.chapter = "hub"
+			Game.mark_completed("terra_virex", 1)
+			var w = main.load_map(main.story.hub._map(), Vector2i(8, 6), 2)
+			w.busy = true
+			var hiro: Actor = w.actor("hiro")
+			w.player.walk_to([w.tile_center(Vector2i(6, 4)) + Vector2(4, 0)], 50.0)
+			await wait(1.3)
+			hiro.hop()
+			hiro.emote("note")
+			main.story.say("hiro", "You felt it, right? The flow. That turn near the end was perfect.", "still_smiling")
+			caption("BETWEEN DEPLOYMENTS,", 0.6, 1.4, 6)
+			caption("CHOOSE WHO YOU BECOME.", 2.4, 1.6, 6)
+			await wait(5.0)
+		"starmap":
+			for p in Data.PLANETS:
+				Game._unlock(p)
+			var sm := StarMap.new()
+			main.cine_layer.add_child(sm)
+			sm.setup(false, true)
+			sm.run()
+			caption("SEVEN WORLDS TO DEFEND.", 2.4, 1.6, 104)
+			await wait(4.6)
+		"ending":
+			var c := Cinema.open()
+			c.show_tex(Art.cine("ascend"), 0.0)
+			c.effect = "stars"
+			c.effect_k = 0.6
+			var mech := c.sprite(Art.prop("mech", 0), Vector2(160, 150))
+			mech.modulate = Color(0.85, 1.0, 1.1)
+			c.create_tween().tween_property(mech, "position:y", 96.0, 4.0).set_trans(Tween.TRANS_SINE)
+			caption("FIVE ENDINGS.", 0.6, 1.6, 20)
+			caption("HOW MUCH OF YOU REMAINS?", 2.4, 1.6, 20)
+			await wait(4.6)
+		"title":
+			main.title()
+			await wait(7.0)
+	get_tree().quit()
+
+
 func _has_training() -> bool:
 	for c in main.cine_layer.get_children():
 		if c is Training:
@@ -119,6 +273,9 @@ func _bot() -> void:
 
 func _run(scenario: String) -> void:
 	print("autotest ", scenario, " -> ", out)
+	if scenario == "trailer":
+		await _trailer(OS.get_environment("PK_SEG"))
+		return
 	match scenario:
 		"title":
 			main.title()
@@ -629,6 +786,8 @@ func _run(scenario: String) -> void:
 				await get_tree().process_frame
 				frames[act.frame] = true
 				pf[w.player.frame] = true
+				if i % 12 == 6:
+					await shot("walk_%d" % i)
 			print("npc frames seen: ", frames.keys(), " player frames seen: ", pf.keys())
 			get_tree().quit()
 		"escape":
