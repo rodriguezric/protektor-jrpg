@@ -389,8 +389,13 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 			b.pset(ex - 1, ey + 2, Pal.INK2)
 			b.pset(ex + 2, ey + 2, Pal.INK2)
 	if s.get("patch", false):
+		# the strap is tied to the patch: back from its outer edge to the side
+		# of the head, and up from its top corner into the hair
+		var px: int = eyes[0]
 		var po := 3 if side else 0
-		b.line(ix - 6 + po, ey - 2, ix + 4 + po, ey - 5, Pal.INK2)
+		b.line(px - 1, ey + 1, ix - 7 + po, ey, Pal.INK2)
+		b.line(px + 1, ey - 1, ix + 4 + po, ey - 4, Pal.INK2)
+		b.pset(px + 1, ey, Pal.SLATE)
 	var blush := Pal.PINK.lerp(Pal.ROSE, 0.3)
 	var mouth := Pal.shade(skin).lerp(Pal.INK2, 0.4)
 	# the mouth sits on the face's centre line, which turns with the head
