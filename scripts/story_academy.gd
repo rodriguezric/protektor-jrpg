@@ -139,7 +139,7 @@ func badge() -> void:
 	# Close-up: your name, etched into the metal.
 	var c := Cinema.open()
 	c.modulate.a = 0.0
-	c.show_tex(Art.cine("palm", Game.look), 0.0)
+	c.show_tex(Art.cine("badge_bg"), 0.0)
 	var bs := c.sprite(Art.cine("badge", 0), Vector2(160, 104), 1.0)
 	var nm := Art.label(Game.player_name.to_upper(), Pal.deep(Pal.STEEL))
 	nm.position = Vector2(160 - Art.text_width(nm.text) / 2.0, 113)

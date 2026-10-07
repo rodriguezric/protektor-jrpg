@@ -11,10 +11,9 @@ static func make(name: String, frame: int) -> PixBuf:
 	match name:
 		"table": return table()
 		"letter": return letter(frame)
-		"hands": return hands()
 		"city": return city(frame)
 		"city_frame": return city_frame()
-		"palm": return palm()
+		"badge_bg": return badge_bg()
 		"badge": return badge(frame)
 		"horizon": return horizon()
 		"chamber": return chamber(frame)
@@ -79,7 +78,7 @@ static func table() -> PixBuf:
 
 
 static func letter(frame: int) -> PixBuf:
-	## The Helion letter. frame 1: crumpled where it's gripped.
+	## The Helion letter. frame 1: crumpled.
 	var b := PixBuf.new(160, 112)
 	b.rect(4, 4, 152, 104, Pal.WHITE)
 	b.rect(4, 4, 152, 2, Pal.hi(Pal.WHITE))
@@ -102,20 +101,6 @@ static func letter(frame: int) -> PixBuf:
 			var x := 6 + k * 3
 			b.line(x, 8 + k * 9, x + 10, 20 + k * 11, Pal.CREAM.lerp(Pal.STONE, 0.4))
 			b.line(153 - k * 3, 12 + k * 10, 143 - k * 3, 26 + k * 9, Pal.CREAM.lerp(Pal.STONE, 0.4))
-	b.outline()
-	return b
-
-
-static func hands() -> PixBuf:
-	var b := PixBuf.new(W, H)
-	var skin := Pal.SKIN2.lerp(Pal.SKIN, 0.5)
-	for side in [-1, 1]:
-		var cx: float = 160 + side * 86
-		b.ball(cx, 96, 14, 18, skin)
-		for f in 4:
-			b.ball(cx - side * 9, 82 + f * 7, 6, 3.5, skin)
-		b.ball(cx + side * 4, 74, 4, 7, Pal.shade(skin))
-		b.poly([Vector2(cx - 12, 108), Vector2(cx + 12, 108), Vector2(cx + side * 30 + 14, 180), Vector2(cx + side * 30 - 14, 180)], Pal.PLUM.lerp(Pal.INK, 0.2))
 	b.outline()
 	return b
 
@@ -158,17 +143,27 @@ static func city_frame() -> PixBuf:
 	return b
 
 
-static func palm() -> PixBuf:
+static func badge_bg() -> PixBuf:
+	## The badge presented on its own: a dark field, a soft cone of light from
+	## above and a pool of light on the surface where it hovers.
 	var b := PixBuf.new(W, H)
-	gradient(b, [Color("1a2030"), Color("232c40"), Color("2c3850")])
-	var skin: Color = Game.player_spec().get("skin", Pal.SKIN)
-	b.ball(160, 130, 70, 50, skin)
-	b.ell(160, 128, 50, 30, Pal.shade(skin).lerp(skin, 0.5))
-	for f in 4:
-		b.ball(108 + f * 34, 80, 13, 26, skin)
-	b.ball(236, 120, 14, 22, skin)
-	b.poly([Vector2(110, 168), Vector2(210, 168), Vector2(230, 180), Vector2(90, 180)], Data.JACKET)
-	b.outline()
+	gradient(b, [Color("141a28"), Color("1a2234"), Color("202a40")])
+	var c := Vector2(160, 100)
+	for y in H:
+		for x in W:
+			var d := Vector2((x - c.x) / 120.0, (y - c.y) / 90.0).length()
+			var cone := absf(x - c.x) < 24.0 + y * 0.35 and y < c.y
+			var k := 0.0
+			if d < 1.0:
+				k = (1.0 - d) * 0.35
+			if cone:
+				k += 0.08
+			if k > 0.0 and k * 16.0 > BAYER[y % 4][x % 4]:
+				b.img.set_pixel(x, y, b.img.get_pixel(x, y).lerp(Pal.NAVY.lerp(Pal.SYNC, 0.25), 0.55))
+	# a lit pool on the surface below, and the badge's shadow within it
+	b.ell(160, 154, 64, 10, Color("28344c"))
+	b.ell(160, 154, 46, 7, Color("2e3c56"))
+	b.ell(160, 154, 26, 4, Color("1a2234"))
 	return b
 
 
