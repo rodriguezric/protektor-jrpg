@@ -1,0 +1,27 @@
+#!/bin/bash
+# Builds the Android APK and uploads it.
+# Release-signed if a release keystore is given through the environment:
+#   GODOT_ANDROID_KEYSTORE_RELEASE_PATH / _USER / _PASSWORD
+# otherwise debug-signed with your debug keystore (installs fine on a phone).
+set -euo pipefail
+cd "$(dirname "$0")"
+
+APK=exports/android/protektor_rpg.apk
+mkdir -p "$(dirname "$APK")"
+rm -f "$APK"
+
+if [ -n "${GODOT_ANDROID_KEYSTORE_RELEASE_PATH:-}" ]; then
+    godot --headless --path . --export-release "Android" "$APK"
+else
+    echo "No release keystore set; building a debug-signed APK."
+    godot --headless --path . --export-debug "Android" "$APK"
+fi
+
+# Godot doesn't always exit non-zero on a failed export, so check the file
+if [ ! -s "$APK" ]; then
+    echo "Export failed: $APK was not created." >&2
+    exit 1
+fi
+echo "Built $APK ($(du -h "$APK" | cut -f1))"
+
+scp exports/android/protektor_rpg.apk rohins@rohins.com:/home/rohins/web/sites/rodriguezric.com/apks
