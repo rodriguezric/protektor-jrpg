@@ -74,8 +74,8 @@ func portal(d: int, frame: int) -> Texture2D:
 	return _cached("portal:%d:%d" % [d, frame], func(): return ArtMission.spawn_portal(d, frame))
 
 
-func space(w: int, h: int, key: String) -> Texture2D:
-	return _cached("space:%d:%d:%s" % [w, h, key], func(): return ArtMission.space(w, h, key))
+func space(w: int, h: int, key: String, nebula: bool = true) -> Texture2D:
+	return _cached("space:%d:%d:%s:%s" % [w, h, key, nebula], func(): return ArtMission.space(w, h, key, nebula))
 
 
 func star(kind: int) -> Texture2D:

@@ -202,7 +202,10 @@ func _build() -> void:
 	arena.clip_contents = true
 	add_child(arena)
 	space = TextureRect.new()
-	space.texture = Art.space(176, 176, planet_key)
+	# ./run_mission ... --no-nebula: plain dark space, to compare the look
+	var nebula := not OS.get_cmdline_user_args().has("--no-nebula")
+	space.texture = Art.space(176, 176, planet_key, nebula)
+	space.modulate.a = NEBULA_ALPHA
 	arena.add_child(space)
 	stars = StarLayer.new()
 	stars.m = self
@@ -409,6 +412,9 @@ const INTRO_HUD_FADE_SEC := 1.2
 const INTRO_PLANET_START_SCALE := 0.16
 const INTRO_PLANET_SCREEN_FILL := 0.70
 const INTRO_ZOOM_LOOP_FADE_OUT_SEC := 12.0
+const INTRO_SPACE_FADE_SEC := 1.6
+## The galaxy backdrop sits at half strength over the dark arena.
+const NEBULA_ALPHA := 0.5
 
 var _zoom_loop: AudioStreamPlayer
 var _intro_black: ColorRect
@@ -422,6 +428,8 @@ func _intro_prep() -> void:
 	left_panel.modulate.a = 0.0
 	right_panel.modulate.a = 0.0
 	frame_box.modulate.a = 0.0
+	# the galaxy backdrop stays hidden until the planet has pulled back out
+	space.modulate.a = 0.0
 	stars.warp = 0.0
 	_intro_black = ColorRect.new()
 	_intro_black.size = ARENA.size
@@ -467,7 +475,6 @@ func _intro() -> void:
 	var t1 := create_tween().set_parallel(true)
 	t1.tween_property(stars, "warp", 0.68, INTRO_STAR_WARP_SEC).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	t1.tween_property(_intro_black, "color:a", 0.0, INTRO_STAR_WARP_SEC * 0.68)
-	t1.tween_property(space, "modulate", Color(0.55, 0.55, 0.65), INTRO_STAR_WARP_SEC)
 	await t1.finished
 	# 2. Warp to the planet: it rushes up out of the tunnel to fill the view.
 	var t2 := create_tween().set_parallel(true)
@@ -476,7 +483,6 @@ func _intro() -> void:
 	t2.tween_property(core, "modulate:a", 1.0, INTRO_WARP_TO_PLANET_SEC * 0.78).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	await t2.finished
 	stars.warp = 0.0
-	space.modulate = Color.WHITE
 	# 3. The planet's name, after a white flash; the zoom loop begins its long fade.
 	if _zoom_loop and _zoom_loop.playing:
 		var zf := _zoom_loop.create_tween()
@@ -514,6 +520,8 @@ func _intro() -> void:
 	var t5 := create_tween()
 	t5.tween_property(core, "planet_scale", 1.0, INTRO_PLANET_ZOOM_OUT_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	await t5.finished
+	# The galaxy fades in around the planet as the Protektor forms.
+	create_tween().tween_property(space, "modulate:a", NEBULA_ALPHA, INTRO_SPACE_FADE_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	# 5. The Protektor forms: the shield grows in, then the cannon extends.
 	var shield_up := AudioStreamPlayer.new()
 	shield_up.stream = load("res://sfx/shield_up.wav")
