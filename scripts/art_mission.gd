@@ -289,10 +289,13 @@ static func nebula_colors(key: String) -> Array:
 	return [Color("0e1119"), Color("131b2b"), Color("1b2a3a")]
 
 
-static func space(w: int, h: int, key: String) -> PixBuf:
+static func space(w: int, h: int, key: String, nebula: bool = true) -> PixBuf:
+	## nebula = false: the same star dust on the nebula's darkest tone, flat.
 	var b := PixBuf.new(w, h)
 	var cols := nebula_colors(key)
-	for y in h:
+	if not nebula:
+		b.img.fill(cols[0])
+	for y in (h if nebula else 0):
 		for x in w:
 			var n := Pal.noise(x * 0.9, y * 0.9, 4.0 + key.length()) * 0.6 + Pal.noise(x * 2.3, y * 2.1, 9.0) * 0.4
 			var t := clampf((n + 0.6) / 1.4, 0.0, 0.999) * (cols.size() - 1)
