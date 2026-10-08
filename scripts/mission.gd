@@ -205,6 +205,7 @@ func _build() -> void:
 	# ./run_mission ... --no-nebula: plain dark space, to compare the look
 	var nebula := not OS.get_cmdline_user_args().has("--no-nebula")
 	space.texture = Art.space(176, 176, planet_key, nebula)
+	space.modulate.a = NEBULA_ALPHA
 	arena.add_child(space)
 	stars = StarLayer.new()
 	stars.m = self
@@ -412,6 +413,8 @@ const INTRO_PLANET_START_SCALE := 0.16
 const INTRO_PLANET_SCREEN_FILL := 0.70
 const INTRO_ZOOM_LOOP_FADE_OUT_SEC := 12.0
 const INTRO_SPACE_FADE_SEC := 1.6
+## The galaxy backdrop sits at half strength over the dark arena.
+const NEBULA_ALPHA := 0.5
 
 var _zoom_loop: AudioStreamPlayer
 var _intro_black: ColorRect
@@ -518,7 +521,7 @@ func _intro() -> void:
 	t5.tween_property(core, "planet_scale", 1.0, INTRO_PLANET_ZOOM_OUT_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	await t5.finished
 	# The galaxy fades in around the planet as the Protektor forms.
-	create_tween().tween_property(space, "modulate:a", 1.0, INTRO_SPACE_FADE_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	create_tween().tween_property(space, "modulate:a", NEBULA_ALPHA, INTRO_SPACE_FADE_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	# 5. The Protektor forms: the shield grows in, then the cannon extends.
 	var shield_up := AudioStreamPlayer.new()
 	shield_up.stream = load("res://sfx/shield_up.wav")
