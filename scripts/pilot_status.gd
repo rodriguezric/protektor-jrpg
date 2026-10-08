@@ -8,6 +8,9 @@ var bars := []
 var labels := []
 var t := 0.0
 var glitch := 0.0
+var pic: TextureRect
+var pic_mood := ""
+var blink_t := 2.0
 
 
 func _init() -> void:
@@ -22,8 +25,9 @@ func _init() -> void:
 	box.position = Vector2(80, 6)
 	box.size = Vector2(234, 168)
 	add_child(box)
-	var pic := TextureRect.new()
-	pic.texture = Art.portrait(Game.player_spec(), "flat" if sync >= 55 else "", false, false, 2)
+	pic = TextureRect.new()
+	pic_mood = "flat" if sync >= 55 else ""
+	pic.texture = Art.portrait(Game.player_spec(), pic_mood, false, false, 2)
 	pic.position = Vector2(6, 6)
 	box.add_child(pic)
 	var nm := Art.label(Game.player_name, Pal.TEXT)
@@ -84,6 +88,13 @@ func _init() -> void:
 
 
 func _process(delta: float) -> void:
+	# the portrait blinks now and then, like the talking portraits do
+	blink_t -= delta
+	if blink_t <= 0.0:
+		var shut := blink_t > -0.12
+		pic.texture = Art.portrait(Game.player_spec(), pic_mood, shut, false, 2)
+		if not shut:
+			blink_t = randf_range(2.0, 5.0)
 	t += delta
 	if glitch > 0.0:
 		for l in labels:
