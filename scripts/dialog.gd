@@ -263,7 +263,20 @@ func ask(question: String, options: Array, speaker: String = "", opts: Dictionar
 	name_label.text = speaker
 	name_box.size.x = Art.text_width(speaker) + 12
 	text.add_theme_color_override("font_color", opts.get("color", Pal.TEXT if speaker != "" else Pal.CREAM))
-	await _type(question, opts.get("voice", "narrator"), false)
+	# Wrap the question like any other line; a question longer than one page
+	# advances like dialog, and the choices come up with its last page.
+	var pages := paginate(question)
+	if pages.is_empty():
+		pages = [""]
+	for i in pages.size() - 1:
+		await _type(pages[i], opts.get("voice", "narrator"), false)
+		arrow.visible = true
+		_armed = Engine.get_process_frames()
+		while not (_pressed("accept") or _pressed("cancel") or skip_all):
+			await get_tree().process_frame
+		Sfx.play("blip", 1.3, -10.0)
+		arrow.visible = false
+	await _type(pages[-1], opts.get("voice", "narrator"), false)
 	var w := 0
 	for o in options:
 		w = maxi(w, Art.text_width(o if o is String else o.text))
