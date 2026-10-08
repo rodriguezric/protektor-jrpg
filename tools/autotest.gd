@@ -825,6 +825,64 @@ func _run(scenario: String) -> void:
 						await shot("blink_menu")
 			print("menu blink frames: ", shut)
 			get_tree().quit()
+		"choices":
+			# Every ask() in the scripts: does the question fit one 3-line page,
+			# and does the choice menu stay on screen, clear of the portrait?
+			Game.testing = true
+			var re := RegEx.new()
+			re.compile("(?s)ask\\(\\s*\"([^\"]*)\"(?:\\s*%\\s*\\[[^\\]]*\\])?\\s*,\\s*\\[([^\\]]*)\\]\\s*(?:,\\s*\"([^\"]*)\")?")
+			var opt_re := RegEx.new()
+			opt_re.compile("\"([^\"]*)\"")
+			var d: DialogBox = main.dialog
+			auto_talk = false
+			main.fade_rect.color.a = 0.0
+			main.load_map(Maps.hall(), Vector2i(5, 9), 0)
+			main.world.busy = true
+			var worst := []
+			var problems := 0
+			for f in ["main", "pilot_status", "story_prologue", "story_academy", "story_hub"]:
+				var src := FileAccess.get_file_as_string("res://scripts/%s.gd" % f)
+				for mt in re.search_all(src):
+					var q := mt.get_string(1).replace("%d", "3").replace("%s", "WWWWWWWW")
+					var opts: Array = []
+					for om in opt_re.search_all(mt.get_string(2)):
+						opts.append(om.get_string(1))
+					var who := mt.get_string(3)
+					var pages := d.paginate(q)
+					var w := 0
+					for o in opts:
+						w = maxi(w, Art.text_width(o))
+					var h := opts.size() * 10 + 7
+					var r := Rect2(312 - w - 22, 124 - h, w + 20, h)
+					var portrait := who == "system"
+					var issues := []
+					if pages.size() > 1:
+						issues.append("question needs %d pages" % pages.size())
+					if r.position.x < 4 or r.position.y < 4:
+						issues.append("menu off screen")
+					if portrait and r.intersects(Rect2(8, 40, 78, 78)):
+						issues.append("menu overlaps portrait")
+					problems += issues.size()
+					print("%-14s q_lines=%d menu=%s %s | %s" % [f, d.paginate(q)[0].count("\n") + 1, r, "OK" if issues.is_empty() else str(issues), q])
+					worst.append({"q": q, "opts": opts, "who": who, "w": w * 100 + opts.size()})
+			print("choice problems: ", problems)
+			# show the widest and the tallest menus on screen
+			worst.sort_custom(func(a, b): return a.w > b.w)
+			# plus the longest question
+			var longest: Dictionary = worst[0]
+			for c in worst:
+				if Art.text_width(c.q) > Art.text_width(longest.q):
+					longest = c
+			worst.insert(1, longest)
+			for i in 2:
+				var c: Dictionary = worst[i]
+				var sp: Array = main.story.speaker(c.who)
+				d.ask(c.q, c.opts, sp[0], sp[1])
+				await wait(2.5)
+				await shot("choices_%d" % i)
+				tap("accept")
+				await wait(0.4)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world
