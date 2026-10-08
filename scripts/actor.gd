@@ -25,6 +25,9 @@ var bot := false
 var walk_id := 0
 ## True while a script is walking this actor; the field leaves its animation alone.
 var scripted := false
+## Idle blinking: counts down to the next blink, then holds the eyes shut briefly.
+var blink_t := 0.0
+var blinking := false
 
 
 func _init(p_spec: Dictionary = {}) -> void:
@@ -38,6 +41,7 @@ func _init(p_spec: Dictionary = {}) -> void:
 	sprite.centered = false
 	add_child(sprite)
 	wander_t = randf_range(1.0, 3.0)
+	blink_t = randf_range(1.5, 4.5)
 	refresh()
 
 
@@ -76,7 +80,8 @@ func refresh() -> void:
 		sprite.offset = Vector2(-8, -13 - lift)
 		return
 	var td: int = [0, 1, 2, 2][dir]
-	sprite.texture = Art.person(spec, td, frame if pose == "walk" else 0, mood, pose)
+	var m := mood + "+blink" if blinking else mood
+	sprite.texture = Art.person(spec, td, frame if pose == "walk" else 0, m, pose)
 	if pose == "lie":
 		sprite.offset = Vector2(-16, -20 - lift)
 	else:
@@ -85,6 +90,7 @@ func refresh() -> void:
 
 
 func _process(delta: float) -> void:
+	_blink(delta)
 	if moving:
 		anim_t += delta * 8.0
 		var f := int(anim_t) % 4
@@ -101,6 +107,24 @@ func _process(delta: float) -> void:
 		if f2 != frame:
 			frame = f2
 			refresh()
+
+
+func _blink(delta: float) -> void:
+	## Every so often the eyes close for a moment; now and then twice in a row.
+	if bot or dir == 1 or mood == "closed":
+		if blinking:
+			blinking = false
+			refresh()
+		return
+	blink_t -= delta
+	if blink_t > 0.0:
+		return
+	blinking = not blinking
+	if blinking:
+		blink_t = 0.12
+	else:
+		blink_t = 0.18 if randf() < 0.15 else randf_range(2.0, 5.0)
+	refresh()
 
 
 # ------------------------------------------------------------- scripting ---

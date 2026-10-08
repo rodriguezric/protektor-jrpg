@@ -798,6 +798,33 @@ func _run(scenario: String) -> void:
 				await wait(1.2)
 				await shot("comms_%d" % i)
 			get_tree().quit()
+		"blink":
+			# Idle actors blink on their own; so does the pilot status portrait.
+			Game.testing = true
+			main.load_map(Maps.hall(), Vector2i(5, 9), 0)
+			var w = main.world
+			w.busy = true
+			var seen := {}
+			var shot_taken := false
+			for i in 360:
+				await get_tree().process_frame
+				if w.player.blinking:
+					seen["player"] = int(seen.get("player", 0)) + 1
+					if not shot_taken:
+						shot_taken = true
+						await shot("blink_field")
+			print("player blink frames: ", seen)
+			var ps := PilotStatus.new()
+			main.ui.add_child(ps)
+			var shut := 0
+			for i in 360:
+				await get_tree().process_frame
+				if ps.blink_t <= 0.0:
+					shut += 1
+					if shut == 2:
+						await shot("blink_menu")
+			print("menu blink frames: ", shut)
+			get_tree().quit()
 		"walkcheck":
 			main.load_map(Maps.hall(), Vector2i(5, 9), 1)
 			var w = main.world
