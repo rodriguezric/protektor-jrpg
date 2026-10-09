@@ -80,13 +80,38 @@ func _place_cursor() -> void:
 
 func ask() -> int:
 	active = true
+	set_meta("tap_priority", 10)
+	add_to_group("tap_targets")
 	_armed = Engine.get_process_frames()
 	cursor.visible = true
 	_place_cursor()
 	moved.emit(index)
 	var r: int = await done
 	active = false
+	remove_from_group("tap_targets")
 	return r
+
+
+func tap(p: Vector2) -> bool:
+	## Touch: tap a row to move the cursor there, tap it again to choose it.
+	## Taps anywhere on the box are taken, so they never confirm by accident.
+	if not active or entries.is_empty():
+		return false
+	var gr := get_global_rect()
+	if not gr.has_point(p):
+		return false
+	var local := p - gr.position
+	for i in entries.size():
+		if Rect2(_slot(i) + Vector2(-3, -1), Vector2(col_w, row_h)).has_point(local):
+			if i == index:
+				TouchControls.confirm()
+			else:
+				index = i
+				Sfx.play("blip")
+				_place_cursor()
+				moved.emit(index)
+			break
+	return true
 
 
 func _process(delta: float) -> void:

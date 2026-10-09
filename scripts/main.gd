@@ -68,6 +68,7 @@ func _ready() -> void:
     if test_mission != "":
         test_level(test_mission)
         return
+    await company_splash()
     title()
 
 
@@ -162,6 +163,18 @@ func shake(amount: float, t: float) -> void:
 
 
 # ------------------------------------------------------------------ title --
+
+func company_splash() -> void:
+    ## The studio card, once per launch, before the title. It opens on the
+    ## same backdrop as the LOADING screen (no fade, so there's no seam) and
+    ## ends on black, so the title fades in from the same black.
+    fade_rect.color = Color(Pal.INK, 0.0)
+    var c := CompanySplash.new()
+    cine_layer.add_child(c)
+    await c.run()
+    fade_rect.color = Color(Pal.INK, 1.0)
+    c.queue_free()
+
 
 func title() -> void:
     Sfx.music("title", 1.5)

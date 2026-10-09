@@ -227,6 +227,175 @@ func _has_starmap() -> bool:
 	return false
 
 
+# ---------------------------------------------------------------- touch ---
+
+func _finger(i: int, pos: Vector2, pressed: bool) -> void:
+	var e := InputEventScreenTouch.new()
+	e.index = i
+	e.position = pos
+	e.pressed = pressed
+	Input.parse_input_event(e)
+
+
+func _drag_to(i: int, pos: Vector2) -> void:
+	var e := InputEventScreenDrag.new()
+	e.index = i
+	e.position = pos
+	Input.parse_input_event(e)
+
+
+func _touch_tap(pos: Vector2, after: float = 0.3) -> void:
+	_finger(9, pos, true)
+	await wait(0.08)
+	_finger(9, pos, false)
+	await wait(after)
+
+
+func window_shot(name: String) -> void:
+	## The whole window, touch controls included.
+	await RenderingServer.frame_post_draw
+	get_tree().root.get_texture().get_image().save_png("%s/%s.png" % [out, name])
+
+
+func _control(id: String) -> Vector2:
+	for c in Game.shell.touch.controls:
+		if c.id == id:
+			return (c.rect as Rect2).get_center()
+	return Vector2.ZERO
+
+
+func _touch_test() -> void:
+	## Real touch events: walk with the stick, pause from MENU, then in a
+	## deployment aim with the stick, fire by tapping, and pause.
+	Game.testing = true
+	auto_talk = false
+	main.fade_rect.color.a = 0.0
+	var sh: Shell = Game.shell
+	var tc: TouchControls = sh.touch
+	var win: Vector2 = get_tree().root.get_visible_rect().size
+	Game.chapter = "hub"
+	main.load_map(main.story.hub._map(), Vector2i(8, 6), 2)
+	var w = main.world
+	await wait(0.6)
+	await _touch_tap(sh.game_rect.get_center(), 0.5)   # first touch wakes the controls
+	print("[touch] active=%s layout=%s slot=%s in_bars=%s game_rect=%s" % [tc.active, tc.layout, tc.slot_mode, tc.in_bars, sh.game_rect])
+	# the floating stick: touch the left side, push right, then far right to run
+	var start := Vector2(win.x * 0.2, win.y * 0.7)
+	var p0: Vector2 = w.player.position
+	_finger(1, start, true)
+	await wait(0.1)
+	_drag_to(1, start + Vector2(tc.joy_radius * 0.5, 0))
+	await wait(0.6)
+	var walked: float = w.player.position.x - p0.x
+	var at_touch := tc.joy_origin.distance_to(start) < 2.0
+	var run0: Vector2 = w.player.position
+	_drag_to(1, start + Vector2(tc.joy_radius * 1.4, 0))
+	await wait(0.4)
+	await window_shot("touch_field")
+	print("[touch] stick at touch=%s walked_right=%.1f (0.6s) running=%s ran=%.1f (0.4s)" % [at_touch, walked, tc.running, w.player.position.x - run0.x])
+	_finger(1, start, false)
+	await wait(0.3)
+	# MENU opens the pilot status; B closes it
+	await _touch_tap(_control("menu"), 0.8)
+	var open := false
+	for c in main.ui.get_children():
+		if c is PilotStatus:
+			open = true
+	await window_shot("touch_menu")
+	print("[touch] menu opened pilot status=%s slot now=%s" % [open, tc.slot_mode])
+	await _touch_tap(_control("b"), 0.8)
+	# a deployment
+	w.busy = true
+	main.start_mission("terra_virex_level_01", false, false)
+	await wait(1.6)
+	var m: Mission = tc._mission()
+	print("[touch] mission layout=%s slot=%s controls=%s" % [tc.layout, tc.slot_mode, tc.controls.map(func(x): return x.id)])
+	# aim up-left with the stick
+	_finger(1, start, true)
+	await wait(0.1)
+	_drag_to(1, start + Vector2(-1, -1).normalized() * tc.joy_radius * 0.9)
+	await wait(0.3)
+	print("[touch] facing=%s (want about (-0.71, -0.71)) aim=%s" % [m.facing, Game.touch_aim])
+	# a second finger on the right fires; holding keeps firing
+	var shots_before := 0
+	var fired := {"n": 0}
+	var fire_pos := Vector2(win.x * 0.7, win.y * 0.5)
+	_finger(2, fire_pos, true)
+	for i in 30:
+		await get_tree().process_frame
+		fired.n = maxi(fired.n, m.bolts.size())
+	await window_shot("touch_mission")
+	_finger(2, fire_pos, false)
+	print("[touch] bolts in the air while holding fire: %d (before %d)" % [fired.n, shots_before])
+	# letting go of the stick keeps the facing
+	_finger(1, start, false)
+	await wait(0.2)
+	print("[touch] facing kept after release=%s" % [m.facing.distance_to(Vector2(-1, -1).normalized()) < 0.05])
+	# a single tap fires once (after the last volley has cleared: three in
+	# the air is the weapon's limit)
+	for i in 240:
+		if m.bolts.is_empty():
+			break
+		await get_tree().process_frame
+	await wait(0.2)
+	var b0: int = m.bolts.size()
+	_finger(3, fire_pos, true)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var b1: int = m.bolts.size()
+	_finger(3, fire_pos, false)
+	print("[touch] tap fired=%s" % [b1 > b0])
+	# the top-right button pauses; tap Resume twice (select, confirm)
+	await wait(0.3)
+	await _touch_tap(_control("menu"), 0.6)
+	print("[touch] paused=%s slot=%s" % [m.paused, tc.slot_mode])
+	await window_shot("touch_pause")
+	var rows := get_tree().get_nodes_in_group("tap_targets")
+	if not rows.is_empty():
+		var menu: Menu = rows[0]
+		var row := sh.to_window(menu.get_global_rect().position + menu._slot(0) + Vector2(10, 4))
+		await _touch_tap(row, 0.5)
+	print("[touch] resumed=%s" % [not m.paused])
+	# desktop still works through the shell: a key hides the touch controls,
+	# the mouse aims where it points and a click fires
+	var k := InputEventKey.new()
+	k.keycode = KEY_RIGHT
+	k.physical_keycode = KEY_RIGHT
+	k.pressed = true
+	Input.parse_input_event(k)
+	await get_tree().process_frame
+	k = k.duplicate()
+	k.pressed = false
+	Input.parse_input_event(k)
+	await wait(0.3)
+	print("[touch] key hid touch controls=%s aim_mode=%s" % [not tc.active, m._aim_mode])
+	var target := sh.to_window(Mission.ARENA.position + m.core.position + Vector2(40, 0))
+	for i in 3:
+		var mm := InputEventMouseMotion.new()
+		mm.position = target + Vector2(i, 0)
+		mm.relative = Vector2(4, 0)
+		Input.parse_input_event(mm)
+		await get_tree().process_frame
+	await wait(0.1)
+	print("[touch] mouse aim facing=%s (want about (1, 0)) aim_mode=%s" % [m.facing, m._aim_mode])
+	for i in 240:
+		if m.bolts.is_empty():
+			break
+		await get_tree().process_frame
+	var mb := InputEventMouseButton.new()
+	mb.button_index = MOUSE_BUTTON_LEFT
+	mb.position = target
+	mb.pressed = true
+	Input.parse_input_event(mb)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	print("[touch] mouse click fired=%s" % [m.bolts.size() > 0])
+	mb = mb.duplicate()
+	mb.pressed = false
+	Input.parse_input_event(mb)
+	get_tree().quit()
+
+
 func _process(_d: float) -> void:
 	if auto_talk and main.dialog.visible and Engine.get_process_frames() % 9 == 0:
 		_send("accept", true)
@@ -274,6 +443,40 @@ func _run(scenario: String) -> void:
 	print("autotest ", scenario, " -> ", out)
 	if scenario == "trailer":
 		await _trailer(OS.get_environment("PK_SEG"))
+		return
+	if scenario == "splash":
+		# the studio card at 0.5 s steps, then the title fading in after it
+		auto_talk = false
+		var t0 := Time.get_ticks_msec()
+		var done := {"v": false}
+		var go := func() -> void:
+			await main.company_splash()
+			done.v = true
+		go.call()
+		for i in 12:
+			await wait(0.5)
+			await shot("splash_%02d" % i)
+		print("[splash] finished on its own=%s after %.1fs, screen black=%s" % [done.v, (Time.get_ticks_msec() - t0) / 1000.0, main.fade_rect.color.a > 0.99])
+		main.title()
+		await wait(1.5)
+		await shot("splash_then_title")
+		# skipping: press Z partway through; it must end the same way
+		main.cine_layer.get_child(main.cine_layer.get_child_count() - 1).queue_free()
+		done.v = false
+		var t1 := Time.get_ticks_msec()
+		go.call()
+		await wait(1.0)
+		await tap("accept", 0.1)
+		for i in 60:
+			if done.v:
+				break
+			await wait(0.05)
+		print("[splash] skipped=%s in %.1fs, screen black=%s, splash freed=%s" % [done.v, (Time.get_ticks_msec() - t1) / 1000.0, main.fade_rect.color.a > 0.99,
+			main.cine_layer.get_children().filter(func(c): return c is CompanySplash and not c.is_queued_for_deletion()).is_empty()])
+		get_tree().quit()
+		return
+	if scenario == "touch":
+		await _touch_test()
 		return
 	match scenario:
 		"title":
