@@ -63,31 +63,14 @@ static func _shield(img: Image, c: Vector2, r: float, from: float, to: float, co
 
 
 static func _splash() -> Image:
-	var img: Image = ArtMission.space(320, 180, "green_planet").img
-	# stars that sparkle a little brighter than the nebula's
-	for i in 30:
-		var p := Vector2i(int(Pal.hash2(i, 7) * 320), int(Pal.hash2(i, 9) * 180))
-		img.set_pixelv(p, Pal.WHITE)
-	var planet: Image = ArtMission.planet("green_planet", 96, 6).img
-	var pc := Vector2(232, 92)
-	img.blend_rect(planet, Rect2i(Vector2i.ZERO, planet.get_size()), Vector2i(pc) - planet.get_size() / 2)
-	# the Protektor: shield on the back side, cannon facing out
-	_shield(img, pc, 56.0, PI * 0.35, PI * 1.15, Pal.SYNC)
-	var f := Vector2.from_angle(-PI * 0.25)
-	for k in 14:
-		var p := pc + f * (50.0 + k)
-		img.fill_rect(Rect2i(Vector2i(p) - Vector2i(1, 1), Vector2i(3, 3)), Pal.STEEL)
-		img.set_pixelv(Vector2i(p), Pal.SYNC.lerp(Pal.WHITE, 0.4))
-	img.fill_rect(Rect2i(Vector2i(pc + f * 64.0) - Vector2i(1, 1), Vector2i(3, 3)), Pal.WHITE)
-	# title
-	text(img, "PROTEKTOR", 18, 38, 3, Pal.SYNC.lerp(Pal.WHITE, 0.2))
-	text(img, "CHILDREN OF THE VOID", 22, 72, 1, Pal.CREAM)
-	# a loading line
-	text(img, "SYNCHRONIZING", 22, 156, 1, Pal.TEXT_DIM, false)
-	for k in 3:
-		img.fill_rect(Rect2i(22 + text_w("SYNCHRONIZING", 1) + 2 + k * 4, 162, 2, 2), Pal.SYNC)
-	img.fill_rect(Rect2i(22, 168, 120, 3), Pal.INK)
-	img.fill_rect(Rect2i(23, 169, 46, 1), Pal.SYNC)
+	## The loading screen: the studio card's own backdrop with LOADING in the
+	## middle, so the BAYERIAN card takes over from it without a seam.
+	var img: Image = ArtCine.studio().img
+	var k := 2
+	var word := "LOADING"
+	var x := 160 - text_w(word, k) / 2
+	var y := 90 - PixFont.ASCENT * k / 2
+	text(img, word, x, y, k, Pal.TEXT_DIM.lerp(Pal.TEXT, 0.4))
 	return img
 
 

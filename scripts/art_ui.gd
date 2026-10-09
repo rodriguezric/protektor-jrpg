@@ -62,8 +62,68 @@ static func make(name: String) -> PixBuf:
 			var b := PixBuf.new(9, 9)
 			b.ascii(["......X", ".....XX", "X...XX.", "XX.XX..", ".XXX...", "..X...."], {"X": Pal.GLOW}, 1, 2)
 			return b
+	if name.begins_with("t_"):
+		return touch(name.substr(2))
 	if name.begins_with("emote_"):
 		return _emote(name.substr(6))
+	return PixBuf.new(1, 1)
+
+
+# ------------------------------------------------------------ touch controls --
+# Drawn small like everything else and scaled up whole-number by the shell.
+# "_on" variants are the pressed look: the face sinks a pixel and brightens.
+
+static func touch(name: String) -> PixBuf:
+	var on := name.ends_with("_on")
+	if on:
+		name = name.trim_suffix("_on")
+	var face := Pal.NAVY.lerp(Pal.INK, 0.35)
+	var rim := Pal.SYNC.lerp(Pal.TEAL, 0.45)
+	var lit := Pal.SYNC
+	if name == "joy_base":
+		# the floating stick's ring: a dark well with four sync ticks
+		var b := PixBuf.new(37, 37)
+		b.circ(18.5, 18.5, 18, Pal.INK)
+		b.circ(18.5, 18.5, 17, rim)
+		b.circ(18.5, 18.5, 15.5, Color(Pal.PANEL2, 0.75))
+		b.circ(18.5, 18.5, 9, Color(Pal.PANEL, 0.6))
+		for t in [Vector2i(17, 4), Vector2i(17, 31), Vector2i(4, 17), Vector2i(31, 17)]:
+			b.rect(t.x, t.y, 3, 3, lit)
+		return b
+	if name == "joy_knob":
+		# the thumb knob; brightens (on) when pushed far enough to run
+		var b := PixBuf.new(19, 19)
+		b.circ(9.5, 10.5, 8.5, Pal.INK)
+		b.circ(9.5, 9.5, 8, rim)
+		b.circ(9.5, 9.5, 6.5, face.lerp(lit, 0.45) if on else face)
+		b.rect(6, 4, 5, 1, face.lerp(Pal.WHITE, 0.3))
+		b.circ(9.5, 9.5, 2, lit if not on else Pal.WHITE)
+		return b
+	if name in ["a", "b"]:
+		var b := PixBuf.new(21, 21)
+		var dy := 1 if on else 0
+		b.circ(10.5, 11.5, 9.5, Pal.INK)
+		b.circ(10.5, 10.5 + dy, 9, rim if name == "a" else Pal.ROSE.lerp(Pal.LILAC, 0.3))
+		b.circ(10.5, 10.5 + dy, 7.5, face.lerp(lit, 0.3) if on else face)
+		b.rect(6, 4 + dy, 6, 1, face.lerp(Pal.WHITE, 0.25))
+		var g: PackedStringArray = (PixFont.GLYPHS[name.to_upper()] as String).split("|")
+		for y in g.size():
+			for x in g[y].length():
+				if g[y][x] == "#":
+					b.pset(9 + x, 7 + y + dy, Pal.WHITE if on else Pal.TEXT)
+		return b
+	if name == "menu":
+		# same size and shape as A/B, so it can share B's spot; two bars,
+		# which also read as "pause" in a deployment
+		var b := PixBuf.new(21, 21)
+		var dy := 1 if on else 0
+		b.circ(10.5, 11.5, 9.5, Pal.INK)
+		b.circ(10.5, 10.5 + dy, 9, Pal.TEAL.lerp(Pal.NAVY, 0.3))
+		b.circ(10.5, 10.5 + dy, 7.5, face.lerp(lit, 0.3) if on else face)
+		b.rect(6, 4 + dy, 6, 1, face.lerp(Pal.WHITE, 0.25))
+		b.rect(7, 7 + dy, 2, 7, Pal.WHITE if on else lit)
+		b.rect(12, 7 + dy, 2, 7, Pal.WHITE if on else lit)
+		return b
 	return PixBuf.new(1, 1)
 
 

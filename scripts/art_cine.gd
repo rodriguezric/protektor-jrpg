@@ -23,6 +23,7 @@ static func make(name: String, frame: int) -> PixBuf:
 		"ascend": return ascend()
 		"academy_ext": return academy_ext()
 		"transport_sky": return transport_sky()
+		"studio": return studio()
 	return PixBuf.new(W, H)
 
 
@@ -140,6 +141,19 @@ static func city_frame() -> PixBuf:
 	b.rect(0, H - 14, W, 2, Pal.hi(Pal.WOOD))
 	b.rect(10, 10, 146, 1, Pal.shade(Pal.WOOD))
 	b.rect(164, 10, 146, 1, Pal.shade(Pal.WOOD))
+	return b
+
+
+static func studio() -> PixBuf:
+	## The studio card's backdrop: deep ink with a faint navy breath in the
+	## middle, falling to ink at the edges in grainy dither.
+	var b := PixBuf.new(W, H)
+	gradient(b, [Color("0d0f1c"), Color("141a2a"), Color("0d0f1c")])
+	for y in H:
+		for x in W:
+			var d := Vector2((x - 160) / 180.0, (y - 90) / 110.0).length()
+			if d > 0.55 and Pal.hash2(x, y, 11) < (d - 0.55) * 2.2:
+				b.img.set_pixel(x, y, Pal.INK)
 	return b
 
 

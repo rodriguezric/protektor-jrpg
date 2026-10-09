@@ -117,7 +117,9 @@ func run() -> String:
 			await Game.main.dialog.say(["Arrows/WASD walk. Shift runs. Z talks, examines and confirms. X opens this menu.",
 				"In a deployment, turn with the arrows, WASD, the mouse or a stick. Z, Space or left-click fires the beam from your FRONT.",
 				"Your BACK raises the shield. Turn away from asteroids and enemy fire to block them. Drones must be shot.",
-				"Esc pauses a deployment."], "", {"sys": true, "voice": "system"})
+				"Esc pauses a deployment.",
+				"Touch: the stick on the left walks (push far to run). Tap to talk and confirm; tap a choice, then tap it again.",
+				"In a deployment the stick on the left aims. Tap anywhere else to fire, and hold to keep firing. The top-right button pauses."], "", {"sys": true, "voice": "system"})
 			continue
 		if r == 2:
 			var c: int = await Game.main.dialog.ask("Return to the title screen? Progress is saved at each interval.", ["Stay", "Return to title"], "", {"sys": true})

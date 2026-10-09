@@ -633,6 +633,13 @@ func _input(event: InputEvent) -> void:
 
 
 func _handle_aim() -> void:
+	# touch: the floating joystick sets the facing at any angle
+	if Game.touch_aim != Vector2.ZERO:
+		_aim_mode = "touch"
+		facing = Game.touch_aim.normalized()
+		return
+	if _aim_mode == "touch":
+		return
 	var v := Vector2.ZERO
 	match _aim_mode:
 		"mouse":

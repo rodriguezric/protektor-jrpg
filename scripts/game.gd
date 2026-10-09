@@ -32,6 +32,12 @@ var testing := false
 const ACH_PATH := "user://protektor_achievements.json"
 var achieved := {}
 var achv_stats := {}
+## The window shell (game picture + touch controls).
+var shell: Shell
+## Touch: whether on-screen controls are in use, and in a mission the
+## floating joystick's aim (a vector up to length 1; zero when released).
+var touch_active := false
+var touch_aim := Vector2.ZERO
 
 
 func _ready() -> void:
@@ -537,3 +543,9 @@ func _migrate_legacy_save() -> void:
 		if g:
 			g.store_string(JSON.stringify(d))
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(LEGACY_SAVE_PATH), ProjectSettings.globalize_path(LEGACY_SAVE_PATH + ".migrated"))
+
+
+func buzz(ms: int) -> void:
+	## A short vibration, only when playing by touch.
+	if touch_active:
+		Input.vibrate_handheld(ms)
