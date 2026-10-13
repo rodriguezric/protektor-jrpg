@@ -19,6 +19,7 @@ var title_l: Label
 var cursor_ring := 0.0
 var drawer: Node2D
 var _ready_input := false
+var help: Label
 
 
 func setup(p_arcade: bool, p_first: bool) -> void:
@@ -60,7 +61,7 @@ func setup(p_arcade: bool, p_first: bool) -> void:
 	info_levels = Art.label("", Pal.SYNC)
 	info_levels.position = Vector2(6, 27)
 	ib.add_child(info_levels)
-	var help := Art.label("Arrows choose   Z select   X back", Pal.TEXT_DIM)
+	help = Art.label("", Pal.TEXT_DIM)
 	help.position = Vector2(170, 6)
 	add_child(help)
 	for i in visible_planets.size():
@@ -78,7 +79,33 @@ func _unlocked(p: String) -> bool:
 func _process(delta: float) -> void:
 	t += delta
 	cursor_ring += delta
+	help.text = "Tap a world, tap again" if Game.touch_active else "Arrows choose   Z select   X back"
 	drawer.queue_redraw()
+
+
+func _planet_pos(i: int) -> Vector2:
+	return Data.PLANET_INFO[visible_planets[i]].pos + Vector2(0, sin(t * 1.5 + i) * 1.5)
+
+
+func tap(p: Vector2) -> bool:
+	## Touch: tap a world to select it, tap it again to choose it. Taps that
+	## miss every world are still taken, so they never confirm by accident.
+	var best := -1
+	var best_d := 22.0
+	for i in visible_planets.size():
+		var d := p.distance_to(_planet_pos(i))
+		if d < best_d:
+			best_d = d
+			best = i
+	if best < 0:
+		return true
+	if best == sel:
+		TouchControls.confirm()
+	else:
+		sel = best
+		Sfx.play("blip")
+		_update_info()
+	return true
 
 
 func _draw_map() -> void:
@@ -100,7 +127,7 @@ func _draw_map() -> void:
 		var k: float = bloom[p]
 		if k <= 0.0:
 			continue
-		var pos: Vector2 = Data.PLANET_INFO[p].pos + Vector2(0, sin(t * 1.5 + i) * 1.5)
+		var pos := _planet_pos(i)
 		var unlocked := _unlocked(p)
 		var key: String = Data.PLANET_INFO[p].tex
 		var d := 24 if i == sel else 18
@@ -161,6 +188,8 @@ func run() -> String:
 			await get_tree().create_timer(0.35).timeout
 	Sfx.music("level_select", 1.0)
 	await get_tree().process_frame
+	# worlds can be tapped while choosing (not during the level menu or warp)
+	add_to_group("tap_targets")
 	while true:
 		await get_tree().process_frame
 		var old := sel
@@ -170,6 +199,7 @@ func run() -> String:
 			sel = (sel - 1 + visible_planets.size()) % visible_planets.size()
 		elif Input.is_action_just_pressed("cancel"):
 			Sfx.play("cancel")
+			remove_from_group("tap_targets")
 			return ""
 		elif Input.is_action_just_pressed("accept"):
 			var p: String = visible_planets[sel]
@@ -177,11 +207,13 @@ func run() -> String:
 				Sfx.play("miss")
 				continue
 			Sfx.play("confirm")
+			remove_from_group("tap_targets")
 			var lv := await _pick_level(p)
 			if lv > 0:
 				Game.story["last_planet"] = p
 				await _deploy_fx(p)
 				return "%s_level_%02d" % [p, lv]
+			add_to_group("tap_targets")
 		if old != sel:
 			Sfx.play("blip")
 			_update_info()
@@ -197,7 +229,12 @@ func _pick_level(p: String) -> int:
 		if l == 2:
 			label += " - " + str(Data.PLANET_INFO[p].boss)
 		opts.append({"text": label, "enabled": open, "right": "done" if done > l else ("" if open else "locked")})
-	var m := Menu.make(self, opts, Vector2(150, 70), Vector2(158, 37))
+	# sized from its text, so a long boss name never runs into "locked"
+	var w := 0
+	for o in opts:
+		w = maxi(w, Art.text_width(o.text) + (Art.text_width(o.right) + 10 if o.right != "" else 0))
+	w += 22
+	var m := Menu.make(self, opts, Vector2(312 - w, 70), Vector2(w, 37))
 	var best := 0
 	for l in 3:
 		if Game.is_level_unlocked(p, l + 1, arcade):

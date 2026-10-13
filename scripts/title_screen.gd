@@ -8,6 +8,7 @@ var drawer: Node2D
 var letters: Array = []
 var press: Label
 var menu: Menu
+var keys: Label
 
 
 func _init() -> void:
@@ -43,6 +44,8 @@ func _init() -> void:
 func _process(delta: float) -> void:
 	t += delta
 	planet.texture = Art.planet("green_planet", 84, int(t * 3.0))
+	if keys:
+		keys.text = "Tap an option, tap again" if Game.touch_active else "Arrows move  Z ok  X back  Shift run"
 	drawer.queue_redraw()
 
 
@@ -96,7 +99,7 @@ func run() -> String:
 	var mt := create_tween()
 	mt.tween_property(menu, "position:y", 84.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await mt.finished
-	var keys := Art.label("Arrows move  Z ok  X back  Shift run", Pal.TEXT_DIM)
+	keys = Art.label("", Pal.TEXT_DIM)
 	keys.position = Vector2(22, 156)
 	add_child(keys)
 	while true:
