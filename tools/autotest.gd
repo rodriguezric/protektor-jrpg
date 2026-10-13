@@ -295,6 +295,16 @@ func _touch_test() -> void:
 	print("[touch] stick at touch=%s walked_right=%.1f (0.6s) running=%s ran=%.1f (0.4s)" % [at_touch, walked, tc.running, w.player.position.x - run0.x])
 	_finger(1, start, false)
 	await wait(0.3)
+	# no A button: a quick tap on the stick (never pushed) presses OK, and the
+	# stick is only drawn while held
+	var saw := {"accept": false}
+	var watch := func() -> void:
+		if Input.is_action_pressed("accept"):
+			saw.accept = true
+	get_tree().process_frame.connect(watch)
+	await _touch_tap(start, 0.2)
+	get_tree().process_frame.disconnect(watch)
+	print("[touch] no A=%s stick tap accepted=%s stick hidden=%s" % [tc.controls.all(func(x): return x.id != "a"), saw.accept, tc.joy_finger < 0])
 	# MENU opens the pilot status; B closes it
 	await _touch_tap(_control("menu"), 0.8)
 	var open := false

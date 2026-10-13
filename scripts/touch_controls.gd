@@ -10,11 +10,14 @@ extends Control
 ## - Wide screens: the controls live in the side bars beside the game.
 ##   16:9 screens: they overlay the corners, semi-transparent.
 ## - Walking around: a floating joystick (touch anywhere on the left part of
-##   the screen; a small push walks, a big push runs), A = OK, and MENU.
-## - Tapping the game itself presses OK (advances dialog). Menus and dialog
-##   choices are tapped directly: tap a row to select it, tap again to choose.
+##   the screen; a small push walks, a big push runs) and MENU. The stick is
+##   only drawn while a thumb holds it.
+## - There is no A button: tapping the game itself presses OK (talk, advance
+##   dialog...), and so does a quick tap that never pushes the stick. Menus
+##   and dialog choices are tapped directly: tap a row to select it, tap again
+##   to choose.
 ## - Screens driven by arrows (star map, training, slots...): the joystick
-##   steers the cursor, with A and B.
+##   steers the cursor, a tap is OK, with B.
 ## - Deployments: the joystick aims the Protektor (any angle, not just the
 ##   eight directions) and tapping anywhere else fires; hold to keep firing.
 ##   The top-right button pauses.
@@ -51,17 +54,22 @@ var fingers := {}
 ## Reference counts per action, so two sources can hold the same action.
 var held := {}
 ## Joystick state: which finger holds it, its ring centre and knob, its size,
-## where its ghost rests, and the directions it is pressing.
+## and the directions it is pressing.
 var joy_finger := -1
 var joy_origin := Vector2.ZERO
 var joy_knob := Vector2.ZERO
 var joy_radius := 1.0
-var joy_rest := Vector2.ZERO
 var joy_dirs := {}
 ## When the ring had to shift to stay on screen, the thumb's starting offset
 ## from its centre, so touching down never counts as a push.
 var joy_offset := Vector2.ZERO
 var joy_blocked := true
+## When the stick was touched and whether it was ever pushed: a quick touch
+## that never leaves the dead centre counts as a tap (OK).
+var joy_start_ms := 0
+var joy_pushed := false
+## A touch on the stick shorter than this (ms) without a push is a tap.
+const JOY_TAP_MS := 300
 var running := false
 ## "field" (walking around and every other screen) or "mission" (aim + fire).
 var layout := ""
@@ -102,26 +110,13 @@ func relayout() -> void:
 	ck = maxf(ck, min_k)
 	var m := 4.0 * ck
 	controls.clear()
-	var left_c: Vector2
-	var right_c: Vector2
-	if in_bars:
-		left_c = Vector2(bar / 2.0, win.y * 0.62)
-		right_c = Vector2(win.x - bar / 2.0, win.y * 0.62)
-	else:
-		left_c = Vector2(m + PAD_ART * ck / 2.0, win.y - m - PAD_ART * ck / 2.0)
-		right_c = Vector2(win.x - m - PAD_ART * ck / 2.0, win.y - m - PAD_ART * ck / 2.0)
 	# the shared top-right slot: MENU and B are the same size, same place
 	var ss := 21.0 * _scale_for("b")
 	var slot_c := Vector2(win.x - bar / 2.0, maxf(win.y * 0.14, m + ss / 2.0)) if in_bars else Vector2(win.x - m - ss / 2.0, m + ss / 2.0)
 	_add("menu", slot_c, "menu", "", "menu")
 	_add("b", slot_c, "b", "cancel", "button")
 	# the joystick isn't a fixed control: it appears where you touch
-	joy_rest = left_c
 	joy_radius = PAD_ART * ck / 2.0
-	if layout != "mission":
-		# in a deployment every tap off the stick fires, so there's no A
-		var s := 21.0 * _scale_for("a")
-		_add("a", right_c + Vector2(s * 0.25, s * 0.1), "a", "accept", "button")
 	queue_redraw()
 
 
@@ -166,12 +161,12 @@ func _process(delta: float) -> void:
 	# text, choices are tapped directly); they return when the box closes
 	var want_hidden: Array = []
 	if _dialog_up():
-		want_hidden = ["pad", "a", "b"]
+		want_hidden = ["pad", "b"]
 	elif _menu_up():
-		want_hidden = ["pad", "a"]
+		want_hidden = ["pad"]
 	elif layout == "field" and not _field_control() and not _arrow_screen():
 		# cutscenes and fades: nothing to steer, and a tap still means OK
-		want_hidden = ["pad", "a", "b"]
+		want_hidden = ["pad", "b"]
 	if not want_hidden.is_empty():
 		if want_hidden != hidden_ids:
 			if dialog_fade == 0.0 or not hidden_ids.has("pad"):
@@ -224,22 +219,17 @@ func _draw() -> void:
 
 
 func _draw_joystick(a: float) -> void:
-	## The stick under your thumb while held; otherwise a faint ghost where it
-	## usually sits, so you know it's there.
+	## The stick under your thumb, only while it is held.
 	var base := Art.ui("t_joy_base")
 	var knob := Art.ui("t_joy_knob_on" if running else "t_joy_knob")
 	var bs := Vector2(joy_radius * 2.0, joy_radius * 2.0)
 	var ks := bs * (19.0 / 37.0)
-	if joy_finger >= 0:
-		draw_texture_rect(base, Rect2((joy_origin - bs / 2.0).round(), bs), false, Color(1, 1, 1, a * 0.85))
-		draw_texture_rect(knob, Rect2((joy_knob - ks / 2.0).round(), ks), false, Color(1, 1, 1, a))
-		if running:
-			draw_arc(joy_origin, joy_radius * 1.08, 0, TAU, 40, Color(Pal.SYNC, 0.4 * a), maxf(1.0, ck * 0.75))
-	elif not joy_blocked:
-		var g := a * 0.3 * (1.0 - dialog_fade)
-		if g > 0.01:
-			draw_texture_rect(base, Rect2((joy_rest - bs / 2.0).round(), bs), false, Color(1, 1, 1, g))
-			draw_texture_rect(knob, Rect2((joy_rest - ks / 2.0).round(), ks), false, Color(1, 1, 1, g))
+	if joy_finger < 0:
+		return
+	draw_texture_rect(base, Rect2((joy_origin - bs / 2.0).round(), bs), false, Color(1, 1, 1, a * 0.85))
+	draw_texture_rect(knob, Rect2((joy_knob - ks / 2.0).round(), ks), false, Color(1, 1, 1, a))
+	if running:
+		draw_arc(joy_origin, joy_radius * 1.08, 0, TAU, 40, Color(Pal.SYNC, 0.4 * a), maxf(1.0, ck * 0.75))
 
 
 # -------------------------------------------------------------------- input --
@@ -278,6 +268,8 @@ func _touch(e: InputEventScreenTouch) -> void:
 			joy_origin = e.position.clamp(Vector2(joy_radius + 2, joy_radius + 2), win - Vector2(joy_radius + 2, joy_radius + 2))
 			joy_offset = e.position - joy_origin
 			joy_knob = joy_origin
+			joy_start_ms = Time.get_ticks_msec()
+			joy_pushed = false
 			Game.buzz(6)
 			queue_redraw()
 			return
@@ -318,7 +310,12 @@ func _touch(e: InputEventScreenTouch) -> void:
 			"":
 				pass
 			"joy":
+				var quick := not joy_pushed and Time.get_ticks_msec() - joy_start_ms < JOY_TAP_MS
 				_joy_release()
+				if quick and layout != "mission":
+					# a tap on the stick that never pushed it: OK
+					_tap("accept")
+					Game.buzz(8)
 			"fire":
 				_release("accept")
 			"game":
@@ -507,6 +504,8 @@ func _joy_move(p: Vector2) -> void:
 		v = p - joy_origin
 	joy_knob = p
 	var k := v.length() / joy_radius
+	if k > JOY_DEAD:
+		joy_pushed = true
 	if layout == "mission":
 		Game.touch_aim = v / joy_radius if k > JOY_DEAD else Vector2.ZERO
 		queue_redraw()
