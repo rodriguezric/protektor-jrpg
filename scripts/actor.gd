@@ -28,6 +28,9 @@ var scripted := false
 ## Idle blinking: counts down to the next blink, then holds the eyes shut briefly.
 var blink_t := 0.0
 var blinking := false
+## Idle breathing: counts down to the next breath, then holds it in briefly.
+var breath_t := 0.0
+var breathing := false
 
 
 func _init(p_spec: Dictionary = {}) -> void:
@@ -42,6 +45,7 @@ func _init(p_spec: Dictionary = {}) -> void:
 	add_child(sprite)
 	wander_t = randf_range(1.0, 3.0)
 	blink_t = randf_range(1.5, 4.5)
+	breath_t = randf_range(1.0, 4.0)
 	refresh()
 
 
@@ -81,7 +85,10 @@ func refresh() -> void:
 		return
 	var td: int = [0, 1, 2, 2][dir]
 	var m := mood + "+blink" if blinking else mood
-	sprite.texture = Art.person(spec, td, frame if pose == "walk" else 0, m, pose)
+	var f := frame if pose == "walk" else 0
+	if breathing and pose != "lie":
+		f = 4
+	sprite.texture = Art.person(spec, td, f, m, pose)
 	if pose == "lie":
 		sprite.offset = Vector2(-16, -20 - lift)
 	else:
@@ -91,6 +98,7 @@ func refresh() -> void:
 
 func _process(delta: float) -> void:
 	_blink(delta)
+	_breathe(delta)
 	if moving:
 		anim_t += delta * 8.0
 		var f := int(anim_t) % 4
@@ -124,6 +132,23 @@ func _blink(delta: float) -> void:
 		blink_t = 0.12
 	else:
 		blink_t = 0.18 if randf() < 0.15 else randf_range(2.0, 5.0)
+	refresh()
+
+
+func _breathe(delta: float) -> void:
+	## Standing still, every few seconds the upper body rises a pixel for a
+	## moment: a slow breath in and out.
+	if bot or moving or pose == "lie":
+		if breathing:
+			breathing = false
+			breath_t = randf_range(1.5, 3.5)
+			refresh()
+		return
+	breath_t -= delta
+	if breath_t > 0.0:
+		return
+	breathing = not breathing
+	breath_t = randf_range(0.5, 0.8) if breathing else randf_range(2.5, 5.0)
 	refresh()
 
 

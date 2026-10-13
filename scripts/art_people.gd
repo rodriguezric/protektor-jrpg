@@ -2,7 +2,8 @@ class_name ArtPeople
 ## One renderer for every humanoid (Greywater's chibi rig). Recruits, parents and
 ## officers are just data: colours + a hair style + clothes + accessories.
 ## dir: 0 = down, 1 = up, 2 = side: a three-quarter view turned to the right
-## (flipped for left). frame: 0..3 walk cycle.
+## (flipped for left). frame: 0..3 walk cycle, 4 = standing, breathing in
+## (head, body and arms rise a pixel, feet stay planted).
 ## mood changes only the face: "", smile, sad, hollow, closed, shock, cry, angry.
 ## pose: walk (default), sit (legs tucked behind a seat), lie (flat, for pods).
 
@@ -32,7 +33,9 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 	var rstep := 0.0
 	var bob := 0.0
 	var swing := 0.0
-	if not sit:
+	if frame == 4:
+		bob = -1.0
+	elif not sit:
 		if frame == 1:
 			lstep = -1.0
 			bob = -1.0

@@ -37,6 +37,17 @@ func _init() -> void:
 				put(ArtPeople.render(s, 0, 0, "", "sit").img)
 			for s in Data.EXTRAS:
 				put(ArtPeople.render(s, 0, 0).img)
+		"breath":
+			# idle breathing: each view at rest, then breathing in (frame 4)
+			out = Image.create_empty(34 * 8 + 2, 34 * 4 + 2, false, Image.FORMAT_RGBA8)
+			out.fill(Color("3a3548"))
+			for id in ["hiro", "pala", "midas", "officer"]:
+				var s: Dictionary = Data.CAST[id]
+				for d in 3:
+					put(ArtPeople.render(s, d, 0).img)
+					put(ArtPeople.render(s, d, 4).img)
+				put(ArtPeople.render(s, 0, 0, "", "sit").img)
+				put(ArtPeople.render(s, 0, 4, "", "sit").img)
 		"faces":
 			# close-up of front and side heads for hairline / eye work
 			out = Image.create_empty(34 * 8 + 2, 34 * 3 + 2, false, Image.FORMAT_RGBA8)
