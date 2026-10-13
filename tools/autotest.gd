@@ -396,6 +396,58 @@ func _touch_test() -> void:
 	get_tree().quit()
 
 
+func _touch_screens() -> void:
+	## The title shows no stick or buttons; the star map is played by tapping
+	## worlds (stick hidden, B kept for back).
+	Game.testing = true
+	auto_talk = false
+	var sh: Shell = Game.shell
+	var tc: TouchControls = sh.touch
+	main.title()
+	await wait(0.8)
+	await _touch_tap(sh.to_window(Vector2(250, 20)), 0.2)   # wake the controls
+	await wait(3.0)
+	await window_shot("touch_title")
+	var shown := tc.controls.filter(func(c): return tc._shown(c) and (not tc.hidden_ids.has(c.id)) and (not tc.slot_alpha.has(c.id) or tc.slot_mode == c.id))
+	print("[screens] title: active=%s slot='%s' hidden=%s stick blocked=%s visible controls=%s" % [tc.active, tc.slot_mode, tc.hidden_ids, tc.joy_blocked, shown.map(func(c): return c.id)])
+	# the star map, every world open
+	for c in main.cine_layer.get_children():
+		c.queue_free()
+	main.fade_rect.color.a = 0.0
+	Game.load_meta_only()
+	for p in Data.PLANETS:
+		Game._unlock(p)
+	var res := {"pick": "?"}
+	var go := func() -> void:
+		res.pick = await main.starmap(true, false)
+	go.call()
+	await wait(1.5)
+	var sm: StarMap
+	for c in main.cine_layer.get_children():
+		if c is StarMap:
+			sm = c
+	await window_shot("touch_starmap")
+	print("[screens] starmap: slot='%s' hidden=%s stick blocked=%s" % [tc.slot_mode, tc.hidden_ids, tc.joy_blocked])
+	var before := sm.sel
+	var target := (before + 2) % sm.visible_planets.size()
+	var tp: Vector2 = sh.to_window(sm._planet_pos(target))
+	await _touch_tap(tp, 0.3)
+	print("[screens] tap a world: selected %s -> %s (want %s, %s)" % [before, sm.sel, target, sm.visible_planets[sm.sel]])
+	await _touch_tap(sh.to_window(Vector2(300, 100)), 0.3)   # empty space: nothing
+	print("[screens] tap empty space: still %s, level menu open=%s" % [sm.sel, not get_tree().get_nodes_in_group("tap_targets").filter(func(n): return n is Menu).is_empty()])
+	await _touch_tap(sh.to_window(sm._planet_pos(sm.sel)), 0.5)   # again: choose it
+	var menus := get_tree().get_nodes_in_group("tap_targets").filter(func(n): return n is Menu)
+	print("[screens] tap it again: level menu open=%s slot='%s'" % [not menus.is_empty(), tc.slot_mode])
+	await window_shot("touch_starmap_levels")
+	if not menus.is_empty():
+		var m: Menu = menus[0]
+		var row := sh.to_window(m.get_global_rect().position + m._slot(0) + Vector2(12, 4))
+		await _touch_tap(row, 0.3)
+		await _touch_tap(row, 2.0)
+	print("[screens] deployed to: %s" % res.pick)
+	get_tree().quit()
+
+
 func _process(_d: float) -> void:
 	if auto_talk and main.dialog.visible and Engine.get_process_frames() % 9 == 0:
 		_send("accept", true)
@@ -474,6 +526,9 @@ func _run(scenario: String) -> void:
 		print("[splash] skipped=%s in %.1fs, screen black=%s, splash freed=%s" % [done.v, (Time.get_ticks_msec() - t1) / 1000.0, main.fade_rect.color.a > 0.99,
 			main.cine_layer.get_children().filter(func(c): return c is CompanySplash and not c.is_queued_for_deletion()).is_empty()])
 		get_tree().quit()
+		return
+	if scenario == "touch_screens":
+		await _touch_screens()
 		return
 	if scenario == "touch":
 		await _touch_test()
