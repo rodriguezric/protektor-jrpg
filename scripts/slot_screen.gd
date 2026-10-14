@@ -13,6 +13,7 @@ var t := 0.0
 var cards: Array = []
 var infos: Array = []
 var cursor: TextureRect
+var help: Label
 
 
 func setup(p_mode: String) -> void:
@@ -29,8 +30,8 @@ func setup(p_mode: String) -> void:
 	var tl := Art.label("NEW GAME - CHOOSE SLOT" if mode == "new" else "LOAD GAME", Pal.SYNC)
 	tl.position = Vector2(5, 3)
 	tb.add_child(tl)
-	var help := Art.label("Z choose  X back", Pal.TEXT_DIM)
-	help.position = Vector2(232, 7)
+	help = Art.label("", Pal.TEXT_DIM)
+	help.position = Vector2(220, 7)
 	add_child(help)
 	for n in range(1, Game.SLOTS + 1):
 		var info := Game.slot_info(n)
@@ -104,6 +105,7 @@ func _card(n: int, info: Dictionary) -> Control:
 
 func _process(delta: float) -> void:
 	t += delta
+	help.text = "Tap, tap again" if Game.touch_active else "Z choose  X back"
 	for i in cards.size():
 		var c: Control = cards[i]
 		var target_x := 14.0 + (6.0 if i == sel else 0.0)
@@ -112,8 +114,30 @@ func _process(delta: float) -> void:
 	cursor.position = Vector2(cc.position.x - 9 - (1 if fmod(t, 0.5) < 0.25 else 0), cc.position.y + 19)
 
 
+func tap(p: Vector2) -> bool:
+	## Touch: tap a slot to select it, tap it again to choose it. Taps that
+	## miss every slot are still taken, so they never confirm by accident.
+	for i in cards.size():
+		if (cards[i] as Control).get_global_rect().has_point(p):
+			if i == sel:
+				TouchControls.confirm()
+			else:
+				sel = i
+				Sfx.play("blip")
+			break
+	return true
+
+
 func run() -> int:
 	await get_tree().process_frame
+	# slots can be tapped while choosing (not during the overwrite question)
+	add_to_group("tap_targets")
+	var r := await _choose()
+	remove_from_group("tap_targets")
+	return r
+
+
+func _choose() -> int:
 	while true:
 		await get_tree().process_frame
 		var old := sel

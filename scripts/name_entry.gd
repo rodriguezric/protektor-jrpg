@@ -16,6 +16,9 @@ var sprite: TextureRect
 var pic: TextureRect
 var look_l: Label
 var t := 0.0
+var help: Label
+## Set by End: the name is accepted.
+var done := false
 
 
 func _init() -> void:
@@ -72,7 +75,7 @@ func _init() -> void:
 	cursor = TextureRect.new()
 	cursor.texture = Art.ui("cursor")
 	gb.add_child(cursor)
-	var help := Art.label("Z type   X erase   Left/Right on Look to change", Pal.TEXT_DIM)
+	help = Art.label("", Pal.TEXT_DIM)
 	help.position = Vector2(12, 148)
 	add_child(help)
 	var tip := Art.label("Your name will be etched into your badge.", Pal.CREAM)
@@ -83,6 +86,7 @@ func _init() -> void:
 
 func _process(delta: float) -> void:
 	t += delta
+	help.text = "Tap letters to type   B erase" if Game.touch_active else "Z type   X erase   Left/Right on Look to change"
 	var spec := Game.player_spec("home")
 	pic.texture = Art.portrait(spec, "", false, false, 2)
 	sprite.texture = Art.person(spec, 0, [0, 1, 0, 3][int(t * 6.0) % 4])
@@ -92,8 +96,38 @@ func _process(delta: float) -> void:
 	cursor.position = l.position + Vector2(-8 - (1 if fmod(t, 0.5) < 0.25 else 0), 1)
 
 
+func tap(p: Vector2) -> bool:
+	## Touch: works like a keyboard, so one tap types a letter (or presses
+	## Del / End). Tap either half of "< Look >", or the portrait, to change
+	## your look. Taps elsewhere are still taken, so they never confirm.
+	if (pic.get_parent() as Control).get_global_rect().has_point(p):
+		_change_look(1)
+		return true
+	for r in grid.size():
+		for c in (grid[r] as Array).size():
+			var l: Label = grid[r][c]
+			var w := 15.0 if r < ROWS.size() else 60.0
+			var cell := Rect2(l.global_position + Vector2(-5, -4), Vector2(w, 15))
+			if not cell.has_point(p):
+				continue
+			cx = c
+			cy = r
+			if r == ROWS.size() and c == 0:
+				_change_look(-1 if p.x < l.global_position.x + Art.text_width(l.text) / 2.0 else 1)
+			else:
+				_activate()
+			return true
+	return true
+
+
+func _change_look(d: int) -> void:
+	Game.look = (Game.look + d + Data.LOOKS.size()) % Data.LOOKS.size()
+	Sfx.play("pop")
+
+
 func run() -> void:
 	await get_tree().process_frame
+	add_to_group("tap_targets")
 	while true:
 		await get_tree().process_frame
 		var moved := false
@@ -105,15 +139,13 @@ func run() -> void:
 			moved = true
 		elif Input.is_action_just_pressed("right"):
 			if cy == grid.size() - 1 and cx == 0:
-				Game.look = (Game.look + 1) % Data.LOOKS.size()
-				Sfx.play("pop")
+				_change_look(1)
 			else:
 				cx += 1
 				moved = true
 		elif Input.is_action_just_pressed("left"):
 			if cy == grid.size() - 1 and cx == 0:
-				Game.look = (Game.look - 1 + Data.LOOKS.size()) % Data.LOOKS.size()
-				Sfx.play("pop")
+				_change_look(-1)
 			else:
 				cx -= 1
 				moved = true
@@ -122,29 +154,36 @@ func run() -> void:
 				name_text = name_text.substr(0, name_text.length() - 1)
 				Sfx.play("cancel")
 		elif Input.is_action_just_pressed("accept"):
-			if cy < ROWS.size():
-				if name_text.length() < MAXLEN:
-					name_text += ROWS[cy][cx]
-					Sfx.play("blip", 1.2)
-					var l: Label = grid[cy][cx]
-					l.scale = Vector2(1.6, 1.6)
-					create_tween().tween_property(l, "scale", Vector2.ONE, 0.15)
-				else:
-					Sfx.play("miss")
-			elif cx == 0:
-				Game.look = (Game.look + 1) % Data.LOOKS.size()
-				Sfx.play("pop")
-			elif cx == 1:
-				if name_text.length() > 0:
-					name_text = name_text.substr(0, name_text.length() - 1)
-					Sfx.play("cancel")
-			else:
-				if name_text.strip_edges() == "":
-					Sfx.play("miss")
-					continue
-				Game.player_name = name_text.strip_edges()
-				Sfx.play("confirm")
-				return
+			_activate()
+		if done:
+			remove_from_group("tap_targets")
+			return
 		if moved:
 			cx = clampi(cx, 0, (grid[cy] as Array).size() - 1)
 			Sfx.play("blip")
+
+
+func _activate() -> void:
+	## OK on whatever the cursor is on: type a letter, change look, Del, End.
+	if cy < ROWS.size():
+		if name_text.length() < MAXLEN:
+			name_text += ROWS[cy][cx]
+			Sfx.play("blip", 1.2)
+			var l: Label = grid[cy][cx]
+			l.scale = Vector2(1.6, 1.6)
+			create_tween().tween_property(l, "scale", Vector2.ONE, 0.15)
+		else:
+			Sfx.play("miss")
+	elif cx == 0:
+		_change_look(1)
+	elif cx == 1:
+		if name_text.length() > 0:
+			name_text = name_text.substr(0, name_text.length() - 1)
+			Sfx.play("cancel")
+	else:
+		if name_text.strip_edges() == "":
+			Sfx.play("miss")
+			return
+		Game.player_name = name_text.strip_edges()
+		Sfx.play("confirm")
+		done = true

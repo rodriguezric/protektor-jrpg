@@ -40,8 +40,9 @@ const MIN_BUTTON := 0.12
 ## do nothing, so a thumb that just misses never becomes a confirm.
 const GUARD := 0.07
 ## Screens that are steered with arrows rather than tapped.
-## (The title, the star map and training are tapped directly, so they aren't here.)
-const ARROW_SCREENS := ["SlotScreen", "AchievementsScreen", "NameEntry", "Escape", "Workshop", "PilotStatus"]
+## (The title, star map, training, save slots and name entry are tapped
+## directly, so they aren't here.)
+const ARROW_SCREENS := ["AchievementsScreen", "Escape", "Workshop", "PilotStatus"]
 
 var active := false
 var alpha := 0.0

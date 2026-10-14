@@ -406,6 +406,9 @@ func _touch_test() -> void:
 	get_tree().quit()
 
 
+const ROWS_N := 4
+
+
 func _touch_screens() -> void:
 	## The title shows no stick or buttons; the star map is played by tapping
 	## worlds (stick hidden, B kept for back).
@@ -484,6 +487,52 @@ func _touch_screens() -> void:
 		await _touch_tap(trow, 0.3)
 		await _touch_tap(trow, 0.5)
 	print("[screens] training pick: %s (want module %s tier 0)" % [tres.pick, Data.TRAINING_MODULES[tt]])
+	tr.queue_free()
+	# save slots: tap a slot, tap it again; B backs out
+	var ss := SlotScreen.new()
+	ss.setup("new")
+	main.cine_layer.add_child(ss)
+	var sres := {"n": -1}
+	var go_ss := func() -> void:
+		sres.n = await ss.run()
+	go_ss.call()
+	await wait(0.6)
+	await window_shot("touch_slots")
+	print("[screens] slots: slot='%s' hidden=%s stick blocked=%s" % [tc.slot_mode, tc.hidden_ids, tc.joy_blocked])
+	await _touch_tap(sh.to_window((ss.cards[2] as Control).get_global_rect().get_center()), 0.3)
+	print("[screens] tap slot 3: sel=%s (want 2) chosen=%s" % [ss.sel, sres.n])
+	await _touch_tap(sh.to_window((ss.cards[2] as Control).get_global_rect().get_center()), 0.3)
+	print("[screens] tap it again: chosen=%s (want 3) still tappable=%s" % [sres.n, ss.is_in_group("tap_targets")])
+	sres.n = -1
+	go_ss.call()
+	await wait(0.3)
+	await _touch_tap(_control("b"), 0.3)
+	print("[screens] B on slots: chosen=%s (want 0)" % sres.n)
+	ss.queue_free()
+	# name entry: letters type on one tap, B erases, Look changes, End accepts
+	Game.player_name = ""
+	var ne := NameEntry.new()
+	main.cine_layer.add_child(ne)
+	var nres := {"done": false}
+	var go_ne := func() -> void:
+		await ne.run()
+		nres.done = true
+	go_ne.call()
+	await wait(0.6)
+	print("[screens] name entry: slot='%s' hidden=%s stick blocked=%s" % [tc.slot_mode, tc.hidden_ids, tc.joy_blocked])
+	for k in [[0, 0], [2, 1], [2, 2]]:   # A, b, c
+		await _touch_tap(sh.to_window((ne.grid[k[0]][k[1]] as Label).global_position + Vector2(2, 3)), 0.2)
+	print("[screens] typed: '%s' (want 'Abc')" % ne.name_text)
+	await _touch_tap(_control("b"), 0.3)
+	print("[screens] B erased: '%s' (want 'Ab')" % ne.name_text)
+	var look0 := Game.look
+	var look_l: Label = ne.grid[ROWS_N][0]
+	await _touch_tap(sh.to_window(look_l.global_position + Vector2(Art.text_width(look_l.text) - 2, 3)), 0.2)
+	print("[screens] tap Look >: look %s -> %s" % [look0, Game.look])
+	await window_shot("touch_name")
+	var end_l: Label = ne.grid[ROWS_N][2]
+	await _touch_tap(sh.to_window(end_l.global_position + Vector2(4, 3)), 0.3)
+	print("[screens] tap End: done=%s name='%s'" % [nres.done, Game.player_name])
 	get_tree().quit()
 
 
