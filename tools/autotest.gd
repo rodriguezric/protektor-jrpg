@@ -455,6 +455,35 @@ func _touch_screens() -> void:
 		await _touch_tap(row, 0.3)
 		await _touch_tap(row, 2.0)
 	print("[screens] deployed to: %s" % res.pick)
+	# training: tap a module, tap it again, tap a tier (no stick, B for back)
+	for c in main.cine_layer.get_children():
+		c.queue_free()
+	main.fade_rect.color.a = 0.0
+	var tr := Training.new()
+	main.cine_layer.add_child(tr)
+	var tres := {"pick": null}
+	var go_tr := func() -> void:
+		tres.pick = await tr.run()
+	go_tr.call()
+	await wait(0.6)
+	await window_shot("touch_training")
+	print("[screens] training: slot='%s' hidden=%s stick blocked=%s" % [tc.slot_mode, tc.hidden_ids, tc.joy_blocked])
+	var tb := tr.sel
+	var tt := (tb + 1) % Data.TRAINING_MODULES.size()
+	await _touch_tap(sh.to_window(tr._module_pos(tt)), 0.3)
+	print("[screens] tap a module: selected %s -> %s (want %s)" % [tb, tr.sel, tt])
+	await _touch_tap(sh.to_window(Vector2(300, 100)), 0.3)   # empty space: nothing
+	print("[screens] tap empty space: still %s" % tr.sel)
+	await _touch_tap(sh.to_window(tr._module_pos(tr.sel)), 0.5)
+	var tmenus := get_tree().get_nodes_in_group("tap_targets").filter(func(n): return n is Menu)
+	print("[screens] tap it again: tier menu open=%s slot='%s'" % [not tmenus.is_empty(), tc.slot_mode])
+	await window_shot("touch_training_tiers")
+	if not tmenus.is_empty():
+		var tm: Menu = tmenus[0]
+		var trow := sh.to_window(tm.get_global_rect().position + tm._slot(0) + Vector2(12, 4))
+		await _touch_tap(trow, 0.3)
+		await _touch_tap(trow, 0.5)
+	print("[screens] training pick: %s (want module %s tier 0)" % [tres.pick, Data.TRAINING_MODULES[tt]])
 	get_tree().quit()
 
 

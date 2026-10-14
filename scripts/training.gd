@@ -14,6 +14,7 @@ var info_name: Label
 var info_desc: Label
 var info_tiers: Label
 var credits_l: Label
+var help: Label
 
 
 func _init() -> void:
@@ -58,8 +59,8 @@ func _init() -> void:
 	info_tiers = Art.label("", Pal.SYNC)
 	info_tiers.position = Vector2(6, 40)
 	ib.add_child(info_tiers)
-	var help := Art.label("Z select  X back", Pal.TEXT_DIM)
-	help.position = Vector2(140, 6)
+	help = Art.label("", Pal.TEXT_DIM)
+	help.position = Vector2(132, 6)
 	add_child(help)
 	_update_info()
 
@@ -67,14 +68,43 @@ func _init() -> void:
 func _process(delta: float) -> void:
 	t += delta
 	credits_l.text = str(Game.credits())
+	help.text = "Tap a module, tap again" if Game.touch_active else "Z select  X back"
 	drawer.queue_redraw()
+
+
+func _module_pos(i: int) -> Vector2:
+	var m: Dictionary = Data.TRAINING[Data.TRAINING_MODULES[i]]
+	return m.pos + Vector2(0, sin(t * 1.5 + i) * 1.5)
+
+
+func tap(p: Vector2) -> bool:
+	## Touch: tap a module to select it, tap it again to pick a tier. Taps
+	## that miss every module are still taken, so they never confirm by
+	## accident. The label and tier pips below each hologram count too.
+	var best := -1
+	var best_d := 26.0
+	for i in Data.TRAINING_MODULES.size():
+		var c := _module_pos(i) + Vector2(0, 12)
+		var d := p.distance_to(c)
+		if d < best_d and absf(p.x - c.x) < 22.0:
+			best_d = d
+			best = i
+	if best < 0:
+		return true
+	if best == sel:
+		TouchControls.confirm()
+	else:
+		sel = best
+		Sfx.play("blip")
+		_update_info()
+	return true
 
 
 func _draw_map() -> void:
 	for i in Data.TRAINING_MODULES.size():
 		var id: String = Data.TRAINING_MODULES[i]
 		var m: Dictionary = Data.TRAINING[id]
-		var pos: Vector2 = m.pos + Vector2(0, sin(t * 1.5 + i) * 1.5)
+		var pos := _module_pos(i)
 		var d := 30 if i == sel else 24
 		# hologram: the planet in sync-light, with scanlines
 		var tex := Art.planet(m.tex, d, int(t * 4.0 + i * 5))
@@ -117,6 +147,8 @@ func _update_info() -> void:
 
 func run() -> Dictionary:
 	await get_tree().process_frame
+	# modules can be tapped while choosing (not during the tier menu)
+	add_to_group("tap_targets")
 	while true:
 		await get_tree().process_frame
 		var old := sel
@@ -126,12 +158,15 @@ func run() -> Dictionary:
 			sel = (sel - 1 + Data.TRAINING_MODULES.size()) % Data.TRAINING_MODULES.size()
 		elif Input.is_action_just_pressed("cancel"):
 			Sfx.play("cancel")
+			remove_from_group("tap_targets")
 			return {}
 		elif Input.is_action_just_pressed("accept"):
 			Sfx.play("confirm")
+			remove_from_group("tap_targets")
 			var tier := await _pick_tier()
 			if tier >= 0:
 				return {"module": Data.TRAINING_MODULES[sel], "tier": tier}
+			add_to_group("tap_targets")
 		if old != sel:
 			Sfx.play("blip")
 			_update_info()
