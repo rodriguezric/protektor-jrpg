@@ -270,7 +270,7 @@
     {
       "id": "ignara_prime_level_02_development_start_message",
       "type": "fx_async_message",
-      "time": 16.15,
+      "time": 12.27,
       "text": "Threat complexity rising.",
       "type_speed_cps": 24,
       "hold_sec": 1.2
@@ -278,203 +278,203 @@
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_01",
       "type": "spawn_enemy",
-      "time": 16.28,
+      "time": 12.4,
       "enemy_type": "asteroid",
       "spawn_side": "angle_335"
     },
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_02",
       "type": "spawn_enemy",
-      "time": 16.56,
+      "time": 12.68,
       "enemy_type": "asteroid",
       "spawn_side": "angle_355"
     },
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_03",
       "type": "spawn_enemy",
-      "time": 16.84,
+      "time": 12.96,
       "enemy_type": "asteroid",
       "spawn_side": "angle_15"
     },
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_04",
       "type": "spawn_enemy",
-      "time": 17.12,
+      "time": 13.24,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_30"
     },
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_05",
       "type": "spawn_enemy",
-      "time": 28.04,
+      "time": 15.64,
       "enemy_type": "asteroid",
       "spawn_side": "angle_245"
     },
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_06",
       "type": "spawn_enemy",
-      "time": 28.32,
+      "time": 15.92,
       "enemy_type": "asteroid",
       "spawn_side": "angle_265"
     },
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_07",
       "type": "spawn_enemy",
-      "time": 28.6,
+      "time": 16.2,
       "enemy_type": "asteroid",
       "spawn_side": "angle_285"
     },
     {
       "id": "ignara_prime_level_02_development_rapid_projectile_burst_01_spawn_08",
       "type": "spawn_enemy",
-      "time": 28.88,
+      "time": 16.48,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_300"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_01",
       "type": "spawn_enemy",
-      "time": 31.23,
+      "time": 18.83,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_82"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_02",
       "type": "spawn_enemy",
-      "time": 31.23,
+      "time": 18.83,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_98"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_03",
       "type": "spawn_enemy",
-      "time": 32.46,
+      "time": 20.06,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_262"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_04",
       "type": "spawn_enemy",
-      "time": 32.46,
+      "time": 20.06,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_278"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_05",
       "type": "spawn_enemy",
-      "time": 33.7,
+      "time": 21.3,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_82"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_06",
       "type": "spawn_enemy",
-      "time": 33.7,
+      "time": 21.3,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_98"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_07",
       "type": "spawn_enemy",
-      "time": 34.93,
+      "time": 22.53,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_262"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_08",
       "type": "spawn_enemy",
-      "time": 34.93,
+      "time": 22.53,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_278"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_09",
       "type": "spawn_enemy",
-      "time": 36.16,
+      "time": 23.76,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_82"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_10",
       "type": "spawn_enemy",
-      "time": 36.16,
+      "time": 23.76,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_98"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_11",
       "type": "spawn_enemy",
-      "time": 37.39,
+      "time": 24.99,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_262"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_12",
       "type": "spawn_enemy",
-      "time": 37.39,
+      "time": 24.99,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_278"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_13",
       "type": "spawn_enemy",
-      "time": 38.62,
+      "time": 26.22,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_82"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_14",
       "type": "spawn_enemy",
-      "time": 38.62,
+      "time": 26.22,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_98"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_15",
       "type": "spawn_enemy",
-      "time": 39.86,
+      "time": 27.46,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_262"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_16",
       "type": "spawn_enemy",
-      "time": 39.86,
+      "time": 27.46,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_278"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_17",
       "type": "spawn_enemy",
-      "time": 41.09,
+      "time": 28.69,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_82"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_18",
       "type": "spawn_enemy",
-      "time": 41.09,
+      "time": 28.69,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_98"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_19",
       "type": "spawn_enemy",
-      "time": 42.32,
+      "time": 29.92,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_262"
     },
     {
       "id": "ignara_prime_level_02_development_alternating_fast_side_pressure_01_spawn_20",
       "type": "spawn_enemy",
-      "time": 42.32,
+      "time": 29.92,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_278"
     },
     {
       "id": "ignara_prime_level_02_final_clear_start_message",
       "type": "fx_async_message",
-      "time": 44.15,
+      "time": 31.75,
       "text": "Final contact sweep.",
       "type_speed_cps": 24,
       "hold_sec": 1.2
@@ -482,140 +482,140 @@
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_01",
       "type": "spawn_enemy",
-      "time": 44.18,
+      "time": 31.78,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_340"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_02",
       "type": "spawn_enemy",
-      "time": 44.36,
+      "time": 31.96,
       "enemy_type": "asteroid",
       "spawn_side": "east"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_03",
       "type": "spawn_enemy",
-      "time": 44.54,
+      "time": 32.14,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_20"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_04",
       "type": "spawn_enemy",
-      "time": 46.88,
+      "time": 34.48,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_250"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_05",
       "type": "spawn_enemy",
-      "time": 47.06,
+      "time": 34.66,
       "enemy_type": "asteroid",
       "spawn_side": "north"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_06",
       "type": "spawn_enemy",
-      "time": 47.24,
+      "time": 34.84,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_290"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_07",
       "type": "spawn_enemy",
-      "time": 49.58,
+      "time": 37.18,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_70"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_08",
       "type": "spawn_enemy",
-      "time": 49.76,
+      "time": 37.36,
       "enemy_type": "asteroid",
       "spawn_side": "south"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_09",
       "type": "spawn_enemy",
-      "time": 49.94,
+      "time": 37.54,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_110"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_10",
       "type": "spawn_enemy",
-      "time": 52.28,
+      "time": 39.88,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_160"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_11",
       "type": "spawn_enemy",
-      "time": 52.46,
+      "time": 40.06,
       "enemy_type": "asteroid",
       "spawn_side": "west"
     },
     {
       "id": "ignara_prime_level_02_final_clear_chain_lane_ignition_02_spawn_12",
       "type": "spawn_enemy",
-      "time": 52.64,
+      "time": 40.24,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_200"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_01",
       "type": "spawn_enemy",
-      "time": 53.27,
+      "time": 40.87,
       "enemy_type": "asteroid",
       "spawn_side": "south"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_02",
       "type": "spawn_enemy",
-      "time": 53.54,
+      "time": 41.14,
       "enemy_type": "asteroid",
       "spawn_side": "north"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_03",
       "type": "spawn_enemy",
-      "time": 53.81,
+      "time": 41.41,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_75"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_04",
       "type": "spawn_enemy",
-      "time": 54.08,
+      "time": 41.68,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_285"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_05",
       "type": "spawn_enemy",
-      "time": 54.89,
+      "time": 42.49,
       "enemy_type": "asteroid",
       "spawn_side": "north"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_06",
       "type": "spawn_enemy",
-      "time": 55.16,
+      "time": 42.76,
       "enemy_type": "asteroid",
       "spawn_side": "west"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_07",
       "type": "spawn_enemy",
-      "time": 55.43,
+      "time": 43.03,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_255"
     },
     {
       "id": "ignara_prime_level_02_final_clear_double_lane_rush_02_spawn_08",
       "type": "spawn_enemy",
-      "time": 55.7,
+      "time": 43.3,
       "enemy_type": "drone_fast",
       "spawn_side": "angle_195"
     }
