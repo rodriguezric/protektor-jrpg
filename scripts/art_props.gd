@@ -50,6 +50,25 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"quilt": return quilt()
 		"workshop": return workshop(v)
 		"memorial": return memorial()
+		"door": return door(v)
+		"tv": return tv()
+		"clock": return clock()
+		"calendar": return calendar()
+		"coatrack": return coatrack()
+		"radio": return radio()
+		"sofa": return sofa()
+		"bigbed": return bigbed()
+		"dresser": return dresser()
+		"tub": return tub()
+		"basin": return basin()
+		"mirror": return mirror()
+		"toilet": return toilet()
+		"desk": return desk()
+		"wardrobe": return wardrobe()
+		"bag": return bag()
+		"basket": return basket()
+		"toy": return toy()
+		"drawings": return drawings()
 	return crate()
 
 
@@ -313,6 +332,297 @@ static func cup() -> PixBuf:
 	b.rect(1, 1, 3, 4, Pal.BLUE.lerp(Pal.SKY, 0.4))
 	b.pset(4, 2, Pal.BLUE)
 	b.pset(1, 1, Pal.WHITE)
+	b.outline()
+	return b
+
+
+# ------------------------------------------------------------ home, more ---
+
+static func door(v: int) -> PixBuf:
+	## An interior door filling a doorway (d). 0 = shut, 1 = swung open into
+	## the room, seen edge-on against the frame.
+	var b := PixBuf.new(16, 29)
+	var c := Pal.WOOD.lerp(Pal.PEACH, 0.1)
+	if v == 1:
+		b.rect(2, 1, 3, 28, Pal.shade(c))
+		b.rect(2, 1, 1, 28, c)
+		b.outline()
+		return b
+	b.rect(2, 1, 12, 28, c)
+	b.rect(2, 1, 12, 1, Pal.hi(c))
+	b.rect(4, 3, 8, 10, Pal.shade(c))
+	b.rect(5, 4, 6, 8, c)
+	b.rect(4, 16, 8, 10, Pal.shade(c))
+	b.rect(5, 17, 6, 8, c)
+	b.rect(11, 14, 2, 2, Pal.HONEY)
+	b.outline()
+	return b
+
+
+static func tv() -> PixBuf:
+	## The block screen, hung on the wall: the Helion seal over a parade loop.
+	var b := PixBuf.new(30, 20)
+	b.rect(1, 1, 28, 17, Pal.INK2)
+	b.rect(3, 3, 24, 13, Pal.NAVY.lerp(Pal.SYNC, 0.25))
+	b.rect(3, 12, 24, 4, Pal.NAVY.lerp(Pal.INK2, 0.3))
+	for k in 5:
+		b.rect(5 + k * 5, 10, 2, 3, Pal.STONE)
+	_emblem(b, 12, 4, Pal.LEMON.lerp(Pal.SYNC, 0.3), Pal.WHITE)
+	b.rect(13, 18, 4, 2, Pal.INK2)
+	b.outline()
+	return b
+
+
+static func clock() -> PixBuf:
+	var b := PixBuf.new(12, 12)
+	b.circ(6, 6, 5, Pal.WOOD)
+	b.circ(6, 6, 4, Pal.CREAM)
+	b.rect(6, 3, 1, 3, Pal.INK2)
+	b.rect(6, 6, 3, 1, Pal.INK2)
+	b.outline()
+	return b
+
+
+static func calendar() -> PixBuf:
+	var b := PixBuf.new(12, 14)
+	b.rect(1, 1, 10, 12, Pal.WHITE)
+	b.rect(1, 1, 10, 3, Pal.RED.lerp(Pal.ROSE, 0.4))
+	for yy in 3:
+		for xx in 4:
+			b.pset(2 + xx * 2, 6 + yy * 2, Pal.STONE)
+	b.circ(8, 10, 1.6, Pal.RED)
+	b.pset(8, 10, Pal.WHITE)
+	b.outline()
+	return b
+
+
+static func coatrack() -> PixBuf:
+	var b := PixBuf.new(16, 32)
+	b.rect(7, 4, 2, 26, Pal.BARK)
+	b.rect(4, 29, 8, 2, Pal.BARK)
+	b.rect(4, 4, 8, 1, Pal.BARK)
+	# mother's coat, father's work jacket, an empty hook
+	b.poly([Vector2(3, 5), Vector2(8, 5), Vector2(9, 19), Vector2(2, 19)], Pal.ROSE.lerp(Pal.PLUM, 0.4))
+	b.poly([Vector2(8, 5), Vector2(13, 5), Vector2(14, 17), Vector2(8, 17)], Pal.SLATE.lerp(Pal.SAGE, 0.3))
+	b.rect(10, 8, 2, 1, Pal.LEMON)
+	b.outline()
+	return b
+
+
+static func radio() -> PixBuf:
+	## A low table on the rug with the block radio on it.
+	var b := PixBuf.new(32, 18)
+	var top := Pal.WOOD.lerp(Pal.BARK, 0.2)
+	b.rect(3, 11, 2, 6, Pal.shade(top))
+	b.rect(27, 11, 2, 6, Pal.shade(top))
+	b.rect(1, 8, 30, 4, top)
+	b.rect(1, 8, 30, 1, Pal.hi(top))
+	b.rect(9, 2, 12, 7, Pal.HONEY.lerp(Pal.BARK, 0.35))
+	b.rect(10, 3, 5, 5, Pal.BARK)
+	for k in 3:
+		b.rect(10, 4 + k * 1.5, 5, 0.6, Pal.shade(Pal.BARK))
+	b.circ(18, 5, 1.5, Pal.CREAM)
+	b.line(19, 2, 23, 0, Pal.STONE)
+	b.ell(26, 9, 2, 1, Pal.WHITE)
+	b.outline()
+	return b
+
+
+static func sofa() -> PixBuf:
+	## The living room couch from behind, facing the screen on the far wall.
+	var b := PixBuf.new(38, 20)
+	var c := Pal.ROSE.lerp(Pal.WOOD, 0.45)
+	b.rect(1, 5, 5, 13, Pal.shade(c))
+	b.rect(32, 5, 5, 13, Pal.shade(c))
+	b.rect(4, 2, 30, 15, c)
+	b.rect(4, 2, 30, 2, Pal.hi(c))
+	b.rect(18, 4, 1, 12, Pal.shade(c))
+	b.rect(4, 15, 30, 2, Pal.shade(c))
+	b.rect(4, 17, 2, 2, Pal.INK2)
+	b.rect(32, 17, 2, 2, Pal.INK2)
+	# the dent where your father sits
+	b.ell(11, 3, 4, 1, Pal.shade(c))
+	b.outline()
+	return b
+
+
+static func bigbed() -> PixBuf:
+	var b := PixBuf.new(36, 40)
+	b.rect(1, 1, 34, 8, Pal.WOOD)
+	b.rect(2, 2, 32, 2, Pal.hi(Pal.WOOD))
+	b.rect(2, 7, 32, 30, Pal.CREAM)
+	b.ball(10, 11, 6, 3, Pal.WHITE)
+	b.ball(26, 11, 6, 3, Pal.WHITE)
+	var q := Pal.SAGE.lerp(Pal.CREAM, 0.25)
+	b.rect(2, 16, 32, 21, q)
+	b.rect(2, 16, 32, 2, Pal.hi(q))
+	for k in 6:
+		b.rect(4 + k * 5, 22, 3, 1, Pal.shade(q))
+		b.rect(4 + k * 5, 29, 3, 1, Pal.shade(q))
+	b.rect(24, 13, 5, 3, Pal.BLUE)
+	b.rect(1, 36, 34, 3, Pal.shade(Pal.WOOD))
+	b.outline()
+	return b
+
+
+static func dresser() -> PixBuf:
+	var b := PixBuf.new(20, 24)
+	b.rect(1, 6, 18, 17, Pal.WOOD)
+	b.rect(1, 6, 18, 1, Pal.hi(Pal.WOOD))
+	for k in 3:
+		b.rect(3, 9 + k * 5, 14, 4, Pal.shade(Pal.WOOD))
+		b.rect(9, 10 + k * 5, 2, 1, Pal.HONEY)
+	# father's work badge and a little dish of keys
+	b.rect(3, 3, 5, 4, Pal.SLATE)
+	b.rect(4, 4, 2, 2, Pal.SKIN)
+	b.ell(14, 5, 3, 1.5, Pal.STONE)
+	b.pset(13, 4, Pal.LEMON)
+	b.outline()
+	return b
+
+
+static func tub() -> PixBuf:
+	var b := PixBuf.new(36, 22)
+	b.rect(1, 4, 34, 15, Pal.WHITE)
+	b.rect(1, 4, 34, 1, Pal.hi(Pal.WHITE))
+	b.ell(18, 8, 14, 3, Pal.SKY.lerp(Pal.FROST, 0.5))
+	b.rect(4, 7, 28, 4, Pal.SKY.lerp(Pal.FROST, 0.5))
+	b.rect(1, 16, 34, 3, Pal.FROST)
+	b.rect(30, 1, 2, 5, Pal.STONE)
+	b.rect(28, 1, 4, 1, Pal.STONE)
+	b.rect(3, 19, 2, 2, Pal.STONE)
+	b.rect(31, 19, 2, 2, Pal.STONE)
+	b.outline()
+	return b
+
+
+static func basin() -> PixBuf:
+	var b := PixBuf.new(16, 24)
+	b.rect(6, 10, 4, 13, Pal.FROST)
+	b.rect(1, 5, 14, 6, Pal.WHITE)
+	b.rect(1, 5, 14, 1, Pal.hi(Pal.WHITE))
+	b.ell(8, 7, 5, 1.5, Pal.SKY.lerp(Pal.FROST, 0.6))
+	b.rect(7, 2, 2, 4, Pal.STONE)
+	b.rect(3, 3, 2, 3, Pal.MINT)
+	b.outline()
+	return b
+
+
+static func mirror() -> PixBuf:
+	var b := PixBuf.new(14, 16)
+	b.rect(1, 1, 12, 14, Pal.STONE)
+	b.rect(2, 2, 10, 12, Pal.SKY.lerp(Pal.FROST, 0.4))
+	b.line(4, 4, 7, 2, Pal.WHITE)
+	b.line(4, 7, 9, 3, Pal.hi(Pal.SKY.lerp(Pal.FROST, 0.4)))
+	b.outline()
+	return b
+
+
+static func toilet() -> PixBuf:
+	var b := PixBuf.new(14, 20)
+	b.rect(2, 1, 10, 7, Pal.WHITE)
+	b.rect(2, 1, 10, 1, Pal.hi(Pal.WHITE))
+	b.ell(7, 12, 5, 3.5, Pal.WHITE)
+	b.ell(7, 11, 3, 2, Pal.FROST)
+	b.rect(5, 14, 4, 5, Pal.FROST)
+	b.rect(9, 3, 2, 1, Pal.STONE)
+	b.outline()
+	return b
+
+
+static func desk() -> PixBuf:
+	## Your desk: drawings, a cup of pencils, a little lamp.
+	var b := PixBuf.new(32, 26)
+	var c := Pal.WOOD.lerp(Pal.PEACH, 0.2)
+	b.rect(2, 14, 2, 11, Pal.shade(c))
+	b.rect(28, 14, 2, 11, Pal.shade(c))
+	b.rect(20, 14, 9, 9, Pal.shade(c))
+	b.rect(23, 17, 3, 1, Pal.HONEY)
+	b.rect(1, 10, 30, 5, c)
+	b.rect(1, 10, 30, 1, Pal.hi(c))
+	b.rect(4, 7, 9, 5, Pal.WHITE)
+	b.circ(8, 9, 1.5, Pal.GRASS)
+	b.pset(8, 9, Pal.LEMON)
+	b.rect(14, 8, 6, 4, Pal.CREAM)
+	b.rect(15, 9, 3, 1, Pal.SKY)
+	b.rect(22, 6, 3, 5, Pal.BLUE)
+	b.pset(22, 5, Pal.RED)
+	b.pset(24, 4, Pal.LEMON)
+	b.rect(27, 3, 1, 8, Pal.INK2)
+	b.poly([Vector2(25, 4), Vector2(30, 4), Vector2(29, 1), Vector2(26, 1)], Pal.LEMON.lerp(Pal.HONEY, 0.4))
+	b.outline()
+	return b
+
+
+static func wardrobe() -> PixBuf:
+	var b := PixBuf.new(18, 36)
+	var c := Pal.WOOD.lerp(Pal.BARK, 0.15)
+	b.rect(1, 1, 16, 34, c)
+	b.rect(1, 1, 16, 1, Pal.hi(c))
+	b.rect(8, 3, 1, 30, Pal.shade(c))
+	b.rect(3, 3, 4, 30, Pal.shade(c).lerp(c, 0.5))
+	b.rect(10, 3, 5, 30, Pal.shade(c).lerp(c, 0.5))
+	b.rect(6, 17, 1, 3, Pal.HONEY)
+	b.rect(10, 17, 1, 3, Pal.HONEY)
+	b.outline()
+	return b
+
+
+static func bag() -> PixBuf:
+	## The bag someone already packed for you.
+	var b := PixBuf.new(16, 14)
+	var c := Pal.SLATE.lerp(Pal.TEAL, 0.25)
+	b.ball(8, 8, 6.5, 4.5, c)
+	b.rect(2, 8, 13, 5, c)
+	b.rect(2, 8, 13, 1, Pal.hi(c))
+	b.cap(5, 5, 11, 5, 1.0, Pal.shade(c))
+	b.rect(7, 10, 3, 2, Pal.HONEY)
+	b.outline()
+	return b
+
+
+static func basket() -> PixBuf:
+	var b := PixBuf.new(18, 14)
+	var c := Pal.HONEY.lerp(Pal.WOOD, 0.4)
+	b.ball(9, 5, 7, 3, Pal.BLUE.lerp(Pal.CREAM, 0.35))
+	b.ball(6, 4, 3, 2, Pal.ROSE.lerp(Pal.CREAM, 0.3))
+	b.rect(2, 5, 14, 8, c)
+	for k in 4:
+		b.rect(3 + k * 3.5, 6, 1, 6, Pal.shade(c))
+	b.rect(2, 5, 14, 1, Pal.hi(c))
+	b.outline()
+	return b
+
+
+static func toy() -> PixBuf:
+	## A plastic Protektor, one arm glued back on slightly wrong.
+	var b := PixBuf.new(10, 14)
+	var c := Pal.FROST.lerp(Pal.SKY, 0.3)
+	b.rect(3, 4, 4, 6, c)
+	b.ball(5, 3, 2, 2, c)
+	b.pset(5, 3, Pal.SYNC)
+	b.rect(1, 5, 2, 4, Pal.shade(c))
+	b.rect(7, 4, 2, 3, Pal.shade(c))
+	b.rect(3, 10, 1, 3, Pal.shade(c))
+	b.rect(6, 10, 1, 3, Pal.shade(c))
+	b.outline()
+	return b
+
+
+static func drawings() -> PixBuf:
+	## Old drawings taped along the hallway: a rocket, a dog, the shield grid.
+	var b := PixBuf.new(30, 12)
+	for k in 3:
+		var x := 1 + k * 10
+		b.rect(x, 1 + (k % 2), 8, 9, Pal.WHITE)
+		b.rect(x + 3, 0 + (k % 2), 2, 1, Pal.HONEY.lerp(Pal.WHITE, 0.4))
+	b.rect(4, 3, 2, 5, Pal.RED)
+	b.pset(4, 2, Pal.ORANGE)
+	b.rect(13, 6, 4, 2, Pal.WOOD)
+	b.pset(16, 5, Pal.WOOD)
+	for k in 3:
+		b.line(22 + k * 2, 3, 22 + k * 2, 8, Pal.SYNC)
+	b.line(22, 5, 27, 5, Pal.SYNC)
 	b.outline()
 	return b
 

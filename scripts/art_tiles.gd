@@ -3,14 +3,23 @@ class_name ArtTiles
 ## (Greywater's approach), so seams, trims and wall faces never visibly repeat.
 ## Tiles: # wall, W window wall, D door (in a wall), . floor, , rug/carpet,
 ## : tiles, = guide strip, _ grate, g grass, ~ road, + red carpet, space = void.
+## d doorway (a gap through a wall, drawn as wall but walkable; a door prop
+## usually sits in it), S stairs going up (north), U the stairwell they climb
+## into (wall), v stairs going down (south).
 ## Walls are drawn in 3/4 view: the two wall rows above a floor become a face.
 
 const TILE := 16
-const WALLS := "#WD "
+const WALLS := "#WDdU "
 
 
 static func is_wall(ch: String) -> bool:
+	## Drawn as wall (it shapes the faces around it).
 	return WALLS.contains(ch)
+
+
+static func is_solid(ch: String) -> bool:
+	## Blocks walking. Doorways are drawn as wall but can be walked through.
+	return is_wall(ch) and ch != "d"
 
 
 static func ground(rows: Array, theme: String) -> Image:
@@ -48,6 +57,8 @@ static func ground(rows: Array, theme: String) -> Image:
 							c = Pal.INK
 						"top":
 							c = _wall_top(theme, x, y, lx, ly, at.call(tx, ty + 1) == " " or ty == th - 1)
+							if ch == "d":
+								c = _threshold(theme, x, y, lx)
 						"face_high", "face_low":
 							c = _wall_face(theme, ch, x, y, lx, ly + (0 if mode == "face_high" else TILE), at, tx, ty)
 						_:
@@ -123,7 +134,49 @@ static func _wall_face(theme: String, ch: String, x: int, y: int, lx: int, fy: i
 		c = _window(theme, x, y, lx, fy, c)
 	elif ch == "D":
 		c = _door(theme, lx, fy, c)
+	elif ch == "d":
+		c = _doorway(theme, x, y, lx, fy, c)
+	elif ch == "U":
+		c = _stairwell(theme, x, lx, fy)
 	return c
+
+
+static func _threshold(theme: String, x: int, y: int, lx: int) -> Color:
+	## The floor running through a doorway where the wall top would be.
+	var c := _base_floor(theme, x, y, lx, 0, 0.0, 0.0)
+	if lx == 0 or lx == 15:
+		return Pal.WOOD.lerp(Pal.BARK, 0.3)
+	return Pal.shade(c) if lx == 1 or lx == 14 else c
+
+
+static func _doorway(theme: String, x: int, y: int, lx: int, fy: int, wall: Color) -> Color:
+	## An open doorway in a wall face: a wooden frame around the dim room beyond.
+	if fy < 3:
+		return wall
+	var frame := Pal.WOOD if theme == "home" else Pal.SLATE
+	if lx <= 1 or lx >= 14 or fy == 3:
+		return Pal.hi(frame) if lx == 1 or fy == 3 else frame
+	var beyond := _base_floor(theme, x, y, lx, fy % TILE, 0.0, 0.0)
+	return beyond.lerp(Pal.INK, 0.55 - fy / 31.0 * 0.3)
+
+
+static func _stairwell(theme: String, x: int, lx: int, fy: int) -> Color:
+	## The stairs climbing on into the dark of the floor above.
+	if lx < 2:
+		return Pal.WOOD.lerp(Pal.BARK, 0.2) if lx == 1 else Pal.shade(Pal.WOOD)
+	var step := _step(theme, x, fy + 32, lx)
+	return step.lerp(Pal.INK, 0.85 - fy / 31.0 * 0.5)
+
+
+static func _step(theme: String, x: int, k: int, lx: int) -> Color:
+	## One stair tread: k counts down the run, every 5 px a new step.
+	var tread := Pal.WOOD.lerp(Pal.PEACH, 0.25) if theme == "home" else Pal.STEEL
+	var s := k % 5
+	if s == 0:
+		return Pal.hi(tread)
+	if s == 4:
+		return Pal.deep(tread) if theme == "home" else Pal.shade(tread)
+	return tread if (x + k) % 9 != 0 else Pal.shade(tread)
 
 
 static func _window(theme: String, x: int, y: int, lx: int, fy: int, wall: Color) -> Color:
@@ -197,6 +250,23 @@ static func _floor(theme: String, ch: String, x: int, y: int, lx: int, ly: int, 
 					c = Pal.FROST.lerp(Pal.STEEL, 0.5)
 				elif hs > 0.97:
 					c = Pal.shade(Pal.FROST)
+		"S", "v":
+			# stairs: treads across the tile, a banister on the open side;
+			# going up (S) they brighten toward you, going down (v) they sink
+			# into shadow
+			var run := ty * TILE + ly
+			c = _step(theme, x, run, lx)
+			if ch == "v":
+				var depth := 0
+				while at.call(tx, ty - depth - 1) == "v":
+					depth += 1
+				c = c.lerp(Pal.INK, minf(0.75, (depth * TILE + ly) / 40.0))
+			var open_l: bool = at.call(tx - 1, ty) != ch
+			var open_r: bool = at.call(tx + 1, ty) != ch
+			if open_l and lx < 2:
+				c = Pal.WOOD.lerp(Pal.BARK, 0.2) if lx == 1 else Pal.shade(Pal.WOOD)
+			elif open_r and lx > 13:
+				c = Pal.WOOD.lerp(Pal.BARK, 0.2) if lx == 14 else Pal.shade(Pal.WOOD)
 		"_":
 			c = Pal.INK2.lerp(Pal.INK, 0.2)
 			if x % 3 == 0 or y % 3 == 0:

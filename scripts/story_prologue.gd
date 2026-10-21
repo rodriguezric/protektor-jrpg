@@ -3,6 +3,8 @@ extends RefCounted
 ## Chapter 0: the letter, the night before, the parade.
 ## (dialog/demo_intro_scene.dialog.json, Intro Scene Script Draft)
 
+const EVENING := Color(0.85, 0.78, 0.82)
+
 var s: Story
 var evening := false
 var letter_c: Cinema
@@ -25,7 +27,7 @@ func start() -> void:
 	c.sprite(Art.cine("city_frame"), Vector2(160, 90))
 	Sfx.music("letter_discussion", 2.0)
 	await m.fade_in(1.4)
-	await s.say("", ["Home is one narrow kitchen, a fold-out bed, and a window that makes the whole block look cleaner than it is.",
+	await s.say("", ["Home is a narrow stack of rooms in Block 7: a kitchen and a living room below, bedrooms up a creaking staircase, and windows that make the whole block look cleaner than it is.",
 		"Outside, transports drag shadows across the window while the shield grid pulses over the block in slow blue waves."])
 	await m.fade_out(0.8)
 	c.queue_free()
@@ -38,7 +40,7 @@ func start() -> void:
 	s.w.busy = true
 	s.w.show_area_name()
 	await m.fade_in(0.8)
-	await s.say("", ["You know where every floor panel creaks, where the heater stutters, where your mother keeps the good cups for visitors who never stay long.",
+	await s.say("", ["You know which stair creaks, where the heater stutters, where your mother keeps the good cups for visitors who never stay long.",
 		"Tonight, even familiar things feel careful."])
 	await s.say("", "Your parents stand in the kitchen. Your mother is holding a letter so tightly the fold has gone white.")
 	s.w.prop_sprite("letter").visible = false
@@ -119,18 +121,41 @@ func _letter_close() -> void:
 func _evening() -> void:
 	var m = s.m
 	evening = true
-	s.place("mother", Vector2i(2, 3), 1)
-	s.place("father", Vector2i(11, 5), 1)
-	s.w.prop_sprite("letter").visible = true
-	s.w.player.position = s.w.tile_center(Vector2i(7, 8))
-	s.w.player.face(0)
-	s.w.tint.color = Color(0.85, 0.78, 0.82)
 	Sfx.music("mellow_loop", 1.5)
+	m.load_map(_house("home"), Vector2i(7, 8), 0)
+	s.w.busy = true
 	await m.fade_in(0.8)
 	await s.say("", "Evening. Nobody mentions the letter again. It is still on the table.")
 	await s.say("~", "I should go to bed. Tomorrow comes either way.")
-	s.w.show_marker(Vector2i(19, 2))
+	s.w.show_marker(Vector2i(21, 2))
 	s.w.busy = false
+
+
+func _house(id: String) -> Dictionary:
+	## Either floor of home, set for the evening once it has come.
+	var mp := Maps.home() if id == "home" else Maps.home_up()
+	if evening:
+		mp.tint = EVENING
+		mp.music = "mellow_loop"
+		if id == "home":
+			mp.npcs = [
+				{"id": "mother", "who": "mother", "tile": Vector2i(2, 3), "dir": 1},
+				{"id": "father", "who": "father", "tile": Vector2i(18, 4), "dir": 1},
+			]
+	return mp
+
+
+func exit(e: Dictionary) -> void:
+	## The stairs between the floors.
+	var to: String = e.get("to", "")
+	if to != "home" and to != "home_up":
+		return
+	for i in 3:
+		Sfx.play("step", 0.85 + i * 0.08, -16.0)
+		await s.wait(0.09)
+	await s.m.change_map(_house(to), e.tile, e.dir)
+	if evening:
+		s.w.show_marker(Vector2i(2, 2) if to == "home_up" else Vector2i(21, 2))
 
 
 # ---------------------------------------------------------------- field ---
@@ -178,14 +203,46 @@ func examine(ev: Dictionary) -> void:
 			await s.say("", "The heater stutters, catches, stutters again. It has always done that.")
 		"photo":
 			await s.say("", "A family photo. Three faces squinting into the same bright afternoon.")
+		"tv":
+			await s.say("", ["The block screen loops tomorrow's parade rehearsal with the sound off.", "Every recruit on it is smiling. The camera never stays on one long enough to check."])
+		"clock":
+			await s.say("", "The wall clock runs four minutes fast. It has run four minutes fast your whole life, and nobody has ever fixed it.")
+		"calendar":
+			await s.say("", "The ration calendar. Tomorrow's square has been circled, and then the circle has been scribbled over.")
+		"coats":
+			await s.say("", "Your mother's coat, your father's work jacket, and the hook where yours hangs. It's empty. Your coat is already packed.")
+		"radio":
+			await s.say("", "The block radio, turned down low. A voice is reading the names of tomorrow's recruits, slowly enough to be a ceremony.")
+		"couch":
+			await s.say("", "The couch still has a dent where your father sits for the evening broadcast. Tonight he's standing.")
+		"desk":
+			await s.say("", ["Your desk. Drawings of planets with faces, a cup of worn-down pencils.", "Someone has squared the papers into a neat pile. It wasn't you."])
+		"wardrobe":
+			await s.say("", "Your wardrobe is half empty. The clothes that are left all suddenly feel too small.")
+		"toy":
+			await s.say("", "A plastic Protektor. You glued its arm back on years ago, and it has pointed slightly the wrong way ever since.")
+		"bag":
+			await s.say("", "A bag, packed and zipped, waiting by the door. You didn't pack it.")
+		"parentsbed":
+			await s.say("", "Your parents' bed, made tight at the corners. A book on your mother's side has the same page folded down as last week.")
+		"dresser":
+			await s.say("", "Your father's work badge: Block 7 Maintenance. The photo on it is younger than he is.")
+		"tub":
+			await s.say("", "The tub. The water runs warm for exactly four minutes, so everyone in this house showers fast.")
+		"basin":
+			await s.say("", ["Three toothbrushes in a cup. By tomorrow night there'll be two.", "In the mirror you try to look like someone a parade would be for."])
+		"toilet":
+			await s.say("", "The flush handle has to be held down for a count of three. You count without thinking.")
+		"basket":
+			await s.say("", "Laundry, folded. One of your shirts is on top, still warm. Somebody washed it so you'd have it tomorrow.")
+		"drawings":
+			await s.say("", "Your old drawings, taped along the hallway: a rocket, a dog you never had, the shield grid in blue crayon.")
 		"table":
 			await s.say("", ["The letter is still face down on the table. The Helion seal shows through the paper.", "You don't turn it over."])
 		"packet":
 			await s.say("", "A sealed travel packet, already stamped with your family name. It is heavier than it looks.")
 		"sink":
 			await s.say("", "The good cups for visitors. Two are out tonight.")
-		"foldbed":
-			await s.say("", "Your parents' fold-out bed. Nobody has unfolded it yet.")
 		"frontdoor":
 			await s.say("", "The front door. Tomorrow you go through it in a uniform.")
 		"bed":
@@ -205,22 +262,21 @@ func _night() -> void:
 	evening = false
 	var pl := s.w.player
 	pl.visible = false
-	var sleeper := s.w.add_npc({"id": "sleeper", "spec": Game.player_spec("home"), "tile": Vector2i(19, 2), "dir": 0, "offset": Vector2(0, 6), "ghost": true})
+	var sleeper := s.w.add_npc({"id": "sleeper", "spec": Game.player_spec("home"), "tile": Vector2i(2, 2), "dir": 0, "offset": Vector2(0, 6), "ghost": true})
 	sleeper.z_index = 1
 	var quilt := Sprite2D.new()
 	quilt.texture = Art.prop("quilt")
-	quilt.position = s.w.tile_center(Vector2i(19, 2)) + Vector2(0, 2)
+	quilt.position = s.w.tile_center(Vector2i(2, 2)) + Vector2(0, 2)
 	quilt.z_index = 2
 	s.w.add_child(quilt)
-	s.hide("father")
-	s.place("mother", Vector2i(13, 8), 2)
+	# your mother comes up the stairs and waits outside your door
+	s.w.add_npc({"id": "mother", "who": "mother", "tile": Vector2i(4, 10), "dir": 1})
 	s.w.tint.color = Maps.NIGHT
-	var kl := s.w.prop_sprite("kidlamp")
 	s.w.cam_follow = false
-	s.w.cam_focus = s.w.tile_center(Vector2i(17, 5))
+	s.w.cam_focus = s.w.tile_center(Vector2i(5, 5))
 	s.w.cam.position = s.w.cam_focus
 	await m.fade_in(1.2)
-	await s.say("", "You lie awake while the ceiling recycler hums above you and the packed silence from the kitchen settles into your room.")
+	await s.say("", "You lie awake while the ceiling recycler hums above you and the packed silence from downstairs climbs the stairs and settles into your room.")
 	match Game.vars.get("letter_choice", ""):
 		"doubt":
 			await s.say("", "You asked if you had to go. No one answered that part.")
@@ -234,8 +290,8 @@ func _night() -> void:
 	await s.wait(0.5)
 	await s.say("mother", "Can I come in?", "gentle")
 	await s.say("you", "Yeah.")
-	await s.walk("mother", [Vector2i(16, 8), Vector2i(17, 5), Vector2i(18, 4)], 34.0)
-	s.face("mother", 2)
+	await s.walk("mother", [Vector2i(4, 5), Vector2i(3, 4), Vector2i(3, 3)], 34.0)
+	s.face("mother", 3)
 	await s.say("mother", "You don't have to be strong for us.", "gentle")
 	var r := await s.ask("How do you respond?", ["I am scared.", "I'll be fine."])
 	if r == 0:

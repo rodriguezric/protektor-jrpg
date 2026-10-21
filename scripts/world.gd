@@ -34,6 +34,9 @@ var marker: Sprite2D
 var fired := {}
 var step_t := 0.0
 var cam_bias := 0.0
+## Doors that swing open while someone stands in or beside them:
+## {sprite, kind, pos (bottom centre), open}.
+var doors: Array = []
 
 
 func setup(map_def: Dictionary, tile: Vector2i, facing: int, p_handler: Object) -> void:
@@ -128,7 +131,7 @@ func _build_tiles() -> void:
 	for y in th:
 		for x in tw:
 			var ch: String = (rows[y] as String)[x]
-			if ArtTiles.is_wall(ch):
+			if ArtTiles.is_solid(ch):
 				solid[Vector2i(x, y)] = true
 
 
@@ -148,6 +151,8 @@ func _build_props() -> void:
 			s.offset.y -= p.lift
 		if p.has("id"):
 			props[p.id] = s
+		if p.get("door", false):
+			doors.append({"sprite": s, "kind": p.kind, "pos": pos, "open": false})
 		if p.has("anim"):
 			s.set_meta("kind", p.kind)
 			s.set_meta("frames", p.anim)
@@ -294,6 +299,19 @@ func _try_move(d: Vector2) -> void:
 	var p := player.position + d
 	if not blocked(p, player):
 		player.position = p
+	elif d.x == 0.0 and d.y != 0.0:
+		# walking up or down into a narrow gap (a doorway, a stair) slightly
+		# off centre: slide toward the gap instead of sticking on its frame
+		var cx := floorf(player.position.x / TILE) * TILE + TILE / 2.0
+		for c in [cx, cx - TILE, cx + TILE]:
+			var off: float = c - player.position.x
+			if absf(off) > 7.0 or absf(off) < 0.01:
+				continue
+			if not blocked(Vector2(c, p.y), player):
+				var nudge := Vector2(signf(off) * minf(absf(off), absf(d.y)), 0)
+				if not blocked(player.position + nudge, player):
+					player.position += nudge
+				return
 
 
 func blocked(p: Vector2, who: Node2D) -> bool:
@@ -384,7 +402,24 @@ func _update_npcs(delta: float) -> void:
 				n.walk_target = null
 
 
+func _update_doors() -> void:
+	for d in doors:
+		var near := false
+		for a: Actor in [player] + npcs:
+			if not a.visible or a.info.get("ghost", false):
+				continue
+			var v: Vector2 = a.position - d.pos
+			if absf(v.x) < 12.0 and v.y > -44.0 and v.y < 6.0:
+				near = true
+				break
+		if near != d.open:
+			d.open = near
+			(d.sprite as Sprite2D).texture = Art.prop(d.kind, 1 if near else 0)
+			Sfx.play("latch", 1.0 if near else 0.88, -8.0)
+
+
 func _animate(_delta: float) -> void:
+	_update_doors()
 	var t := Time.get_ticks_msec() / 1000.0
 	for s in animated:
 		if not is_instance_valid(s):

@@ -653,6 +653,57 @@ func _run(scenario: String) -> void:
 				await wait(1.6 if i < 4 else 3.0)
 				await shot("mission_%02d" % i)
 			get_tree().quit()
+		"house":
+			# both floors of home: walk into your room through its door, then
+			# take the stairs down and back up
+			Game.new_game()
+			Game.player_name = "Ari"
+			auto_talk = false
+			var pr: StoryPrologue = main.story.prologue
+			pr.evening = true
+			main.fade_rect.color.a = 0.0
+			var w = main.load_map(pr._house("home"), Vector2i(16, 5), 0)
+			w.cam_follow = true
+			await wait(0.8)
+			await shot("house_ground")
+			w.player.position = w.tile_center(Vector2i(6, 5))
+			await wait(0.4)
+			await shot("house_kitchen")
+			w.player.position = w.tile_center(Vector2i(21, 4))
+			await hold("up", 0.7)
+			await wait(1.2)
+			w = main.world
+			print("[house] after stairs up: map=%s at %s" % [w.def.id, Vector2i(w.player.position / 16.0)])
+			await shot("house_up")
+			w.player.position = w.tile_center(Vector2i(4, 9)) + Vector2(4, 0)   # a little off centre
+			var door: Dictionary = w.doors[0]
+			print("[house] door shut before=%s" % [not door.open])
+			await hold("up", 0.35)
+			await wait(0.1)
+			print("[house] door open in the doorway=%s at %s" % [door.open, w.player.position])
+			await shot("house_door")
+			await hold("up", 0.8)
+			print("[house] walked into the bedroom: tile=%s (want y<=5)" % [Vector2i(w.player.position / 16.0)])
+			await shot("house_bedroom")
+			await wait(0.6)
+			print("[house] door shut again=%s" % [not door.open])
+			w.player.position = w.tile_center(Vector2i(20, 9))
+			await hold("down", 0.9)
+			await wait(1.2)
+			print("[house] after stairs down: map=%s at %s" % [main.world.def.id, Vector2i(main.world.player.position / 16.0)])
+			await shot("house_back_down")
+			w = main.world
+			w.player.position = w.tile_center(Vector2i(21, 4))
+			await hold("up", 0.7)
+			await wait(1.2)
+			w = main.world
+			w.player.position = w.tile_center(Vector2i(2, 4))
+			w.player.face(1)
+			await tap("accept", 0.4)
+			await wait(0.2)
+			print("[house] back up, bed asks to sleep=%s" % main.dialog.visible)
+			await shot("house_bed")
+			get_tree().quit()
 		"prologue":
 			Game.new_game()
 			Game.player_name = "Ari"
@@ -662,7 +713,11 @@ func _run(scenario: String) -> void:
 				await shot("prologue_%02d" % i)
 				var w = main.world
 				if w and w.marker and w.marker.visible and not w.busy and w.def.id == "home":
-					w.player.position = w.tile_center(Vector2i(19, 4))
+					# up the stairs
+					w.player.position = w.tile_center(Vector2i(21, 4))
+					await hold("up", 0.7)
+				elif w and w.marker and w.marker.visible and not w.busy and w.def.id == "home_up":
+					w.player.position = w.tile_center(Vector2i(2, 4))
 					w.player.face(1)
 					await tap("accept", 0.5)
 				elif w and w.marker and w.marker.visible and not w.busy and w.def.id == "parade":
