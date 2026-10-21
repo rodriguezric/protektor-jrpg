@@ -19,44 +19,105 @@ static func p(kind: String, x: int, y: int, extra: Dictionary = {}) -> Dictionar
 # ------------------------------------------------------------------ home ---
 
 static func home() -> Dictionary:
+	## The ground floor: the kitchen on the left, the living room on the
+	## right, the front door, and the stairs up to the bedrooms.
 	var rows := [
-		"#WW#####WW##D#########",
-		"#WW#####WW##D###WW####",
-		"#::::::::.....#......#",
-		"#::::::::.....#......#",
-		"#::::::::.....#......#",
-		"#........,,,,.#......#",
-		"#........,,,,.#......#",
-		"#........,,,,........#",
-		"#........,,,,........#",
-		"#.............#......#",
-		"#.............#......#",
-		"######################",
+		"#WW############D##WW#U##",
+		"#WW############D##WW#U##",
+		"#::::::::#...........S.#",
+		"#::::::::#...........S.#",
+		"#::::::::#...........S.#",
+		"#........#.............#",
+		"#........#...,,,,,,....#",
+		"#............,,,,,,....#",
+		"#............,,,,,,....#",
+		"#........#.............#",
+		"#........#.............#",
+		"########################",
 	]
 	var props := [
+		# kitchen
 		p("counter", 2, 2, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(2, 2, 2, 1), "event": {"id": "sink"}}),
 		p("counter", 4, 2, {"offset": Vector2(8, 0), "area": Rect2i(4, 2, 2, 1), "event": {"id": "packet"}}),
 		p("packet", 4, 2, {"offset": Vector2(12, -1), "lift": 13, "id": "packet", "area": Rect2i()}),
 		p("stove", 6, 2, {"event": {"id": "stove"}, "light": Pal.EMBER, "lr": 10, "light_off": Vector2(0, -10), "pulse": 3.0}),
 		p("fridge", 7, 2, {"event": {"id": "fridge"}}),
-		p("heater", 9, 2, {"anim": 2, "fps": 0.7, "event": {"id": "heater"}}),
-		p("shelf", 13, 2, {"event": {"id": "photo"}}),
-		p("foldbed", 11, 3, {"offset": Vector2(0, 0), "area": Rect2i(10, 3, 3, 1), "event": {"id": "foldbed"}}),
+		p("calendar", 8, 1, {"wall": true, "lift": 12, "area": Rect2i()}),
 		p("table", 4, 6, {"offset": Vector2(8, 0), "area": Rect2i(4, 6, 2, 1), "event": {"id": "table"}}),
 		p("letter", 4, 6, {"offset": Vector2(2, 1), "lift": 12, "id": "letter", "area": Rect2i()}),
 		p("cup", 5, 6, {"offset": Vector2(6, 1), "lift": 12, "area": Rect2i()}),
 		p("chair", 3, 6, {"offset": Vector2(2, 0), "area": Rect2i()}),
 		p("chair", 6, 6, {"offset": Vector2(-2, 0), "area": Rect2i()}),
-		p("lamp", 13, 9, {"light": Pal.LEMON, "lr": 26, "light_off": Vector2(0, -24), "pulse": 1.5}),
 		p("plant", 1, 9, {}),
-		p("kidbed", 19, 3, {"area": Rect2i(19, 2, 1, 2), "event": {"id": "bed"}}),
-		p("plant", 15, 2, {}),
-		p("lamp", 20, 9, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "id": "kidlamp"}),
+		# living room
+		p("tv", 11, 1, {"offset": Vector2(8, 0), "wall": true, "lift": 7, "area": Rect2i(), "light": Pal.SYNC, "lr": 16, "light_off": Vector2(0, -14), "pulse": 1.2}),
+		p("clock", 13, 1, {"wall": true, "lift": 16, "area": Rect2i()}),
+		p("coatrack", 14, 2, {"event": {"id": "coats"}}),
+		p("shelf", 17, 2, {"event": {"id": "photo"}}),
+		p("heater", 18, 2, {"offset": Vector2(8, 0), "area": Rect2i(18, 2, 2, 1), "anim": 2, "fps": 0.7, "event": {"id": "heater"}}),
+		p("radio", 15, 7, {"offset": Vector2(8, 0), "area": Rect2i(15, 7, 2, 1), "event": {"id": "radio"}}),
+		p("sofa", 15, 9, {"offset": Vector2(8, 0), "area": Rect2i(15, 9, 2, 1), "event": {"id": "couch"}}),
+		p("lamp", 12, 9, {"light": Pal.LEMON, "lr": 26, "light_off": Vector2(0, -24), "pulse": 1.5}),
+		p("plant", 22, 9, {}),
+		p("plant", 10, 2, {"v": 0}),
 	]
 	return {"id": "home", "name": "Home, Block 7", "theme": "home", "tint": WARM, "outfit": "home", "rows": rows, "props": props,
-		"npcs": [], "exits": [], "triggers": [], "music": "letter_discussion",
-		"events": [{"tile": Vector2i(12, 1), "id": "frontdoor"}, {"tile": Vector2i(1, 1), "id": "window"}, {"tile": Vector2i(2, 1), "id": "window"},
-			{"tile": Vector2i(8, 1), "id": "window"}, {"tile": Vector2i(9, 1), "id": "window"}, {"tile": Vector2i(16, 1), "id": "window"}, {"tile": Vector2i(17, 1), "id": "window"}]}
+		"npcs": [], "triggers": [], "music": "letter_discussion",
+		"exits": [{"rect": Rect2i(21, 2, 1, 1), "to": "home_up", "tile": Vector2i(20, 9), "dir": 3}],
+		"events": [{"tile": Vector2i(15, 1), "id": "frontdoor"}, {"tile": Vector2i(1, 1), "id": "window"}, {"tile": Vector2i(2, 1), "id": "window"},
+			{"tile": Vector2i(18, 1), "id": "window"}, {"tile": Vector2i(19, 1), "id": "window"},
+			{"tile": Vector2i(11, 1), "id": "tv"}, {"tile": Vector2i(12, 1), "id": "tv"}, {"tile": Vector2i(13, 1), "id": "clock"},
+			{"tile": Vector2i(8, 1), "id": "calendar"}]}
+
+
+static func home_up() -> Dictionary:
+	## Upstairs: your room, your parents' room and the bathroom, each behind a
+	## door off the hallway, and the stairs back down.
+	var rows := [
+		"##WW######WW#####W####",
+		"##WW######WW#####W####",
+		"#......#......#::::::#",
+		"#......#......#::::::#",
+		"#......#......#::::::#",
+		"#......#......#::::::#",
+		"####d######d#####d####",
+		"####d######d#####d####",
+		"####d######d#####d####",
+		"#....................#",
+		"#...................v#",
+		"####################v#",
+	]
+	var props := [
+		# your room
+		p("kidbed", 2, 3, {"area": Rect2i(2, 2, 1, 2), "event": {"id": "bed"}}),
+		p("desk", 4, 2, {"offset": Vector2(8, 0), "area": Rect2i(4, 2, 2, 1), "event": {"id": "desk"}}),
+		p("wardrobe", 6, 2, {"event": {"id": "wardrobe"}}),
+		p("toy", 6, 4, {"event": {"id": "toy"}}),
+		p("bag", 5, 5, {"event": {"id": "bag"}}),
+		p("lamp", 1, 5, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "id": "kidlamp"}),
+		# your parents' room
+		p("bigbed", 10, 3, {"offset": Vector2(8, 0), "area": Rect2i(10, 2, 2, 2), "event": {"id": "parentsbed"}}),
+		p("dresser", 13, 2, {"event": {"id": "dresser"}}),
+		p("plant", 8, 5, {}),
+		# bathroom
+		p("tub", 15, 2, {"offset": Vector2(8, 0), "area": Rect2i(15, 2, 2, 1), "event": {"id": "tub"}}),
+		p("basin", 19, 2, {"event": {"id": "basin"}}),
+		p("mirror", 19, 1, {"wall": true, "lift": 13, "area": Rect2i()}),
+		p("toilet", 20, 4, {"event": {"id": "toilet"}}),
+		# hallway
+		p("door", 4, 8, {"door": true, "area": Rect2i(), "shadow": false}),
+		p("door", 11, 8, {"door": true, "area": Rect2i(), "shadow": false}),
+		p("door", 17, 8, {"door": true, "area": Rect2i(), "shadow": false}),
+		p("drawings", 7, 8, {"offset": Vector2(8, 0), "wall": true, "lift": 10, "area": Rect2i()}),
+		p("basket", 14, 10, {"event": {"id": "basket"}}),
+		p("plant", 1, 10, {}),
+	]
+	return {"id": "home_up", "name": "Home, Upstairs", "theme": "home", "tint": WARM, "outfit": "home", "rows": rows, "props": props,
+		"npcs": [], "triggers": [], "music": "letter_discussion",
+		"exits": [{"rect": Rect2i(20, 11, 1, 1), "to": "home", "tile": Vector2i(21, 5), "dir": 0}],
+		"events": [{"tile": Vector2i(2, 1), "id": "window"}, {"tile": Vector2i(3, 1), "id": "window"},
+			{"tile": Vector2i(10, 1), "id": "window"}, {"tile": Vector2i(11, 1), "id": "window"}, {"tile": Vector2i(17, 1), "id": "window"},
+			{"tile": Vector2i(7, 8), "id": "drawings"}, {"tile": Vector2i(8, 8), "id": "drawings"}]}
 
 
 # ---------------------------------------------------------------- parade ---
