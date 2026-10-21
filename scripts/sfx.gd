@@ -177,6 +177,11 @@ func _make(name: String) -> PackedFloat32Array:
 			return _cat([_noise(0.08, 0.3, 0.95), _noise(0.05, 0.2, 0.9), _noise(0.1, 0.25, 0.95)])
 		"door":
 			return _noise(0.45, 0.35, 0.7, true, true)
+		"latch":
+			# a house door: a low latch click, then the wooden door bumping
+			# against its frame (a dull thud with a little dark rattle)
+			return _cat([_mix([_tone(420, 300, 0.018, "tri", 0.3), _noise(0.012, 0.22, 0.5)]), _tone(0, 0, 0.03, "sin", 0.0),
+				_mix([_tone(110, 55, 0.09, "sin", 0.7), _tone(240, 160, 0.03, "tri", 0.18), _noise(0.06, 0.3, 0.12)])])
 		"heavy_door":
 			return _mix([_noise(1.0, 0.5, 0.06), _tone(60, 45, 1.0, "sq", 0.18), _crackle(0.9, 0.15)])
 		"step":

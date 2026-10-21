@@ -415,7 +415,7 @@ func _update_doors() -> void:
 		if near != d.open:
 			d.open = near
 			(d.sprite as Sprite2D).texture = Art.prop(d.kind, 1 if near else 0)
-			Sfx.play("door", 1.15 if near else 1.0, -16.0)
+			Sfx.play("latch", 1.0 if near else 0.88, -8.0)
 
 
 func _animate(_delta: float) -> void:
