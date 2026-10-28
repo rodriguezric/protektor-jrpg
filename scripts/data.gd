@@ -96,8 +96,8 @@ static var UPGRADES := {
 static var SPECIALS := {
 	"ext_shield": {"name": "Extended Shield", "cost": 300, "missions": 2,
 		"desc": "Projects the rear shield further from the planet, catching threats earlier."},
-	"missile": {"name": "Auto Missile", "cost": 450, "missions": 4,
-		"desc": "Every few seconds a homing missile seeks the nearest target. Rocks shrug it off."},
+	"missile": {"name": "Auto Missile", "cost": 450, "missions": 4, "max": 3, "costs": [450, 600, 800],
+		"desc": "Every few seconds homing missiles seek the nearest targets, one per level. Rocks shrug them off."},
 }
 
 static var WEAPONS := {

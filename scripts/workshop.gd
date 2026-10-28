@@ -108,6 +108,14 @@ func _build_rows() -> Array:
 		var sp: Dictionary = Data.SPECIALS[id]
 		var owned := Game.has_special(id)
 		var locked: bool = missions < int(sp.missions)
+		if sp.has("max"):
+			# upgradeable special: bought level by level like the Protektor upgrades
+			var lv := Game.missile_level()
+			var maxed: bool = lv >= int(sp.max)
+			var cost: int = 0 if maxed else int(sp.costs[lv])
+			out.append({"kind": "special", "id": id, "text": "%s %d/%d" % [sp.name, lv, sp.max], "cost": cost, "locked": locked, "done": maxed,
+				"right": "MAX" if maxed else ("%d missions" % sp.missions if locked else "%dc" % cost)})
+			continue
 		out.append({"kind": "special", "id": id, "text": sp.name, "cost": int(sp.cost), "locked": locked, "done": owned,
 			"right": "OWNED" if owned else ("%d missions" % sp.missions if locked else "%dc" % sp.cost)})
 	out.append({"kind": "header", "text": "-- WEAPON --"})
@@ -166,6 +174,9 @@ func _describe(i: int) -> void:
 			name = Data.SPECIALS[r.id].name
 			desc = Data.SPECIALS[r.id].desc
 			stat = "Needs %d missions (you have %d)" % [Data.SPECIALS[r.id].missions, Game.completed_count()] if r.locked else ""
+			if r.id == "missile" and not r.locked:
+				var lv := Game.missile_level()
+				stat = "Missiles %d" % lv + ("" if lv >= 3 else " -> %d" % (lv + 1))
 		"weapon":
 			name = Data.WEAPONS[r.id].name
 			desc = Data.WEAPONS[r.id].desc
@@ -208,8 +219,11 @@ func _draw_preview() -> void:
 				preview.draw_rect(Rect2(Vector2(-1, y + k * 5), Vector2(2, 2)), Pal.LEMON)
 		_:
 			preview.draw_rect(Rect2(Vector2(-1, y), Vector2(3, 3)), Pal.LEMON)
-	if Game.has_special("missile") or r.get("id", "") == "missile":
-		var a2 := t * 2.0
+	var n_missiles := Game.missile_level()
+	if r.get("id", "") == "missile":
+		n_missiles = mini(n_missiles + 1, 3)
+	for k in n_missiles:
+		var a2 := t * 2.0 + k * TAU / n_missiles
 		preview.draw_rect(Rect2((Vector2(cos(a2), sin(a2)) * 22.0).round(), Vector2(2, 2)), Pal.EMBER)
 
 
@@ -260,9 +274,13 @@ func _act(r: Dictionary, i: int) -> void:
 				_popup(where, "CLEARED", Pal.GLOW)
 		"special":
 			if Game.spend(r.cost):
-				Game.story.specials.append(r.id)
+				var before := Game.missile_level() if r.id == "missile" else 0
+				if not Game.has_special(r.id):
+					Game.story.specials.append(r.id)
+				if r.id == "missile":
+					Game.story.upgrades[r.id] = before + 1
 				Game.save()
-				_bought(where, "INSTALLED")
+				_bought(where, "UPGRADED" if before > 0 else "INSTALLED")
 		"weapon":
 			if r.owned:
 				Game.set_weapon(r.id)
