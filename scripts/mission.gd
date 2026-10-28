@@ -926,20 +926,29 @@ func _update_beam(delta: float) -> void:
 
 
 func _update_missiles(delta: float) -> void:
-	## Auto Missile: launches on a timer and homes on the nearest thing it can
-	## see, rocks included (which it can't break).
-	if not lo.get("missile", false):
+	## Auto Missile: launches a volley on a timer, one missile per level. Each
+	## homes on its own target when there are enough to go around, rocks
+	## included (which it can't break).
+	var n := int(lo.get("missile", 0))
+	if n <= 0:
 		return
 	var sd := delta * speed_scale
 	_missile_t -= sd
 	if _missile_t <= 0.0 and not threats.is_empty():
 		_missile_t = MISSILE_INTERVAL
-		var a := facing.angle() + PI * (0.5 if randf() < 0.5 else -0.5)
-		missiles.append({"lp": CENTER + Vector2.from_angle(a) * 20.0, "dir": Vector2.from_angle(a), "t": 0.0, "trail": []})
+		var side := 0.5 if randf() < 0.5 else -0.5
+		for k in n:
+			# fan out from alternating flanks of the cannon
+			var s := side if k % 2 == 0 else -side
+			var a := facing.angle() + PI * s + (k / 2) * 0.5 * signf(s)
+			missiles.append({"lp": CENTER + Vector2.from_angle(a) * 20.0, "dir": Vector2.from_angle(a), "t": 0.0, "trail": [], "target": null})
 		Sfx.play("portal", 1.6, -12.0)
 	for ms in missiles.duplicate():
 		ms.t += sd
-		var target = _nearest_threat(ms.lp)
+		var target = ms.target
+		if target == null or not is_instance_valid(target) or not target.can_be_hit():
+			target = _missile_target(ms)
+			ms.target = target
 		if target != null:
 			var want: Vector2 = (target.lp - ms.lp).normalized()
 			var ang: float = ms.dir.angle_to(want)
@@ -963,6 +972,24 @@ func _update_missiles(delta: float) -> void:
 			Sfx.play("enemy_hit", 0.8, -10.0)
 			if hit != null and not (hit.is_asteroid and hit.max_hp > 5.0):
 				hit.apply_damage(1.0)
+
+
+func _missile_target(ms: Dictionary):
+	## The nearest threat no other missile is chasing, else just the nearest.
+	var taken := []
+	for o in missiles:
+		if o != ms and o.target != null and is_instance_valid(o.target):
+			taken.append(o.target)
+	var best = null
+	var bd := INF
+	for th in threats:
+		if not th.can_be_hit() or taken.has(th):
+			continue
+		var d: float = th.lp.distance_to(ms.lp)
+		if d < bd:
+			bd = d
+			best = th
+	return best if best != null else _nearest_threat(ms.lp)
 
 
 func _nearest_threat(from: Vector2):

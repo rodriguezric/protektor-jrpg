@@ -316,6 +316,13 @@ func has_special(id: String) -> bool:
 	return story.get("specials", []).has(id)
 
 
+func missile_level() -> int:
+	## Auto Missile is a special that upgrades: one missile per launch per level.
+	if not has_special("missile"):
+		return 0
+	return clampi(upgrade_level("missile"), 1, int(Data.SPECIALS.missile.max))
+
+
 func has_weapon(id: String) -> bool:
 	return id == "basic" or story.get("weapons", []).has(id)
 
@@ -336,9 +343,9 @@ func set_weapon(w: String) -> void:
 func loadout() -> Dictionary:
 	## What the Protektor takes into a deployment.
 	if bool(story.get("stripped", false)):
-		return {"cooldown": 0, "armor": 0, "weapon": "basic", "missile": false, "ext_shield": false}
+		return {"cooldown": 0, "armor": 0, "weapon": "basic", "missile": 0, "ext_shield": false}
 	return {"cooldown": upgrade_level("cooldown"), "armor": upgrade_level("armor"), "weapon": equipped_weapon(),
-		"missile": has_special("missile"), "ext_shield": has_special("ext_shield")}
+		"missile": missile_level(), "ext_shield": has_special("ext_shield")}
 
 
 func training_level(module: String) -> int:

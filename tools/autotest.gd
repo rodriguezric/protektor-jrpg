@@ -56,7 +56,7 @@ func _apply_loadout() -> void:
 		Game.story.weapons = ["basic", "wave", "beam", "auto"]
 		Game.story.weapon = w
 	if OS.get_environment("PK_UP") == "max":
-		Game.story.upgrades = {"cooldown": 3, "armor": 3}
+		Game.story.upgrades = {"cooldown": 3, "armor": 3, "missile": 3}
 		Game.story.specials = ["missile", "ext_shield"]
 
 
@@ -166,7 +166,7 @@ func _trailer(seg: String) -> void:
 			Game.story.weapons = ["basic", "wave", "beam", "auto"]
 			Game.story.weapon = OS.get_environment("PK_WEAPON") if OS.get_environment("PK_WEAPON") != "" else "basic"
 			if OS.get_environment("PK_UP") == "max":
-				Game.story.upgrades = {"cooldown": 3, "armor": 3}
+				Game.story.upgrades = {"cooldown": 3, "armor": 3, "missile": 3}
 				Game.story.specials = ["missile", "ext_shield"]
 			main.start_mission(lv, false, false)
 			var cap := OS.get_environment("PK_CAP")
@@ -992,6 +992,57 @@ func _run(scenario: String) -> void:
 			print("beam ended: ", m.beam.is_empty(), " can refire right away: ", m._try_fire())
 			await wait(1.0)
 			print("refire after cooldown: ", m._try_fire())
+			get_tree().quit()
+		"missilecheck":
+			# Auto Missile levels 1-3: bought in the Workshop, one missile per level per volley
+			auto_talk = false
+			Game.testing = true
+			Game.story.credits = 5000
+			Game.mark_completed("terra_virex", 5)
+			main.load_map(Maps.commons(), Vector2i(6, 12), 1)
+			main.workshop()
+			await wait(1.2)
+			var ws: Workshop = null
+			for c in main.ui.get_children():
+				if c is Workshop:
+					ws = c
+			print("start: missile level ", Game.missile_level(), " credits ", Game.credits(), " upgrades ", Game.story.upgrades, " specials ", Game.story.specials)
+			for k in 4:
+				for i in ws.rows.size():
+					if ws.rows[i].get("id", "") == "missile":
+						ws.menu.index = i
+						ws._describe(i)
+				await wait(0.3)
+				if k == 1:
+					await shot("ws_missile")
+				print("row: ", ws.rows[ws.menu.index].text, " ", ws.rows[ws.menu.index].right, " stat: ", ws.d_stat.text)
+				await tap("accept", 0.8)
+			print("missile level ", Game.missile_level(), " specials ", Game.story.specials, " credits ", Game.credits())
+			await tap("cancel", 1.2)
+			for lvl in [1, 2, 3]:
+				Game.story.upgrades.missile = lvl
+				main.start_mission("terra_virex_level_01", true, false)
+				await wait(1.0)
+				var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+				m.timeline = []
+				for d in [0.0, 90.0, 180.0, 270.0]:
+					m._spawn({"enemy_type": "drone_tank", "spawn_side": "north"})
+					var th: Threat = m.threats[m.threats.size() - 1]
+					th.lp = Mission.CENTER + Vector2.from_angle(deg_to_rad(d)) * (120.0 + d * 0.2)
+					th.move_speed = 0.0
+				m._missile_t = 0.0
+				for i in 3:
+					await get_tree().process_frame
+				var tg := {}
+				for ms in m.missiles:
+					if ms.target != null:
+						tg[ms.target.get_instance_id()] = true
+				if lvl == 3:
+					await wait(0.15)
+					await shot("missile_volley")
+				print("level ", lvl, " loadout ", m.lo.missile, " missiles ", m.missiles.size(), " distinct targets ", tg.size())
+				m.queue_free()
+				await wait(0.3)
 			get_tree().quit()
 		"firecheck":
 			auto_talk = false

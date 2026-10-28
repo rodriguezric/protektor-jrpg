@@ -52,7 +52,7 @@ static func defs() -> Array:
 	d.append({"id": "all_training", "cat": "protektor", "icon": "training", "name": "Top of the Class",
 		"desc": "Clear every training module at every tier.", "stat": "training_tiers", "target": 9})
 	d.append({"id": "all_upgrades", "cat": "protektor", "icon": "upgrades", "name": "Fully Outfitted",
-		"desc": "Own every upgrade, special and weapon.", "stat": "upgrades_owned", "target": 11})
+		"desc": "Own every upgrade, special and weapon.", "stat": "upgrades_owned", "target": 13})
 	Engine.set_meta("pk_achievement_defs", d)
 	return d
 
@@ -84,9 +84,9 @@ static func stat(name: String) -> int:
 			return t
 		"upgrades_owned":
 			var n := Game.upgrade_level("cooldown") + Game.upgrade_level("armor")
-			for s in ["ext_shield", "missile"]:
-				if Game.has_special(s):
-					n += 1
+			if Game.has_special("ext_shield"):
+				n += 1
+			n += Game.missile_level()
 			for w in ["wave", "beam", "auto"]:
 				if Game.has_weapon(w):
 					n += 1
