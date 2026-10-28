@@ -951,6 +951,48 @@ func _run(scenario: String) -> void:
 			await shot("endflow")
 			print("returned to title: ", got, " chapter=", Game.chapter)
 			get_tree().quit()
+		"beamcheck":
+			# Beam Shot: pierces a line of tanks at once and can be swept onto a target
+			auto_talk = false
+			Game.story.weapons = ["basic", "beam"]
+			Game.story.weapon = "beam"
+			main.start_mission("terra_virex_level_01", true, false)
+			await wait(1.0)
+			var m: Mission = main.mission_layer.get_child(0)
+			m.timeline = []
+			m._aim_mode = "key"
+			var line := []
+			for d in [70.0, 120.0, 170.0]:
+				m._spawn({"enemy_type": "drone_tank", "spawn_side": "north"})
+				var th: Threat = m.threats[m.threats.size() - 1]
+				th.lp = Mission.CENTER + Vector2(0, -d)
+				th.move_speed = 0.0
+				line.append(th)
+			m._spawn({"enemy_type": "drone_tank", "spawn_side": "east"})
+			var side: Threat = m.threats[m.threats.size() - 1]
+			side.lp = Mission.CENTER + Vector2(140, 0)
+			side.move_speed = 0.0
+			for th in m.threats:
+				print("before hp ", th.hp)
+			m.facing = Vector2.UP
+			m._fire_cd = 0.0
+			m._try_fire()
+			await wait(0.08)
+			await shot("beam_fire")
+			# sweep the beam toward the side target while it is still active
+			for i in 8:
+				m.facing = Vector2.UP.rotated(PI / 2.0 * (i + 1) / 8.0)
+				await get_tree().process_frame
+			await shot("beam_sweep")
+			print("beam active after sweep: ", not m.beam.is_empty())
+			for th in line:
+				print("line hp ", th.hp if is_instance_valid(th) else -1.0)
+			print("side hp ", side.hp if is_instance_valid(side) else -1.0)
+			await wait(0.4)
+			print("beam ended: ", m.beam.is_empty(), " can refire right away: ", m._try_fire())
+			await wait(1.0)
+			print("refire after cooldown: ", m._try_fire())
+			get_tree().quit()
 		"firecheck":
 			auto_talk = false
 			var fw := OS.get_environment("PK_WEAPON")

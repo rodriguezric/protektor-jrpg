@@ -200,7 +200,9 @@ func _draw_preview() -> void:
 			for k in range(-5, 6):
 				preview.draw_rect(Rect2(Vector2(k, y + k * k * 0.09).round(), Vector2.ONE), Pal.SYNC)
 		"beam":
-			preview.draw_line(Vector2(0, y), Vector2(0, y + 9), Pal.WHITE, 1.0)
+			if phase < 0.35:
+				preview.draw_line(Vector2(0, -6), Vector2(0, -30), Pal.VOID.lerp(Pal.WHITE, 0.55), 3.0)
+				preview.draw_line(Vector2(0, -6), Vector2(0, -30), Pal.WHITE, 1.0)
 		"auto":
 			for k in 4:
 				preview.draw_rect(Rect2(Vector2(-1, y + k * 5), Vector2(2, 2)), Pal.LEMON)
