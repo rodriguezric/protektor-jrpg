@@ -953,17 +953,24 @@ func _run(scenario: String) -> void:
 			get_tree().quit()
 		"firecheck":
 			auto_talk = false
+			var fw := OS.get_environment("PK_WEAPON")
+			if fw != "":
+				Game.story.weapons = ["basic", fw]
+				Game.story.weapon = fw
 			main.start_mission("terra_virex_level_01", true, false)
 			await wait(1.0)
 			var m: Mission = main.mission_layer.get_child(0)
 			var mx := 0
+			var shots := 0
 			# hold fire
 			_send("accept", true)
 			for i in 90:
+				var before := m.bolts.size()
 				await get_tree().process_frame
+				shots += maxi(0, m.bolts.size() - before)
 				mx = maxi(mx, m.bolts.size())
 			_send("accept", false)
-			print("held fire, max in flight: ", mx)
+			print("weapon ", m.lo.weapon, " held fire, shots: ", shots, " max in flight: ", mx)
 			await wait(1.0)
 			mx = 0
 			# mash fire as fast as possible (a press every 2 frames)
