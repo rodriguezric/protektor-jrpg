@@ -103,7 +103,7 @@ static var SPECIALS := {
 static var WEAPONS := {
 	"basic": {"name": "Basic Shot", "cost": 0, "missions": 0, "desc": "The Protektor's standard beam bolt."},
 	"wave": {"name": "Wave Shot", "cost": 350, "missions": 3, "desc": "A wide crescent that is hard to miss."},
-	"auto": {"name": "Auto Shot", "cost": 400, "missions": 5, "desc": "Hold fire for a fast stream, up to five shots at once."},
+	"auto": {"name": "Auto Shot", "cost": 400, "missions": 5, "desc": "Hold fire to keep shooting. Cannon Cycler sets how fast."},
 	"beam": {"name": "Beam Shot", "cost": 550, "missions": 7, "desc": "A focused lance that deals 3 damage."},
 }
 

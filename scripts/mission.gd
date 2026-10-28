@@ -20,7 +20,7 @@ const WEAPON_STATS := {
 	"basic": {"max": 3, "speed": 560.0, "r": 5.0, "dmg": 1.0, "cd": 1.0},
 	"wave": {"max": 3, "speed": 470.0, "r": 14.0, "dmg": 1.0, "cd": 1.15},
 	"beam": {"max": 3, "speed": 820.0, "r": 4.0, "dmg": 3.0, "cd": 1.35},
-	"auto": {"max": 5, "speed": 600.0, "r": 5.0, "dmg": 1.0, "cd": 0.6},
+	"auto": {"max": 3, "speed": 600.0, "r": 5.0, "dmg": 1.0, "cd": 1.0},
 }
 const EXT_SHIELD_REACH := 14.0
 const MISSILE_INTERVAL := 2.6
@@ -659,6 +659,9 @@ func _handle_fire(delta: float) -> void:
 	elif _fire_buffer > 0.0 and _fire_cd <= 0.0:
 		_fire_buffer = 0.0
 		_try_fire()
+	# only Auto Shot keeps firing while held; every other weapon is one shot per press
+	if str(lo.weapon) != "auto":
+		return
 	var held := Input.is_action_pressed("accept") or (_aim_mode == "mouse" and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT))
 	if held and _fire_cd <= 0.0:
 		_try_fire()
