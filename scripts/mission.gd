@@ -19,9 +19,12 @@ const MAX_BULLETS := 3
 const WEAPON_STATS := {
 	"basic": {"max": 3, "speed": 560.0, "r": 5.0, "dmg": 1.0, "cd": 1.0},
 	"wave": {"max": 3, "speed": 470.0, "r": 14.0, "dmg": 1.0, "cd": 1.15},
-	"beam": {"max": 3, "speed": 820.0, "r": 4.0, "dmg": 3.0, "cd": 1.35},
+	"beam": {"max": 1, "speed": 0.0, "r": 6.0, "dmg": 3.0, "cd": 7.0},
 	"auto": {"max": 3, "speed": 600.0, "r": 5.0, "dmg": 1.0, "cd": 1.0},
 }
+## Beam Shot: a lance that lasts a moment, follows your aim and pierces
+## everything on its line, hitting each target once.
+const BEAM_LIFE := 0.32
 const EXT_SHIELD_REACH := 14.0
 const MISSILE_INTERVAL := 2.6
 const MISSILE_SPEED := 300.0
@@ -74,6 +77,7 @@ var freeze := 0.0
 var threats: Array = []
 var shots: Array = []
 var bolts: Array = []
+var beam := {}
 var fired_triggers := {}
 var score := 0
 var shown_score := 0.0
@@ -610,6 +614,7 @@ func _process(delta: float) -> void:
 			th.tick(delta)
 	_update_shots(delta)
 	_update_bolts(delta)
+	_update_beam(delta)
 	_update_missiles(delta)
 	_chatter(delta)
 	if hp <= 1.0 and alive:
@@ -680,20 +685,24 @@ func _try_fire(_unused: bool = false) -> bool:
 		return false
 	if _fire_cd > 0.0:
 		return false
-	if bolts.size() >= int(wstat.max):
+	if bolts.size() >= int(wstat.max) or not beam.is_empty():
 		return false
 	_fire_cd = fire_cd_base
 	var dirv := facing
 	if _aim_mode != "mouse":
 		dirv = _assist(facing)
 	var tip := CENTER + facing * (PLAYER_CORE + CANNON_LEN)
-	bolts.append({"lp": tip, "dir": dirv, "trail": [], "w": str(lo.weapon)})
+	if str(lo.weapon) == "beam":
+		beam = {"t": 0.0, "dir": dirv, "hit": {}, "hits": 0}
+		_update_beam(0.0)
+	else:
+		bolts.append({"lp": tip, "dir": dirv, "trail": [], "w": str(lo.weapon)})
 	_recoil = 3.0
 	fx.burst(core.position + facing * 15.0, 5, [Pal.LEMON, Pal.WHITE, Pal.SYNC], Vector2(20, 60), Vector2(0.06, 0.16), {"dir": facing.angle(), "spread": 0.5})
 	match str(lo.weapon):
 		"beam":
-			Sfx.play("shoot", 0.7, -6.0)
-			shake(1.0, 0.06)
+			Sfx.play("lance", 1.0, -6.0)
+			shake(1.5, 0.1)
 		"wave":
 			Sfx.play("shoot", 0.85, -8.0)
 		_:
@@ -886,6 +895,34 @@ func _update_bolts(delta: float) -> void:
 				bolts.erase(b)
 				_bolt_hit(th, b)
 				break
+
+
+func _update_beam(delta: float) -> void:
+	## Follows the aim every frame and hits whatever crosses its line, once each.
+	if beam.is_empty():
+		return
+	beam.t += delta * speed_scale
+	if beam.t >= BEAM_LIFE or not alive or finished:
+		if int(beam.hits) == 0:
+			Achievements.shot_missed()
+		beam = {}
+		return
+	beam.dir = facing if _aim_mode == "mouse" else _assist(facing)
+	var origin := CENTER + facing * (PLAYER_CORE + CANNON_LEN)
+	var area := Rect2(Vector2.ZERO, Vector2(L, L))
+	for th in threats.duplicate():
+		if not is_instance_valid(th) or not th.can_be_hit() or beam.hit.has(th.get_instance_id()):
+			continue
+		if not area.has_point(th.lp):
+			continue
+		var along: float = (th.lp - origin).dot(beam.dir)
+		if along < -th.hit_radius():
+			continue
+		var near: Vector2 = origin + beam.dir * maxf(0.0, along)
+		if near.distance_to(th.lp) <= th.hit_radius() + float(wstat.r):
+			beam.hit[th.get_instance_id()] = true
+			beam.hits = int(beam.hits) + 1
+			_bolt_hit(th, {"lp": near, "dir": beam.dir})
 
 
 func _update_missiles(delta: float) -> void:
@@ -1324,6 +1361,7 @@ func _begin_victory() -> void:
 	await get_tree().create_timer(0.6).timeout
 	shots.clear()
 	bolts.clear()
+	beam = {}
 	Sfx.music("mission_complete", 0.4, -6.0)
 	Sfx.play("sync", 1.0, -4.0)
 	fx.ring(core.position, 6, 120, 1.0, Pal.SYNC, 2.0, 1.0)
@@ -1562,17 +1600,14 @@ class ShotLayer extends Node2D:
 						var col := Pal.SYNC.lerp(Pal.WHITE, 0.5 if absi(k) < 2 else 0.0)
 						draw_rect(Rect2(q.round(), Vector2.ONE), col)
 						draw_rect(Rect2((q - b.dir).round(), Vector2.ONE), Color(Pal.SYNC, 0.45))
-				"beam":
-					var tail: Vector2 = p - b.dir * 9.0
-					draw_line(tail, p, Color(Pal.VOID.lerp(Pal.WHITE, 0.3), 0.55), 3.0)
-					draw_line(tail, p, Pal.WHITE, 1.0)
-					draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Pal.WHITE)
 				_:
 					for i in b.trail.size():
 						var q: Vector2 = (b.trail[i] * K).round()
 						draw_line(q, p, Color(Pal.LEMON, 0.5 - i * 0.15), 3.0 - i)
 					draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Pal.LEMON)
 					draw_rect(Rect2(p, Vector2(1, 1)), Pal.WHITE)
+		if not m.beam.is_empty():
+			_draw_beam(K)
 		for ms in m.missiles:
 			var p: Vector2 = (ms.lp * K).round()
 			var back: Vector2 = -ms.dir
@@ -1591,6 +1626,24 @@ class ShotLayer extends Node2D:
 			draw_circle(p, r + 1.0, Color(col, 0.5))
 			draw_circle(p, r, col.lerp(Pal.WHITE, 0.3 * fl))
 			draw_rect(Rect2(p - Vector2(0, 1), Vector2(1, 1)), Pal.WHITE)
+
+
+	func _draw_beam(K: float) -> void:
+		# a white core in a violet glow, flaring at the muzzle and thinning out
+		var k: float = m.beam.t / m.BEAM_LIFE
+		var dirv: Vector2 = m.beam.dir
+		var a: Vector2 = ((m.CENTER + m.facing * (m.PLAYER_CORE + m.CANNON_LEN)) * K).round()
+		var b: Vector2 = (a + dirv * 260.0).round()
+		var w := 1.0 - k * k
+		var fl := 1.0 if int(Time.get_ticks_msec() / 40) % 2 == 0 else 0.0
+		draw_line(a, b, Color(Pal.VOID.lerp(Pal.WHITE, 0.2), 0.35 * w), 5.0 * w + 1.0 + fl)
+		draw_line(a, b, Color(Pal.VOID.lerp(Pal.WHITE, 0.55), 0.8 * w), 3.0 * w + 1.0)
+		draw_line(a, b, Color(Pal.WHITE, 0.6 + 0.4 * w), 1.0)
+		draw_circle(a, 2.0 + 2.0 * w + fl, Color(Pal.WHITE, 0.9 * w))
+		var nrm := Vector2(-dirv.y, dirv.x)
+		for i in 4:
+			var q: Vector2 = a + dirv * randf_range(6.0, 120.0) + nrm * randf_range(-2.5, 2.5) * w
+			draw_rect(Rect2(q.round(), Vector2.ONE), Color(Pal.WHITE, w))
 
 
 class PlayerCore extends Node2D:

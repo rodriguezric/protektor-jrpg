@@ -133,6 +133,9 @@ func _make(name: String) -> PackedFloat32Array:
 			return _tone(500, 400, 0.1, "tri", 0.2)
 		"shoot":
 			return _mix([_tone(1500, 520, 0.09, "sq", 0.16), _noise(0.06, 0.18, 0.9)])
+		"lance":
+			# Beam Shot: a bright crack into a humming, falling lance
+			return _mix([_tone(1800, 600, 0.05, "sq", 0.14), _tone(320, 180, 0.32, "sq", 0.12), _tone(640, 360, 0.32, "tri", 0.16), _noise(0.3, 0.12, 0.6)])
 		"block":
 			return _mix([_tone(980, 980, 0.16, "tri", 0.3), _tone(1470, 1460, 0.2, "tri", 0.18), _noise(0.07, 0.35, 0.95)])
 		"hurt":
