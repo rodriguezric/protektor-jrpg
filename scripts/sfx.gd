@@ -39,7 +39,9 @@ func _ready() -> void:
 
 func play(name: String, pitch: float = 1.0, vol_db: float = -6.0) -> void:
 	if not sounds.has(name):
-		sounds[name] = _wav(_make(name), false)
+		# a recorded file in res://sfx replaces the synthesized sound of that name
+		var path := "res://sfx/%s.ogg" % name
+		sounds[name] = load(path) if ResourceLoader.exists(path) else _wav(_make(name), false)
 	var p: AudioStreamPlayer = players[0]
 	for cand in players:
 		if not cand.playing:

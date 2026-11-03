@@ -19,6 +19,43 @@ void fragment() {
 }
 """
 
+## The eye roll's "bleeding out": rows waver, the colour channels drift
+## apart and bright pixels drip downward in uneven streaks, all on whole pixels.
+const BLEED_SHADER := """
+shader_type canvas_item;
+uniform sampler2D screen_tex : hint_screen_texture, filter_nearest;
+uniform float k = 0.0;
+uniform float time = 0.0;
+vec3 at(vec2 p, vec2 px) {
+	return texture(screen_tex, (clamp(p, vec2(0.0), px - 1.0) + 0.5) / px).rgb;
+}
+// only bright things (the badge, not the dim backdrop) bleed
+float lit(vec3 c) {
+	return step(0.3, dot(c, vec3(0.3, 0.55, 0.15)));
+}
+void fragment() {
+	vec2 px = floor(1.0 / SCREEN_PIXEL_SIZE + 0.5);
+	vec2 p = floor(SCREEN_UV * px);
+	float wob = floor((sin(p.y * 0.21 + time * 7.0) * 2.5 + sin(p.y * 0.05 - time * 3.0) * 2.0) * k + 0.5);
+	vec2 q = vec2(p.x + wob, p.y);
+	float r = fract(sin(floor(p.x / 2.0) * 12.9898) * 43758.5453);
+	float drip = k * k * (8.0 + r * 46.0);
+	vec3 col = at(q, px);
+	for (int i = 1; i <= 10; i++) {
+		float f = float(i) / 10.0;
+		vec3 c = at(q - vec2(0.0, floor(drip * f)), px);
+		col = max(col, c * (1.0 - f * 0.7) * lit(c));
+	}
+	float sp = floor(k * 4.0 + 0.5);
+	vec3 cr = at(q + vec2(sp, 0.0), px);
+	vec3 cb = at(q - vec2(sp, 0.0), px);
+	col.r = max(col.r, cr.r * lit(cr));
+	col.b = max(col.b, cb.b * lit(cb));
+	col = mix(col, col * vec3(0.95, 0.7, 0.85), k * 0.6);
+	COLOR = vec4(col, 1.0);
+}
+"""
+
 var bg: TextureRect
 var back: ColorRect
 var actors: Node2D
@@ -138,6 +175,58 @@ func clear_sprites() -> void:
 
 func fade_node(n: CanvasItem, a: float, t_: float) -> void:
 	await create_tween().tween_property(n, "modulate:a", a, t_).finished
+
+
+func eyes_roll(dur: float = 1.2) -> void:
+	## The eyes rolling up: the figures slide down out of sight with a shiver
+	## (the backdrop holds still) and everything darkens, while the picture bleeds out (rows waver, colours split and
+	## light drips down the screen). Follow with eyes_crossfade().
+	var bleed := ColorRect.new()
+	bleed.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bleed.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sh := Shader.new()
+	sh.code = BLEED_SHADER
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	bleed.material = mat
+	add_child(bleed)
+	set_meta("bleed", bleed)
+	var tw := create_tween().set_parallel()
+	tw.tween_property(actors, "position:y", 46.0, dur).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	for n in [bg, actors]:
+		tw.tween_property(n, "modulate", Color(0.45, 0.5, 0.75), dur)
+	var t0 := t
+	while t - t0 < dur:
+		var k := clampf((t - t0) / dur, 0.0, 1.0)
+		mat.set_shader_parameter("k", k)
+		mat.set_shader_parameter("time", t)
+		var j := Vector2(randf_range(-1, 1), randf_range(-1, 1)).round() * k * 1.5
+		actors.position.x = j.x
+		await get_tree().process_frame
+	mat.set_shader_parameter("k", 1.0)
+	if tw.is_running():
+		await tw.finished
+
+
+func eyes_fade(setup: Callable, out_t: float = 0.6, hold: float = 0.4, in_t: float = 2.0) -> void:
+	## Fades the bled-out frame fully to black, lets `setup` build the next
+	## scene in the dark, then eases it in from black.
+	var black := ColorRect.new()
+	black.color = Color(Pal.INK, 0.0)
+	black.set_anchors_preset(Control.PRESET_FULL_RECT)
+	black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(black)
+	await create_tween().tween_property(black, "color:a", 1.0, out_t).finished
+	if has_meta("bleed"):
+		(get_meta("bleed") as Node).queue_free()
+		remove_meta("bleed")
+	for n in [bg, actors]:
+		n.position = Vector2.ZERO
+		n.modulate = Color.WHITE
+	setup.call()
+	await get_tree().create_timer(hold).timeout
+	await create_tween().tween_property(black, "color:a", 0.0, in_t).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT).finished
+	black.queue_free()
 
 
 func close(fade: float = 0.5) -> void:

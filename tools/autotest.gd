@@ -1044,6 +1044,46 @@ func _run(scenario: String) -> void:
 				m.queue_free()
 				await wait(0.3)
 			get_tree().quit()
+		"eyesroll":
+			# badge contact: gasp, eyes roll up, then the sync flash
+			auto_talk = false
+			var c := Cinema.open()
+			c.show_tex(Art.cine("badge_bg"), 0.0)
+			var bs := c.sprite(Art.cine("badge", 1), Vector2(160, 104), 1.0)
+			var nm := Art.shadow_label("ARI", Pal.FROST)
+			nm.position = Vector2(-Art.text_width(nm.text) / 2.0, 8)
+			bs.add_child(nm)
+			await wait(0.5)
+			Sfx.play("gasp", 1.0, -2.0)
+			print("gasp stream: ", Sfx.sounds["gasp"].get_class(), " length ", Sfx.sounds["gasp"].get_length())
+			var done := [false]
+			var roll := func() -> void:
+				await c.eyes_roll(1.2)
+				done[0] = true
+			roll.call()
+			for i in 4:
+				await wait(0.28)
+				await shot("eyes_%d" % i)
+			while not done[0]:
+				await get_tree().process_frame
+			print("eyes_roll returned: ", done[0])
+			var to_warp := func() -> void:
+				c.clear_sprites()
+				c.show_tex(null, 0.0)
+				c.effect = "warp"
+				c.effect_k = 1.0
+				c.set_vignette(0.75, 0.0)
+			var faded := [false]
+			var cross := func() -> void:
+				await c.eyes_fade(to_warp, 0.6, 0.4, 2.0)
+				faded[0] = true
+			cross.call()
+			for i in 6:
+				await wait(0.5)
+				await shot("eyes_after_%d" % i)
+			await wait(0.2)
+			print("fade returned: ", faded[0])
+			get_tree().quit()
 		"firecheck":
 			auto_talk = false
 			var fw := OS.get_environment("PK_WEAPON")

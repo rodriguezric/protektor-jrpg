@@ -151,18 +151,22 @@ func badge() -> void:
 	Sfx.stop_music(0.3)
 	await s.wait(0.6)
 	await s.say("instructor", "Now.")
-	Sfx.play("gasp", 1.0, -2.0)
+	# contact: the badge answers, a gasp, and the eyes roll back
 	bs.texture = Art.cine("badge", 1)
 	Sfx.play("sync", 0.8, -4.0)
-	await m.flash(Pal.SYNC, 0.3, 0.9)
-	nm.queue_free()
+	await s.wait(0.35)
+	Sfx.play("gasp", 1.0, -2.0)
+	await c.eyes_roll(1.2)
+	# fade to black, then the rushing light eases in; the music waits for it
+	var to_warp := func() -> void:
+		c.clear_sprites()
+		c.show_tex(null, 0.0)
+		c.effect = "warp"
+		c.effect_k = 1.0
+		c.set_vignette(0.75, 0.0)
+		Sfx.play("warp", 1.0, -2.0)
+	await c.eyes_fade(to_warp, 0.6, 0.4, 2.0)
 	Sfx.music("claustrophobia_1", 0.4)
-	c.clear_sprites()
-	c.show_tex(null, 0.0)
-	c.effect = "warp"
-	c.effect_k = 1.0
-	c.set_vignette(0.75, 0.0)
-	Sfx.play("warp", 1.0, -2.0)
 	m.shake(2.0, 2.0)
 	await s.say("", ["The instant your skin touches the badge, everything rushes forward.", "Light stretches. Colors tear past you. Blue. Gold. White."])
 	await s.say("you", "I can't breathe-", "shock")
