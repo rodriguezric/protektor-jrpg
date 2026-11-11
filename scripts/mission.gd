@@ -1499,8 +1499,8 @@ func _begin_victory() -> void:
 		panel.add_child(u)
 		Sfx.play("chime", 1.0, -6.0)
 		y += 10
-	var press := Art.shadow_label("Press Z", Pal.TEXT)
-	press.position = Vector2(88 - Art.text_width("Press Z") / 2.0, 160)
+	var press := Art.shadow_label(Art.press_prompt(), Pal.TEXT)
+	press.position = Vector2(88 - Art.text_width(press.text) / 2.0, 160)
 	overlay.add_child(press)
 	while not Input.is_action_just_pressed("accept"):
 		press.visible = fmod(Time.get_ticks_msec() / 1000.0, 1.0) < 0.65
@@ -1543,8 +1543,8 @@ func _begin_death() -> void:
 	sub.position = Vector2(160 - Art.text_width(sub.text) / 2.0, 84)
 	add_child(sub)
 	await get_tree().create_timer(1.0).timeout
-	var press := Art.shadow_label("Press Z", Pal.TEXT)
-	press.position = Vector2(160 - Art.text_width("Press Z") / 2.0, 150)
+	var press := Art.shadow_label(Art.press_prompt(), Pal.TEXT)
+	press.position = Vector2(160 - Art.text_width(press.text) / 2.0, 150)
 	add_child(press)
 	while not Input.is_action_just_pressed("accept"):
 		press.visible = fmod(Time.get_ticks_msec() / 1000.0, 1.0) < 0.65
