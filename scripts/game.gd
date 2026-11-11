@@ -23,6 +23,9 @@ var games_completed := 0
 var history: Array = []
 var chapter := "prologue"
 var slot := 1
+## Whether a story playthrough is live. Free Missions and the title run on
+## the profile alone, and must never write their blank story into a slot.
+var in_story := true
 ## Carried between playthroughs. story.upgrades/specials/weapons point into it.
 var profile := {}
 var rng := RandomNumberGenerator.new()
@@ -61,6 +64,7 @@ func new_game() -> void:
 		"stripped": false, "bought": false,
 	}
 	chapter = "prologue"
+	in_story = true
 	_link_profile()
 
 
@@ -184,7 +188,7 @@ func mark_completed(planet: String, level: int, arcade_mode: bool = false) -> Ar
 	## Returns newly unlocked planets.
 	if arcade_mode:
 		arcade[planet] = maxi(int(arcade.get(planet, 0)), level)
-		save()
+		save_profile()
 		Achievements.check()
 		return []
 	story.completed_levels[planet] = maxi(highest(planet), level)
@@ -438,6 +442,9 @@ func save() -> void:
 	## Autosaves the active slot and the shared profile.
 	if testing:
 		return
+	if not in_story:
+		save_profile()
+		return
 	profile.weapon = story.get("weapon", "basic")
 	var data := {"player_name": player_name, "look": look, "vars": vars, "story": story, "chapter": chapter,
 		"saved_at": int(Time.get_unix_time_from_system())}
@@ -547,6 +554,7 @@ func load_meta_only() -> void:
 	## Free Missions and the title use the profile only.
 	load_profile()
 	new_game()
+	in_story = false
 
 
 func _migrate_legacy_save() -> void:

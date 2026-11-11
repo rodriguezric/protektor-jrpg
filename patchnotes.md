@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-11 16:15 EST — `bugfix_free_missions_overwrites_story_slot` (v0.25.5)
+
+Playing Free Missions no longer wipes your story save.
+
+- Clearing a Free Mission used to overwrite the last-used save slot with an empty prologue, so Continue started a new game. Story slots are now untouched; Free Missions progress is still saved.
+- scripts/game.gd: new `in_story` flag (true after `new_game()`, false after `load_meta_only()`); `save()` only writes the profile when no playthrough is live; `mark_completed(..., arcade_mode=true)` calls `save_profile()` instead of `save()`.
+
 ## 2026-11-11 16:11 EST — `bugfix_autotest_writes_real_saves` (v0.25.4)
 
 Running the autotest scenarios no longer overwrites the player's real save slots, profile or achievements.
