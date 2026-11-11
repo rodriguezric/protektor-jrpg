@@ -42,6 +42,7 @@ var touch_aim := Vector2.ZERO
 
 func _ready() -> void:
 	rng.randomize()
+	_init_save_dir()
 	_migrate_legacy_save()
 	load_profile()
 	new_game()
@@ -379,7 +380,7 @@ func unlock_achievement(id: String) -> void:
 
 func _ach_path() -> String:
 	## Test runs can point achievements at a scratch file (PK_ACH).
-	return OS.get_environment("PK_ACH") if OS.get_environment("PK_ACH") != "" else ACH_PATH
+	return OS.get_environment("PK_ACH") if OS.get_environment("PK_ACH") != "" else _p(ACH_PATH)
 
 
 func save_achievements() -> void:
@@ -402,8 +403,35 @@ func load_achievements() -> void:
 
 # ------------------------------------------------------------------- save ---
 
+## Where saves live. Autotest runs (PK_TEST) get their own folder, wiped at
+## launch, so they never touch the player's real slots, profile or
+## achievements. PK_SAVE_DIR overrides it (and is not wiped).
+var save_dir := "user://"
+
+
+func _init_save_dir() -> void:
+	var custom := OS.get_environment("PK_SAVE_DIR")
+	if custom != "":
+		save_dir = custom.trim_suffix("/") + "/"
+	elif OS.get_environment("PK_TEST") != "":
+		save_dir = "user://autotest/"
+		var abs_dir := ProjectSettings.globalize_path(save_dir)
+		var d := DirAccess.open(abs_dir)
+		if d:
+			for f in d.get_files():
+				d.remove(f)
+	else:
+		return
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(save_dir))
+
+
+func _p(path: String) -> String:
+	## A user:// save path, moved into save_dir.
+	return save_dir + path.trim_prefix("user://")
+
+
 func slot_path(n: int) -> String:
-	return "user://protektor_slot_%d.json" % n
+	return _p("user://protektor_slot_%d.json" % n)
 
 
 func save() -> void:
@@ -422,14 +450,14 @@ func save() -> void:
 func save_profile() -> void:
 	if testing:
 		return
-	var f := FileAccess.open(PROFILE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(_p(PROFILE_PATH), FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(profile))
 
 
 func load_profile() -> void:
 	profile = _default_profile()
-	var d = _read(PROFILE_PATH)
+	var d = _read(_p(PROFILE_PATH))
 	if d is Dictionary:
 		for k in d:
 			profile[k] = d[k]
@@ -523,9 +551,9 @@ func load_meta_only() -> void:
 
 func _migrate_legacy_save() -> void:
 	## Saves from before slots become Slot 1, and seed the profile.
-	if not FileAccess.file_exists(LEGACY_SAVE_PATH) or FileAccess.file_exists(PROFILE_PATH):
+	if not FileAccess.file_exists(_p(LEGACY_SAVE_PATH)) or FileAccess.file_exists(_p(PROFILE_PATH)):
 		return
-	var d = _read(LEGACY_SAVE_PATH)
+	var d = _read(_p(LEGACY_SAVE_PATH))
 	if not (d is Dictionary):
 		return
 	var st: Dictionary = d.get("story", {})
@@ -541,7 +569,7 @@ func _migrate_legacy_save() -> void:
 	pr.specials = st.get("specials", [])
 	pr.weapons = st.get("weapons", ["basic"])
 	pr.weapon = str(st.get("weapon", "basic"))
-	var f := FileAccess.open(PROFILE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(_p(PROFILE_PATH), FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(pr))
 	if not FileAccess.file_exists(slot_path(1)):
@@ -549,7 +577,7 @@ func _migrate_legacy_save() -> void:
 		var g := FileAccess.open(slot_path(1), FileAccess.WRITE)
 		if g:
 			g.store_string(JSON.stringify(d))
-	DirAccess.rename_absolute(ProjectSettings.globalize_path(LEGACY_SAVE_PATH), ProjectSettings.globalize_path(LEGACY_SAVE_PATH + ".migrated"))
+	DirAccess.rename_absolute(ProjectSettings.globalize_path(_p(LEGACY_SAVE_PATH)), ProjectSettings.globalize_path(_p(LEGACY_SAVE_PATH + ".migrated")))
 
 
 func buzz(ms: int) -> void:

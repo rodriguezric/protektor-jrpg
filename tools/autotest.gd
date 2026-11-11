@@ -1291,7 +1291,8 @@ func _run(scenario: String) -> void:
 			await wait(2.0)
 			print("A slot2=", Game.slot_info(2))
 			# buy an upgrade in slot 2: it should carry over to every slot
-			Game.story.specials.append("missile")
+			if not Game.story.specials.has("missile"):
+				Game.story.specials.append("missile")
 			Game.save()
 			Game.start_new_game(3, true)
 			Game.player_name = "Rin"
