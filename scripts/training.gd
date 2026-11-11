@@ -140,7 +140,8 @@ func _update_info() -> void:
 	var done := Game.training_level(id)
 	var parts := []
 	for k in 3:
-		var tag := "cleared" if k < done else ("%dc" % m.rewards[k] if k <= done else "locked")
+		# the next uncleared tier pays double on its first clear, as the tier menu says
+		var tag := "cleared" if k < done else ("%dc x2" % m.rewards[k] if k == done else "locked")
 		parts.append("[%s %s]" % [ROMAN[k], tag])
 	info_tiers.text = "  ".join(parts)
 
