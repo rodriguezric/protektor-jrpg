@@ -112,7 +112,8 @@ func talk(n: Actor) -> void:
 			var lines := [
 				["Did you see the leaderboard? Nobody's beaten Hiro's turn speed.", "I sleep better after a deployment. Is that weird?"],
 				["My roommate transferred. That's what they said. Transferred.", "The food's better than at home. That's something."],
-				["You're from the same intake as Midas, right? He's nice.", "Don't sit in the sim pods too long. You get... sticky."],
+				["They took Midas's name off the board this morning. Nobody said anything." if Game.midas_dead() else "You're from the same intake as Midas, right? He's nice.",
+					"Don't sit in the sim pods too long. You get... sticky."],
 				["I counted. There are fewer of us at dinner every week.", "They say we're the best intake in years."],
 				["I don't remember my sister's voice anymore. I mean, I do. I just can't hear it.", "Synchronization's at forty for me. Is that good?"],
 			]
