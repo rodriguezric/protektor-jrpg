@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-11 16:11 EST — `bugfix_autotest_writes_real_saves` (v0.25.4)
+
+Running the autotest scenarios no longer overwrites the player's real save slots, profile or achievements.
+
+- No player-facing change; normal play still saves to user:// exactly as before.
+- scripts/game.gd: new `save_dir` + `_init_save_dir()` / `_p()`. When PK_TEST is set, slots, profile, legacy save and achievements go to user://autotest/ (wiped at launch); PK_SAVE_DIR overrides the folder. PK_ACH still wins for achievements.
+- tools/autotest.gd `slotlogic`: only appends the missile special if it isn't already owned (it was duplicating it in the profile).
+- Note: `slots`/`slotlogic` used to read whatever was in the real save folder; they now start from an empty one.
+
 ## 2026-11-11 16:09 EST — `bugfix_press_z_prompt_on_touch` (v0.25.3)
 
 Mission results and the ending card say "Tap ..." instead of "Press Z" when you're playing by touch.
