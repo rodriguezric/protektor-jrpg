@@ -151,5 +151,12 @@ func shadow_label(text: String, color: Color = Pal.TEXT, size_k: int = 1) -> Lab
 	return l
 
 
+func press_prompt(rest: String = "") -> String:
+	## "Press Z ..." with keys, "Tap ..." when playing by touch.
+	if Game.touch_active:
+		return "Tap " + (rest if rest != "" else "to continue")
+	return "Press Z" if rest == "" else "Press Z " + rest
+
+
 func text_width(text: String, size_k: int = 1) -> int:
 	return int(font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE * size_k).x)

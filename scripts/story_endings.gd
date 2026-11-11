@@ -248,7 +248,7 @@ func _end_card(c: Cinema) -> void:
 	var seen := Art.label("Endings seen: %d" % _endings_seen(), Pal.TEXT_DIM)
 	seen.position = Vector2(160 - Art.text_width(seen.text) / 2.0, 112)
 	c.add_child(seen)
-	var press := Art.shadow_label("Press Z to return to the title", Pal.TEXT)
+	var press := Art.shadow_label(Art.press_prompt("to return to the title"), Pal.TEXT)
 	press.position = Vector2(160 - Art.text_width(press.text) / 2.0, 150)
 	c.add_child(press)
 	await m.get_tree().process_frame
