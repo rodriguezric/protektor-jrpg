@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-12 20:00 EST — `feature_free_missions_quick_retry` (v0.27.0)
+
+Free Missions results now offer Retry / Next / Star map, so you can go again without the star map.
+
+- Win screen: Retry, Next (the next level of the same world, when unlocked; cursor starts here) and Star map. Defeat screen: Retry and Star map. Retry skips the warp intro; Next plays it. Star map (or X) returns to the map with the same world selected. Story deployments and training are unchanged.
+- scripts/mission.gd: new `_arcade_menu()` (one-row Menu, keys and touch) replaces the "Press Z" prompt in arcade mode on victory and defeat; `_result` carries `next`.
+- scripts/main.gd `arcade()`: inner loop replays or advances on `next`.
+
 ## 2026-11-12 19:40 EST — `feature_dont_show_protektor_portrait` (v0.26.0)
 
 The Protektor speaks without a portrait: a voice with no face.

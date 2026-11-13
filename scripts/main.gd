@@ -270,7 +270,20 @@ func arcade() -> void:
         var pick: String = await starmap(true)
         if pick == "":
             break
-        await start_mission(pick, true)
+        # Retry / Next from the result screen go straight back in; Star map
+        # (or cancel) returns to the map, still on the same world.
+        var lv := pick
+        var intro := true
+        while true:
+            var res: Dictionary = await start_mission(lv, true, intro)
+            match str(res.get("next", "")):
+                "retry":
+                    intro = false
+                "next":
+                    lv = "%s_level_%02d" % [res.planet, int(res.level) + 1]
+                    intro = true
+                _:
+                    break
     await fade_out(0.3)
     title()
 
