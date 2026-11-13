@@ -100,9 +100,12 @@ func speaker(who: String, mood: String = "") -> Array:
 			return ["", {"voice": "child", "color": Pal.SKY.lerp(Pal.TEXT, 0.45)}]
 		"you":
 			return [Game.player_name, {"portrait": Game.player_spec(), "mood": mood, "side": "right", "voice": "child"}]
-		"system", "system_far", "system_close":
-			var nm: String = {"system": "System", "system_far": "System (distant)", "system_close": "System (close)"}[who]
-			return [nm, {"portrait": "system", "sys": true, "voice": "system", "side": "left"}]
+		"system":
+			return ["System", {"portrait": "system", "sys": true, "voice": "system", "side": "left"}]
+		"system_far", "system_close":
+			# the Protektor itself, speaking through the badge: a voice with no face
+			var nm: String = {"system_far": "System (distant)", "system_close": "System (close)"}[who]
+			return [nm, {"sys": true, "voice": "system", "side": "left"}]
 		"parent":
 			return ["Parent", {"portrait": "comm", "voice": "woman", "side": "left"}]
 		"voice":

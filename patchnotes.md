@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-12 19:40 EST — `feature_dont_show_protektor_portrait` (v0.26.0)
+
+The Protektor speaks without a portrait: a voice with no face.
+
+- When the Protektor talks through the badge (first badge touch, the sync pod link and its follow-up line), the dialog box shows only its name tag and text. Academy System announcements keep their eye portrait.
+- scripts/story.gd `speaker()`: `system_far` / `system_close` no longer pass a portrait; plain `system` is unchanged.
+
 ## 2026-11-11 16:15 EST — `bugfix_free_missions_overwrites_story_slot` (v0.25.5)
 
 Playing Free Missions no longer wipes your story save.
