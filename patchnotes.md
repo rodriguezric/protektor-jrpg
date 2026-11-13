@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-12 20:13 EST — `feature_options_menu` (v0.28.0)
+
+New Options screen: music volume, sound volume, text speed and vibration.
+
+- Options is on the title menu (between Achievements and Quit) and in the X field menu (Close / Save / Options / Controls / Title). Left/Right change a row, Z (or a second tap) cycles it, X or Back leaves. Changes apply immediately (the blip previews the sound level) and are remembered across launches, shared by all save slots.
+- Music and Sound: 0-10, 0 mutes. Text speed: Slow / Normal (the old 48 cps) / Fast / Instant. Vibration On/Off appears when playing by touch.
+- scripts/options_screen.gd (new `OptionsScreen`); scripts/game.gd `settings`, `load_settings()`, `save_settings()`, `text_cps()` (file user://protektor_settings.json, test-isolated via `_p()`); scripts/sfx.gd creates Music/SFX buses and `apply_volumes()`; mission.gd routes the zoom loop and shield-up players to those buses; dialog.gd types at `Game.text_cps()`; `Game.buzz()` honours the vibration setting; touch_controls.gd lists OptionsScreen as an arrow screen; title menu moved up 6 px to fit the extra row.
+
 ## 2026-11-12 20:00 EST — `feature_free_missions_quick_retry` (v0.27.0)
 
 Free Missions results now offer Retry / Next / Star map, so you can go again without the star map.
