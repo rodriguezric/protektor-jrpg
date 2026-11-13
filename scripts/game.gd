@@ -46,6 +46,7 @@ var touch_aim := Vector2.ZERO
 func _ready() -> void:
 	rng.randomize()
 	_init_save_dir()
+	load_settings()
 	_migrate_legacy_save()
 	load_profile()
 	new_game()
@@ -589,6 +590,40 @@ func _migrate_legacy_save() -> void:
 
 
 func buzz(ms: int) -> void:
-	## A short vibration, only when playing by touch.
-	if touch_active:
+	## A short vibration, only when playing by touch (and not switched off).
+	if touch_active and bool(settings.vibration):
 		Input.vibrate_handheld(ms)
+
+
+# --------------------------------------------------------------- settings ---
+
+## Options: volumes 0-10, text speed index into TEXT_SPEEDS, vibration.
+## Kept in their own file, shared by every slot.
+const SETTINGS_PATH := "user://protektor_settings.json"
+const TEXT_SPEEDS := [["Slow", 28.0], ["Normal", 48.0], ["Fast", 96.0], ["Instant", 0.0]]
+var settings := {"music": 8, "sfx": 8, "text": 1, "vibration": true}
+
+
+func load_settings() -> void:
+	var d = _read(_p(SETTINGS_PATH))
+	if d is Dictionary:
+		for k in settings:
+			if d.has(k):
+				settings[k] = d[k]
+	settings.music = clampi(int(settings.music), 0, 10)
+	settings.sfx = clampi(int(settings.sfx), 0, 10)
+	settings.text = clampi(int(settings.text), 0, TEXT_SPEEDS.size() - 1)
+	settings.vibration = bool(settings.vibration)
+	Sfx.apply_volumes(settings.music, settings.sfx)
+
+
+func save_settings() -> void:
+	Sfx.apply_volumes(settings.music, settings.sfx)
+	var f := FileAccess.open(_p(SETTINGS_PATH), FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(settings))
+
+
+func text_cps() -> float:
+	## Typewriter speed in characters per second; 0 means show the page at once.
+	return float(TEXT_SPEEDS[int(settings.text)][1])

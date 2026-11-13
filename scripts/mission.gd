@@ -447,6 +447,7 @@ func _intro_prep() -> void:
 		stream.loop = true
 		_zoom_loop.stream = stream
 		_zoom_loop.volume_db = 0.0 if not Sfx.muted_music else -80.0
+		_zoom_loop.bus = Sfx.MUSIC_BUS
 		add_child(_zoom_loop)
 		_zoom_loop.play()
 
@@ -529,6 +530,7 @@ func _intro() -> void:
 	# 5. The Protektor forms: the shield grows in, then the cannon extends.
 	var shield_up := AudioStreamPlayer.new()
 	shield_up.stream = load("res://sfx/shield_up.wav")
+	shield_up.bus = Sfx.SFX_BUS
 	add_child(shield_up)
 	shield_up.play()
 	var t6 := create_tween()

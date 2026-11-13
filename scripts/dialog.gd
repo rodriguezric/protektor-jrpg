@@ -224,6 +224,9 @@ func _type(line: String, voice: String, auto: bool) -> void:
 	var hold := 0.0
 	var n := 0
 	var count := 0
+	var cps := Game.text_cps()
+	if cps <= 0.0:
+		n = line.length()
 	while n < line.length():
 		await get_tree().process_frame
 		if skip_all:
@@ -234,7 +237,7 @@ func _type(line: String, voice: String, auto: bool) -> void:
 		if hold > 0.0:
 			hold -= dt
 			continue
-		t += dt * 48.0
+		t += dt * cps
 		while n < mini(int(t), line.length()):
 			n += 1
 			var ch := line[n - 1]

@@ -91,16 +91,17 @@ func run() -> String:
 	opts.append({"text": "Load Game", "enabled": Game.has_any_save()})
 	opts.append("Free Missions")
 	opts.append("Achievements")
+	opts.append("Options")
 	opts.append("Quit")
 	menu = Menu.make(self, opts, Vector2(22, 186), Vector2(84, opts.size() * 10 + 7))
 	menu.cancellable = false
 	menu.index = 0 if has else 1
 	menu.set_entries(opts)
 	var mt := create_tween()
-	mt.tween_property(menu, "position:y", 84.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	mt.tween_property(menu, "position:y", 78.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await mt.finished
 	keys = Art.label("", Pal.TEXT_DIM)
-	keys.position = Vector2(22, 156)
+	keys.position = Vector2(22, 157)
 	add_child(keys)
 	while true:
 		var r := await menu.ask()
@@ -116,5 +117,15 @@ func run() -> String:
 			4:
 				return "achievements"
 			5:
+				await _options()
+			6:
 				get_tree().quit()
 	return "new"
+
+
+func _options() -> void:
+	## Options open over the title; the menu waits underneath.
+	var o := OptionsScreen.new()
+	add_child(o)
+	await o.run()
+	o.queue_free()

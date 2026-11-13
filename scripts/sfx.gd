@@ -24,17 +24,47 @@ var muted_music := false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_make_bus(MUSIC_BUS)
+	_make_bus(SFX_BUS)
 	for i in 14:
 		var p := AudioStreamPlayer.new()
 		p.volume_db = -6.0
+		p.bus = SFX_BUS
 		add_child(p)
 		players.append(p)
 	music_a = AudioStreamPlayer.new()
 	music_b = AudioStreamPlayer.new()
 	for m in [music_a, music_b]:
 		m.volume_db = -60.0
+		m.bus = MUSIC_BUS
 		add_child(m)
 	muted_music = OS.get_environment("PK_MUTE") != ""
+
+
+## Every sound goes through one of these two buses, so the Options volumes
+## are just their gains.
+const MUSIC_BUS := "Music"
+const SFX_BUS := "SFX"
+
+
+func _make_bus(bus_name: String) -> void:
+	if AudioServer.get_bus_index(bus_name) >= 0:
+		return
+	AudioServer.add_bus()
+	var i := AudioServer.bus_count - 1
+	AudioServer.set_bus_name(i, bus_name)
+	AudioServer.set_bus_send(i, "Master")
+
+
+func apply_volumes(music_v: int, sfx_v: int) -> void:
+	## Volumes 0-10; 0 mutes the bus.
+	for pair in [[MUSIC_BUS, music_v], [SFX_BUS, sfx_v]]:
+		var i := AudioServer.get_bus_index(pair[0])
+		if i < 0:
+			continue
+		var v: int = pair[1]
+		AudioServer.set_bus_mute(i, v <= 0)
+		AudioServer.set_bus_volume_db(i, linear_to_db(maxf(v, 1) / 10.0) if v > 0 else -80.0)
 
 
 func play(name: String, pitch: float = 1.0, vol_db: float = -6.0) -> void:
