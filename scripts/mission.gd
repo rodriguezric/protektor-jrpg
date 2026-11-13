@@ -1499,14 +1499,18 @@ func _begin_victory() -> void:
 		panel.add_child(u)
 		Sfx.play("chime", 1.0, -6.0)
 		y += 10
-	var press := Art.shadow_label(Art.press_prompt(), Pal.TEXT)
-	press.position = Vector2(88 - Art.text_width(press.text) / 2.0, 160)
-	overlay.add_child(press)
-	while not Input.is_action_just_pressed("accept"):
-		press.visible = fmod(Time.get_ticks_msec() / 1000.0, 1.0) < 0.65
-		await get_tree().process_frame
-	Sfx.play("confirm")
-	_result = {"result": "win", "score": score, "defeated": defeated_n, "blocks": blocks, "best_streak": best_streak,
+	var next := ""
+	if arcade:
+		next = await _arcade_menu(overlay, 88.0, 157.0, true)
+	else:
+		var press := Art.shadow_label(Art.press_prompt(), Pal.TEXT)
+		press.position = Vector2(88 - Art.text_width(press.text) / 2.0, 160)
+		overlay.add_child(press)
+		while not Input.is_action_just_pressed("accept"):
+			press.visible = fmod(Time.get_ticks_msec() / 1000.0, 1.0) < 0.65
+			await get_tree().process_frame
+		Sfx.play("confirm")
+	_result = {"result": "win", "next": next, "score": score, "defeated": defeated_n, "blocks": blocks, "best_streak": best_streak,
 		"planet": planet_type, "level": level_index, "unlocks": unlocks, "hits": hits_taken, "credits": credits_earned}
 	_done_sig = true
 	mission_done.emit()
@@ -1543,6 +1547,9 @@ func _begin_death() -> void:
 	sub.position = Vector2(160 - Art.text_width(sub.text) / 2.0, 84)
 	add_child(sub)
 	await get_tree().create_timer(1.0).timeout
+	if arcade:
+		_finish("lose", await _arcade_menu(self, 160.0, 140.0, false))
+		return
 	var press := Art.shadow_label(Art.press_prompt(), Pal.TEXT)
 	press.position = Vector2(160 - Art.text_width(press.text) / 2.0, 150)
 	add_child(press)
@@ -1552,10 +1559,31 @@ func _begin_death() -> void:
 	_finish("lose")
 
 
-func _finish(result: String) -> void:
+func _arcade_menu(parent: Control, cx: float, y: float, won: bool) -> String:
+	## Free Missions: what to do next, right on the result screen. Returns
+	## "retry", "next" (only offered on a win with the next level open) or "map".
+	var keys := ["retry"]
+	var opts: Array = [{"text": "Retry"}]
+	if won:
+		var open := level_index < Game.LEVELS and Game.is_level_unlocked(planet_type, level_index + 1, true)
+		keys.append("next")
+		opts.append({"text": "Next", "enabled": open})
+	keys.append("map")
+	opts.append({"text": "Star map"})
+	var col := 56
+	var w := col * keys.size() + 8
+	var m := Menu.make(parent, opts, Vector2(roundf(cx - w / 2.0), y), Vector2(w, 17), keys.size())
+	m.index = 1 if won and opts[1].enabled else 0
+	m.set_entries(opts)
+	var r := await m.ask()
+	m.queue_free()
+	return "map" if r < 0 else keys[r]
+
+
+func _finish(result: String, next: String = "") -> void:
 	if result != "win" and not arcade and not training:
 		Game.record_failure()
-	_result = {"result": result, "score": score, "planet": planet_type, "level": level_index, "unlocks": []}
+	_result = {"result": result, "next": next, "score": score, "planet": planet_type, "level": level_index, "unlocks": []}
 	_done_sig = true
 	mission_done.emit()
 
