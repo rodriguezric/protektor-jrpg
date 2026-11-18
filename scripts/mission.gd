@@ -133,6 +133,8 @@ var cells: Array = []
 var sync_label: Label
 var sync_bar: ColorRect
 var prog_bar: ColorRect
+## "Esc pause": hidden while playing by touch (the pause button sits there).
+var pause_hint: Label
 var _comms_queue: Array = []
 ## Bosses and mini-bosses (data/bosses.json) alive in the arena, the ids
 ## beaten this mission, and the HP bar along the top of the arena.
@@ -391,9 +393,9 @@ func _build_right() -> void:
 	prog_bar.position = Vector2(6, 38)
 	prog_bar.size = Vector2(0, 3)
 	yb.add_child(prog_bar)
-	var hint := Art.label("Esc pause", Pal.TEXT_DIM)
-	hint.position = Vector2(5, 44)
-	yb.add_child(hint)
+	pause_hint = Art.label("Esc pause", Pal.TEXT_DIM)
+	pause_hint.position = Vector2(5, 44)
+	yb.add_child(pause_hint)
 	_sync0 = Game.sync_percent()
 	_update_sync()
 
@@ -1599,6 +1601,7 @@ func _update_hud(delta: float) -> void:
 		shown_score = minf(score, shown_score + maxf(40.0, (score - shown_score) * 8.0) * delta)
 		score_label.text = str(int(shown_score))
 	_update_boss_bar()
+	pause_hint.visible = not Game.touch_active
 	if running:
 		prog_bar.size.x = 56.0 * clampf(level_t / maxf(1.0, last_spawn_t), 0.0, 1.0)
 		_update_sync()

@@ -47,6 +47,9 @@ const ARROW_SCREENS := ["AchievementsScreen", "Escape", "Workshop", "PilotStatus
 var active := false
 var alpha := 0.0
 var in_bars := false
+## Where the MENU/B button goes in a mission when there are no side bars, in
+## game pixels: the empty right half of the SCORE box (Mission._build_right).
+const MISSION_SLOT := Vector2(304, 96)
 var ck := 4.0
 ## Each control: {id, rect (window space), hit, guard, art, action, kind}
 var controls: Array = []
@@ -114,6 +117,10 @@ func relayout() -> void:
 	# the shared top-right slot: MENU and B are the same size, same place
 	var ss := 21.0 * _scale_for("b")
 	var slot_c := Vector2(win.x - bar / 2.0, maxf(win.y * 0.14, m + ss / 2.0)) if in_bars else Vector2(win.x - m - ss / 2.0, m + ss / 2.0)
+	if not in_bars and layout == "mission":
+		# no side bars: the top-right corner is the planet/level box, so the
+		# button sits in the empty right half of the SCORE box instead
+		slot_c = g.position + MISSION_SLOT * (g.size / Vector2(320, 180))
 	_add("menu", slot_c, "menu", "", "menu")
 	_add("b", slot_c, "b", "cancel", "button")
 	# the joystick isn't a fixed control: it appears where you touch
