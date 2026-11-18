@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 11:08 EST — `feature_viscera_nova_level_redesign` (v0.37.0)
+
+Viscera Nova rebuilt around reading intent: enemies that answer fire, wake on a block or lunge when you turn. Pulse Node mini-boss, The Gestalt Heart boss.
+
+- New behaviours: retaliators (pink) fire back 0.45 s after a hit that doesn't kill them, so finish them in one burst; watchers hover, pulsing, and lunge the moment you block anything, or the moment you turn; chargers still flash before they lunge.
+- Level 1 "First Contact" (~90 s) teaches each one on its own with a comms line, then mixes them. Level 2 "Reflex Arc" (~120 s) mixes them up, then the PULSE NODE: it opens and shuts on a beat and fires back if you hit it while it's shut. Level 3 "The Heart" (~150 s) ends on THE GESTALT HEART: it is ringed by node drones and stays shut until they're dead; it fires whenever you turn (it mirrors your rhythm), re-grows watcher nodes in phase 2 and sends chargers in phase 3.
+- Standard kit: the levelcheck bot clears all three (95 s, 107 s, 121 s; 1 hit on the boss).
+- Code: scripts/threat.gd `retaliate`, `hold_style` "watch", `wake_on` block / turn, `lunge_mult`; scripts/mission.gd `block_count`, spawn events take the new keys; scripts/boss.gd open `when_clear`, `punish_shut`, adds pass the intent keys. tools/build_levels.py `chargers`, `retaliators`, `watchers` and the Viscera plans; data/bosses.json `pulse_node`, `gestalt_heart`.
+
 ## 2026-11-18 10:51 EST — `feature_tempestris_level_redesign` (v0.36.0)
 
 Tempestris rebuilt as a storm with hidden structure: the rock storm steps round the planet on a beat. Storm Eye mini-boss, The Cyclarch boss.

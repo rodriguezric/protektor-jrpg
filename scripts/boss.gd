@@ -13,7 +13,9 @@ extends Threat
 ## move:  {type: hold | orbit (speed_deg) | hop (every, step_deg) |
 ##         mirror (delay, offset_deg) | lunge (every, depth, speed)}
 ## open:  "always" | {type: cycle, open, closed} | {type: after_attack, sec}
-##        | {type: after_block, sec}   (when shut, hits only spark off it)
+##        | {type: after_block, sec} | {type: when_clear} (open only when no
+##        other threats are in the arena)   (when shut, hits only spark off
+##        it; with punish_shut: true in the def it fires back)
 ## attacks:
 ##   volley      n shots from the boss at the planet (gap, speed)
 ##   arc_burst   count shots from the arena edge, centred on the boss's
@@ -121,6 +123,7 @@ func tick(delta: float) -> void:
 	_invuln_t = maxf(0.0, _invuln_t - sd)
 	_tell_t = maxf(0.0, _tell_t - sd)
 	_shut_spark_t = maxf(0.0, _shut_spark_t - sd)
+	_punish_cd = maxf(0.0, _punish_cd - sd)
 	var ph: Dictionary = phases[phase] if phase >= 0 and phase < phases.size() else {}
 	_move(ph.get("move", {}), sd)
 	_update_open(ph.get("open", "always"), sd)
@@ -188,6 +191,9 @@ func _update_open(o, sd: float) -> void:
 		"after_attack", "after_block":
 			_open_t = maxf(0.0, _open_t - sd)
 			open = _open_t > 0.0
+		"when_clear":
+			# shut while anything else is in the arena (its nodes, its adds)
+			open = m.threats.all(func(x): return x == self or (x is Boss))
 		_:
 			open = true
 
@@ -257,6 +263,9 @@ func _fire_attack(a: Dictionary) -> void:
 				if a.has("hold_dist"):
 					ev.hold_dist = float(a.hold_dist)
 					ev.hold_sec = float(a.get("hold_sec", 2.5))
+				for k in ["hold_style", "wake_on", "lunge_mult", "retaliate"]:
+					if a.has(k):
+						ev[k] = a[k]
 				m._spawn(ev)
 	var o = (phases[phase] if phase >= 0 and phase < phases.size() else {}).get("open", "always")
 	if o is Dictionary and str(o.get("type", "")) == "after_attack":
@@ -283,6 +292,20 @@ func _shoot_from(p: Vector2, spd: float, r: float, dmg: float) -> void:
 func _tell(t: float) -> void:
 	_tell_t = maxf(_tell_t, t)
 	m.on_tell(self, "boss")
+
+
+var _punish_cd := 0.0
+
+
+func punish() -> void:
+	## Hit while shut: a boss with punish_shut answers with a shot.
+	if not bool(def.get("punish_shut", false)) or _punish_cd > 0.0:
+		return
+	_punish_cd = 0.9
+	_tell(0.3)
+	get_tree().create_timer(0.3 / maxf(0.05, m.speed_scale), false).timeout.connect(func() -> void:
+		if not dying and is_inside_tree() and m.alive and not m.finished:
+			_shoot_from(lp, 230.0, 8.0, 1.0))
 
 
 func on_shot_blocked() -> void:
