@@ -4,8 +4,9 @@
   "planet_type": "umbra_vacua",
   "level_index": 1,
   "target_duration_sec": 90,
+  "title": "Stillness",
   "completion": {
-    "message_text": "Umbra Vacua 01 clear: Wave Convergence.",
+    "message_text": "Umbra Vacua 01 clear: Stillness.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -312,7 +313,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Umbra Vacua 01 clear: Wave Convergence.",
+      "text": "Umbra Vacua 01 clear: Stillness.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-18 11:56 EST — `bugfix_level_clear_names_outdated` (v0.40.2)
+
+Each redesigned level now ends with its own name instead of the old level's.
+
+- The clear message was still the old level's ("Viscera Nova 01 clear: Meteor Pulse", "Umbra Vacua 02 clear: Rotating Convergence"...). It now names the level as built: Glacien IX Thin Ice / Crowding / Deep Freeze, Ignara Prime Kindling / Flashpoint / Crucible, Tempestris Squall Line / Eyewall / Cyclone Season, Viscera Nova First Contact / Reflex Arc / The Heart, Umbra Vacua Stillness / Commitment / The Observer, Mechanon Ascens Calibration / Disruption / Paragon (Terra Virex unchanged).
+- tools/build_levels.py: `TITLES`; `write()` sets each level's `title`, its completion message and `completion.message_text`. All 21 missions rebuilt (only those texts changed).
+
 ## 2026-11-18 11:55 EST — `bugfix_touch_pause_button_covers_mission_hud` (v0.40.1)
 
 On 16:9 touch screens the pause button no longer covers the planet name and level in a deployment.

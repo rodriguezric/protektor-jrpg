@@ -4,6 +4,7 @@
   "planet_type": "terra_virex",
   "level_index": 2,
   "target_duration_sec": 120,
+  "title": "Crossfire Watch",
   "completion": {
     "message_text": "Terra Virex 02 clear: Crossfire Watch.",
     "message_hold_sec": 2,

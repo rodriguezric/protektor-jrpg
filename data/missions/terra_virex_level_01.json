@@ -4,6 +4,7 @@
   "planet_type": "terra_virex",
   "level_index": 1,
   "target_duration_sec": 90,
+  "title": "First Watch",
   "completion": {
     "message_text": "Terra Virex 01 clear: First Watch.",
     "message_hold_sec": 1.8,

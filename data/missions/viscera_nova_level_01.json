@@ -4,8 +4,9 @@
   "planet_type": "viscera_nova",
   "level_index": 1,
   "target_duration_sec": 90,
+  "title": "First Contact",
   "completion": {
-    "message_text": "Viscera Nova 01 clear: Meteor Pulse.",
+    "message_text": "Viscera Nova 01 clear: First Contact.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -372,7 +373,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Viscera Nova 01 clear: Meteor Pulse.",
+      "text": "Viscera Nova 01 clear: First Contact.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

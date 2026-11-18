@@ -4,8 +4,9 @@
   "planet_type": "glacien_ix",
   "level_index": 3,
   "target_duration_sec": 150,
+  "title": "Deep Freeze",
   "completion": {
-    "message_text": "Glacien IX 03 clear: Shatter Wake.",
+    "message_text": "Glacien IX 03 clear: Deep Freeze.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -727,7 +728,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Glacien IX 03 clear: Shatter Wake.",
+      "text": "Glacien IX 03 clear: Deep Freeze.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

@@ -4,8 +4,9 @@
   "planet_type": "mechanon_ascens",
   "level_index": 1,
   "target_duration_sec": 90,
+  "title": "Calibration",
   "completion": {
-    "message_text": "Mechanon Ascens 01 clear: Mirror Setup.",
+    "message_text": "Mechanon Ascens 01 clear: Calibration.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -498,7 +499,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Mechanon Ascens 01 clear: Mirror Setup.",
+      "text": "Mechanon Ascens 01 clear: Calibration.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

@@ -4,8 +4,9 @@
   "planet_type": "glacien_ix",
   "level_index": 1,
   "target_duration_sec": 90,
+  "title": "Thin Ice",
   "completion": {
-    "message_text": "Glacien IX 01 clear: Silent Ring.",
+    "message_text": "Glacien IX 01 clear: Thin Ice.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -448,7 +449,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Glacien IX 01 clear: Silent Ring.",
+      "text": "Glacien IX 01 clear: Thin Ice.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

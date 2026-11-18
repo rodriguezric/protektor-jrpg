@@ -4,8 +4,9 @@
   "planet_type": "umbra_vacua",
   "level_index": 2,
   "target_duration_sec": 120,
+  "title": "Commitment",
   "completion": {
-    "message_text": "Umbra Vacua 02 clear: Rotating Convergence.",
+    "message_text": "Umbra Vacua 02 clear: Commitment.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -430,7 +431,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Umbra Vacua 02 clear: Rotating Convergence.",
+      "text": "Umbra Vacua 02 clear: Commitment.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

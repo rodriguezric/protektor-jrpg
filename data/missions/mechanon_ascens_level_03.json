@@ -4,8 +4,9 @@
   "planet_type": "mechanon_ascens",
   "level_index": 3,
   "target_duration_sec": 150,
+  "title": "Paragon",
   "completion": {
-    "message_text": "Mechanon Ascens 03 clear: Machine Storm.",
+    "message_text": "Mechanon Ascens 03 clear: Paragon.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -605,7 +606,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Mechanon Ascens 03 clear: Machine Storm.",
+      "text": "Mechanon Ascens 03 clear: Paragon.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },
