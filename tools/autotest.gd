@@ -900,6 +900,8 @@ func _run(scenario: String) -> void:
 					await wait(0.5)
 					if c.game and is_instance_valid(c.game) and "auto" in c.game and OS.get_environment("PK_HUMAN") == "":
 						c.game.auto = true
+					if i == 0 and OS.get_environment("PK_WAVE") != "" and "wave" in c.game:
+						c.game.wave = int(OS.get_environment("PK_WAVE"))
 					if OS.get_environment("PK_TOUCH") != "" and i == 4:
 						await window_shot("console_touch")
 						c.game.auto = false
