@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 16:38 EST — `feature_console_duel_striders_mini` (v0.49.0)
+
+DUEL STRIDERS, the second Starbox cartridge: a pocket grid duel against an endless ladder of CPU striders.
+
+- A 6x3 grid, your three blue columns against the CPU's red ones. Step between your panels with the arrows / stick (held stick repeats), Z (A) fires your buster down the row, X (B) plays the card in hand: WIDE SWORD (hits the enemy's whole front column), BOMB (lands three panels ahead) or GUARD (blocks the next hit). Each card reloads on its own timer (bars on the hand at the bottom right) and the hand moves on to the next ready card.
+- Opponents (SPARK, BOLT, HEX, VOLT...) come one after another, each with more health, more speed and more moves: shots, then ground waves, column strikes and bombs. Every strike flashes its panels yellow first. VS / FIGHT! / K.O.! banners; your five hearts carry over and heal one per win.
+- Scoring: 10 per hit, and per win 1000 + 200 per heart left + a speed bonus.
+- Achievements (GAMES): Rookie Strider (3 wins), Grid Champion (10), Legend of the Grid (25), Not a Scratch (win a round untouched), Buster Purist (win a round with the buster alone).
+- Code: new `scripts/cg_duel.gd`; `scripts/achievements.gd` (GAME_ACH duel).
+
 ## 2026-11-18 16:35 EST — `feature_console_protektor_mini` (v0.48.0)
 
 PROTEKTOR, the first Starbox cartridge: the toy version of the real thing, starring a cartoon tin robot.

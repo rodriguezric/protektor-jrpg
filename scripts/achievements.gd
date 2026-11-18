@@ -28,6 +28,11 @@ const GAME_ACH := {
 		["s20k", "Robot Legend", "Score 20,000 in Starbox PROTEKTOR.", "score", 20000, 2],
 		["survive", "Three-Minute Hero", "Survive 3 minutes in Starbox PROTEKTOR.", "survive", 180, 1],
 		["chain", "Unbreakable Bot", "Block 50 in a row in Starbox PROTEKTOR.", "chain", 50, 2]],
+	"duel": [["w3", "Rookie Strider", "Beat 3 opponents in Starbox DUEL STRIDERS.", "wins", 3, 0],
+		["w10", "Grid Champion", "Beat 10 opponents in Starbox DUEL STRIDERS.", "wins", 10, 1],
+		["w25", "Legend of the Grid", "Beat 25 opponents in Starbox DUEL STRIDERS.", "wins", 25, 2],
+		["flawless", "Not a Scratch", "Win a DUEL STRIDERS round without taking a hit.", "flawless", 1, 1],
+		["buster", "Buster Purist", "Win a DUEL STRIDERS round with the buster alone.", "buster", 1, 0]],
 }
 
 ## Each planet's boss (data/bosses.json) and its achievement.
