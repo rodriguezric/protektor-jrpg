@@ -45,7 +45,7 @@ const GUARD := 0.07
 ## Screens that are steered with arrows rather than tapped.
 ## (The title, star map, training, save slots and name entry are tapped
 ## directly, so they aren't here.)
-const ARROW_SCREENS := ["AchievementsScreen", "Escape", "Workshop", "PilotStatus", "OptionsScreen"]
+const ARROW_SCREENS := ["AchievementsScreen", "Escape", "Workshop", "PilotStatus", "OptionsScreen", "TvScreen"]
 
 var active := false
 var alpha := 0.0

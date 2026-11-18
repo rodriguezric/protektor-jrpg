@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 16:52 EST — `feature_home_tv_channels` (v0.51.0)
+
+The home TV works: flip through six channels of short animated shows on the family set.
+
+- Examine the TV in the living room (after the first look at the silent parade loop) and choose Watch: the set fills the screen, a wood-cabinet CRT with its picture under scanlines. Up/Right and Down/Left flip channels through a burst of static with a green CH number; X (B) switches it off. Each show is staged with real field actors, props and backdrops inside the picture, with a one-line caption band, and loops with a test-card ident between runs.
+- CH1 HELION NEWS: anchor Corvin Vale at his desk, a scrolling red ticker ('SHIELD GRID AT 100% * RATIONS UNCHANGED...'), footage of a Protektor over Terra Virex, proud families cheering 'the brave machines', and 'the Protektor never sleeps... so you can.' CH2 ROBO-PROTEKTOR!: the robot cartoon (the Space Slime Lord, KA-POW!, 'eat your rations... and ENLIST!'). CH3 RATION KITCHEN: Chef Dilly's Nutri-Loaf three ways ('...also sliced.', laugh track). CH4 is held for the serial (stand-by card for now). CH5 PLANET OF THE WEEK: Sunny Rollins' forecast for a planet that changes by the day. CH6: snow... and every so often, for a blink, REMAIN CALM.
+- In the evening your parents react to whatever you left it on (your father on the news, your mother on the cartoon you used to punch the air to, and so on). The TV remembers its channel.
+- Touch: the TV is an arrow screen (the stick flips, B switches off).
+- Code: new `scripts/tv_screen.gd` (TvScreen: set, channel flipping, show runner and safe cancelling), `scripts/tv_stage.gd` (TvStage: actors, props, captions, zoom, flash, shake, stings, ticker), `scripts/tv_shows.gd` (the shows), `scripts/tv_sets.gd` (backdrops and foreground pieces), `scripts/tv_serial.gd` (channel 4 placeholder); `scripts/main.gd` (tv()), `scripts/story_prologue.gd` (_tv(), TV_REACTIONS), `scripts/touch_controls.gd`, `tools/autotest.gd` (`PK_TEST=tv`, `PK_CH`, `PK_EVERY`, `PK_FLIP`).
+
 ## 2026-11-18 16:43 EST — `feature_console_sword_story_mini` (v0.50.0)
 
 SWORD STORY, the third Starbox cartridge: a one-screen action RPG on a meadow, wave after wave.

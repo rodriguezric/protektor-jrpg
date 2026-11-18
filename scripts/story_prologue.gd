@@ -204,7 +204,7 @@ func examine(ev: Dictionary) -> void:
 		"photo":
 			await s.say("", "A family photo. Three faces squinting into the same bright afternoon.")
 		"tv":
-			await s.say("", ["The block screen loops tomorrow's parade rehearsal with the sound off.", "Every recruit on it is smiling. The camera never stays on one long enough to check."])
+			await _tv()
 		"clock":
 			await s.say("", "The wall clock runs four minutes fast. It has run four minutes fast your whole life, and nobody has ever fixed it.")
 		"calendar":
@@ -257,6 +257,33 @@ func examine(ev: Dictionary) -> void:
 
 
 # ---------------------------------------------------------------- night ---
+
+## What your parents say about what you just watched (evening, at home).
+const TV_REACTIONS := {
+	"news": ["father", "Forty percent. They say it like it's a harvest.", ""],
+	"cartoon": ["mother", "You used to stand on the couch for that one and punch the air.", "smile"],
+	"kitchen": ["mother", "Three ways. I've made that loaf four ways for years. Nobody noticed.", "smile"],
+	"weather": ["father", "They never forecast the weather here. Only out there.", ""],
+	"serial": ["mother", "Don't tell me what happens. I'm two episodes behind.", "smile"],
+	"static": ["father", "That channel's been dead since before you were born. Turn it off, would you?", "sad"],
+}
+
+
+func _tv() -> void:
+	## The block screen. Flip through what's on; your parents have opinions.
+	if not bool(Game.story.get("tv_seen", false)):
+		Game.story.tv_seen = true
+		await s.say("", ["The block screen loops tomorrow's parade rehearsal with the sound off.", "Every recruit on it is smiling. The camera never stays on one long enough to check."])
+	if await s.ask("Change the channel?", ["Watch", "Leave it"]) != 0:
+		return
+	var res: Dictionary = await s.m.tv(int(Game.story.get("tv_channel", 0)))
+	Game.story.tv_channel = int(res.get("index", 0))
+	var last: String = res.get("last", "")
+	if evening and TV_REACTIONS.has(last) and s.a(TV_REACTIONS[last][0]) != null:
+		var r: Array = TV_REACTIONS[last]
+		s.a(r[0]).face_toward(s.w.player.position)
+		await s.say(r[0], r[1], r[2])
+
 
 func _starbox() -> void:
 	## Your Starbox. One more game before tomorrow.

@@ -375,6 +375,25 @@ func training() -> void:
     await fade_in(0.35)
 
 
+func tv(start_channel: int = 0) -> Dictionary:
+    ## A television, its own screen over the field. Returns which channels
+    ## were watched and the one it was left on.
+    if world:
+        world.paused = true
+    await fade_out(0.3)
+    var t := TvScreen.new()
+    ui.add_child(t)
+    await fade_in(0.2)
+    await t.run(start_channel)
+    var res := {"seen": t.seen.duplicate(), "last": t.channel_id(), "index": t.idx}
+    await fade_out(0.3)
+    t.queue_free()
+    if world:
+        world.paused = false
+    await fade_in(0.3)
+    return res
+
+
 func console() -> void:
     ## The Starbox in your room: its own screen over the field.
     if world:
