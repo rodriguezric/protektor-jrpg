@@ -1117,6 +1117,24 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[propaganda] found=%d/%d %s footage_seen=%s ach=%s" % [Propaganda.count(), Propaganda.ORDER.size(), Propaganda.found_all().keys(), Game.story.get("footage_seen"), Game.achieved.keys()])
 			get_tree().quit()
+		"tomato":
+			# the rooftop planter across visits once Midas is gone
+			Game.new_game()
+			Game.chapter = "hub"
+			for p in ["terra_virex", "glacien_ix"]:
+				Game.story.completed_levels[p] = 3
+			Game.story.midas_dead = true
+			main.fade_rect.color.a = 0.0
+			for step in ["first", "again", "watered"]:
+				if step == "watered":
+					Game.story.watered_tomato = true
+				main.load_map(Maps.wing_room("rooftop"), Vector2i(7, 7), 1)
+				Game.story.room_rooftop_seen = true
+				await wait(0.6)
+				var tom: Sprite2D = main.world.prop_sprite("tomato")
+				print("[tomato] %s: planter is %s" % [step, "v2 wilted" if tom.texture == Art.prop("planter", 2) else ("v0 green" if tom.texture == Art.prop("planter", 0) else "v1 tomatoes")])
+				await shot("tomato_" + step)
+			get_tree().quit()
 		"commonstalk":
 			# the Commons' named recruits and the bot, talked to in the field
 			auto_talk = false

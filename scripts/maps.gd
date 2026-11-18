@@ -603,7 +603,10 @@ static func wing_room(id: String) -> Dictionary:
 			props = [
 				p("planter", 3, 3, {"offset": Vector2(8, 0), "area": Rect2i(2, 3, 3, 1), "event": {"id": "planter"}}),
 				p("planter", 12, 3, {"offset": Vector2(8, 0), "area": Rect2i(11, 3, 3, 1), "event": {"id": "planter"}}),
-				p("planter", 3, 6, {"offset": Vector2(8, 0), "area": Rect2i(2, 6, 3, 1), "v": 1, "id": "tomato", "event": {"id": "tomato"}}),
+				# Midas' tomatoes: fruiting while he's alive, wilted once he's
+				# gone, green again once someone waters them
+				p("planter", 3, 6, {"offset": Vector2(8, 0), "area": Rect2i(2, 6, 3, 1), "id": "tomato", "event": {"id": "tomato"},
+					"v": 1 if not Game.midas_dead() else (0 if bool(Game.story.get("watered_tomato", false)) else 2)}),
 				p("bench", 11, 6, {"offset": Vector2(8, 0), "area": Rect2i(11, 6, 2, 1)}),
 				p("streetlamp", 8, 3, {"light": Pal.LEMON, "lr": 26, "light_off": Vector2(0, -38), "pulse": 1.0}),
 			]
