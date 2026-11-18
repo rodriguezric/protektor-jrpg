@@ -129,6 +129,13 @@ func cast(id: String) -> Dictionary:
 	## Cast spec, aged by the story (Hiro empties out as he synchronizes).
 	if id == "player":
 		return player_spec()
+	if Data.RECRUITS.has(id):
+		var rc: Array = Data.RECRUITS[id]
+		var rs: Dictionary = Data.EXTRAS[int(rc[0]) % Data.EXTRAS.size()].duplicate()
+		rs.id = "rec_" + id
+		rs.name = rc[1]
+		rs.voice = rc[2]
+		return rs
 	var s: Dictionary = Data.CAST[id].duplicate()
 	if id == "hiro":
 		var r := relationship("hiro")

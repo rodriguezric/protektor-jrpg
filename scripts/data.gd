@@ -44,6 +44,10 @@ static var CAST := {
 		"apron": false, "adult": true, "voice": "adult_flat"},
 }
 
+## The Commons' recruits, by name: [EXTRAS index, name, voice].
+const RECRUITS := {"nell": [1, "Nell", "girl"], "dov": [4, "Dov", "boy"], "sefa": [7, "Sefa", "girl"], "kit": [2, "Kit", "boy2"], "bram": [5, "Bram", "boy"]}
+const RECRUIT_ORDER := ["nell", "dov", "sefa", "kit", "bram"]
+
 ## Player looks, chosen on the naming screen.
 static var LOOKS := [
 	{"skin": Pal.SKIN, "hair": Pal.INK2, "style": "short", "eye": Pal.BLUE},

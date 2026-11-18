@@ -533,17 +533,10 @@ func aftermath(res: Dictionary) -> void:
 
 func talk(n: Actor) -> void:
 	var id: String = n.info.get("id", "")
-	match id:
-		"instructor":
-			await s.say("instructor", "Proceed to your pod, recruit. Do not delay.")
-		"hiro":
-			await s.say("hiro", "Hurry up! I want to know what mine sounds like.", "still_smiling")
-		"pala":
-			await s.say("pala", "Group of four. Four pods. And no one asked us which one we wanted.", "anxious")
-		"midas":
-			await s.say("midas", "If I close my eyes, it's almost like the lift at home.", "uneasy")
-		_:
-			await s.say("", "\"Keep moving. They're timing us.\"")
+	if NpcTalk.has("corridor." + id):
+		await NpcTalk.say(s, "corridor." + id)
+	elif not await NpcTalk.say(s, "corridor.rec", id):
+		await s.say("", "\"Keep moving. They're timing us.\"")
 
 
 func examine(ev: Dictionary) -> void:

@@ -1,0 +1,740 @@
+{
+ "home.mother": {
+  "speaker": "mother",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Did you eat? You should eat something.",
+      "tired"
+     ],
+     [
+      "...I keep reading it. As if the words will change if I look long enough.",
+      "tired"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "letter:resolve"
+    ],
+    "lines": [
+     [
+      "You said you could do it. You always said that. Even about the slide.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "letter:doubt"
+    ],
+    "lines": [
+     [
+      "You asked if you had to go. I've been asking myself the same thing all evening.",
+      "sad"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "block7"
+    ],
+    "lines": [
+     [
+      "You went outside? Did Mrs. Okafor say something? ...She always says something.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "bracelet"
+    ],
+    "lines": [
+     [
+      "Is that from Juno? Keep it on. Don't let them take it off you.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [],
+    "lines": [
+     [
+      "I ironed your shirt three times. It didn't need it. I needed it.",
+      "sad"
+     ],
+     [
+      "When you were small you were afraid of the dark. Tonight I think it's my turn.",
+      "sad"
+     ]
+    ]
+   }
+  ]
+ },
+ "home.father": {
+  "speaker": "father",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "The shield's breathing slower tonight. They say that's normal.",
+      ""
+     ],
+     [
+      "Get some sleep. I'll check the heater.",
+      ""
+     ]
+    ]
+   },
+   {
+    "when": [
+     "letter:silent"
+    ],
+    "lines": [
+     [
+      "You didn't say much at the table. Neither did I. We're alike that way.",
+      "sad"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "block7"
+    ],
+    "lines": [
+     [
+      "Benno gave your mother the good tea for free. The whole block knows, then.",
+      ""
+     ]
+    ]
+   },
+   {
+    "when": [],
+    "lines": [
+     [
+      "I fixed that heater the week you were born. It still stutters. Some things just stay the way they are.",
+      ""
+     ],
+     [
+      "They'll give you a uniform. Don't let it give you a new name.",
+      "stern"
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.hiro": {
+  "speaker": "hiro",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Look at those things. Bet they hit harder than anything on this planet.",
+      "still_smiling"
+     ],
+     [
+      "I'm going to be the best pilot this intake has ever had. Watch.",
+      "smile"
+     ],
+     [
+      "Nervous? I'm not nervous. I'm ready. It feels the same, that's all.",
+      "smile"
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.pala": {
+  "speaker": "pala",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Their joints don't flex like armor. They flex like... something grown.",
+      "anxious"
+     ],
+     [
+      "Have you noticed none of them has a face?",
+      "anxious"
+     ],
+     [
+      "My brother says the parade's the last time they let you choose where to look.",
+      ""
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.midas": {
+  "speaker": "midas",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "My mom's out there somewhere. I can't find her face.",
+      "uneasy"
+     ],
+     [
+      "I'm Midas. Sorry. I talk when I'm scared. I'm talking a lot.",
+      "sad"
+     ],
+     [
+      "If they ask you later, tell them I was brave, okay?",
+      "sad"
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.announcer": {
+  "speaker": "announcer",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Recruits will hold formation until called!",
+      ""
+     ],
+     [
+      "Smile for the families, recruits! This is the proudest day of their lives!",
+      ""
+     ],
+     [
+      "...Please step back into the line.",
+      ""
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.mother": {
+  "speaker": "mother",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "We're right here. We'll stay right here.",
+      "sad"
+     ],
+     [
+      "Go on. Stand with them. We can see you from here.",
+      "smile"
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.father": {
+  "speaker": "father",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Stand up straight. Not for them. For you.",
+      ""
+     ],
+     [
+      "Whatever they call you up there, you know your name.",
+      "stern"
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.crowd": {
+  "speaker": "",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "We're so proud of you!",
+      ""
+     ],
+     [
+      "Helion keeps us safe!",
+      ""
+     ],
+     [
+      "Wave! Wave to us!",
+      ""
+     ],
+     [
+      "My boy went up last spring. He writes every month. Well. The letters come every month.",
+      ""
+     ],
+     [
+      "Look at the machines! Aren't they beautiful?",
+      ""
+     ],
+     [
+      "Which one's yours, sweetheart? Oh, you don't get to pick?",
+      ""
+     ],
+     [
+      "Don't cry. They're watching the cameras.",
+      ""
+     ],
+     [
+      "A hero in the family! Full rations for life!",
+      ""
+     ]
+    ]
+   }
+  ]
+ },
+ "parade.rec": {
+  "speaker": "",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Don't step out of line. They're watching.",
+      ""
+     ],
+     [
+      "My uniform's too big too.",
+      ""
+     ],
+     [
+      "I heard you get your own Protektor.",
+      ""
+     ],
+     [
+      "My mom told me to be brave. I said okay. I don't know how.",
+      ""
+     ],
+     [
+      "...",
+      ""
+     ],
+     [
+      "Do you think they'll let us write home?",
+      ""
+     ]
+    ]
+   }
+  ]
+ },
+ "corridor.instructor": {
+  "speaker": "instructor",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Proceed to your pod, recruit. Do not delay.",
+      ""
+     ],
+     [
+      "Hesitation is a habit. Habits can be removed.",
+      ""
+     ],
+     [
+      "Your pod is calibrated to you. It already knows your name.",
+      ""
+     ]
+    ]
+   }
+  ]
+ },
+ "corridor.hiro": {
+  "speaker": "hiro",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Hurry up! I want to know what mine sounds like.",
+      "still_smiling"
+     ],
+     [
+      "Race you to the pods. Loser has to... I don't know. Lose.",
+      "smile"
+     ]
+    ]
+   }
+  ]
+ },
+ "corridor.pala": {
+  "speaker": "pala",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Group of four. Four pods. And no one asked us which one we wanted.",
+      "anxious"
+     ],
+     [
+      "Count the doors. There are more pods than recruits.",
+      "anxious"
+     ]
+    ]
+   }
+  ]
+ },
+ "corridor.midas": {
+  "speaker": "midas",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "If I close my eyes, it's almost like the lift at home.",
+      "uneasy"
+     ],
+     [
+      "Do you think it hurts? Don't answer. Actually, answer.",
+      "sad"
+     ]
+    ]
+   }
+  ]
+ },
+ "corridor.rec": {
+  "speaker": "",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Keep moving. They're timing us.",
+      ""
+     ],
+     [
+      "Which pod's yours? Mine has a scratch on the glass.",
+      ""
+     ],
+     [
+      "Somebody said the pods are warm. Why are they warm?",
+      ""
+     ]
+    ]
+   }
+  ]
+ },
+ "commons.nell": {
+  "speaker": "nell",
+  "groups": [
+   {
+    "when": [
+     "done<3"
+    ],
+    "lines": [
+     [
+      "I counted the chairs at dinner. Thirty-one. Yesterday there were thirty-two.",
+      "worried"
+     ],
+     [
+      "I count things when I'm nervous. Stairs. Chairs. Us.",
+      ""
+     ]
+    ]
+   },
+   {
+    "when": [
+     "done>=3"
+    ],
+    "lines": [
+     [
+      "Twenty-six chairs tonight. I've stopped telling anyone the number.",
+      "sad"
+     ],
+     [
+      "Nobody's chair has a name on it. That's on purpose, isn't it?",
+      "worried"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "midas_dead"
+    ],
+    "lines": [
+     [
+      "They take the empty chair away before dinner now. So the gap doesn't show.",
+      "sad"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "done>=6"
+    ],
+    "lines": [
+     [
+      "I don't count anymore. It's easier. Is that bad? It feels bad.",
+      "flat"
+     ]
+    ]
+   }
+  ]
+ },
+ "commons.dov": {
+  "speaker": "dov",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "You play ping-pong? Rec room, through the wing. I'll go easy on you.",
+      "smile"
+     ],
+     [
+      "I had a table at home. Well. A door on two crates. Same thing.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "pong>=10"
+    ],
+    "lines": [
+     [
+      "You're the one with the rally! The whole wing's talking about it.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "won"
+    ],
+    "lines": [
+     [
+      "Clean deployment? You're grinning. Don't let them see you grin.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "done>=5"
+    ],
+    "lines": [
+     [
+      "I don't really want to play anymore. My hands keep turning to block.",
+      "flat"
+     ]
+    ]
+   }
+  ]
+ },
+ "commons.sefa": {
+  "speaker": "sefa",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "I don't remember my sister's voice anymore. I mean, I do. I just can't hear it.",
+      "sad"
+     ],
+     [
+      "Do you write letters? I write them and keep them. It's cheaper than sending.",
+      ""
+     ]
+    ]
+   },
+   {
+    "when": [
+     "home>=1"
+    ],
+    "lines": [
+     [
+      "You called home? What did it sound like? ...No. Don't tell me.",
+      "sad"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "sync>=55"
+    ],
+    "lines": [
+     [
+      "I dreamed about home last night and it was all planets. Just planets.",
+      "flat"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "done>=4"
+    ],
+    "lines": [
+     [
+      "They asked if I wanted my letters forwarded to my new posting. I'm not going anywhere. Am I?",
+      "worried"
+     ]
+    ]
+   }
+  ]
+ },
+ "commons.kit": {
+  "speaker": "kit",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Did you see the leaderboard? Nobody's beaten Hiro's turn speed.",
+      "smile"
+     ],
+     [
+      "I'm eleventh. Eleventh's fine. Eleventh's basically tenth.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "lost"
+    ],
+    "lines": [
+     [
+      "Rough one? It happens. They write it down, though. Everything gets written down.",
+      ""
+     ]
+    ]
+   },
+   {
+    "when": [
+     "won"
+    ],
+    "lines": [
+     [
+      "Nice deployment. You're climbing the board.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "hiro>=3"
+    ],
+    "lines": [
+     [
+      "Hiro doesn't even look at the board anymore. He's just... what the board measures.",
+      "flat"
+     ]
+    ]
+   }
+  ]
+ },
+ "commons.bram": {
+  "speaker": "bram",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Why did the Protektor cross the galaxy? Because it was told to. ...That's the whole joke.",
+      "smile"
+     ],
+     [
+      "Knock knock. Who's there? Synchronization. Synchronization wh- Synchronization.",
+      "smile"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "midas_dead"
+    ],
+    "lines": [
+     [
+      "Midas laughed at all my jokes. Even the bad ones. Especially the bad ones.",
+      "sad"
+     ]
+    ]
+   },
+   {
+    "when": [
+     "done>=4"
+    ],
+    "lines": [
+     [
+      "I ran out of jokes. I'm recycling. Why did the Protektor cross the galaxy?",
+      "flat"
+     ]
+    ]
+   }
+  ]
+ },
+ "commons.bot": {
+  "speaker": "",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "A maintenance unit polishes the same panel of floor. It has been polishing it since you arrived.",
+      ""
+     ],
+     [
+      "The unit stops, turns its sensor toward you, considers you, and resumes polishing.",
+      ""
+     ]
+    ]
+   },
+   {
+    "when": [
+     "done>=3"
+    ],
+    "lines": [
+     [
+      "Someone has taped a paper smile to the maintenance unit.",
+      ""
+     ]
+    ]
+   },
+   {
+    "when": [
+     "done>=6"
+    ],
+    "lines": [
+     [
+      "The maintenance unit has a name now, on a strip of tape: PROTEKTOR. Someone thought that was funny.",
+      ""
+     ]
+    ]
+   }
+  ]
+ },
+ "launch_wing.pala": {
+  "speaker": "pala",
+  "groups": [
+   {
+    "when": [],
+    "lines": [
+     [
+      "Not now. Keep moving.",
+      "anxious"
+     ],
+     [
+      "Stay low. The cameras pan every eight seconds.",
+      ""
+     ],
+     [
+      "If anyone asks, we're inventory.",
+      "smile"
+     ]
+    ]
+   }
+  ]
+ }
+}
