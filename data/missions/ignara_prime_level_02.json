@@ -4,8 +4,9 @@
   "planet_type": "ignara_prime",
   "level_index": 2,
   "target_duration_sec": 120,
+  "title": "Flashpoint",
   "completion": {
-    "message_text": "Ignara Prime 02 clear: Flashover Drill.",
+    "message_text": "Ignara Prime 02 clear: Flashpoint.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -943,7 +944,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Ignara Prime 02 clear: Flashover Drill.",
+      "text": "Ignara Prime 02 clear: Flashpoint.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     }

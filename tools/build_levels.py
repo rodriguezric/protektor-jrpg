@@ -830,6 +830,20 @@ def mechanon_ascens():
     return out
 
 
+## Each level's name: its clear message reads "<Planet> 0N clear: <Title>."
+TITLES = {
+    "terra_virex": ["First Watch", "Crossfire Watch", "Aegis Drill"],
+    "glacien_ix": ["Thin Ice", "Crowding", "Deep Freeze"],
+    "ignara_prime": ["Kindling", "Flashpoint", "Crucible"],
+    "tempestris": ["Squall Line", "Eyewall", "Cyclone Season"],
+    "viscera_nova": ["First Contact", "Reflex Arc", "The Heart"],
+    "umbra_vacua": ["Stillness", "Commitment", "The Observer"],
+    "mechanon_ascens": ["Calibration", "Disruption", "Paragon"],
+}
+
+PLANET_NAMES = {"terra_virex": "Terra Virex", "glacien_ix": "Glacien IX", "ignara_prime": "Ignara Prime", "tempestris": "Tempestris",
+                "viscera_nova": "Viscera Nova", "umbra_vacua": "Umbra Vacua", "mechanon_ascens": "Mechanon Ascens"}
+
 PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime, "tempestris": tempestris,
            "viscera_nova": viscera_nova, "umbra_vacua": umbra_vacua, "mechanon_ascens": mechanon_ascens}
 
@@ -839,13 +853,22 @@ def write(level: Level) -> str:
     old = json.load(open(path)) if os.path.exists(path) else {}
     built = level.build()
     keep = [e for e in old.get("events", []) if "trigger" in e]
+    # the clear message names the level as built
+    title = TITLES[level.planet][level.index - 1]
+    clear = "%s %02d clear: %s." % (PLANET_NAMES[level.planet], level.index, title)
+    for e in keep:
+        if e.get("type") == "fx_async_message":
+            e["text"] = clear
+    completion = dict(old.get("completion", {}))
+    completion["message_text"] = clear
     data = {
         "format_version": old.get("format_version", 1),
         "level_id": "%s_level_%02d" % (level.planet, level.index),
         "planet_type": level.planet,
         "level_index": level.index,
         "target_duration_sec": {1: 90, 2: 120, 3: 150}[level.index],
-        "completion": old.get("completion", {}),
+        "title": title,
+        "completion": completion,
         "header": old.get("header", {}),
         "phases": built["phases"],
         "authoring": {"built_by": "tools/build_levels.py", "timeline_sec": built["timeline_sec"]},

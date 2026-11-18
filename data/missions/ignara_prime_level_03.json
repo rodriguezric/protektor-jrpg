@@ -4,8 +4,9 @@
   "planet_type": "ignara_prime",
   "level_index": 3,
   "target_duration_sec": 150,
+  "title": "Crucible",
   "completion": {
-    "message_text": "Ignara Prime 03 clear: Meltdown Sprint.",
+    "message_text": "Ignara Prime 03 clear: Crucible.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -945,7 +946,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Ignara Prime 03 clear: Meltdown Sprint.",
+      "text": "Ignara Prime 03 clear: Crucible.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     }

@@ -4,8 +4,9 @@
   "planet_type": "umbra_vacua",
   "level_index": 3,
   "target_duration_sec": 150,
+  "title": "The Observer",
   "completion": {
-    "message_text": "Umbra Vacua 03 clear: Inverse Orbit.",
+    "message_text": "Umbra Vacua 03 clear: The Observer.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -419,7 +420,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Umbra Vacua 03 clear: Inverse Orbit.",
+      "text": "Umbra Vacua 03 clear: The Observer.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

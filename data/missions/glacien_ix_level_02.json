@@ -4,8 +4,9 @@
   "planet_type": "glacien_ix",
   "level_index": 2,
   "target_duration_sec": 120,
+  "title": "Crowding",
   "completion": {
-    "message_text": "Glacien IX 02 clear: Whiteout Hold.",
+    "message_text": "Glacien IX 02 clear: Crowding.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -619,7 +620,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Glacien IX 02 clear: Whiteout Hold.",
+      "text": "Glacien IX 02 clear: Crowding.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

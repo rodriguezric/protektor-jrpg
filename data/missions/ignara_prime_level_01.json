@@ -4,8 +4,9 @@
   "planet_type": "ignara_prime",
   "level_index": 1,
   "target_duration_sec": 90,
+  "title": "Kindling",
   "completion": {
-    "message_text": "Ignara Prime 01 clear: Kindling Lanes.",
+    "message_text": "Ignara Prime 01 clear: Kindling.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -662,7 +663,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Ignara Prime 01 clear: Kindling Lanes.",
+      "text": "Ignara Prime 01 clear: Kindling.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },

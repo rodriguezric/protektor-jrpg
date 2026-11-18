@@ -4,8 +4,9 @@
   "planet_type": "viscera_nova",
   "level_index": 2,
   "target_duration_sec": 120,
+  "title": "Reflex Arc",
   "completion": {
-    "message_text": "Viscera Nova 02 clear: Spiral Barrage.",
+    "message_text": "Viscera Nova 02 clear: Reflex Arc.",
     "message_hold_sec": 1.8,
     "scene_handoff": {
       "enabled": true,
@@ -505,7 +506,7 @@
         "repeat": false,
         "params": {}
       },
-      "text": "Viscera Nova 02 clear: Spiral Barrage.",
+      "text": "Viscera Nova 02 clear: Reflex Arc.",
       "type_speed_cps": 26,
       "hold_sec": 1.8
     },
