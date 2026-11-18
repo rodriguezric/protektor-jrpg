@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 14:39 EST — `feature_mission_codec_portraits` (v0.42.0)
+
+Pilots now call you mid-mission codec-style: their face blinks into your portrait panel while they talk, then blinks back to you.
+
+- When Hiro, Pala or Midas sends a message, the portrait panel cuts to static, their face flickers in with their name under it in their colour, and their mouth moves while the text types. Back-to-back lines from the same pilot keep the face up; when the calls end (or a SYSTEM message comes in) the panel blinks back to the protagonist, with any mood they picked up in the meantime (a hit flinch can't cover the pilot's face).
+- The random in-mission chatter uses the new calls. Midas never calls once he is dead.
+- Code: `scripts/mission.gd` (`pilot_call()`, `_portrait_swap()`, `_static_tex()`, pilot-aware `_comms`/`_comms_pump`, `_set_mood` held while a pilot is on, new `pilot_comms` mission event: `{type, pilot, text, mood, type_speed_cps, hold_sec}`), `tools/autotest.gd` (`PK_TEST=codec`).
+
 ## 2026-11-18 13:20 EST — `feature_midas_toy_memory_field_scene` (v0.41.0)
 
 Midas' memory of his mother and the hidden toys now plays out in his kitchen, in field graphics, instead of over a still painting.

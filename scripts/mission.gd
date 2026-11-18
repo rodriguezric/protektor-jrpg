@@ -154,6 +154,13 @@ var block_count := 0
 ## spawn_side "echo" (Mechanon: threats arrive where you were facing).
 var _facing_log: Array = []
 var _comms_busy := false
+## Codec calls: the pilot whose face is in the portrait panel ("" = the
+## protagonist), the panel's name label, and the static drawn over a swap.
+var _pilot_on := ""
+var _pilot_mood := ""
+var portrait_name: Label
+var portrait_static: TextureRect
+const PILOT_COLOR := {"hiro": Color("8fc7e8"), "pala": Color("f0b48a"), "midas": Color("e8d27a")}
 
 signal mission_done
 
@@ -279,9 +286,14 @@ func _build_left() -> void:
 	portrait = TextureRect.new()
 	portrait.position = Vector2(11, 11)
 	pbox.add_child(portrait)
-	var nm := Art.label(Game.player_name if not arcade else "PILOT", Pal.SYNC)
-	nm.position = Vector2(4, 72)
-	left_panel.add_child(nm)
+	portrait_static = TextureRect.new()
+	portrait_static.position = Vector2(3, 3)
+	portrait_static.size = Vector2(64, 64)
+	portrait_static.visible = false
+	pbox.add_child(portrait_static)
+	portrait_name = Art.label(_player_label(), Pal.SYNC)
+	portrait_name.position = Vector2(4, 72)
+	left_panel.add_child(portrait_name)
 	var cbox := Art.make_box("sys_box")
 	cbox.position = Vector2(2, 84)
 	cbox.size = Vector2(68, 92)
@@ -765,6 +777,9 @@ func _run_event(e: Dictionary) -> void:
 			_bg_color(e)
 		"fx_async_message":
 			_comms("SYSTEM", str(e.get("text", "")), float(e.get("type_speed_cps", 24.0)), float(e.get("hold_sec", 2.0)))
+		"pilot_comms":
+			if not arcade:
+				pilot_call(str(e.get("pilot", "")), str(e.get("text", "")), str(e.get("mood", "")), float(e.get("type_speed_cps", 30.0)), float(e.get("hold_sec", 2.2)))
 		"scene_handoff":
 			_begin_victory()
 		"spawn_boss", "spawn_miniboss":
@@ -1584,6 +1599,9 @@ func _update_shake(delta: float) -> void:
 func _set_mood(mood: String, t: float = 0.0) -> void:
 	_mood = mood
 	_mood_t = t
+	if _pilot_on != "":
+		# a pilot is on the codec: the player's face comes back after the call
+		return
 	var spec := Game.player_spec()
 	if mood == "" and Game.sync_percent() >= 55:
 		mood = "flat"
@@ -1618,18 +1636,110 @@ func _update_sync() -> void:
 	sync_bar.size.x = 56.0 * clampf(v / 100.0, 0.0, 1.0)
 
 
-func _comms(who: String, text: String, cps: float, hold: float) -> void:
-	_comms_queue.append({"who": who, "text": text, "cps": cps, "hold": hold})
+func _comms(who: String, text: String, cps: float, hold: float, pilot: String = "", mood: String = "") -> void:
+	_comms_queue.append({"who": who, "text": text, "cps": cps, "hold": hold, "pilot": pilot, "mood": mood})
 	if not _comms_busy:
 		_comms_pump()
+
+
+func pilot_call(pilot: String, text: String, mood: String = "", cps: float = 30.0, hold: float = 2.2) -> void:
+	## Queue a codec call: the pilot's face blinks into the portrait panel for
+	## the message and blinks back to the protagonist when the calls end.
+	if pilot == "midas" and Game.midas_dead():
+		return
+	if not Data.CAST.has(pilot):
+		_comms("SYSTEM", text, cps, hold)
+		return
+	_comms(str(Data.CAST[pilot].name).to_upper(), text, cps, hold, pilot, mood)
+
+
+func _player_label() -> String:
+	return Game.player_name if not arcade else "PILOT"
+
+
+func _pilot_face(open: bool) -> void:
+	portrait.texture = Art.portrait(Game.cast(_pilot_on), _pilot_mood, false, open, 2)
+
+
+func _portrait_swap(to: String, mood: String) -> void:
+	## Codec blink: the face cuts to static, holds a beat, and the new face
+	## flickers in (to = "" brings the protagonist back).
+	Sfx.play("blip", 0.7 if to == "" else 1.25, -10.0)
+	portrait_static.visible = true
+	for i in 3:
+		portrait_static.texture = _static_tex(i)
+		portrait.visible = i == 1
+		await get_tree().create_timer(0.05, false).timeout
+		if not is_inside_tree():
+			return
+	portrait.visible = false
+	await get_tree().create_timer(0.08, false).timeout
+	if not is_inside_tree():
+		return
+	_pilot_on = to
+	_pilot_mood = mood
+	if to == "":
+		portrait_name.text = _player_label()
+		portrait_name.add_theme_color_override("font_color", Pal.SYNC)
+		_set_mood(_mood, _mood_t)
+	else:
+		portrait_name.text = str(Data.CAST[to].name)
+		portrait_name.add_theme_color_override("font_color", PILOT_COLOR.get(to, Pal.LEMON))
+		_pilot_face(false)
+	for i in 3:
+		portrait_static.texture = _static_tex(i + 3)
+		portrait.visible = i != 1
+		await get_tree().create_timer(0.04, false).timeout
+		if not is_inside_tree():
+			return
+	portrait.visible = true
+	portrait_static.visible = false
+
+
+var _static_cache: Dictionary = {}
+
+
+func _static_tex(k: int) -> Texture2D:
+	## Codec static: grey snow with dark scanlines, a few frames cached.
+	k = k % 4
+	if _static_cache.has(k):
+		return _static_cache[k]
+	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7 + k * 31
+	for y in 64:
+		var dark := y % 2 == 1
+		var band := rng.randf() < 0.08
+		for x in 64:
+			var v := rng.randf_range(0.15, 0.7) * (0.55 if dark else 1.0)
+			if band:
+				v = 0.85
+			img.set_pixel(x, y, Color(Pal.SYNC.lerp(Color(v, v, v), 0.75), 0.92))
+	var tex := ImageTexture.create_from_image(img)
+	_static_cache[k] = tex
+	return tex
 
 
 func _comms_pump() -> void:
 	_comms_busy = true
 	while not _comms_queue.is_empty():
 		var msg: Dictionary = _comms_queue.pop_front()
+		var pilot: String = msg.get("pilot", "")
+		if pilot == "" and _pilot_on != "":
+			await _portrait_swap("", "")
+			if not is_inside_tree():
+				return
+		if pilot != "" and (pilot != _pilot_on or msg.mood != _pilot_mood):
+			if pilot == _pilot_on:
+				_pilot_mood = msg.mood
+				_pilot_face(false)
+			else:
+				await _portrait_swap(pilot, msg.mood)
+				if not is_inside_tree():
+					return
 		comms_name.text = msg.who
-		comms_name.add_theme_color_override("font_color", Pal.SYNC if msg.who == "SYSTEM" else Pal.LEMON)
+		comms_name.add_theme_color_override("font_color", Pal.SYNC if msg.who == "SYSTEM" else PILOT_COLOR.get(pilot, Pal.LEMON))
+		var voice := "system" if msg.who == "SYSTEM" else str(Data.CAST.get(pilot, {}).get("voice", "boy"))
 		var lines := _comms_wrap(msg.text)
 		var total := 0
 		for ln: String in lines:
@@ -1646,7 +1756,9 @@ func _comms_pump() -> void:
 			if nn != n:
 				n = nn
 				if n % 3 == 0:
-					Sfx.voice("system" if msg.who == "SYSTEM" else "boy", n)
+					Sfx.voice(voice, n)
+				if pilot != "" and pilot == _pilot_on:
+					_pilot_face(n < total and (n / 2) % 2 == 0)
 				_comms_show(lines, n, true)
 		var hold: float = msg.hold
 		var blink := 0.0
@@ -1657,6 +1769,14 @@ func _comms_pump() -> void:
 			hold -= get_process_delta_time()
 			blink += get_process_delta_time()
 			_comms_show(lines, n, fmod(blink, 0.8) < 0.4)
+	if _pilot_on != "":
+		await _portrait_swap("", "")
+		if not is_inside_tree():
+			return
+		# a call that ended into a new message hands the queue back
+		if not _comms_queue.is_empty():
+			_comms_pump()
+			return
 	_comms_busy = false
 
 
@@ -1723,7 +1843,7 @@ func _chatter(delta: float) -> void:
 	var lines: Array = Data.COMMS[w]
 	if w == "hiro" and Game.relationship("hiro") >= 3:
 		lines = ["Target. Target. Target.", "...", "Faster."]
-	_comms(w.capitalize(), lines[randi() % lines.size()], 30.0, 2.0)
+	pilot_call(w, lines[randi() % lines.size()])
 
 
 # ----------------------------------------------------------------- pause ---

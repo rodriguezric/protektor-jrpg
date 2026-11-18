@@ -759,6 +759,36 @@ func _run(scenario: String) -> void:
 				await wait(1.6 if i < 4 else 3.0)
 				await shot("mission_%02d" % i)
 			get_tree().quit()
+		"codec":
+			# pilot codec calls: the portrait panel blinks to the pilot's face
+			# for their messages and back to the protagonist afterwards
+			bot = true
+			auto_talk = false
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			Game.testing = true
+			main.start_mission("terra_virex_level_01", false, false)
+			await wait(1.5)
+			var m: Node = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+			m._chatter_t = 999.0
+			await shot("codec_00_player")
+			m.pilot_call("hiro", "Ari, rocks inbound on your left. Turn!", "smile")
+			m.pilot_call("hiro", "Clean. Again.", "")
+			for i in 16:
+				await wait(0.08 if i < 6 else 0.4)
+				await shot("codec_hiro_%02d" % i)
+			m._comms("SYSTEM", "Sector clear. Hold position.", 30.0, 1.0)
+			m.pilot_call("pala", "Steady. Breathe. Count it out.", "sad")
+			m._set_mood("shock", 0.4)   # a hit mid-call must not cover Pala
+			for i in 18:
+				await wait(0.35)
+				await shot("codec_pala_%02d" % i)
+			print("[codec] pilot_on='%s' busy=%s" % [m._pilot_on, m._comms_busy])
+			Game.story.midas_dead = true
+			m.pilot_call("midas", "This should never show.")
+			await wait(0.3)
+			print("[codec] after dead midas call: pilot_on='%s' queue=%d" % [m._pilot_on, m._comms_queue.size()])
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up
