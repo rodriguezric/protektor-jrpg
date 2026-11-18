@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-18 17:32 EST — `feature_protektor_propaganda_lore` (v0.56.0)
+
+How they sell us: 13 pieces of Protektor propaganda to find and file, a FILES page to read them, and two scenes where the truth breaks through.
+
+- Helion sells the Protektor as a chrome robot that never sleeps; the program is children in chairs. The pieces: the Block 7 noticeboard poster, the recruitment flyer in the bin, your plastic Protektor, Pip's cardboard costume (from Helion's printed pattern), the Starbox PROTEKTOR cartridge, Helion News's 'brave machines' (watch channel 1 a few seconds), the ROBO-PROTEKTOR! cartoon (channel 2), the hollow display Protektor at the parade (examine it before you line up), the Commons vending machine's robot sticker, PROTEKTOR CRUNCH cereal in the mess hall, and two archive files: 'a deliberate simplification', and the new MARKETING BRIEF 7-C (after four deployments): 'The public must never picture a child.'
+- Each find files with a toast (FILED n / 13). The field menu has a new Files page: found pieces with where they were and what they say; missing ones show where to look.
+- Reveal 1: reading Marketing Brief 7-C the first time cuts through every robot you grew up with (the poster, the parade machine, the toy, the cartridge) to 'There was never a robot. There was always a child in a chair.'
+- Reveal 2: after six deployments, Helion News on the rec room TV runs a special bulletin over your last planet: a robot painted over a defense, the shield swinging wide before each block the way you swing it. Afterwards: 'They painted a robot over me,' and the recruit on the couch: 'Wasn't that robot AMAZING? I want to be just like it.'
+- Achievement: Read Between the Lines (file all 13). Finds are kept in the profile.
+- Code: new `scripts/propaganda.gd` (Propaganda), `scripts/propaganda_screen.gd` (FILES), `scripts/pilot_status.gd` (Files entry), `scripts/story_prologue.gd`, `scripts/story_hub.gd`, `scripts/story_wing.gd` (finds, brief entry, both reveals), `scripts/tv_shows.gd` (the special bulletin), `scripts/tv_screen.gd`, `scripts/console_screen.gd`, `scripts/maps.gd` (parade mech and cereal events), `scripts/main.gd` (toast headers), `scripts/achievements.gd`, `scripts/art_achieve.gd`, `tools/autotest.gd` (`PK_TEST=propaganda`).
+
 ## 2026-11-18 17:27 EST — `feature_hub_room_minigames` (v0.55.0)
 
 Three little games in the Pilot Wing, each under a minute, with best scores, achievements and a few credits for a good result.

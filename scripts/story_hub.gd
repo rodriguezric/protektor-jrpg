@@ -663,7 +663,8 @@ func examine(ev: Dictionary) -> void:
 			await s.m.workshop()
 		"vending":
 			Sfx.play("beep", 1.3, -8.0)
-			await s.say("", "NUTRITION PASTE, flavor: BLUE. The machine thanks you for your service.")
+			await s.say("", ["NUTRITION PASTE, flavor: BLUE. The machine thanks you for your service.", "A sticker on its side: a robot giving a thumbs up. 'PROTEKTORS NEVER SLEEP. NEITHER DO I.'"])
+			Propaganda.find("vending")
 		"archive":
 			await s.say("", "The archive console asks for clearance you don't have. Pala's fingerprints are all over the glass.")
 		"locker":

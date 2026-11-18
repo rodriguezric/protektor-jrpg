@@ -125,6 +125,16 @@ static func icon(a: Dictionary, unlocked: bool) -> PixBuf:
 			b.ball(12, 12, 7.5, 7.5, Pal.HONEY)
 			b.ball(12, 12, 3, 3, Pal.PANEL2)
 			b.pset(9, 8, Pal.hi(Pal.HONEY))
+		"propaganda":
+			# a torn poster: the chrome robot, a strip of slogan
+			b.rect(3, 1, 18, 22, Pal.CREAM)
+			b.rect(4, 2, 16, 15, Pal.NAVY.lerp(Pal.SKY, 0.35))
+			b.ball(12, 15, 6, 3, Pal.GRASS)
+			b.rect(9, 5, 6, 4, Pal.FROST)
+			b.rect(10, 6, 4, 1, Pal.SYNC)
+			b.rect(8, 9, 8, 5, Pal.FROST.lerp(Pal.STEEL, 0.3))
+			b.rect(4, 18, 16, 2, Pal.LEMON)
+			b.poly([Vector2(16, 1), Vector2(21, 1), Vector2(21, 8)], Pal.INK)
 		"pong":
 			b.ball(9, 11, 6, 6, Pal.RED)
 			b.rect(8, 16, 3, 7, Pal.WOOD)

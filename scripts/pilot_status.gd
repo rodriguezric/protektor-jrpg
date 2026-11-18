@@ -103,7 +103,7 @@ func _process(delta: float) -> void:
 
 
 func run() -> String:
-	var m := Menu.make(self, ["Close", "Save", "Options", "Controls", "Title"], Vector2(6, 6), Vector2(70, 57))
+	var m := Menu.make(self, ["Close", "Save", "Options", "Files", "Controls", "Title"], Vector2(6, 6), Vector2(70, 67))
 	while true:
 		var r := await m.ask()
 		if r == 1:
@@ -117,8 +117,14 @@ func run() -> String:
 			await o.run()
 			o.queue_free()
 			continue
-		if r >= 3:
-			r -= 2
+		if r == 3:
+			var f := PropagandaScreen.new()
+			add_child(f)
+			await f.run()
+			f.queue_free()
+			continue
+		if r >= 4:
+			r -= 3
 		if r == 1:
 			await Game.main.dialog.say(["Arrows/WASD walk. Shift runs. Z talks, examines and confirms. X opens this menu.",
 				"In a deployment, turn with the arrows, WASD, the mouse or a stick. Z, Space or left-click fires the beam from your FRONT.",

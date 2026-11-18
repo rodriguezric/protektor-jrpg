@@ -498,13 +498,16 @@ func _show_toasts() -> void:
         ic.texture = Art.achievement(a, true)
         ic.position = Vector2(4, 3)
         box.add_child(ic)
-        var h := Art.label("ACHIEVEMENT UNLOCKED", Pal.TEXT_DIM)
+        var h := Art.label(str(a.get("header", "ACHIEVEMENT UNLOCKED")), Pal.TEXT_DIM)
         h.position = Vector2(32, 3)
         box.add_child(h)
         var n := Art.label(a.name, Pal.LEMON)
         n.position = Vector2(32, 15)
         box.add_child(n)
-        Sfx.play("levelup", 1.0, -6.0)
+        if a.has("header"):
+            Sfx.play("paper", 1.1, -6.0)
+        else:
+            Sfx.play("levelup", 1.0, -6.0)
         var tw := box.create_tween()
         tw.tween_property(box, "position:x", 158.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
         tw.tween_interval(2.6)

@@ -244,8 +244,8 @@ static func parade() -> Dictionary:
 	]
 	var props := [
 		p("stage", 14, 4, {"offset": Vector2(8, 0), "area": Rect2i(11, 2, 7, 3)}),
-		p("mech", 6, 7, {"area": Rect2i(5, 5, 3, 3), "anim": 2, "fps": 1.2, "id": "mech1", "light": Pal.SYNC, "lr": 14, "light_off": Vector2(0, -44), "pulse": 2.0}),
-		p("mech", 22, 7, {"area": Rect2i(21, 5, 3, 3), "anim": 2, "fps": 1.2, "id": "mech2", "light": Pal.SYNC, "lr": 14, "light_off": Vector2(0, -44), "pulse": 2.0}),
+		p("mech", 6, 7, {"area": Rect2i(5, 5, 3, 3), "anim": 2, "fps": 1.2, "id": "mech1", "light": Pal.SYNC, "lr": 14, "light_off": Vector2(0, -44), "pulse": 2.0, "event": {"id": "parade_mech"}}),
+		p("mech", 22, 7, {"area": Rect2i(21, 5, 3, 3), "anim": 2, "fps": 1.2, "id": "mech2", "light": Pal.SYNC, "lr": 14, "light_off": Vector2(0, -44), "pulse": 2.0, "event": {"id": "parade_mech"}}),
 		p("pole", 2, 7, {"v": 0}), p("pole", 10, 7, {"v": 1}), p("pole", 18, 7, {"v": 1}), p("pole", 26, 4, {"v": 0}),
 		p("speaker", 9, 3, {}), p("speaker", 19, 3, {}),
 		p("shuttle", 27, 10, {"offset": Vector2(0, 0), "id": "shuttle", "area": Rect2i(25, 7, 5, 3)}),
@@ -543,7 +543,7 @@ static func wing_room(id: String) -> Dictionary:
 		"mess":
 			props = [
 				p("counter", 3, 2, {"offset": Vector2(8, 0), "area": Rect2i(3, 2, 2, 1), "event": {"id": "tray"}}),
-				p("counter", 5, 2, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(5, 2, 2, 1), "event": {"id": "tray"}}),
+				p("counter", 5, 2, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(5, 2, 2, 1), "event": {"id": "cereal"}}),
 				p("vending", 12, 2, {"anim": 2, "fps": 1.5, "event": {"id": "dispenser"}, "light": Pal.GLOW, "lr": 10}),
 				p("board", 9, 1, {"wall": true, "area": Rect2i(), "offset": Vector2(8, 0)}),
 				p("table", 4, 5, {"offset": Vector2(8, 0), "area": Rect2i(3, 5, 4, 1), "v": 1}),
