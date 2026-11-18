@@ -308,5 +308,207 @@
 				]
 			}
 		]
+	},
+	"frost_sentinel": {
+		"name": "FROST SENTINEL",
+		"mini": true,
+		"hp": 9,
+		"size": 66,
+		"dist": 160,
+		"fight_sec": 22,
+		"color": [
+			0.62,
+			0.8,
+			0.92
+		],
+		"art": {
+			"shape": "orb",
+			"spikes": 6
+		},
+		"subtitle": "IT FREEZES WHAT IT CALLS",
+		"phases": [
+			{
+				"until": 0.5,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 8
+				},
+				"open": {
+					"type": "after_attack",
+					"sec": 3.5
+				},
+				"attacks": [
+					{
+						"type": "adds",
+						"every": 6.5,
+						"first": 2.0,
+						"enemy_type": "asteroid",
+						"degrees": [
+							150,
+							180,
+							210
+						],
+						"hold_dist": 140,
+						"hold_sec": 2.6,
+						"tell": 0.6
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "orbit",
+					"speed_deg": -12
+				},
+				"open": {
+					"type": "after_attack",
+					"sec": 3.0
+				},
+				"attacks": [
+					{
+						"type": "adds",
+						"every": 5.5,
+						"first": 1.5,
+						"enemy_type": "asteroid",
+						"degrees": [
+							140,
+							165,
+							195,
+							220
+						],
+						"hold_dist": 140,
+						"hold_sec": 2.4,
+						"tell": 0.6
+					},
+					{
+						"type": "volley",
+						"every": 5.5,
+						"first": 4.0,
+						"n": 1,
+						"speed": 180,
+						"tell": 0.6
+					}
+				]
+			}
+		]
+	},
+	"boreal_colossus": {
+		"name": "BOREAL COLOSSUS",
+		"hp": 85,
+		"size": 104,
+		"dist": 165,
+		"fight_sec": 50,
+		"color": [
+			0.58,
+			0.74,
+			0.88
+		],
+		"art": {
+			"shape": "colossus",
+			"spikes": 0
+		},
+		"warning": "GLACIAL MASS AWAKENING",
+		"subtitle": "THE SLEEPER UNDER GLACIEN IX",
+		"phases": [
+			{
+				"until": 0.6,
+				"move": {
+					"type": "hold"
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 7.0,
+						"first": 4.0,
+						"count": 7,
+						"width_deg": 100,
+						"offset_deg": 180,
+						"speed": 150,
+						"tell": 1.4
+					}
+				]
+			},
+			{
+				"until": 0.3,
+				"move": {
+					"type": "hop",
+					"every": 9.0,
+					"step_deg": 90
+				},
+				"open": {
+					"type": "cycle",
+					"open": 4.0,
+					"closed": 2.0
+				},
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 5.5,
+						"first": 2.5,
+						"count": 7,
+						"width_deg": 110,
+						"offset_deg": 180,
+						"speed": 160,
+						"tell": 1.1
+					},
+					{
+						"type": "adds",
+						"every": 8.0,
+						"first": 5.0,
+						"enemy_type": "asteroid",
+						"degrees": [
+							160,
+							200
+						],
+						"hold_dist": 140,
+						"hold_sec": 3.0,
+						"tell": 0.6
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "hop",
+					"every": 6.0,
+					"step_deg": 90
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 4.4,
+						"first": 2.0,
+						"count": 9,
+						"width_deg": 120,
+						"offset_deg": 180,
+						"speed": 165,
+						"tell": 0.9
+					},
+					{
+						"type": "volley",
+						"every": 6.0,
+						"first": 4.0,
+						"n": 2,
+						"gap": 0.4,
+						"speed": 190,
+						"tell": 0.8
+					},
+					{
+						"type": "adds",
+						"every": 9.0,
+						"first": 6.0,
+						"enemy_type": "drone_basic",
+						"degrees": [
+							90,
+							-90
+						],
+						"hold_dist": 150,
+						"hold_sec": 2.0
+					}
+				]
+			}
+		]
 	}
 }

@@ -1076,7 +1076,7 @@ func _spawn(e: Dictionary) -> void:
 			th.color = Color(c[0], c[1], c[2], c[3])
 		elif k in th:
 			th.set(k, cfg[k])
-	for k in ["move_speed", "sine_lateral_strength", "sine_wave_speed", "size", "max_hp"]:
+	for k in ["move_speed", "sine_lateral_strength", "sine_wave_speed", "size", "max_hp", "hold_dist", "hold_sec", "release_at"]:
 		if e.has(k):
 			th.set(k, float(e[k]))
 	var side := str(e.get("spawn_side", "top")).strip_edges()
