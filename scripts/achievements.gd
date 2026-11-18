@@ -14,8 +14,15 @@ const ENDING_NAMES := {
 }
 
 ## Categories, in tab order.
-const CATS := ["combat", "worlds", "bosses", "story", "protektor"]
-const CAT_NAMES := {"combat": "COMBAT", "worlds": "WORLDS", "bosses": "BOSSES", "story": "STORY", "protektor": "PROTEKTOR"}
+const CATS := ["combat", "worlds", "bosses", "story", "protektor", "games"]
+const CAT_NAMES := {"combat": "COMBAT", "worlds": "WORLDS", "bosses": "BOSSES", "story": "STORY", "protektor": "PROTEKTOR", "games": "GAMES"}
+
+## Starbox cartridges (ConsoleScreen.GAMES) and their achievements: each
+## entry is [id suffix, name, description, stat, target, icon tier]. Stats
+## are the best value ever reached in one run, kept as cg_<game>_<key>
+## (cg_<game>_score is the best score).
+const CONSOLE_GAMES := ["protektor", "duel", "sword"]
+const GAME_ACH := {}
 
 ## Each planet's boss (data/bosses.json) and its achievement.
 const BOSSES := {
@@ -73,6 +80,16 @@ static func defs() -> Array:
 		"desc": "Clear every training module at every tier.", "stat": "training_tiers", "target": 9})
 	d.append({"id": "all_upgrades", "cat": "protektor", "icon": "upgrades", "name": "Fully Outfitted",
 		"desc": "Own every upgrade, special and weapon.", "stat": "upgrades_owned", "target": 13})
+	d.append({"id": "console_on", "cat": "games", "icon": "console", "tier": 0, "name": "Player One",
+		"desc": "Play a game on the Starbox.", "stat": "console_played", "target": 1})
+	d.append({"id": "console_all", "cat": "games", "icon": "console", "tier": 1, "name": "Cartridge Collector",
+		"desc": "Play all three Starbox games.", "stat": "console_played", "target": CONSOLE_GAMES.size()})
+	d.append({"id": "console_scores", "cat": "games", "icon": "console", "tier": 2, "name": "Name on Every Board",
+		"desc": "Set a high score in every Starbox game.", "stat": "console_scored", "target": CONSOLE_GAMES.size()})
+	for g in GAME_ACH:
+		for a in GAME_ACH[g]:
+			d.append({"id": "cg_%s_%s" % [g, a[0]], "cat": "games", "icon": "cg_" + g, "tier": int(a[5]), "name": a[1],
+				"desc": a[2], "stat": "cg_%s_%s" % [g, a[3]], "target": int(a[4])})
 	Engine.set_meta("pk_achievement_defs", d)
 	return d
 
@@ -107,6 +124,14 @@ static func stat(name: String) -> int:
 			var n := 0
 			for p in BOSSES:
 				if beaten.has(BOSSES[p][0]):
+					n += 1
+			return n
+		"console_played":
+			return (Game.achv_stats.get("console_played", {}) as Dictionary).size()
+		"console_scored":
+			var n := 0
+			for g in CONSOLE_GAMES:
+				if ConsoleScreen.best_score(g) > 0:
 					n += 1
 			return n
 		"upgrades_owned":
@@ -173,6 +198,21 @@ static func shot_hit() -> void:
 		Game.achv_stats.best_shot_streak = s
 		if SHOT_TIERS.has(s):
 			check()
+
+
+static func console_result(game: String, score: int, extra: Dictionary) -> void:
+	## A Starbox run ended: remember that the game was played and keep the
+	## best of each number it reported.
+	var played: Dictionary = Game.achv_stats.get("console_played", {})
+	played[game] = true
+	Game.achv_stats.console_played = played
+	var vals := extra.duplicate()
+	vals["score"] = score
+	for k in vals:
+		var key := "cg_%s_%s" % [game, k]
+		Game.achv_stats[key] = maxi(int(Game.achv_stats.get(key, 0)), int(vals[k]))
+	Game.save_achievements()
+	check()
 
 
 static func shot_missed() -> void:

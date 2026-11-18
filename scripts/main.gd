@@ -125,9 +125,10 @@ func _setup_input() -> void:
         "left": [KEY_LEFT, KEY_A],
         "right": [KEY_RIGHT, KEY_D],
         "run": [KEY_SHIFT],
+        "pause": [KEY_ESCAPE, KEY_P],
     }
     var pads := {"accept": [JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER], "cancel": [JOY_BUTTON_B, JOY_BUTTON_START], "up": [JOY_BUTTON_DPAD_UP],
-        "down": [JOY_BUTTON_DPAD_DOWN], "left": [JOY_BUTTON_DPAD_LEFT], "right": [JOY_BUTTON_DPAD_RIGHT], "run": [JOY_BUTTON_X]}
+        "down": [JOY_BUTTON_DPAD_DOWN], "left": [JOY_BUTTON_DPAD_LEFT], "right": [JOY_BUTTON_DPAD_RIGHT], "run": [JOY_BUTTON_X], "pause": [JOY_BUTTON_START]}
     for action in binds:
         if not InputMap.has_action(action):
             InputMap.add_action(action, 0.3)
@@ -372,6 +373,22 @@ func training() -> void:
         world.visible = true
     Sfx.music("low_mechanical_ambient", 1.0)
     await fade_in(0.35)
+
+
+func console() -> void:
+    ## The Starbox in your room: its own screen over the field.
+    if world:
+        world.paused = true
+    await fade_out(0.3)
+    var c := ConsoleScreen.new()
+    ui.add_child(c)
+    await fade_in(0.2)
+    await c.run()
+    await fade_out(0.3)
+    c.queue_free()
+    if world:
+        world.paused = false
+    await fade_in(0.3)
 
 
 func workshop() -> void:
