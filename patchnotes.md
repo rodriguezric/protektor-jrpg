@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 14:59 EST — `feature_codec_transmission_filter` (v0.46.0)
+
+Incoming pilot calls now look like transmissions: a scanline codec filter over the caller's face.
+
+- While Hiro, Pala or Midas is on the codec, their portrait gets dark scanlines on every other row, a bright band rolling down the frame, a tint toward their colour, darkened edges, flicker and the odd row tearing a pixel sideways, plus a channel tag (CH1 Hiro, CH2 Pala, CH3 Midas) and a blinking red REC dot. Your own face stays clean, so incoming vs. local reads at a glance.
+- In Midas' breakdown the filter frays as he talks: more and wider tears, faster flicker, the tag stuttering, all the way into SIGNAL LOST.
+- Code: `scripts/mission.gd` (`CODEC_SHADER` screen-texture shader on whole pixels, `codec_fx`/`codec_label`/`codec_dot` over the portrait box, `_codec_show()` from `_portrait_swap()`, `_update_codec()`, `_codec_harsh` driven by `_midas_breakdown()`).
+
 ## 2026-11-18 14:55 EST — `feature_midas_dies_in_breakdown` (v0.45.0)
 
 Midas' breakdown on the codec is now the moment he dies, instead of a warning he survives.

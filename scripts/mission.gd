@@ -165,6 +165,50 @@ var portrait_static: TextureRect
 var _pilot_script: Array = []
 static var _pilot_comms_data: Dictionary = {}
 const PILOT_CALL_AT := {"start": 0.06, "mid": 0.45, "late": 0.75}
+## Codec look over an incoming pilot's face, on whole pixels: dark scanlines
+## every other row, a bright band rolling down, a tint toward the caller's
+## colour, darkened edges, and rows that tear a pixel sideways. 'harsh' (0-1)
+## drives the tears and flicker up for Midas' breakdown.
+const CODEC_SHADER := """
+shader_type canvas_item;
+uniform sampler2D screen_tex : hint_screen_texture, filter_nearest;
+uniform vec4 tint : source_color = vec4(0.5, 0.8, 0.8, 1.0);
+uniform float time = 0.0;
+uniform float harsh = 0.0;
+uniform vec2 box = vec2(64.0, 64.0);
+float hash(vec2 v) { return fract(sin(dot(v, vec2(12.9898, 78.233))) * 43758.5453); }
+void fragment() {
+	vec2 px = 1.0 / SCREEN_PIXEL_SIZE;
+	vec2 p = floor(FRAGCOORD.xy);
+	vec2 l = floor(UV * box);
+	float tick = floor(time * (8.0 + harsh * 16.0));
+	// tears: a row (or a run of rows when harsh) slides a pixel or two
+	float tear = step(1.0 - (0.025 + harsh * 0.22), hash(vec2(floor(l.y / (1.0 + harsh * 3.0)), tick)));
+	float shift = tear * (hash(vec2(l.y, tick + 7.0)) < 0.5 ? -1.0 : 1.0) * (1.0 + floor(harsh * 2.0 * hash(vec2(tick, l.y))));
+	vec3 c = texture(screen_tex, (p + vec2(shift, 0.0) + 0.5) / px).rgb;
+	// colour toward the caller's channel, keeping the face's light and shade
+	float luma = dot(c, vec3(0.3, 0.59, 0.11));
+	c = mix(c, luma * tint.rgb * 1.55, 0.32 + harsh * 0.2);
+	// scanlines
+	c *= mod(l.y, 2.0) < 1.0 ? 1.0 : 0.68;
+	// the rolling band, a few rows tall, stepping a row at a time
+	float band = fract(time * 0.28) * (box.y + 16.0) - 8.0;
+	float d = abs(l.y - floor(band));
+	c += tint.rgb * 0.16 * step(d, 2.0) * (1.0 - d / 3.0);
+	// flicker
+	c *= 1.0 - 0.08 * step(0.85 - harsh * 0.4, hash(vec2(tick, 3.0)));
+	// darkened rim
+	float e = min(min(l.x, box.x - 1.0 - l.x), min(l.y, box.y - 1.0 - l.y));
+	c *= e < 1.0 ? 0.55 : (e < 3.0 ? 0.8 : 1.0);
+	COLOR = vec4(c, 1.0);
+}
+"""
+const PILOT_CHANNEL := {"hiro": 1, "pala": 2, "midas": 3}
+var codec_fx: ColorRect
+var codec_label: Label
+var codec_dot: ColorRect
+var _codec_t := 0.0
+var _codec_harsh := 0.0
 const PILOT_COLOR := {"hiro": Color("8fc7e8"), "pala": Color("f0b48a"), "midas": Color("e8d27a")}
 
 signal mission_done
@@ -296,6 +340,27 @@ func _build_left() -> void:
 	portrait_static.size = Vector2(64, 64)
 	portrait_static.visible = false
 	pbox.add_child(portrait_static)
+	codec_fx = ColorRect.new()
+	codec_fx.position = Vector2(3, 3)
+	codec_fx.size = Vector2(64, 64)
+	codec_fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sh := Shader.new()
+	sh.code = CODEC_SHADER
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	codec_fx.material = mat
+	codec_fx.visible = false
+	pbox.add_child(codec_fx)
+	codec_label = Art.label("", Pal.SYNC)
+	codec_label.position = Vector2(5, 3)
+	codec_label.visible = false
+	pbox.add_child(codec_label)
+	codec_dot = ColorRect.new()
+	codec_dot.color = Pal.BLOOD
+	codec_dot.size = Vector2(2, 2)
+	codec_dot.position = Vector2(62, 6)
+	codec_dot.visible = false
+	pbox.add_child(codec_dot)
 	portrait_name = Art.label(_player_label(), Pal.SYNC)
 	portrait_name.position = Vector2(4, 72)
 	left_panel.add_child(portrait_name)
@@ -624,6 +689,7 @@ func _arena_flash(c: Color, t: float, a: float = 0.9) -> void:
 
 func _process(delta: float) -> void:
 	_planet_frame += delta * 5.0
+	_update_codec(delta)
 	_update_shake(delta)
 	_update_hud(delta)
 	if paused or _cutin:
@@ -1721,6 +1787,8 @@ func _midas_breakdown() -> void:
 		var d := get_process_delta_time()
 		t += d
 		tag.visible = fmod(t, 0.9) < 0.6
+		# the signal frays as he comes apart
+		_codec_harsh = clampf(0.25 + t / 14.0, 0.0, 1.0)
 		jolt -= d
 		if _pilot_on == "midas":
 			portrait.position = home + Vector2(randi_range(-1, 1), randi_range(-1, 1))
@@ -1744,6 +1812,7 @@ func _midas_breakdown() -> void:
 	shake(3.0, 0.3)
 	portrait.visible = false
 	portrait_static.visible = true
+	_codec_harsh = 1.0
 	tag.text = "SIGNAL LOST"
 	tag.position.x = ARENA.size.x / 2.0 - Art.text_width("SIGNAL LOST") / 2.0
 	tag.visible = true
@@ -1852,6 +1921,33 @@ func _pilot_tick() -> void:
 	pilot_call(l.pilot, l.text, l.mood)
 
 
+func _codec_show(pilot: String) -> void:
+	## The transmission filter and channel tag sit over a caller's face only;
+	## the protagonist's own face stays clean.
+	var on := pilot != ""
+	codec_fx.visible = on
+	codec_label.visible = on
+	codec_dot.visible = on
+	if not on:
+		_codec_harsh = 0.0
+		return
+	var col: Color = PILOT_COLOR.get(pilot, Pal.SYNC)
+	codec_fx.material.set_shader_parameter("tint", col.lerp(Pal.SYNC, 0.35))
+	codec_label.text = "CH%d" % int(PILOT_CHANNEL.get(pilot, 0))
+	codec_label.add_theme_color_override("font_color", col)
+
+
+func _update_codec(delta: float) -> void:
+	if not codec_fx or not codec_fx.visible:
+		return
+	_codec_t += delta
+	codec_fx.material.set_shader_parameter("time", _codec_t)
+	codec_fx.material.set_shader_parameter("harsh", _codec_harsh)
+	codec_dot.visible = fmod(_codec_t, 1.0) < 0.6
+	if _codec_harsh > 0.0:
+		codec_label.visible = fmod(_codec_t, 0.3) < 0.2
+
+
 func _player_label() -> String:
 	return Game.player_name if not arcade else "PILOT"
 
@@ -1877,6 +1973,7 @@ func _portrait_swap(to: String, mood: String) -> void:
 		return
 	_pilot_on = to
 	_pilot_mood = mood
+	_codec_show(to)
 	if to == "":
 		portrait_name.text = _player_label()
 		portrait_name.add_theme_color_override("font_color", Pal.SYNC)
