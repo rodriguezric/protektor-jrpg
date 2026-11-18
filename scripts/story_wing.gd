@@ -72,6 +72,7 @@ func _enter_room(id: String) -> void:
 		Game.story[rid + "_seen"] = true
 		s.w.show_area_name()
 		await _first_visit(id)
+	await s.scenes.room_scene(id)
 
 
 func exit(e: Dictionary) -> void:

@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 17:42 EST — `feature_field_story_scenes_expansion` (v0.58.0)
+
+Nine new staged moments in the field, each played once when the story is ready for it.
+
+- The Commons, when you come back from a deployment (at most one per return): Nell's secret ration-candle birthday behind the couch (sing along or keep watch); Pala copying files at the archive console as the maintenance unit polishes its way toward her (distract it, or stay out of it); Hiro alone at the sim pod in the dim light, blocking things that aren't there and counting ('You made me lose count.'); the Instructor walking in to 'transfer' Kit, who looks back from the door while nobody looks at Kit (Kit is gone from the Commons after); a medic asking Sefa her name ('...Pilot.').
+- The Pilot Wing: Midas pocketing a bread roll in the mess hall 'for later, in case' (while he's alive); Hiro and Pala arguing on the rooftop ('I'm the fastest thing in this building.' 'That's what scares me.'); Pala leaving Midas' mother's tomato recipe by his name on the memorial wall (after he's gone).
+- The parade: your mother pushes through to the barrier, waving both arms, until a guard steps in front of her.
+- Each scene is staged with actors walking in and out, emotes, pans and a choice or two, and is remembered so it never repeats.
+- Code: new `scripts/story_scenes.gd` (StoryScenes), `scripts/story.gd` (scenes), `scripts/story_hub.gd` (Commons moment on return; Kit's transfer), `scripts/story_wing.gd` (room moments), `scripts/story_prologue.gd` (the barrier), `tools/autotest.gd` (`PK_TEST=scenes`, `PK_SCENE`).
+
 ## 2026-11-18 17:38 EST — `feature_npc_conversation_expansion` (v0.57.0)
 
 Everyone you can walk up to has more to say, it changes with the story, and they move on a line each time you come back.
