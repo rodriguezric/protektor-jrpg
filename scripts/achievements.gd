@@ -33,6 +33,11 @@ const GAME_ACH := {
 		["w25", "Legend of the Grid", "Beat 25 opponents in Starbox DUEL STRIDERS.", "wins", 25, 2],
 		["flawless", "Not a Scratch", "Win a DUEL STRIDERS round without taking a hit.", "flawless", 1, 1],
 		["buster", "Buster Purist", "Win a DUEL STRIDERS round with the buster alone.", "buster", 1, 0]],
+	"sword": [["wave5", "Squire", "Clear wave 5 in Starbox SWORD STORY.", "wave", 5, 0],
+		["wave10", "Knight of the Meadow", "Clear wave 10 in Starbox SWORD STORY.", "wave", 10, 1],
+		["wave20", "Hero of the Story", "Clear wave 20 in Starbox SWORD STORY.", "wave", 20, 2],
+		["nohit", "Flawless Blade", "Beat the Slime King without taking a hit.", "nohit", 1, 2],
+		["combo", "Blade Dancer", "Land a 30-hit combo in SWORD STORY.", "combo", 30, 1]],
 }
 
 ## Each planet's boss (data/bosses.json) and its achievement.

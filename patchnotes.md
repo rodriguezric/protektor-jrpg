@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 16:43 EST — `feature_console_sword_story_mini` (v0.50.0)
+
+SWORD STORY, the third Starbox cartridge: a one-screen action RPG on a meadow, wave after wave.
+
+- The hero moves in eight directions (arrows / stick), Z (A) slashes in a short arc in front with knockback, X (B) rolls (a quick dash you can't be hit during). Five hearts; beaten foes sometimes drop a heart.
+- Foes: slimes hop at you, bats swoop, knights block from the front (hit them from the side or behind), archers back off and shoot (a slash can knock an arrow away). Every fifth wave is the SLIME KING: it quivers and flashes before charging across the meadow and spits out slimes, with its health bar over its crown.
+- Scoring: each foe's value times the combo (+10% per hit while hits keep coming within 1.5 s, shown as 'N HIT'), plus a bonus per wave cleared. WAVE / WAVE CLEAR / KING DEFEATED! / THE END banners and a little fanfare on the title card.
+- Achievements (GAMES): Squire (clear wave 5), Knight of the Meadow (wave 10), Hero of the Story (wave 20), Flawless Blade (beat the Slime King untouched), Blade Dancer (30-hit combo).
+- Code: new `scripts/cg_sword.gd`; `scripts/achievements.gd` (GAME_ACH sword), `tools/autotest.gd` (`PK_WAVE` to start the console scenario at a later wave).
+
 ## 2026-11-18 16:38 EST — `feature_console_duel_striders_mini` (v0.49.0)
 
 DUEL STRIDERS, the second Starbox cartridge: a pocket grid duel against an endless ladder of CPU striders.
