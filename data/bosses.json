@@ -1,0 +1,16 @@
+{
+	"test_boss": {
+		"name": "TEST CONSTRUCT",
+		"hp": 30,
+		"size": 90,
+		"dist": 165,
+		"color": [0.62, 0.48, 0.78],
+		"art": {"shape": "relay", "nodes": 6},
+		"phases": [
+			{"until": 0.5, "move": {"type": "orbit", "speed_deg": 18}, "open": {"type": "cycle", "open": 3.0, "closed": 2.0},
+				"attacks": [{"type": "volley", "every": 2.5, "n": 2, "speed": 220, "tell": 0.5}, {"type": "arc_burst", "every": 5.0, "first": 3.5, "count": 4, "width_deg": 90, "offset_deg": 180, "speed": 170}]},
+			{"until": 0.0, "move": {"type": "hop", "every": 4.0, "step_deg": 90}, "open": "always",
+				"attacks": [{"type": "spin_stream", "every": 6.0, "first": 1.5, "duration": 3.0, "gap": 0.35, "deg_per_sec": 80, "speed": 190}, {"type": "adds", "every": 7.0, "first": 4.0, "enemy_type": "drone_basic", "degrees": [90, -90]}]}
+		]
+	}
+}

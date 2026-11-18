@@ -134,6 +134,15 @@ var sync_label: Label
 var sync_bar: ColorRect
 var prog_bar: ColorRect
 var _comms_queue: Array = []
+## Bosses and mini-bosses (data/bosses.json) alive in the arena, the ids
+## beaten this mission, and the HP bar along the top of the arena.
+signal boss_spawned(boss: Boss)
+signal boss_defeated(boss_id: String, is_mini: bool)
+var bosses: Array = []
+var bosses_beaten: Array = []
+var boss_bar: Control
+var _boss_fill: ColorRect
+var _boss_name: Label
 var _comms_busy := false
 
 signal mission_done
@@ -179,7 +188,7 @@ func _load() -> void:
 			timeline.append(e)
 	timeline.sort_custom(func(a, b): return float(a.get("time", 0.0)) < float(b.get("time", 0.0)))
 	for e in timeline:
-		if str(e.get("type", "")) == "spawn_enemy":
+		if ["spawn_enemy", "spawn_boss", "spawn_miniboss"].has(str(e.get("type", ""))):
 			last_spawn_t = maxf(last_spawn_t, float(e.get("time", 0.0)))
 
 
@@ -609,6 +618,10 @@ func _process(delta: float) -> void:
 	level_t += delta
 	while t_index < timeline.size() and float(timeline[t_index].get("time", 0.0)) <= level_t:
 		var e: Dictionary = timeline[t_index]
+		if str(e.get("type", "")) == "wait_until_clear" and not threats.is_empty():
+			# hold the clock here until every threat (and boss) is gone
+			level_t = float(e.get("time", 0.0))
+			break
 		t_index += 1
 		_run_event(e)
 	for th in threats.duplicate():
@@ -740,6 +753,106 @@ func _run_event(e: Dictionary) -> void:
 			_comms("SYSTEM", str(e.get("text", "")), float(e.get("type_speed_cps", 24.0)), float(e.get("hold_sec", 2.0)))
 		"scene_handoff":
 			_begin_victory()
+		"spawn_boss", "spawn_miniboss":
+			spawn_boss(e)
+		"music":
+			_music_event(e)
+		"fx_flash":
+			_arena_flash(_named_color(str(e.get("color", "white"))), float(e.get("duration_sec", 0.3)))
+		"fx_shake":
+			shake(float(e.get("amount", 3.0)), float(e.get("duration_sec", 0.5)))
+
+
+func _named_color(n: String) -> Color:
+	return {"white": Pal.WHITE, "red": Pal.BLOOD, "danger_red": Pal.BLOOD, "orange": Pal.EMBER, "alert_orange": Pal.EMBER,
+		"cyan": Pal.SYNC, "sync": Pal.SYNC, "black": Pal.INK}.get(n.to_lower(), Pal.WHITE)
+
+
+func _music_event(e: Dictionary) -> void:
+	## {action: play (track, fade_sec, volume_db) | fade_out (fade_sec) |
+	##  duck (volume_db, fade_sec) | restore (fade_sec)}
+	var fade := float(e.get("fade_sec", 1.0))
+	match str(e.get("action", "play")):
+		"play":
+			Sfx.music(str(e.get("track", "")).get_file().get_basename(), fade, float(e.get("volume_db", Sfx.MUSIC_DB)))
+		"fade_out":
+			Sfx.stop_music(fade)
+		"duck":
+			Sfx.music_volume(float(e.get("volume_db", -20.0)), fade)
+		"restore":
+			Sfx.music_volume(Sfx.MUSIC_DB, fade)
+
+
+# ----------------------------------------------------------------- bosses --
+
+func spawn_boss(e: Dictionary) -> Boss:
+	## {type: spawn_boss | spawn_miniboss, boss_id, degrees (compass, 0 = top)}
+	var b := Boss.new()
+	b.m = self
+	b.setup_boss(str(e.get("boss_id", "")), float(e.get("degrees", 0)))
+	threat_root.add_child(b)
+	threats.append(b)
+	bosses.append(b)
+	_show_boss_bar(b)
+	boss_spawned.emit(b)
+	return b
+
+
+func _show_boss_bar(b: Boss) -> void:
+	if boss_bar == null:
+		boss_bar = Control.new()
+		boss_bar.position = Vector2(14, 3)
+		overlay.add_child(boss_bar)
+		_boss_name = Art.shadow_label("", Pal.BLOOD.lerp(Pal.WHITE, 0.35))
+		boss_bar.add_child(_boss_name)
+		var bb := ColorRect.new()
+		bb.color = Pal.INK
+		bb.position = Vector2(0, 11)
+		bb.size = Vector2(148, 5)
+		boss_bar.add_child(bb)
+		_boss_fill = ColorRect.new()
+		_boss_fill.color = Pal.BLOOD
+		_boss_fill.position = Vector2(1, 12)
+		_boss_fill.size = Vector2(146, 3)
+		boss_bar.add_child(_boss_fill)
+	_boss_name.text = b.title
+	boss_bar.visible = true
+
+
+func _update_boss_bar() -> void:
+	if boss_bar == null or not boss_bar.visible:
+		return
+	var live := bosses.filter(func(x): return is_instance_valid(x) and not x.dying)
+	if live.is_empty():
+		boss_bar.visible = false
+		return
+	var b: Boss = live[0]
+	_boss_name.text = b.title
+	var want := 146.0 * clampf(b.hp / maxf(1.0, b.max_hp), 0.0, 1.0)
+	_boss_fill.size.x = move_toward(_boss_fill.size.x, want, 146.0 * get_process_delta_time() * 1.5)
+	_boss_fill.color = Pal.BLOOD if b.can_take_damage() else Pal.STEEL
+
+
+func on_boss_deflect(b: Boss) -> void:
+	## A hit on a boss that is shut: it sparks off.
+	fx.ring(b.position, b.d * 0.4, b.d * 0.55, 0.18, Pal.STEEL.lerp(Pal.WHITE, 0.4), 1.0, 1.0)
+	Sfx.play("block", 1.8, -12.0)
+
+
+func on_boss_died(b: Boss) -> void:
+	var p := b.position
+	_shatter(b.pixel_image(), p, b.color.lerp(Pal.EMBER, 0.4))
+	for k in 3:
+		fx.ring(p, 4 + k * 6, b.d + 20 + k * 14, 0.4 + k * 0.15, [Pal.WHITE, b.color, Pal.EMBER][k], 2.0, 1.0)
+	fx.burst(p, 40, [Pal.WHITE, Pal.LEMON, Pal.EMBER, b.color], Vector2(30, 140), Vector2(0.3, 0.9))
+	Sfx.play("explode", 0.7, -2.0)
+	freeze = maxf(freeze, 0.25)
+	shake(5.0, 0.6)
+	_on_defeated(b.score_value(), false, p)
+	bosses_beaten.append(b.boss_id)
+	bosses.erase(b)
+	boss_defeated.emit(b.boss_id, b.is_mini)
+	remove_threat(b, true)
 
 
 func _bg_color(e: Dictionary) -> void:
@@ -871,6 +984,10 @@ func _update_shots(delta: float) -> void:
 		if dist <= shot_block_r + r and (s.lp - CENTER).dot(-facing) >= -r:
 			shots.erase(s)
 			_block_fx((s.lp * K).round(), true)
+			if s.kind == "boss":
+				for b in bosses:
+					if is_instance_valid(b):
+						b.on_shot_blocked()
 			continue
 		if dist <= PLAYER_RADIUS + r:
 			shots.erase(s)
@@ -1134,7 +1251,7 @@ func remove_threat(th: Threat, _died: bool) -> void:
 
 func _check_all_destroyed() -> void:
 	for i in range(t_index, timeline.size()):
-		if str(timeline[i].get("type", "")) == "spawn_enemy":
+		if ["spawn_enemy", "spawn_boss", "spawn_miniboss"].has(str(timeline[i].get("type", ""))):
 			return
 	if not alive or finished:
 		return
@@ -1232,6 +1349,7 @@ func _update_hud(delta: float) -> void:
 	if shown_score < score:
 		shown_score = minf(score, shown_score + maxf(40.0, (score - shown_score) * 8.0) * delta)
 		score_label.text = str(int(shown_score))
+	_update_boss_bar()
 	if running:
 		prog_bar.size.x = 56.0 * clampf(level_t / maxf(1.0, last_spawn_t), 0.0, 1.0)
 		_update_sync()
@@ -1513,7 +1631,7 @@ func _begin_victory() -> void:
 			await get_tree().process_frame
 		Sfx.play("confirm")
 	_result = {"result": "win", "next": next, "score": score, "defeated": defeated_n, "blocks": blocks, "best_streak": best_streak,
-		"planet": planet_type, "level": level_index, "unlocks": unlocks, "hits": hits_taken, "credits": credits_earned}
+		"planet": planet_type, "level": level_index, "unlocks": unlocks, "hits": hits_taken, "credits": credits_earned, "bosses": bosses_beaten}
 	_done_sig = true
 	mission_done.emit()
 
@@ -1585,7 +1703,7 @@ func _arcade_menu(parent: Control, cx: float, y: float, won: bool) -> String:
 func _finish(result: String, next: String = "") -> void:
 	if result != "win" and not arcade and not training:
 		Game.record_failure()
-	_result = {"result": result, "next": next, "score": score, "planet": planet_type, "level": level_index, "unlocks": []}
+	_result = {"result": result, "next": next, "score": score, "planet": planet_type, "level": level_index, "unlocks": [], "bosses": bosses_beaten}
 	_done_sig = true
 	mission_done.emit()
 
@@ -1674,7 +1792,7 @@ class ShotLayer extends Node2D:
 			draw_rect(Rect2(flame, Vector2.ONE), Pal.LEMON)
 		for s in m.shots:
 			var p: Vector2 = (s.lp * K).round()
-			var col: Color = Pal.EMBER if s.kind == "tank" else Pal.VOID
+			var col: Color = Pal.EMBER if s.kind == "tank" else (Pal.BLOOD.lerp(Pal.PINK, 0.3) if s.kind == "boss" else Pal.VOID)
 			for i in s.trail.size():
 				var q: Vector2 = (s.trail[i] * K).round()
 				draw_circle(q, maxf(0.5, s.r * K - i * 0.6), Color(col, 0.35 - i * 0.08))
