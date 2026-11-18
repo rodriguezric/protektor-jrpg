@@ -732,6 +732,8 @@ func _run(scenario: String) -> void:
 			main.title()
 			await wait(2.5)
 			await shot("title")
+			await wait(3.5)
+			await shot("title_menu")
 			await tap("accept", 1.4)
 			await tap("right", 0.3)
 			await tap("right", 0.3)
@@ -856,6 +858,61 @@ func _run(scenario: String) -> void:
 			m._arm_breakdown()
 			m._finish("retreat")
 			print("[breakdown] retreat before the call: midas_dead=%s (want true)" % Game.midas_dead())
+			get_tree().quit()
+		"console":
+			# the Starbox: the bedroom prop, boot, shelf, a game (PK_GAME, or the
+			# empty-slot path), pause, game over and the high-score table
+			auto_talk = false
+			Game.new_game()
+			Game.player_name = "Ari"
+			var pr: StoryPrologue = main.story.prologue
+			pr.evening = true
+			main.fade_rect.color.a = 0.0
+			var w = main.load_map(pr._house("home_up"), Vector2i(3, 4), 0)
+			await wait(0.8)
+			await shot("console_room")
+			var gid := OS.get_environment("PK_GAME")
+			var c := ConsoleScreen.new()
+			main.ui.add_child(c)
+			c.run()
+			await wait(0.4)
+			await shot("console_boot")
+			await wait(1.6)
+			await shot("console_shelf")
+			var idx := 0
+			for i in ConsoleScreen.GAMES.size():
+				if ConsoleScreen.GAMES[i].id == gid:
+					idx = i
+			for i in idx:
+				await tap("down", 0.2)
+			await shot("console_shelf_sel")
+			await tap("accept", 0.3)
+			if gid == "":
+				await shot("console_nocart")
+				await wait(1.6)
+			else:
+				bot = false
+				var secs := float(OS.get_environment("PK_SECS")) if OS.get_environment("PK_SECS") != "" else 12.0
+				var n := int(secs / 0.5)
+				for i in n:
+					await wait(0.5)
+					if c.game and is_instance_valid(c.game) and c.game.has_method("autoplay"):
+						c.game.autoplay()
+					if i % 2 == 0:
+						await shot("console_play_%02d" % i)
+					if c.state != "playing":
+						break
+				if c.state == "playing":
+					await tap("pause", 0.4)
+					await shot("console_paused")
+					await tap("cancel", 0.8)
+				await wait(0.8)
+				await shot("console_over")
+				print("[console] %s score=%d table=%s stats=%s" % [gid, c.game.score if c.game else -1, ConsoleScreen.scores(gid), Game.achv_stats])
+				await tap("cancel", 0.6)
+			await tap("cancel", 1.0)
+			await shot("console_off")
+			print("[console] state=%s inside=%s ach=%s" % [c.state, c.is_inside_tree(), Game.achieved.keys()])
 			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then

@@ -125,6 +125,30 @@ static func icon(a: Dictionary, unlocked: bool) -> PixBuf:
 			b.ball(12, 12, 7.5, 7.5, Pal.HONEY)
 			b.ball(12, 12, 3, 3, Pal.PANEL2)
 			b.pset(9, 8, Pal.hi(Pal.HONEY))
+		"console":
+			# the Starbox controller; more lit buttons for higher tiers
+			var pad := Color("2a2633").lerp(Pal.STEEL, 0.35)
+			b.ball(6, 14, 5, 5, pad)
+			b.ball(18, 14, 5, 5, pad)
+			b.rect(6, 9, 12, 10, pad)
+			b.rect(4, 13, 5, 1, Pal.INK)
+			b.rect(6, 11, 1, 5, Pal.INK)
+			for k in 3:
+				b.ball(16 + (k % 2) * 3, 12 + (k / 2) * 3, 1.2, 1.2, [Pal.RED, Pal.LEMON, Pal.SYNC][k] if k <= tier else Pal.SLATE)
+			b.rect(10, 4, 4, 5, Pal.INK2)
+		_:
+			if kind.begins_with("cg_"):
+				# a cartridge in its game's colour, stars for the tier
+				var col := Pal.SYNC
+				for g in ConsoleScreen.GAMES:
+					if "cg_" + str(g.id) == kind:
+						col = g.color
+				b.rect(5, 2, 14, 20, col.lerp(Pal.INK2, 0.3))
+				b.rect(7, 4, 10, 8, col.lerp(Pal.WHITE, 0.55))
+				b.rect(7, 18, 10, 3, Pal.INK2)
+				_cart_art(b, kind, col)
+				for k in tier + 1:
+					b.rect(7 + k * 4, 14, 2, 2, Pal.LEMON)
 	b.outline()
 	if not unlocked:
 		b.recolor(func(_x: int, _y: int, col: Color) -> Color:
@@ -137,3 +161,19 @@ static func _figure(b: PixBuf, x: int, hair: Color) -> void:
 	b.ball(x, 13, 3, 3, Pal.SKIN)
 	b.ball(x, 11.5, 3.2, 2, hair)
 	b.rect(x - 3, 16, 6, 7, Pal.TEAL.lerp(Pal.CREAM, 0.4))
+
+
+static func _cart_art(b: PixBuf, kind: String, col: Color) -> void:
+	## The tiny picture on a cartridge label.
+	match kind:
+		"cg_protektor":
+			b.ball(12, 8, 2.5, 2.5, Pal.SYNC.lerp(Pal.NAVY, 0.3))
+			b.pset(12, 4, Pal.INK2)
+			b.pset(15, 7, Pal.INK2)
+		"cg_duel":
+			for k in 3:
+				b.rect(8 + k * 3, 6, 2, 4, col.lerp(Pal.INK2, 0.4) if k != 1 else Pal.BLOOD)
+		"cg_sword":
+			b.line(9, 10, 14, 5, Pal.STEEL)
+			b.rect(9, 9, 2, 1, Pal.WOOD)
+

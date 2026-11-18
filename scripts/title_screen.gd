@@ -32,7 +32,7 @@ func _init() -> void:
 		letters.append(l)
 		x += Art.text_width(word[i], 3) + 3
 	var sub := Art.shadow_label("CHILDREN OF THE VOID", Pal.CREAM)
-	sub.position = Vector2(22, 66)
+	sub.position = Vector2(22, 60)
 	sub.modulate.a = 0.0
 	sub.name = "sub"
 	add_child(sub)
@@ -91,6 +91,7 @@ func run() -> String:
 	opts.append({"text": "Load Game", "enabled": Game.has_any_save()})
 	opts.append("Free Missions")
 	opts.append("Achievements")
+	opts.append("Starbox")
 	opts.append("Options")
 	opts.append("Quit")
 	menu = Menu.make(self, opts, Vector2(22, 186), Vector2(84, opts.size() * 10 + 7))
@@ -98,10 +99,10 @@ func run() -> String:
 	menu.index = 0 if has else 1
 	menu.set_entries(opts)
 	var mt := create_tween()
-	mt.tween_property(menu, "position:y", 78.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	mt.tween_property(menu, "position:y", 70.0, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await mt.finished
 	keys = Art.label("", Pal.TEXT_DIM)
-	keys.position = Vector2(22, 157)
+	keys.position = Vector2(22, 159)
 	add_child(keys)
 	while true:
 		var r := await menu.ask()
@@ -117,10 +118,20 @@ func run() -> String:
 			4:
 				return "achievements"
 			5:
-				await _options()
+				await _starbox()
 			6:
+				await _options()
+			7:
 				get_tree().quit()
 	return "new"
+
+
+func _starbox() -> void:
+	## The Starbox from the title: the console games outside the story.
+	var c := ConsoleScreen.new()
+	add_child(c)
+	await c.run()
+	c.queue_free()
 
 
 func _options() -> void:

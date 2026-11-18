@@ -215,6 +215,8 @@ func examine(ev: Dictionary) -> void:
 			await s.say("", "The block radio, turned down low. A voice is reading the names of tomorrow's recruits, slowly enough to be a ceremony.")
 		"couch":
 			await s.say("", "The couch still has a dent where your father sits for the evening broadcast. Tonight he's standing.")
+		"starbox":
+			await _starbox()
 		"desk":
 			await s.say("", ["Your desk. Drawings of planets with faces, a cup of worn-down pencils.", "Someone has squared the papers into a neat pile. It wasn't you."])
 		"wardrobe":
@@ -255,6 +257,20 @@ func examine(ev: Dictionary) -> void:
 
 
 # ---------------------------------------------------------------- night ---
+
+func _starbox() -> void:
+	## Your Starbox. One more game before tomorrow.
+	if not bool(Game.story.get("starbox_seen", false)):
+		Game.story.starbox_seen = true
+		await s.say("", ["Your Starbox. The A button is worn smooth, and the PROTEKTOR cartridge label has peeled down to a robot's grin.",
+			"Every kid on the block had one. Helion made sure of it."])
+	if await s.ask("Play the Starbox?", ["Play", "Not now"]) != 0:
+		return
+	await s.m.console()
+	if not bool(Game.story.get("starbox_played", false)):
+		Game.story.starbox_played = true
+		await s.say("", "Tomorrow the robot on the cartridge is supposed to be you.")
+
 
 func _night() -> void:
 	var m = s.m

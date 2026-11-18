@@ -41,6 +41,10 @@ var shell: Shell
 ## floating joystick's aim (a vector up to length 1; zero when released).
 var touch_active := false
 var touch_aim := Vector2.ZERO
+## Minigames pick their touch layout ("" = auto, "console" = stick + A/B)
+## and set touch_running only while one is live (see TouchControls).
+var touch_layout := ""
+var touch_running := false
 
 
 func _ready() -> void:

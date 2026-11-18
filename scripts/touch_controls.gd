@@ -21,6 +21,9 @@ extends Control
 ## - Deployments: the joystick aims the Protektor (any angle, not just the
 ##   eight directions) and tapping anywhere else fires; hold to keep firing.
 ##   The top-right button pauses.
+## - Starbox games (Game.touch_layout "console"): while one is live
+##   (Game.touch_running) the stick steers, A and B sit bottom right, MENU
+##   pauses, and stray taps on the picture do nothing.
 ## - The top-right slot holds one button at a time, the same size either way:
 ##   MENU (pause), B wherever "back" exists, or nothing at all.
 
@@ -75,8 +78,10 @@ var joy_pushed := false
 ## A touch on the stick shorter than this (ms) without a push is a tap.
 const JOY_TAP_MS := 300
 var running := false
-## "field" (walking around and every other screen) or "mission" (aim + fire).
+## "field" (walking around and every other screen), "mission" (aim + fire)
+## or "console" (a Starbox game: stick + A/B).
 var layout := ""
+var _laid_running := false
 ## 0..1: how far controls have faded aside for dialog or a tappable menu, and
 ## which ones. The top-right slot is handled on its own.
 var dialog_fade := 0.0
@@ -123,6 +128,14 @@ func relayout() -> void:
 		slot_c = g.position + MISSION_SLOT * (g.size / Vector2(320, 180))
 	_add("menu", slot_c, "menu", "", "menu")
 	_add("b", slot_c, "b", "cancel", "button")
+	_laid_running = Game.touch_running
+	if layout == "console" and Game.touch_running:
+		# A over B on the right, like a handheld; in wide bars they split it
+		var bs := 21.0 * _scale_for("a")
+		var a_c := Vector2(win.x - bar / 2.0, win.y * 0.56) if in_bars else Vector2(win.x - m - bs * 0.6, win.y - m - bs * 1.25)
+		var b_c := Vector2(win.x - bar / 2.0, win.y * 0.82) if in_bars else a_c + Vector2(-bs * 1.3, bs * 0.6)
+		_add("pa", a_c, "a", "accept", "button")
+		_add("pb", b_c, "b", "cancel", "button")
 	# the joystick isn't a fixed control: it appears where you touch
 	joy_radius = PAD_ART * ck / 2.0
 	queue_redraw()
@@ -156,7 +169,11 @@ func _add(id: String, center: Vector2, art: String, action: String, kind: String
 # ------------------------------------------------------------------ drawing --
 
 func _process(delta: float) -> void:
-	var want := "mission" if _mission() != null else "field"
+	var want := "mission" if _mission() != null else ("console" if Game.touch_layout == "console" else "field")
+	if want == "console" and Game.touch_running != _laid_running:
+		_release_all()
+		layout = want
+		relayout()
 	if want != layout:
 		_release_all()
 		layout = want
@@ -286,6 +303,10 @@ func _touch(e: InputEventScreenTouch) -> void:
 			fingers[e.index] = "fire"
 			_press("accept")
 			Game.buzz(5)
+			return
+		if hit.is_empty() and layout == "console" and Game.touch_running:
+			# a live Starbox game: only the stick and the buttons count
+			fingers[e.index] = "guard"
 			return
 		if hit.is_empty() and _guarded(e.position):
 			# just beside a control (or on an empty bar): ignore it entirely
@@ -451,6 +472,8 @@ func _slot_mode() -> String:
 		return "b" if _back_available() else ""
 	if layout == "mission":
 		return "menu" if _mission_steerable() else ""
+	if layout == "console" and Game.touch_running:
+		return "menu"
 	if _field_control():
 		return "menu"
 	if _arrow_screen():
@@ -560,7 +583,9 @@ func _pause() -> void:
 	var m := _main()
 	if m == null:
 		return
-	if _field_control():
+	if layout == "console":
+		_tap("pause")
+	elif _field_control():
 		m.world.run(m.field_menu)
 	else:
 		_tap("cancel")

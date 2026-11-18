@@ -128,6 +128,7 @@ static func home_up() -> Dictionary:
 		p("desk", 4, 2, {"offset": Vector2(8, 0), "area": Rect2i(4, 2, 2, 1), "event": {"id": "desk"}}),
 		p("wardrobe", 6, 2, {"event": {"id": "wardrobe"}}),
 		p("toy", 6, 4, {"event": {"id": "toy"}}),
+		p("starbox", 3, 2, {"anim": 2, "fps": 1.5, "event": {"id": "starbox"}, "light": Pal.SYNC, "lr": 8, "light_off": Vector2(0, -14), "pulse": 2.0}),
 		p("bag", 5, 5, {"event": {"id": "bag"}}),
 		p("lamp", 1, 5, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "id": "kidlamp"}),
 		# your parents' room

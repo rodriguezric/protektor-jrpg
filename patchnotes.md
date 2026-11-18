@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-18 16:31 EST — `feature_bedroom_game_console` (v0.47.0)
+
+The Starbox: a home game console in the protagonist's room (and on the title screen), with a cartridge shelf, high scores and a GAMES achievements tab.
+
+- Your room now has a little CRT and the Starbox on a cabinet, its attract loop blinking. Examine it to play (first look: the worn A button, the robot-grin PROTEKTOR label, 'Every kid on the block had one. Helion made sure of it.'). The title screen has a new Starbox entry so the games are playable outside the story.
+- The console fills the screen as a CRT set: its picture is a low-res 144x80 screen at 2x under scanlines, a roll bar and a curved-tube falloff. It warms up from a bright line, the STARBOX logo bounces in to a jingle ('Helion Toys (c) Licensed Protektor product'), then the cartridge shelf: three slots (Protektor, Duel Striders, Sword Story) with each game's best score. Pause (P / Esc / MENU) in a game; game over shows the top-5 table with your new entry flashing, then Z for another go or X back to the shelf. The tube collapses to a line when you power off.
+- High scores (top 5 per game) live in the profile, so they survive new playthroughs.
+- Achievements: a new GAMES tab with Player One, Cartridge Collector (play all three) and Name on Every Board (a high score in each), plus room for each game's own.
+- Touch: a new console layout: while a game runs the stick steers, A and B sit bottom right and MENU pauses; stray taps on the picture are ignored. The shelf is tapped directly.
+- Code: new `scripts/console_screen.gd` (ConsoleScreen: shell, CRT shader, shelf, pause, scores), `scripts/console_game.gd` (ConsoleGame base for cartridges), `scripts/touch_controls.gd` (console layout), `scripts/game.gd` (touch_layout, touch_running), `scripts/main.gd` (console(), new `pause` action), `scripts/achievements.gd` (GAMES category, console stats, console_result()), `scripts/art_achieve.gd`, `scripts/art_props.gd` (starbox prop), `scripts/maps.gd`, `scripts/story_prologue.gd` (_starbox()), `scripts/title_screen.gd` (Starbox entry; menu nudged up to fit), `tools/autotest.gd` (`PK_TEST=console`, `PK_GAME`).
+
 ## 2026-11-18 14:59 EST — `feature_codec_transmission_filter` (v0.46.0)
 
 Incoming pilot calls now look like transmissions: a scanline codec filter over the caller's face.

@@ -23,6 +23,7 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"bench": return bench(v)
 		"podium": return podium()
 		"console": return console(v)
+		"starbox": return starbox(v)
 		"terminal": return terminal(v)
 		"holo": return holo_base()
 		"pod": return pod(v)
@@ -710,6 +711,37 @@ static func console(v: int) -> PixBuf:
 	b.rect(26, 4, 3, 3, Pal.BLOOD if v % 2 == 0 else Pal.GLOW)
 	for k in 5:
 		b.rect(5 + k * 5, 15, 3, 2, Pal.SLATE)
+	b.outline()
+	return b
+
+
+static func starbox(v: int) -> PixBuf:
+	## Your Starbox: a little CRT on a low cabinet, the console under it and
+	## a controller on its cord. Two frames of its attract loop (v0, v1).
+	var b := PixBuf.new(18, 26)
+	var wood := Pal.WOOD.lerp(Pal.PEACH, 0.15)
+	b.rect(1, 16, 16, 9, Pal.shade(wood))
+	b.rect(1, 16, 16, 1, Pal.hi(wood))
+	b.rect(3, 19, 12, 4, Color("2a2633"))
+	b.rect(4, 20, 4, 1, Pal.SLATE)
+	b.pset(13, 20, Pal.GLOW)
+	b.rect(2, 3, 14, 13, Color("2a2633"))
+	b.rect(2, 3, 14, 1, Color("2a2633").lerp(Pal.WHITE, 0.15))
+	b.rect(3, 5, 10, 9, Pal.INK)
+	# the attract loop: the little planet and a blinking PRESS START bar
+	b.rect(4, 6, 8, 7, Color("1d2a3a"))
+	b.circ(8, 9, 2, Pal.SYNC)
+	b.pset(5 + v * 5, 7, Pal.WHITE)
+	if v == 1:
+		b.rect(5, 12, 6, 1, Pal.LEMON)
+	b.rect(14, 6, 1, 1, Pal.GLOW)
+	b.rect(14, 8, 1, 4, Pal.INK2)
+	b.line(7, 1, 5, 3, Pal.STEEL)
+	b.line(11, 1, 13, 3, Pal.STEEL)
+	# the controller on the floor, cord up into the console
+	b.rect(10, 23, 6, 3, Pal.STEEL.lerp(Pal.INK2, 0.3))
+	b.pset(11, 24, Pal.INK)
+	b.pset(14, 24, Pal.RED)
 	b.outline()
 	return b
 
