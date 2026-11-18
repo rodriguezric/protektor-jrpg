@@ -84,14 +84,51 @@ func trigger(id: String) -> void:
 
 
 func hub_minigame(kind: String) -> void:
-	## The pilot wing's little games (feature hub_room_minigames).
+	## The Pilot Wing's little games (HubGame). A decent result pays a few
+	## credits, once per interval per game.
+	var opp: Dictionary = {}
 	match kind:
 		"pingpong":
-			await say("", "A ping-pong table. The net sags in the middle. Nobody can find the paddles.")
+			await say("", ["A ping-pong table. The net sags in the middle.", "A recruit spins a paddle at you. \"One game. Loser cleans the paddles.\""])
+			opp = Data.EXTRAS[2]
 		"cards":
-			await say("", "A deck of cards with three missing. Someone has drawn the missing ones by hand.")
+			await say("", ["A deck of cards with three missing; someone has drawn the missing ones by hand.", "\"High-low,\" says the recruit shuffling it. \"For ration chits.\""])
+			opp = Data.EXTRAS[1]
 		"drill":
-			await say("system", "SYNC-REFLEX DRILL. Calibrating. Please return later.")
+			await say("system", ["SYNC-REFLEX DRILL. Respond to the indicated vector.", "Your results will be shared with your instructors."])
+	if await ask("Play?", ["Play", "Not now"]) != 0:
+		return
+	var res: Dictionary = await m.hub_game(kind, opp)
+	var sc := int(res.get("score", 0))
+	var good := false
+	match kind:
+		"pingpong":
+			good = sc >= 8
+			if sc < 4:
+				await say("", "\"Paddles are in the cupboard,\" they say. Not unkindly.")
+			elif sc < 12:
+				await say("", "\"Not bad. Again tomorrow.\"")
+			else:
+				await say("", "They stare at the ball, then at you. \"Where did THAT come from?\"")
+		"cards":
+			good = sc >= 5
+			await say("", "\"%s\"" % ("Beginner's luck runs out." if sc < 3 else ("You're counting. Are you counting?" if sc < 7 else "Okay, nobody plays with you anymore.")))
+		"drill":
+			good = sc > 0 and sc <= 380
+			if sc <= 0:
+				await say("system", "Drill incomplete. Incomplete drills are recorded.")
+			elif sc <= 300:
+				await say("system", "Response latency exceptional. Synchronization readiness: elevated. Well done, pilot.")
+				await say("", "It's the first time the system has said 'well done.' It doesn't feel like praise.")
+			else:
+				await say("system", "Response latency acceptable. Hesitation detected.")
+	var played: Dictionary = Game.story.get("hub_game_paid", {})
+	if good and int(played.get(kind, -1)) != int(Game.story.get("interval_count", 0)):
+		played[kind] = int(Game.story.get("interval_count", 0))
+		Game.story.hub_game_paid = played
+		Game.add_credits(5)
+		Sfx.play("coin", 1.0, -6.0)
+		await say("", "You come away 5 credits richer.")
 
 
 func exit(e: Dictionary) -> void:

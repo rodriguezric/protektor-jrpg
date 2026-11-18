@@ -104,6 +104,12 @@ static func defs() -> Array:
 		"desc": "Set a high score in every Starbox game.", "stat": "console_scored", "target": CONSOLE_GAMES.size()})
 	d.append({"id": "tv_serial", "cat": "games", "icon": "tv", "tier": 1, "name": "Must-See TV",
 		"desc": "Watch every episode of Hearts of the Shield Grid.", "stat": "serial_eps", "target": TvSerial.EPISODES.size()})
+	d.append({"id": "hub_pong", "cat": "games", "icon": "pong", "tier": 1, "name": "Table Tennis Ace",
+		"desc": "Keep a ping-pong rally going for 20 hits in the rec room.", "stat": "hg_pingpong_best", "target": 20})
+	d.append({"id": "hub_cards", "cat": "games", "icon": "cards", "tier": 1, "name": "Card Shark",
+		"desc": "Guess 7 cards in a row at high-low.", "stat": "hg_cards_best", "target": 7})
+	d.append({"id": "hub_drill", "cat": "games", "icon": "drill", "tier": 2, "name": "Too Fast to Feel",
+		"desc": "Average under 300 ms in the sync-reflex drill.", "stat": "hg_drill_fast", "target": 1})
 	for g in GAME_ACH:
 		for a in GAME_ACH[g]:
 			d.append({"id": "cg_%s_%s" % [g, a[0]], "cat": "games", "icon": "cg_" + g, "tier": int(a[5]), "name": a[1],
@@ -145,7 +151,12 @@ static func stat(name: String) -> int:
 					n += 1
 			return n
 		"console_played":
-			return (Game.achv_stats.get("console_played", {}) as Dictionary).size()
+			var played: Dictionary = Game.achv_stats.get("console_played", {})
+			var n := 0
+			for g in CONSOLE_GAMES:
+				if played.has(g):
+					n += 1
+			return n
 		"console_scored":
 			var n := 0
 			for g in CONSOLE_GAMES:
@@ -229,6 +240,19 @@ static func console_result(game: String, score: int, extra: Dictionary) -> void:
 	for k in vals:
 		var key := "cg_%s_%s" % [game, k]
 		Game.achv_stats[key] = maxi(int(Game.achv_stats.get(key, 0)), int(vals[k]))
+	Game.save_achievements()
+	check()
+
+
+static func hub_result(game: String, score: int) -> void:
+	## A Pilot Wing game ended (HubGame): keep the best, and for the drill
+	## remember beating 300 ms.
+	if game == "drill":
+		if score > 0 and score <= 300:
+			Game.achv_stats.hg_drill_fast = 1
+	else:
+		var key := "hg_%s_best" % game
+		Game.achv_stats[key] = maxi(int(Game.achv_stats.get(key, 0)), score)
 	Game.save_achievements()
 	check()
 
