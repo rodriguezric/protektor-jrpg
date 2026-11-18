@@ -27,7 +27,7 @@
     "planet_texture": "hot_planet",
     "planet_name": "Ignara Prime",
     "music": {
-      "file_path": "res://music/boss_theme.mp3",
+      "file_path": "res://music/ignara_prime.mp3",
       "volume_db": -8
     }
   },
