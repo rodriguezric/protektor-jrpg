@@ -67,7 +67,7 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"wardrobe": return wardrobe()
 		"bag": return bag()
 		"basket": return basket()
-		"toy": return toy()
+		"toy": return toy(v)
 		"drawings": return drawings()
 	return crate()
 
@@ -594,8 +594,45 @@ static func basket() -> PixBuf:
 	return b
 
 
-static func toy() -> PixBuf:
-	## A plastic Protektor, one arm glued back on slightly wrong.
+static func toy(v: int = 0) -> PixBuf:
+	## v0: a plastic Protektor, one arm glued back on slightly wrong.
+	## v1 a tin rocket, v2 a little robot dog, v3 a patched bear (Midas' toys).
+	match v:
+		1:
+			var r := PixBuf.new(8, 14)
+			r.rect(2, 3, 4, 8, Pal.RED.lerp(Pal.PEACH, 0.2))
+			r.tri(2, 3, 6, 3, 4, 0, Pal.WHITE)
+			r.rect(3, 5, 2, 2, Pal.SKY)
+			r.tri(0, 11, 2, 7, 2, 11, Pal.LEMON)
+			r.tri(8, 11, 6, 7, 6, 11, Pal.LEMON)
+			r.rect(3, 11, 2, 2, Pal.EMBER)
+			r.outline()
+			return r
+		2:
+			var g := PixBuf.new(12, 10)
+			var c := Pal.STEEL.lerp(Pal.WHITE, 0.3)
+			g.rect(2, 3, 7, 4, c)
+			g.rect(7, 1, 4, 4, c)
+			g.pset(9, 2, Pal.SYNC)
+			g.rect(2, 7, 1, 2, Pal.shade(c))
+			g.rect(7, 7, 1, 2, Pal.shade(c))
+			g.pset(1, 3, Pal.shade(c))
+			g.pset(10, 0, Pal.shade(c))
+			g.outline()
+			return g
+		3:
+			var t := PixBuf.new(12, 13)
+			var f := Pal.WOOD.lerp(Pal.HONEY, 0.35)
+			t.ball(6, 9, 4, 3.5, f)
+			t.ball(6, 4, 3.5, 3.2, f)
+			t.ball(2.5, 1.5, 1.6, 1.6, f)
+			t.ball(9.5, 1.5, 1.6, 1.6, f)
+			t.pset(5, 4, Pal.INK)
+			t.pset(7, 4, Pal.INK)
+			t.pset(6, 5, Pal.INK2)
+			t.rect(5, 8, 3, 2, Pal.ROSE.lerp(f, 0.4))
+			t.outline()
+			return t
 	var b := PixBuf.new(10, 14)
 	var c := Pal.FROST.lerp(Pal.SKY, 0.3)
 	b.rect(3, 4, 4, 6, c)

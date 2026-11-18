@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 13:20 EST — `feature_midas_toy_memory_field_scene` (v0.41.0)
+
+Midas' memory of his mother and the hidden toys now plays out in his kitchen, in field graphics, instead of over a still painting.
+
+- When Midas tells the memory (Commons, after your first talk with him), the screen fades into a flashback of his mother's kitchen: counters, stove, the table with the chipped blue cup, a warm haze at the edges. Each line of his story has its beat: young Midas alone at the table the evening after his birthday; the next morning Mom steps through the doorway with a toy and hands it over, and he lights up; two more mornings, two more toys lining up on the table; Midas creeping to the dresser and finding the rest; Mom leaning in the doorway with her hair tied up and flour on her cheek; her answer, and hearts. The cut-off last line, the static and "Interaction window closed." still snap you back to the Commons, where you were standing.
+- New art: Midas' mother (his hair in a bun, apron, flour smudge), young Midas in home clothes, three more toys (tin rocket, robot dog, patched bear), and a `flour` face detail for people.
+- Code: scripts/story_hub.gd `_midas_memory()`, `_next_morning()`, `_mom_brings()`, `_stash_peek()`, `_midas_specs()` (the Commons is rebuilt afterwards and control handed back when the talk ends); scripts/maps.gd `midas_home()`; scripts/art_props.gd `toy(v)`; scripts/art_people.gd `flour`.
+
 ## 2026-11-18 12:50 EST — `bugfix_no_system_eye_portrait` (v0.40.3)
 
 The one-eyed machine portrait is gone from dialogue: System lines show only their name and text.

@@ -8,6 +8,8 @@ extends RefCounted
 var s: Story
 var used := false
 var last_res := {}
+## Set when Midas' memory swaps the map out and back mid-conversation.
+var _swapped_world := false
 
 
 func _init(p_s: Story) -> void:
@@ -104,6 +106,11 @@ func talk(n: Actor) -> void:
 				return
 			await _midas()
 			await _close("midas")
+			if _swapped_world:
+				# the memory rebuilt the Commons; this world never got the
+				# talk's "busy" release, so give control back here
+				_swapped_world = false
+				s.w.busy = false
 		"bot":
 			Sfx.play("beep", 1.4, -8.0)
 			n.emote("...")
@@ -293,31 +300,222 @@ func _midas() -> void:
 		var c := await s.ask("Do you want to hear it?", ["Tell me.", "Not now."])
 		if c == 0:
 			resp = "hear_memory"
-			var cin := Cinema.open(Color(0, 0, 0, 0))
-			cin.modulate.a = 0.0
-			cin.show_tex(Art.cine("kitchen"), 0.0)
-			cin.effect = "embers"
-			cin.effect_k = 0.4
-			cin.create_tween().tween_property(cin, "modulate:a", 1.0, 1.2)
-			await s.say("midas", ["My birthday had already passed. I thought that was it for another year.",
-				"Then Mom came in the next morning holding a toy. She said she'd just discovered one she forgot to give me.",
-				"The morning after that, she discovered another one. Then another the day after that.",
-				"Eventually I figured out she had several toys hidden away. I asked her why she wouldn't just give me the rest.",
-				"I remember her leaning against the kitchen doorway, trying not to smile. Her hair was still tied up from work, and she had flour on one cheek.",
-				"She just shrugged and said, 'Birthdays end too quickly. I thought yours could have a few more mornings.'"], "smile")
-			await s.say("midas", "I-I think maybe she knew that someday I would need to remember how much she-", "cry", {"auto": true, "auto_delay": 0.05})
-			Sfx.play("static", 1.0, -4.0)
-			Sfx.stop_music(0.0)
-			cin.queue_free()
+			await _midas_memory()
 			s.m.flash(Pal.WHITE, 0.1, 0.5)
 			await s.say("system", "Interaction window closed.")
-			act.set_mood("cry")
+			s.a("midas").set_mood("cry")
 		else:
 			resp = "decline_memory"
 			await s.say("midas", ["I understand. Sometimes hearing about someone else's home just makes your own feel farther away.",
 				"I miss the little things most. Her humming, the chipped blue cup, the warm spot beside the stove.",
 				"I don't want to be brave anymore. I just want to be there with her."], "sad")
 	_record("midas", resp)
+
+
+# ------------------------------------------------------- Midas' memory ---
+## The toy memory, played out in field graphics: his mother's kitchen, a
+## few mornings, one toy at a time. Each narration line has its beat; the
+## last line is cut off and static drops you back into the Commons.
+
+const MEM_TABLE := Vector2i(9, 5)
+const MEM_SEAT := Vector2i(8, 5)
+const MEM_DOOR := Vector2i(12, 2)
+const MEM_HALL := Vector2i(12, 1)
+const MEM_DRESSER := Vector2i(14, 3)
+const MORNING := Color(1.05, 0.95, 0.82)
+const EVENING := Color(0.78, 0.72, 0.86)
+var _toys_on_table := 0
+
+
+func _midas_specs() -> Array:
+	## Young Midas in home clothes, and his mother: his skin and hair, hair
+	## tied up from work, an apron over her work clothes.
+	var kid: Dictionary = Data.CAST.midas.duplicate()
+	kid.id = "young_midas"
+	kid.badge = false
+	kid.erase("jacket")
+	kid.hood = false
+	kid.top = Pal.SKY.lerp(Pal.TEAL, 0.35)
+	kid.bottom = Pal.SLATE.lerp(Pal.BLUE, 0.2)
+	var mom := {"id": "midas_mom", "name": "Mom", "skin": kid.skin, "hair": kid.hair, "style": "bun", "eye": Pal.WOOD,
+		"top": Pal.HONEY.lerp(Pal.PEACH, 0.45), "apron": true, "skirt": true, "bottom": Pal.WOOD.lerp(Pal.BARK, 0.3),
+		"shoes": Pal.BARK, "adult": true, "voice": "woman"}
+	return [kid, mom]
+
+
+func _midas_memory() -> void:
+	var m = s.m
+	var back_pos: Vector2 = s.w.player.position
+	var back_dir: int = s.w.player.dir
+	await m.fade_out(0.9)
+	var specs := _midas_specs()
+	var mp := Maps.midas_home()
+	mp.npcs = [{"id": "young_midas", "spec": specs[0], "tile": MEM_SEAT, "dir": 2, "mood": "sad", "pose": "sit", "offset": Vector2(2, -2)},
+		{"id": "midas_mom", "spec": specs[1], "tile": MEM_HALL, "dir": 1}]
+	var w: World = m.load_map(mp, Vector2i(10, 7), 0)
+	w.busy = true
+	w.cam_follow = false
+	# aimed high: the dialog box pushes the view down, and the counters and
+	# stove along the top wall are what make it a kitchen
+	w.cam_focus = w.tile_center(Vector2i(10, 4))
+	w.cam.position = w.cam_focus
+	w.tint.color = EVENING
+	_toys_on_table = 0
+	# a memory: warm haze at the edges
+	var haze := Cinema.open(Color(0, 0, 0, 0))
+	haze.set_vignette(0.9, 0.0)
+	var warm := ColorRect.new()
+	warm.color = Color(1.0, 0.78, 0.5, 0.1)
+	warm.set_anchors_preset(Control.PRESET_FULL_RECT)
+	warm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	haze.add_child(warm)
+	await m.fade_in(1.2)
+	var kid := s.a("young_midas")
+	var mom := s.a("midas_mom")
+
+	# 1. the birthday is over
+	await s.say("midas", "My birthday had already passed. I thought that was it for another year.", "sad")
+
+	# 2. the next morning: Mom comes in with a toy
+	await _next_morning(w)
+	_mom_brings(w, mom, kid, 1)
+	await s.say("midas", "Then Mom came in the next morning holding a toy. She said she'd just discovered one she forgot to give me.", "smile")
+	await _wait_until(func(): return _toys_on_table >= 1)
+
+	# 3. and the next, and the next
+	await _next_morning(w)
+	await _mom_brings(w, mom, kid, 2, 70.0)
+	await _next_morning(w)
+	_mom_brings(w, mom, kid, 3, 70.0)
+	await s.say("midas", "The morning after that, she discovered another one. Then another the day after that.", "smile")
+	await _wait_until(func(): return _toys_on_table >= 3)
+
+	# 4. the hidden stash
+	kid.set_pose("walk")
+	kid.position = w.tile_center(MEM_SEAT + Vector2i(0, 1))
+	await kid.walk_to([w.tile_center(Vector2i(12, 6)), w.tile_center(Vector2i(12, 3)), w.tile_center(MEM_DRESSER)], 34.0)
+	kid.face(1)
+	await s.wait(0.3)
+	Sfx.play("latch", 1.2, -6.0)
+	w.prop_sprite("dresser").position.x += 1
+	kid.emote("!")
+	_stash_peek(w)
+	await s.say("midas", "Eventually I figured out she had several toys hidden away. I asked her why she wouldn't just give me the rest.", "smile")
+
+	# 5. Mom in the doorway, flour on her cheek, trying not to smile
+	var mom_spec: Dictionary = specs[1].duplicate()
+	mom_spec.flour = true
+	mom.set_spec(mom_spec)
+	# leaning in the doorway, facing into the kitchen
+	mom.position = w.tile_center(MEM_HALL) + Vector2(4, 4)
+	mom.modulate.a = 0.0
+	mom.visible = true
+	mom.face(0)
+	mom.set_mood("")
+	mom.create_tween().tween_property(mom, "modulate:a", 1.0, 0.5)
+	kid.face_toward(mom.position)
+	await s.pan(mom.position + Vector2(0, 26), 1.0)
+	await s.say("midas", "I remember her leaning against the kitchen doorway, trying not to smile. Her hair was still tied up from work, and she had flour on one cheek.", "smile")
+
+	# 6. her answer
+	mom.set_mood("smile")
+	mom.emote("heart", 2.0)
+	await s.wait(0.4)
+	kid.hop(4.0)
+	kid.emote("heart", 2.0)
+	await s.say("midas", "She just shrugged and said, 'Birthdays end too quickly. I thought yours could have a few more mornings.'", "smile")
+
+	# the memory breaks: back to the Commons, mid-word
+	w.cam_focus = w.cam_focus.lerp(mom.position, 0.5)
+	await s.say("midas", "I-I think maybe she knew that someday I would need to remember how much she-", "cry", {"auto": true, "auto_delay": 0.05})
+	Sfx.play("static", 1.0, -4.0)
+	Sfx.stop_music(0.0)
+	haze.queue_free()
+	var cw: World = m.load_map(_map(), Vector2i(floori(back_pos.x / 16.0), floori(back_pos.y / 16.0)), back_dir)
+	cw.player.position = back_pos
+	cw.busy = true
+	_swapped_world = true
+	var md := s.a("midas")
+	if md:
+		md.face_toward(cw.player.position)
+
+
+func _next_morning(w: World) -> void:
+	## A fade to the next morning: the light comes up warm.
+	var m = s.m
+	await m.fade_out(0.45)
+	w.tint.color = MORNING
+	Sfx.play("chime", 1.3, -14.0)
+	await s.wait(0.2)
+	await m.fade_in(0.45)
+
+
+func _mom_brings(w: World, mom: Actor, kid: Actor, v: int, speed: float = 46.0) -> void:
+	## Mom comes in through the door with toy v, sets it by Midas, and he
+	## lights up. The toy joins the others on the table.
+	mom.set_mood("smile")
+	mom.position = w.tile_center(MEM_HALL)
+	# she steps out of the doorway
+	mom.modulate.a = 0.0
+	mom.visible = true
+	mom.create_tween().tween_property(mom, "modulate:a", 1.0, 0.3)
+	var toy := Sprite2D.new()
+	toy.texture = Art.prop("toy", v)
+	toy.position = Vector2(6, -14)
+	mom.add_child(toy)
+	await mom.walk_to([w.tile_center(MEM_DOOR), w.tile_center(Vector2i(12, 6)), w.tile_center(MEM_SEAT + Vector2i(1, 1))], speed)
+	mom.face(1)
+	kid.face(0)
+	await s.wait(0.25)
+	# the toy goes onto the table, a little further along each morning
+	var spot := w.tile_center(MEM_TABLE) + Vector2(-2 + _toys_on_table * 8, -13)
+	var from := toy.global_position
+	mom.remove_child(toy)
+	toy.z_index = 6
+	w.add_child(toy)
+	toy.global_position = from
+	var tw := toy.create_tween()
+	tw.tween_property(toy, "global_position", spot, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await tw.finished
+	Sfx.play("pop", 1.2, -8.0)
+	kid.set_mood("smile")
+	kid.hop(3.0)
+	kid.emote("heart", 1.2)
+	_toys_on_table += 1
+	await s.wait(0.6)
+	# and back out the way she came
+	await mom.walk_to([w.tile_center(Vector2i(12, 6)), w.tile_center(MEM_DOOR), w.tile_center(MEM_HALL)], speed)
+	var out := mom.create_tween()
+	out.tween_property(mom, "modulate:a", 0.0, 0.3)
+	await out.finished
+	mom.visible = false
+	mom.modulate.a = 1.0
+
+
+func _stash_peek(w: World) -> void:
+	## The dresser drawer: more toys waiting, peeking up for a moment.
+	var base := w.tile_center(MEM_DRESSER) + Vector2(0, -26)
+	for k in 3:
+		var t := Sprite2D.new()
+		t.texture = Art.prop("toy", [1, 2, 3][k])
+		t.z_index = 6
+		t.position = base + Vector2((k - 1) * 9, 6)
+		t.modulate.a = 0.0
+		w.add_child(t)
+		var tw := t.create_tween()
+		tw.tween_interval(0.15 * k)
+		tw.tween_property(t, "position:y", base.y - 4, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.parallel().tween_property(t, "modulate:a", 1.0, 0.15)
+		tw.tween_interval(1.6)
+		tw.tween_property(t, "modulate:a", 0.0, 0.4)
+		tw.tween_callback(t.queue_free)
+
+
+func _wait_until(cond: Callable) -> void:
+	var guard := 0
+	while not cond.call() and guard < 600:
+		guard += 1
+		await s.m.get_tree().process_frame
 
 
 func _midas_announcement() -> void:
