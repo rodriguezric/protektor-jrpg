@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 11:21 EST — `feature_umbra_vacua_level_redesign` (v0.38.0)
+
+Umbra Vacua rebuilt around restraint: long silences, few but lethal threats, and enemies that punish turning. Void Sentinel mini-boss, The Observer boss.
+
+- The old Umbra was dense spiral spam; now it's sparse. New: turn sentries hold position and fire every time you turn; turn-watchers lunge when you turn. Hold still, shoot what's in front, block what's behind.
+- Level 1 "Stillness" (~90 s), Level 2 "Commitment" (~120 s) ending on the VOID SENTINEL (it lunges at the planet when you turn), Level 3 (~150 s) ending on THE OBSERVER: it only acts when you do. Every turn sends shots at your back as you now face, so turn once and hold, and the shield takes them; keep turning and they land. It hops quadrants in phase 2-3 and calls turn sentries.
+- Standard kit: the levelcheck bot clears all three with no hits (91 s, 110 s, 110 s). The Observer's real length depends on how still you can stay; the bot is a fast, twitchy player.
+- Code: scripts/threat.gd `fire_on_turn`; scripts/boss.gd on_rotate `lunge: true` and `from: "behind"`; tools/build_levels.py `turn_sentries`, `void` and the Umbra plans; data/bosses.json `void_sentinel`, `observer`.
+
 ## 2026-11-18 11:08 EST — `feature_viscera_nova_level_redesign` (v0.37.0)
 
 Viscera Nova rebuilt around reading intent: enemies that answer fire, wake on a block or lunge when you turn. Pulse Node mini-boss, The Gestalt Heart boss.

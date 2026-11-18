@@ -1123,6 +1123,8 @@ func _spawn(e: Dictionary) -> void:
 			th.set(k, str(e[k]))
 	if e.has("retaliate"):
 		th.retaliate = bool(e.retaliate)
+	if e.has("fire_on_turn"):
+		th.fire_on_turn = bool(e.fire_on_turn)
 	var side := str(e.get("spawn_side", "top")).strip_edges()
 	th.spawn_side = side
 	th.lp = _spawn_pos(e, side, kind)

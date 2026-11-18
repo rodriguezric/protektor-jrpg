@@ -241,6 +241,20 @@ class Level:
         self.t += len(degs) * gap
         return self
 
+    def turn_sentries(self, degs: list, hold: float = 10.0, dist: float = 160, kind: str = "drone_basic", gap: float = 0.5):
+        """punish_on_rotation: drones that hold and fire every time you turn.
+        Shoot them without turning (they're in front), or turn as little as
+        you can."""
+        for i, d in enumerate(degs):
+            self.spawn(kind, d, i * gap, hold_dist=dist, hold_sec=hold, hold_style="watch", fire_on_turn=True)
+        self.t += len(degs) * gap
+        return self
+
+    def void(self, sec: float):
+        """empty_gap: nothing at all. The void is part of the level."""
+        self.t += sec
+        return self
+
     def build(self) -> dict:
         return {"events": sorted(self.events, key=lambda e: e["time"]), "phases": self.phases,
                 "timeline_sec": round(max([e["time"] for e in self.events] or [0]), 1)}
@@ -608,8 +622,105 @@ def viscera_nova():
     return out
 
 
+# ============================================================ Umbra Vacua ===
+# Void and restraint. Core skill: disciplined_inaction. Sparse mixed enemies.
+# Patterns: empty_gap_feint, punish_on_rotation, sparse_lethal_lane,
+# delayed_void_commitment. Long silences; few threats, each one lethal.
+# Signature: punish_on_rotation (turn sentries). Mini-boss: Void Sentinel
+# (lunges when you turn). Boss: The Observer (attacks only when you turn).
+
+def umbra_vacua():
+    out = []
+    # ---- L1: Stillness (~90 s), few threats and long gaps ----
+    L = Level("umbra_vacua", 1)
+    L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
+    L.spawn("drone_basic", 0).void(6.0)
+    L.spawn("asteroid", 180).void(5.0)
+    L.spawn("drone_sine", 90).void(6.0)
+    L.phase("development", "Something is watching the turn of your shield.")
+    L.msg("These fire when you turn. Hold still and shoot.")
+    L.turn_sentries([0]).void(7.0)
+    L.turn_sentries([0, 30]).wait(3.0)
+    L.spawn("asteroid", 180).void(6.0)
+    L.phase("signature", "Stillness is the answer.")
+    L.watchers([90], "turn", dist=150, hold=9.0).void(2.0)
+    L.spawn("asteroid", 270).void(4.0)
+    L.turn_sentries([180, 210]).wait(2.0)
+    L.spawn("asteroid", 0).void(6.0)
+    L.spawn("drone_basic", 90).spawn("drone_basic", 270, 3.0).void(7.0)
+    L.watchers([0], "turn", dist=150, hold=8.0).void(1.0)
+    L.spawn("asteroid", 180).void(5.0)
+    L.spawn("drone_sine", 45).void(5.0)
+    L.turn_sentries([0]).wait(2.0)
+    L.spawn("asteroid", 180).spawn("asteroid", 200, 2.0).void(7.0)
+    L.phase("final_clear", "The void closes.")
+    L.spawn("drone_fast", 270).void(4.0)
+    L.spawn("charger_drone", 90).void(4.0)
+    L.spawn("drone_shifter", 0).void(3.0)
+    out.append(L)
+
+    # ---- L2: Commitment (~120 s), delayed commitments, mini-boss ----
+    L = Level("umbra_vacua", 2)
+    L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
+    L.spawn("drone_basic", 45).spawn("drone_basic", 315, 2.5).void(6.0)
+    L.turn_sentries([0, 330]).wait(3.0)
+    L.spawn("asteroid", 180).void(5.0)
+    L.phase("development", "Something is watching the turn of your shield.")
+    L.staggered_lane_freeze([90, 270], 4.0, 4.0, kind="drone_fast").void(3.0)
+    L.watchers([180], "turn", dist=150, hold=10.0).void(1.0)
+    L.spawn("asteroid", 0).spawn("asteroid", 30, 1.2).void(5.0)
+    L.phase("compression", "The dark is crowding in.")
+    L.turn_sentries([90, 120]).wait(2.0)
+    L.spawn("charger_drone", 270).void(4.0)
+    L.spawn("drone_shifter", 0).spawn("drone_shifter", 180, 1.0).void(5.0)
+    L.watchers([45, 315], "turn", dist=150, hold=9.0).void(1.0)
+    L.spawn("asteroid", 180).void(5.0)
+    L.spawn("drone_fast", 90).void(4.0)
+    L.turn_sentries([270, 300]).wait(2.0)
+    L.spawn("asteroid", 90).spawn("asteroid", 120, 1.5).void(6.0)
+    L.staggered_lane_freeze([0, 180], 3.5, 4.0, kind="drone_fast").void(3.0)
+    L.spawn("charger_drone", 90).void(5.0)
+    L.phase("signature", "Stillness is the answer.")
+    L.turn_sentries([0, 30, 330]).wait(1.5)
+    L.spawn("asteroid", 180).spawn("asteroid", 150, 2.0).spawn("asteroid", 210, 4.0).void(7.0)
+    L.wait(2.0).gate()
+    L.phase("mini_boss", "A sentinel in the void. It moves when you move.")
+    L.wait(1.5).boss("void_sentinel", 0, mini=True)
+    L.gate()
+    out.append(L)
+
+    # ---- L3: The Observer (~150 s), mirrored discipline, boss ----
+    L = Level("umbra_vacua", 3)
+    L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
+    L.turn_sentries([0]).wait(2.0)
+    L.spawn("asteroid", 180).spawn("asteroid", 160, 2.0).void(5.0)
+    L.phase("development", "Something is watching the turn of your shield.")
+    L.watchers([90, 270], "turn", dist=150, hold=9.0).void(1.0)
+    L.spawn("drone_fast", 0).void(4.0)
+    L.spawn("asteroid", 180).void(4.0)
+    L.mirrored_arcs(0, 2, 3.0).void(3.0)
+    L.phase("compression", "The dark is crowding in.")
+    L.turn_sentries([45, 75]).wait(1.0)
+    L.spawn("asteroid", 225).spawn("asteroid", 255, 1.6).void(3.0)
+    L.staggered_lane_freeze([135, 315], 3.0, 3.5, kind="drone_fast").void(2.0)
+    L.spawn("charger_drone", 180).void(3.0)
+    L.watchers([0, 180], "turn", dist=150, hold=8.0).void(1.0)
+    L.spawn("drone_sine", 90).spawn("drone_sine", 270, 2.5).void(6.0)
+    L.turn_sentries([180, 150]).wait(1.5)
+    L.spawn("asteroid", 0).spawn("asteroid", 20, 1.5).void(6.0)
+    L.phase("signature", "Stillness is the answer.")
+    L.turn_sentries([0, 330, 30]).wait(1.0)
+    L.spawn("asteroid", 180).spawn("asteroid", 200, 1.5).spawn("asteroid", 160, 3.0).void(6.0)
+    L.wait(2.0).gate()
+    L.phase("boss", "")
+    L.wait(0.5).boss("observer", 0)
+    L.gate()
+    out.append(L)
+    return out
+
+
 PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime, "tempestris": tempestris,
-           "viscera_nova": viscera_nova}
+           "viscera_nova": viscera_nova, "umbra_vacua": umbra_vacua}
 
 
 def write(level: Level) -> str:
