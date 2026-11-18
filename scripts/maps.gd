@@ -156,6 +156,71 @@ static func home_up() -> Dictionary:
 			{"tile": Vector2i(7, 8), "id": "drawings"}, {"tile": Vector2i(8, 8), "id": "drawings"}]}
 
 
+# --------------------------------------------------------------- Block 7 ---
+
+static func block7(time: String = "evening") -> Dictionary:
+	## The street outside home: tenement fronts with lit windows along the
+	## top (your door, Mrs. Okafor's), the sidewalk and lamps, a road, then
+	## the ration kiosk and the noticeboard on the paving and a scrap of park
+	## with swings and a slide. time: "evening" (neighbours out, friends on
+	## the bench, kids playing) or "dawn" (everyone lined up to see you off).
+	var rows := ["##WW##WW#D##WW####WW##WW#D##WW", "##WW##WW#D##WW####WW##WW#D##WW"]
+	for i in 3:
+		rows.append("..............................")
+	for i in 2:
+		rows.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	for i in 6:
+		rows.append("...............ggggggggggggggg")
+	rows.append("##############################")
+	var props := [
+		p("streetlamp", 3, 4, {"anim": 2, "fps": 0.4, "light": Pal.LEMON, "lr": 30, "light_off": Vector2(0, -38), "pulse": 1.0}),
+		p("streetlamp", 15, 4, {"light": Pal.LEMON, "lr": 30, "light_off": Vector2(0, -38), "pulse": 1.0}),
+		p("streetlamp", 27, 4, {"light": Pal.LEMON, "lr": 30, "light_off": Vector2(0, -38), "pulse": 1.0}),
+		p("bin", 12, 2, {"event": {"id": "bin"}}),
+		p("plant", 7, 2, {}),
+		p("plant", 27, 2, {"v": 1}),
+		p("chair", 24, 2, {"v": 0}),
+		p("kiosk", 4, 9, {"offset": Vector2(8, 0), "area": Rect2i(3, 8, 3, 2), "event": {"id": "kiosk"}, "light": Pal.LEMON, "lr": 18, "light_off": Vector2(0, -20), "pulse": 2.0}),
+		p("noticeboard", 11, 8, {"offset": Vector2(8, 0), "area": Rect2i(11, 8, 2, 1), "event": {"id": "noticeboard"}}),
+		p("bench", 7, 11, {"offset": Vector2(8, 0), "area": Rect2i(7, 11, 2, 1)}),
+		p("swings", 19, 9, {"offset": Vector2(8, 0), "area": Rect2i(18, 9, 3, 1), "event": {"id": "swings"}}),
+		p("slide", 25, 10, {"offset": Vector2(8, 0), "area": Rect2i(24, 10, 3, 1), "event": {"id": "slide"}}),
+		p("plant", 15, 12, {}),
+		p("plant", 28, 12, {"v": 1}),
+	]
+	if time == "evening":
+		props.append(p("cat", 17, 3, {"anim": 2, "fps": 0.8, "event": {"id": "cat"}, "area": Rect2i()}))
+	var npcs := []
+	if time == "evening":
+		npcs = [
+			{"id": "okafor", "who": "okafor", "tile": Vector2i(24, 3), "dir": 0, "pose": "sit", "no_turn": true},
+			{"id": "hale", "who": "hale", "tile": Vector2i(12, 9), "dir": 1},
+			{"id": "benno", "who": "benno", "tile": Vector2i(4, 10), "dir": 0},
+			{"id": "tomas", "who": "tomas", "tile": Vector2i(7, 11), "dir": 0},
+			{"id": "juno", "who": "juno", "tile": Vector2i(8, 11), "dir": 0},
+			{"id": "pip", "who": "pip", "tile": Vector2i(21, 11), "dir": 3},
+			{"id": "wren", "who": "wren", "tile": Vector2i(23, 11), "dir": 3},
+		]
+	else:
+		# dawn: the block lines the sidewalk
+		npcs = [
+			{"id": "okafor", "who": "okafor", "tile": Vector2i(24, 3), "dir": 0},
+			{"id": "hale", "who": "hale", "tile": Vector2i(14, 2), "dir": 0},
+			{"id": "benno", "who": "benno", "tile": Vector2i(17, 2), "dir": 0},
+			{"id": "tomas", "who": "tomas", "tile": Vector2i(19, 2), "dir": 0},
+			{"id": "juno", "who": "juno", "tile": Vector2i(20, 2), "dir": 0},
+			{"id": "pip", "who": "pip", "tile": Vector2i(22, 2), "dir": 0},
+			{"id": "wren", "who": "wren", "tile": Vector2i(23, 2), "dir": 0},
+		]
+	return {"id": "block7", "name": "Block 7", "theme": "block", "tint": Color(0.86, 0.78, 0.86) if time == "evening" else Color(1.0, 0.86, 0.78),
+		"outfit": "home", "rows": rows, "props": props, "npcs": npcs, "music": "mellow_loop",
+		"triggers": [{"rect": Rect2i(15, 7, 15, 6), "id": "kids_game"}] if time == "evening" else [],
+		"exits": [{"rect": Rect2i(9, 2, 1, 1), "to": "home", "tile": Vector2i(15, 3), "dir": 0}],
+		"events": [{"tile": Vector2i(9, 1), "id": "homedoor"}, {"tile": Vector2i(25, 1), "id": "okafordoor"},
+			{"tile": Vector2i(2, 1), "id": "nwindow"}, {"tile": Vector2i(3, 1), "id": "nwindow"}, {"tile": Vector2i(18, 1), "id": "nwindow"},
+			{"tile": Vector2i(19, 1), "id": "nwindow"}, {"tile": Vector2i(28, 1), "id": "dark_window"}, {"tile": Vector2i(29, 1), "id": "dark_window"}]}
+
+
 # ---------------------------------------------------------------- parade ---
 
 static func parade() -> Dictionary:

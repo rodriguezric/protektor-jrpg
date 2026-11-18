@@ -142,12 +142,29 @@ func _house(id: String) -> Dictionary:
 				{"id": "mother", "who": "mother", "tile": Vector2i(2, 3), "dir": 1},
 				{"id": "father", "who": "father", "tile": Vector2i(18, 4), "dir": 1},
 			]
+			# the front door opens onto the street for the evening
+			mp.exits = mp.exits.duplicate()
+			mp.exits.append({"rect": Rect2i(15, 2, 1, 1), "to": "block7", "tile": Vector2i(9, 3), "dir": 0})
 	return mp
 
 
 func exit(e: Dictionary) -> void:
-	## The stairs between the floors.
+	## The stairs between the floors, and the front door to the street.
 	var to: String = e.get("to", "")
+	if to == "block7" or (to == "home" and s.w.def.id == "block7"):
+		Sfx.play("door", 1.0, -8.0)
+		if to == "block7":
+			await s.m.change_map(Maps.block7("evening"), e.tile, e.dir)
+			if not bool(Game.story.get("block7_seen", false)):
+				Game.story.block7_seen = true
+				s.w.busy = true
+				s.w.show_area_name()
+				await s.say("", ["Block 7 is out on its steps tonight, the way it only is in summer, or after bad news.", "Everyone pretends not to look at your door."])
+				s.w.busy = false
+		else:
+			await s.m.change_map(_house("home"), e.tile, e.dir)
+			s.w.show_marker(Vector2i(21, 2))
+		return
 	if to != "home" and to != "home_up":
 		return
 	for i in 3:
@@ -178,6 +195,8 @@ func talk(n: Actor) -> void:
 			await s.say("midas", "My mom's out there somewhere. I can't find her face.", "uneasy")
 		"announcer":
 			await s.say("announcer", "Recruits will hold formation until called!")
+		"okafor", "hale", "benno", "tomas", "juno", "pip", "wren":
+			await _neighbour(n.info.get("id", ""))
 		_:
 			var id: String = n.info.get("id", "")
 			if id.begins_with("crowd"):
@@ -217,6 +236,26 @@ func examine(ev: Dictionary) -> void:
 			await s.say("", "The couch still has a dent where your father sits for the evening broadcast. Tonight he's standing.")
 		"starbox":
 			await _starbox()
+		"kiosk":
+			await s.say("", ["Ration chits, tea tins, spare bulbs. A hand-lettered card in the window:", "RECRUIT FAMILIES - ONE EXTRA CHIT THIS WEEK. CONGRATULATIONS."])
+		"noticeboard":
+			await s.say("", ["A Helion poster: a chrome robot striding over a green planet. STEEL THAT NEVER SLEEPS.", "Under it, older notices. A lost cat (FOUND, in pen). Ration hours. A choir that meets on fifth-days."])
+		"swings":
+			await s.say("", "Your initials are still scratched into the left swing. Juno's are next to them, bigger.")
+		"slide":
+			await s.say("", "The slide you were afraid of until you were seven. It looks small now.")
+		"cat":
+			await s.say("", "The block cat. It belongs to nobody, which means it belongs to everybody. It ignores you, as a kindness.")
+		"bin":
+			await s.say("", "Someone threw away a recruitment flyer. Someone else fished it out again and smoothed it flat.")
+		"homedoor":
+			await s.say("", "Your door. The paint is chipped where your father's toolbox always catches it.")
+		"okafordoor":
+			await s.say("", "Mrs. Okafor's door, and a wind chime made of old spoons.")
+		"nwindow":
+			await s.say("", "Behind a curtain, a family eats dinner around a radio. Someone laughs, then remembers what tomorrow is.")
+		"dark_window":
+			await s.say("", "The Delacroix window. Dark for twelve years.")
 		"desk":
 			await s.say("", ["Your desk. Drawings of planets with faces, a cup of worn-down pencils.", "Someone has squared the papers into a neat pile. It wasn't you."])
 		"wardrobe":
@@ -283,6 +322,165 @@ func _tv() -> void:
 		var r: Array = TV_REACTIONS[last]
 		s.a(r[0]).face_toward(s.w.player.position)
 		await s.say(r[0], r[1], r[2])
+
+
+# --------------------------------------------------------------- Block 7 ---
+
+## What each neighbour says, in order, each time you come back to them
+## (the last line repeats).
+const BLOCK7_TALK := {
+	"okafor": [["okafor", ["Ah. Block 7's chosen one.", "Twelve years ago they took the Delacroix boy. Same letter. Same smile printed on the envelope."], "sad"],
+		["okafor", "He waved from the transport. Everyone said how proud he looked. I only remember how small.", "sad"],
+		["okafor", "Come back and tell me if they still smile on the envelopes.", ""]],
+	"hale": [["hale", ["My Lise went up six years ago.", "They send a form letter every spring. Same words. Same signature. 'Your daughter's contribution is valued.'"], "sad"],
+		["hale", "I keep the letters in a shoebox. I tell myself one spring the handwriting will change.", ""],
+		["hale", "If you see her up there... no. Never mind. Get some sleep, kid.", "sad"]],
+	"benno": [["benno", "Extra ration chit, for the family of a recruit. Congratulations? I never know what to say.", ""],
+		["benno", "Your mother came by for the good tea today. First time in a year. I gave her the tin for free.", "smile"],
+		["benno", "Kiosk closes at eight. Same as always. The world could end and the kiosk would close at eight.", ""]],
+	"tomas": [["tomas", "They didn't pick me. I keep checking whether I'm relieved or jealous. It changes every minute.", "sad"],
+		["tomas", "Bet you get a real Protektor. Bet it's enormous.", "smile"],
+		["tomas", "...Don't forget us, okay? That's all.", "sad"]],
+	"juno": [["juno", "Wear it. Even if they make you take everything else off.", ""],
+		["juno", "I'm going to watch the news every night. If they show your face I'll wave at the screen like an idiot.", "smile"],
+		["juno", "Go home. Before I say something embarrassing.", "sad"]],
+	"pip": [["pip", "When I'm big they'll pick me too. I've been practising my robot voice. BEEP. BOOP.", "smile"],
+		["pip", "Robots don't get scared. That's why they're robots.", ""]],
+	"wren": [["wren", "I'm always the slime. Pip says slimes don't get letters.", ""],
+		["wren", "My mama says the robots are lucky. I don't think robots can be lucky.", "sad"]],
+}
+
+
+func _neighbour(id: String) -> void:
+	if (id == "tomas" or id == "juno") and not bool(Game.story.get("bracelet", false)):
+		await _friends_gift()
+		return
+	if (id == "pip" or id == "wren") and not bool(Game.story.get("kids_seen", false)):
+		await _kids_game()
+		return
+	var seen: Dictionary = Game.story.get("block7_talks", {})
+	var n := int(seen.get(id, 0))
+	var lines: Array = BLOCK7_TALK[id]
+	var line: Array = lines[mini(n, lines.size() - 1)]
+	s.face_to(id, "player")
+	if id == "okafor" and n == 0:
+		await s.say(line[0], line[1], line[2])
+		await s.pan(Vector2i(28, 2), 0.7)
+		await s.say("okafor", "That was their window. Nobody has lived there since the family moved to the good housing.", "sad")
+		await s.pan_back(0.5)
+	else:
+		await s.say(line[0], line[1], line[2])
+	seen[id] = n + 1
+	Game.story.block7_talks = seen
+
+
+func _friends_gift() -> void:
+	## Tomas and Juno come over from the bench with something behind Juno's back.
+	Game.story.bracelet = true
+	var p := s.w.player.position
+	s.walk_bg("juno", [p + Vector2(10, 0)], 40.0)
+	await s.walk("tomas", [p + Vector2(-10, 0)], 40.0)
+	await s.wait(0.2)
+	s.face_to("juno", "player")
+	s.face_to("tomas", "player")
+	s.w.player.face(0)
+	await s.say("juno", "We wanted to come to the parade. They only let families on the plaza.", "sad")
+	await s.say("tomas", "So we made you something. Well. Juno made it. I held the string.", "smile")
+	s.a("juno").hop(3.0)
+	s.emote("juno", "heart", 1.4)
+	Sfx.play("chime", 1.2, -8.0)
+	await s.say("", "A bracelet braided from blue parade ribbon. Three knots: one for each of them, one for the block.")
+	var r := await s.ask("What do you say?", ["Thank you.", "I'll come back."])
+	if r == 0:
+		await s.say("you", "Thank you.", "smile")
+		await s.say("juno", "Don't. If you thank me I'll cry, and Tomas will tell everyone.", "smile")
+	else:
+		await s.say("you", "I'll come back.")
+		s.emote("tomas", "...")
+		await s.say("tomas", "Everybody says that.", "sad")
+		await s.say("juno", "So be the one who does.", "")
+	await s.say("tomas", "They didn't pick me. I keep checking whether I'm relieved or jealous. It changes every minute.", "sad")
+
+
+func _kids_game() -> void:
+	## Pip and Wren, in the park: Robo-Protektor versus the Slime Lord.
+	if bool(Game.story.get("kids_seen", false)):
+		return
+	Game.story.kids_seen = true
+	s.w.busy = true
+	await s.pan(Vector2i(22, 10), 0.6)
+	s.face("pip", 2)
+	s.face("wren", 3)
+	s.a("pip").hop(4.0)
+	await s.say("pip", "I'm ROBO-PROTEKTOR! Steel that never sleeps!", "smile")
+	s.a("wren").shake(0.4, 1.0)
+	await s.say("wren", "GLORP! I'm the Slime Lord! Your planet is MINE!", "angry")
+	await s.walk("pip", [Vector2i(22, 11)], 70.0)
+	Sfx.play("knock", 0.8, -4.0)
+	s.m.shake(1.5, 0.3)
+	s.emote("pip", "!", 0.8)
+	s.a("wren").set_pose("lie")
+	await s.say("pip", "KA-POW!", "smile")
+	await s.say("wren", "Ughhh. I am... defeated...", "closed")
+	await s.wait(0.4)
+	s.a("wren").set_pose("walk")
+	s.a("wren").set_mood("smile")
+	# then Pip spots you
+	s.a("pip").face_toward(s.w.player.position)
+	s.emote("pip", "!", 1.0)
+	await s.wait(0.4)
+	await s.pan_back(0.5)
+	var p := s.w.player.position
+	await s.walk("pip", [p + Vector2(12, 4)], 80.0)
+	s.face_to("pip", "player")
+	s.w.player.face_toward(s.a("pip").position)
+	await s.say("pip", "You got the letter! Are you gonna be a ROBOT now?!", "smile")
+	var r := await s.ask("What do you tell Pip?", ["Something like that.", "I don't know."])
+	if r == 0:
+		await s.say("pip", "WHOA. Can I have your Starbox if you don't come back?", "smile")
+		await s.say("wren", "PIP!", "angry")
+	else:
+		await s.say("pip", "You don't KNOW? It's the best thing that can happen to a person! It says so on the poster!", "")
+	s.w.busy = false
+
+
+func _departure() -> void:
+	## Dawn. The whole block lines the sidewalk to see you off, and you walk
+	## the length of it with your parents a step behind.
+	var m = s.m
+	m.load_map(Maps.block7("dawn"), Vector2i(9, 3), 0)
+	s.w.busy = true
+	s.w.add_npc({"id": "mother", "who": "mother", "tile": Vector2i(8, 2), "dir": 0})
+	s.w.add_npc({"id": "father", "who": "father", "tile": Vector2i(10, 2), "dir": 0})
+	Sfx.music("mellow_loop", 1.0)
+	await m.fade_in(1.0)
+	await s.say("", ["Morning comes grey and gold. The whole block has come out onto the sidewalk, which it never does.", "Your parents walk a step behind you, as if you already belong to somewhere else."])
+	var stops := [
+		[14, "hale", "Keep your head down. Write, if they let you.", "sad"],
+		[17, "benno", "For the road. Don't tell your mother it was free.", "smile"],
+		[20, "juno", "Wear it!" if bool(Game.story.get("bracelet", false)) else "Bye! BYE!", "smile"],
+		[19, "tomas", "Don't forget us!", "sad"],
+		[22, "pip", "BEEP BOOP! Good luck, robot!", "smile"],
+		[24, "okafor", "Come back and tell me if they still smile.", ""],
+	]
+	for st in stops:
+		var x: int = st[0]
+		s.walk_bg("mother", [Vector2i(x - 2, 4)], 40.0)
+		s.walk_bg("father", [Vector2i(x - 1, 4)], 40.0)
+		await s.w.player.walk_to([s.w.tile_center(Vector2i(x, 4))], 40.0)
+		s.w.player.face(1)
+		s.face_to(st[1], "player")
+		if st[1] == "pip":
+			s.a("pip").hop(4.0)
+			s.a("wren").hop(3.0)
+		elif st[1] == "benno":
+			s.emote("benno", "note", 1.0)
+		elif st[1] == "juno":
+			s.a("juno").hop(3.0)
+		await s.say(st[1], st[2], st[3])
+	s.emote("okafor", "heart", 1.2)
+	await s.say("", "At the end of the block, a transport waits with its door open and its engine idling.")
+	await m.fade_out(1.2)
 
 
 func _starbox() -> void:
@@ -353,6 +551,7 @@ func _night() -> void:
 	await s.say("mother", "Then we'll remind you.", "smile")
 	await m.fade_out(1.6)
 	Sfx.stop_music(1.0)
+	await _departure()
 	await parade()
 
 
@@ -374,6 +573,9 @@ func parade() -> void:
 
 
 func trigger(id: String) -> void:
+	if id == "kids_game":
+		await _kids_game()
+		return
 	if id != "lineup":
 		return
 	var m = s.m

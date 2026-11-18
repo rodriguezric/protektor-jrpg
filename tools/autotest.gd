@@ -966,6 +966,43 @@ func _run(scenario: String) -> void:
 			await tap("cancel", 0.8)
 			print("[tv] seen=%s left on=%s serial_ep=%s ach=%s" % [t.seen.keys(), t.channel_id(), Game.profile.get("tv_serial_ep", 0), Game.achieved.keys()])
 			get_tree().quit()
+		"block7":
+			# the street outside home: arrival, a look round, the kids' game,
+			# the friends' gift, Mrs. Okafor, and the dawn send-off
+			Game.new_game()
+			Game.player_name = "Ari"
+			var pr: StoryPrologue = main.story.prologue
+			pr.evening = true
+			main.fade_rect.color.a = 0.0
+			main.load_map(pr._house("home"), Vector2i(15, 3), 1)
+			await wait(0.5)
+			var snap := {"on": true, "k": 0}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(0.9)
+					await shot("b7_%03d" % snap.k)
+					snap.k += 1
+			snapper.call()
+			await main.story.exit({"to": "block7", "tile": Vector2i(9, 3), "dir": 0})
+			var w = main.world
+			for t in [Vector2i(4, 4), Vector2i(15, 4), Vector2i(25, 4), Vector2i(6, 10), Vector2i(14, 10)]:
+				w.player.position = w.tile_center(t)
+				await wait(1.0)
+			await main.story.trigger("kids_game")
+			w.player.position = w.tile_center(Vector2i(8, 10))
+			await wait(0.6)
+			await main.story.talk(w.actor("tomas"))
+			await main.story.talk(w.actor("juno"))
+			w.player.position = w.tile_center(Vector2i(24, 4))
+			await wait(0.5)
+			await main.story.talk(w.actor("okafor"))
+			await main.story.talk(w.actor("hale"))
+			await main.story.examine({"id": "noticeboard"})
+			print("[block7] bracelet=%s kids=%s talks=%s" % [Game.story.get("bracelet"), Game.story.get("kids_seen"), Game.story.get("block7_talks")])
+			await pr._departure()
+			snap.on = false
+			print("[block7] departure done, map=%s" % main.world.def.id)
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up

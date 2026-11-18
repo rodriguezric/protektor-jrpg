@@ -174,6 +174,19 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 		if sit:
 			b.circ(cx + 2.6, by - 3.6, 1.2, Pal.shade(skin))
 
+	if s.get("boxbot", false) and pose != "lie":
+		# a kid's cardboard Protektor: a box chest with a marker face, and a
+		# pipe-cleaner antenna
+		var card := Pal.WOOD.lerp(Pal.PEACH, 0.45)
+		b.rect(cx - 4.5, by - 9.5 + bob, 9, 6.5, card)
+		b.rect(cx - 4.5, by - 9.5 + bob, 9, 1, Pal.hi(card))
+		if not back:
+			b.pset(cx - 2, by - 7.5 + bob, Pal.INK2)
+			b.pset(cx + 1, by - 7.5 + bob, Pal.INK2)
+			b.rect(cx - 2, by - 5.5 + bob, 4, 1, Pal.RED)
+		b.line(int(hx), int(hy - 8 + bob), int(hx + 1), int(hy - 12 + bob), Pal.STEEL)
+		b.circ(hx + 1, hy - 12.5 + bob, 1.2, Pal.RED)
+
 	b.outline()
 	if pose == "lie":
 		b.img.rotate_90(COUNTERCLOCKWISE)
