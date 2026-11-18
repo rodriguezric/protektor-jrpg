@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-18 12:50 EST — `bugfix_no_system_eye_portrait` (v0.40.3)
+
+The one-eyed machine portrait is gone from dialogue: System lines show only their name and text.
+
+- Academy and hub System announcements no longer show the single-eye machine in the portrait frame, matching the Protektor's own lines.
+- scripts/story.gd `speaker()`: `system` joins `system_far` / `system_close` with no portrait; scripts/dialog.gd `_set_portrait()` treats a "system" portrait as none, so it can't come back from anywhere else.
+
 ## 2026-11-18 11:56 EST — `bugfix_level_clear_names_outdated` (v0.40.2)
 
 Each redesigned level now ends with its own name instead of the old level's.
