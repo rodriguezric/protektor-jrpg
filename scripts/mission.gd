@@ -765,6 +765,41 @@ func _run_event(e: Dictionary) -> void:
 			_arena_flash(_named_color(str(e.get("color", "white"))), float(e.get("duration_sec", 0.3)))
 		"fx_shake":
 			shake(float(e.get("amount", 3.0)), float(e.get("duration_sec", 0.5)))
+		"fx_lane":
+			_lane_fx(float(e.get("degrees", 0)), float(e.get("duration_sec", 0.6)), _named_color(str(e.get("color", "orange"))))
+
+
+func _lane_fx(deg: float, dur: float, c: Color) -> void:
+	## A lane "ignites": a pulsing streak from the arena edge to just short of
+	## the planet, warning that something fast is coming down it.
+	var a := deg_to_rad(deg - 90.0)
+	var dirv := Vector2.from_angle(a)
+	var from := (_edge_point(dirv, 0.0) * K).round()
+	var to := ((CENTER + dirv * (PLAYER_RADIUS + 26.0)) * K).round()
+	var ln := Line2D.new()
+	ln.points = PackedVector2Array([from, to])
+	ln.width = 3.0
+	ln.default_color = Color(c, 0.0)
+	ln.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	overlay.add_child(ln)
+	var core_ln := Line2D.new()
+	core_ln.points = ln.points
+	core_ln.width = 1.0
+	core_ln.default_color = Color(Pal.LEMON, 0.0)
+	overlay.add_child(core_ln)
+	Sfx.play("thrust", 1.4, -16.0)
+	var tw := create_tween()
+	var steps := maxi(1, int(dur / 0.2))
+	for i in steps:
+		tw.tween_property(ln, "default_color:a", 0.75, 0.1)
+		tw.parallel().tween_property(core_ln, "default_color:a", 0.9, 0.1)
+		tw.tween_property(ln, "default_color:a", 0.3, 0.1)
+		tw.parallel().tween_property(core_ln, "default_color:a", 0.3, 0.1)
+	tw.tween_property(ln, "default_color:a", 0.0, 0.25)
+	tw.parallel().tween_property(core_ln, "default_color:a", 0.0, 0.25)
+	tw.tween_callback(ln.queue_free)
+	tw.tween_callback(core_ln.queue_free)
+	fx.particle(to, Vector2.ZERO, dur, Color(c, 0.6), {"size": 4.0, "size_end": 1.0})
 
 
 func _named_color(n: String) -> Color:
