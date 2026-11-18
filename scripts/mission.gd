@@ -146,6 +146,8 @@ var _boss_name: Label
 ## While a boss intro (or death) is being staged the timeline holds and the
 ## level can't end.
 var _hold := 0
+## Everything the shield has stopped (rocks and shots); intent threats wake on it.
+var block_count := 0
 var _comms_busy := false
 
 signal mission_done
@@ -873,9 +875,11 @@ func _update_boss_bar() -> void:
 
 
 func on_boss_deflect(b: Boss) -> void:
-	## A hit on a boss that is shut: it sparks off.
+	## A hit on a boss that is shut: it sparks off (and a boss with
+	## punish_shut fires back).
 	fx.ring(b.position, b.d * 0.4, b.d * 0.55, 0.18, Pal.STEEL.lerp(Pal.WHITE, 0.4), 1.0, 1.0)
 	Sfx.play("block", 1.8, -12.0)
+	b.punish()
 
 
 func on_boss_died(b: Boss) -> void:
@@ -1111,9 +1115,14 @@ func _spawn(e: Dictionary) -> void:
 			th.color = Color(c[0], c[1], c[2], c[3])
 		elif k in th:
 			th.set(k, cfg[k])
-	for k in ["move_speed", "sine_lateral_strength", "sine_wave_speed", "size", "max_hp", "hold_dist", "hold_sec", "release_at"]:
+	for k in ["move_speed", "sine_lateral_strength", "sine_wave_speed", "size", "max_hp", "hold_dist", "hold_sec", "release_at", "lunge_mult"]:
 		if e.has(k):
 			th.set(k, float(e[k]))
+	for k in ["hold_style", "wake_on"]:
+		if e.has(k):
+			th.set(k, str(e[k]))
+	if e.has("retaliate"):
+		th.retaliate = bool(e.retaliate)
 	var side := str(e.get("spawn_side", "top")).strip_edges()
 	th.spawn_side = side
 	th.lp = _spawn_pos(e, side, kind)
@@ -1383,6 +1392,7 @@ func on_block(th: Threat) -> void:
 
 func _block_fx(p: Vector2, is_shot: bool) -> void:
 	Achievements.blocked()
+	block_count += 1
 	_shield_pulse = 1.0
 	fx.ring(p, 1, 9, 0.25, Pal.SYNC, 1.0, 1.0)
 	fx.burst(p, 10, [Pal.SYNC, Pal.WHITE, Pal.TEAL], Vector2(25, 80), Vector2(0.12, 0.3), {"dir": (p - core.position).angle(), "spread": 1.0})

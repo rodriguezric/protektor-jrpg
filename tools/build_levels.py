@@ -215,6 +215,32 @@ class Level:
         self.t += n * gap
         return self
 
+    def chargers(self, degs: list, gap: float):
+        """color_tell_lunge: chargers flash before they lunge. Read the flash."""
+        for i, d in enumerate(degs):
+            self.spawn("charger_drone", d, i * gap)
+        self.t += len(degs) * gap
+        return self
+
+    def retaliators(self, degs: list, gap: float, kind: str = "drone_basic"):
+        """retaliate_on_shot: hit one without killing it and it fires back.
+        Kill it in one burst, or be ready to turn and block."""
+        for i, d in enumerate(degs):
+            self.spawn(kind, d, i * gap, retaliate=True)
+        self.t += len(degs) * gap
+        return self
+
+    def watchers(self, degs: list, wake: str, dist: float = 170, hold: float = 8.0, kind: str = "drone_basic",
+                 lunge: float = 2.2, gap: float = 0.4):
+        """Drones that hover and watch. wake 'block' (calm_until_blocked):
+        they lunge the moment you block anything. wake 'turn'
+        (bait_on_rotation): they lunge when you turn. Shoot them while
+        they wait, or keep still."""
+        for i, d in enumerate(degs):
+            self.spawn(kind, d, i * gap, hold_dist=dist, hold_sec=hold, hold_style="watch", wake_on=wake, lunge_mult=lunge)
+        self.t += len(degs) * gap
+        return self
+
     def build(self) -> dict:
         return {"events": sorted(self.events, key=lambda e: e["time"]), "phases": self.phases,
                 "timeline_sec": round(max([e["time"] for e in self.events] or [0]), 1)}
@@ -495,7 +521,95 @@ def tempestris():
     return out
 
 
-PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime, "tempestris": tempestris}
+# =========================================================== Viscera Nova ===
+# Living planet, behavioural combat. Core skill: read_enemy_intent.
+# Rhythm: L1 clear_behavior_teaching, L2 reactive_mixups, L3 complex_behavioral_pressure.
+# Signature: mixed_intent_formation (chargers that flash, retaliators that
+# fire back, watchers that wake on a block or a turn, all at once).
+# Mini-boss: Pulse Node (fires back if you hit it shut). Boss: The Gestalt
+# Heart (its nodes must die before its core opens).
+
+def viscera_nova():
+    out = []
+    # ---- L1: First Contact (~90 s), teach each behaviour cleanly ----
+    L = Level("viscera_nova", 1)
+    L.phase("intro_teach", "Biological signatures. They react. Watch them.").wait(2.0)
+    L.chargers([0, 180, 90], 4.0).wait(1.0)
+    L.msg("Pink ones answer fire. Finish them in one burst.")
+    L.retaliators([270, 90, 0], 4.0).wait(1.0)
+    L.phase("development", "They are learning you.")
+    L.msg("Watchers wake when you block.")
+    L.watchers([0, 60], "block").wait(4.0)
+    L.spawn("asteroid", 180).wait(5.0)
+    L.msg("These wake when you turn.")
+    L.watchers([90], "turn").wait(3.0)
+    L.spawn("drone_basic", 270).wait(5.0)
+    L.retaliators([45, 225], 3.0, "drone_tank").wait(2.0)
+    L.phase("signature", "Mixed intent detected.")
+    L.chargers([0], 1.0).retaliators([120], 1.0).watchers([240], "block").wait(4.0)
+    L.spawn("asteroid", 60).wait(4.0)
+    L.chargers([270], 1.0).retaliators([30, 150], 1.5).wait(4.0)
+    L.chargers([90, 270], 2.5).wait(1.5)
+    L.phase("final_clear", "Final contact sweep.")
+    L.slow_encircle(0, 72, 5, 1.8, ["drone_sine", "drone_basic"]).wait(1.0)
+    L.retaliators([0, 180], 2.0)
+    out.append(L)
+
+    # ---- L2: Reflex Arc (~120 s), reactive mix-ups, mini-boss ----
+    L = Level("viscera_nova", 2)
+    L.phase("intro_teach", "Biological signatures. They react. Watch them.").wait(2.0)
+    L.chargers([0, 120, 240], 2.6).wait(1.0)
+    L.retaliators([90, 270, 180], 2.4).wait(1.5)
+    L.phase("development", "They are learning you.")
+    L.watchers([30, 330], "block").wait(2.5)
+    L.rapid_burst(180, 3, 0.8).wait(3.0)
+    L.watchers([90, 270], "turn").wait(2.5)
+    L.spawn("drone_basic", 0).spawn("drone_basic", 180, 2.0).wait(5.0)
+    L.phase("compression", "The surface is moving.")
+    L.retaliators([0, 90, 180, 270], 1.8, "drone_tank").wait(1.0)
+    L.mirrored_arcs(45, 3, 2.4).wait(1.5)
+    L.watchers([0, 180], "block").wait(2.0)
+    L.rapid_burst(90, 3, 0.8).wait(3.0)
+    L.chargers([45, 225, 135], 2.0).wait(1.5)
+    L.phase("signature", "Mixed intent detected.")
+    L.chargers([0], 1.0).retaliators([90, 270], 1.0).watchers([180], "block").wait(3.0)
+    L.spawn("asteroid", 45).wait(3.5)
+    L.watchers([45, 315], "turn").chargers([135, 225], 1.4).wait(4.0)
+    L.wait(2.0).gate()
+    L.phase("mini_boss", "A node is pulsing. Strike on the beat.")
+    L.wait(1.5).boss("pulse_node", 0, mini=True)
+    L.gate()
+    out.append(L)
+
+    # ---- L3: The Heart (~150 s), complex behavioural pressure, boss ----
+    L = Level("viscera_nova", 3)
+    L.phase("intro_teach", "Biological signatures. They react. Watch them.").wait(2.0)
+    L.chargers([0, 90, 180, 270], 2.2).wait(1.0)
+    L.phase("development", "They are learning you.")
+    L.retaliators([45, 225, 135, 315], 1.8, "drone_tank").wait(1.0)
+    L.watchers([0, 120, 240], "block").wait(2.0)
+    L.rapid_burst(60, 3, 0.7).wait(3.0)
+    L.watchers([90, 270], "turn").wait(2.0)
+    L.spawn("drone_shifter", 0).spawn("drone_shifter", 180, 1.5).wait(5.0)
+    L.phase("compression", "The surface is moving.")
+    L.mirrored_arcs(0, 3, 2.2).wait(0.5)
+    L.retaliators([90, 270], 1.0).chargers([0, 180], 1.6).wait(2.5)
+    L.watchers([45, 225], "turn").wait(2.0)
+    L.spawn("drone_basic", 135).spawn("drone_basic", 315, 1.5).wait(4.0)
+    L.phase("signature", "Mixed intent detected.")
+    L.watchers([45, 135, 225, 315], "block", hold=10.0).wait(2.0)
+    L.chargers([0, 180], 2.0).retaliators([90, 270], 1.6, "drone_tank").wait(2.0)
+    L.spawn("asteroid", 0).wait(4.0)
+    L.wait(2.0).gate()
+    L.phase("boss", "")
+    L.wait(0.5).boss("gestalt_heart", 0)
+    L.gate()
+    out.append(L)
+    return out
+
+
+PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime, "tempestris": tempestris,
+           "viscera_nova": viscera_nova}
 
 
 def write(level: Level) -> str:

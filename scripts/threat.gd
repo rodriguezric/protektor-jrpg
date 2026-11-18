@@ -72,6 +72,19 @@ var _released := false
 ## Seconds until the thaw, counted down while frozen (the level clock can
 ## stand still behind a wait_until_clear gate, so it can't be used directly).
 var _release_left := -1.0
+## Viscera Nova intent: hold_style "watch" makes a held threat hover and
+## pulse instead of frosting; wake_on "block" / "turn" releases it the moment
+## the player blocks something / turns, and lunge_mult speeds it up when it
+## goes. A retaliator (retaliate) answers a hit that doesn't kill it with a
+## shot of its own RETALIATE_SEC later.
+var hold_style := "frost"
+var wake_on := ""
+var lunge_mult := 1.0
+var retaliate := false
+var _hold_facing := Vector2.ZERO
+var _hold_blocks := 0
+var _ret_t := -1.0
+const RETALIATE_SEC := 0.45
 const RELEASE_TELL := 0.8
 
 # --- runtime --------------------------------------------------------------
@@ -173,6 +186,10 @@ func tick(delta: float) -> void:
 		_hit_stun_left = maxf(0.0, _hit_stun_left - sd)
 	if _flash_t > 0.0:
 		_flash_t = maxf(0.0, _flash_t - sd)
+	if _ret_t >= 0.0:
+		_ret_t -= sd
+		if _ret_t < 0.0 and m.alive and not m.finished:
+			_fire(230.0, 1.0, 7.0, "boss")
 	if _check_hold(sd):
 		_visual_tick(sd)
 		return
@@ -201,14 +218,22 @@ func _check_hold(sd: float) -> bool:
 		_frozen = true
 		if _release_left <= 0.0:
 			_release_left = maxf(0.3, hold_sec)
-		m.fx.ring(position, 2, d * 0.8, 0.3, Pal.FROST, 1.0, 1.0)
-		Sfx.play("plate", 1.6, -16.0)
+		_hold_facing = m.facing
+		_hold_blocks = m.block_count
+		if hold_style == "frost":
+			m.fx.ring(position, 2, d * 0.8, 0.3, Pal.FROST, 1.0, 1.0)
+			Sfx.play("plate", 1.6, -16.0)
 	_release_left -= sd
-	if _release_left <= 0.0:
+	var woke: bool = (wake_on == "block" and m.block_count > _hold_blocks) or (wake_on == "turn" and absf(m.facing.angle_to(_hold_facing)) > 0.6)
+	if _release_left <= 0.0 or woke:
 		_frozen = false
 		_released = true
-		m.fx.burst(position, 8, [Pal.FROST, Pal.WHITE, Pal.SKY], Vector2(15, 50), Vector2(0.15, 0.35))
-		Sfx.play("knock", 1.5, -12.0)
+		move_speed *= lunge_mult
+		if hold_style == "frost":
+			m.fx.burst(position, 8, [Pal.FROST, Pal.WHITE, Pal.SKY], Vector2(15, 50), Vector2(0.15, 0.35))
+			Sfx.play("knock", 1.5, -12.0)
+		else:
+			m.on_tell(self, "charger")
 		return false
 	return true
 
@@ -544,6 +569,9 @@ func apply_damage(amount: float) -> bool:
 	if hp <= 0.0:
 		die(false)
 		return true
+	if retaliate and _ret_t < 0.0:
+		_ret_t = RETALIATE_SEC
+		Sfx.play("tell", 1.4, -10.0)
 	return false
 
 
@@ -606,13 +634,23 @@ func _visual_tick(delta: float) -> void:
 		var k := 1.0 - _tank_left / maxf(tank_tell_sec, 0.001)
 		flash = lerpf(0.35, 1.0, k) * (sin(t * TAU * tank_flash_hz) * 0.5 + 0.5)
 		fcol = Pal.WHITE
-	if _frozen:
+	if retaliate:
+		# retaliators wear a hot pink cast, and glow red while winding up
+		spr.modulate = Color(1.25, 0.75, 0.9)
+		if _ret_t >= 0.0:
+			flash = 0.8
+			fcol = Pal.BLOOD
+	if _frozen and hold_style == "watch":
+		spr.modulate = Color(1.0, 0.85, 1.1) if not retaliate else spr.modulate
+		flash = maxf(flash, 0.25 + 0.25 * (sin(t * TAU * 1.5) * 0.5 + 0.5))
+		fcol = Pal.PINK
+	elif _frozen:
 		spr.modulate = Color(0.72, 0.9, 1.2)
 		if is_thawing():
 			flash = 0.4 + 0.5 * (sin(t * TAU * 6.0) * 0.5 + 0.5)
 			fcol = Pal.FROST
 			_jitter = Vector2(randf_range(-1, 1), randf_range(-1, 1))
-	elif hold_dist > 0.0 and behavior_type != "charger":
+	elif hold_dist > 0.0 and behavior_type != "charger" and not retaliate:
 		spr.modulate = Color.WHITE
 	if _flash_t > 0.0:
 		flash = 1.0

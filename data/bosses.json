@@ -909,5 +909,220 @@
 				]
 			}
 		]
+	},
+	"pulse_node": {
+		"name": "PULSE NODE",
+		"mini": true,
+		"hp": 20,
+		"size": 66,
+		"dist": 160,
+		"fight_sec": 22,
+		"punish_shut": true,
+		"color": [
+			0.85,
+			0.42,
+			0.55
+		],
+		"art": {
+			"shape": "heart"
+		},
+		"subtitle": "HIT IT ON THE BEAT",
+		"phases": [
+			{
+				"until": 0.5,
+				"move": {
+					"type": "hold"
+				},
+				"open": {
+					"type": "cycle",
+					"open": 2.5,
+					"closed": 2.0
+				},
+				"attacks": [
+					{
+						"type": "volley",
+						"every": 3.6,
+						"first": 2.0,
+						"n": 1,
+						"speed": 200,
+						"tell": 0.5
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 14
+				},
+				"open": {
+					"type": "cycle",
+					"open": 2.0,
+					"closed": 2.0
+				},
+				"attacks": [
+					{
+						"type": "volley",
+						"every": 3.0,
+						"first": 1.5,
+						"n": 1,
+						"speed": 210,
+						"tell": 0.45
+					},
+					{
+						"type": "adds",
+						"every": 7.0,
+						"first": 3.0,
+						"enemy_type": "drone_basic",
+						"degrees": [
+							180
+						],
+						"retaliate": true
+					}
+				]
+			}
+		]
+	},
+	"gestalt_heart": {
+		"name": "THE GESTALT HEART",
+		"hp": 75,
+		"size": 104,
+		"dist": 160,
+		"fight_sec": 50,
+		"color": [
+			0.82,
+			0.36,
+			0.48
+		],
+		"art": {
+			"shape": "heart",
+			"nodes": 5
+		},
+		"warning": "THE PLANET HAS A PULSE",
+		"subtitle": "ONE ORGANISM, MANY MINDS",
+		"phases": [
+			{
+				"until": 0.6,
+				"move": {
+					"type": "hold"
+				},
+				"open": {
+					"type": "when_clear"
+				},
+				"attacks": [
+					{
+						"type": "adds",
+						"every": 16.0,
+						"first": 0.5,
+						"enemy_type": "drone_basic",
+						"degrees": [
+							60,
+							-60,
+							180,
+							120,
+							-120
+						],
+						"hold_dist": 125,
+						"hold_sec": 18,
+						"hold_style": "watch",
+						"retaliate": true
+					},
+					{
+						"type": "on_rotate",
+						"cooldown": 1.4,
+						"n": 1,
+						"speed": 190
+					},
+					{
+						"type": "volley",
+						"every": 5.0,
+						"first": 4.0,
+						"n": 1,
+						"speed": 200,
+						"tell": 0.6
+					}
+				]
+			},
+			{
+				"until": 0.3,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 10
+				},
+				"open": {
+					"type": "when_clear"
+				},
+				"attacks": [
+					{
+						"type": "adds",
+						"every": 15.0,
+						"first": 0.5,
+						"enemy_type": "drone_basic",
+						"degrees": [
+							90,
+							-90,
+							150,
+							-150
+						],
+						"hold_dist": 125,
+						"hold_sec": 14,
+						"hold_style": "watch",
+						"wake_on": "block",
+						"lunge_mult": 2.0
+					},
+					{
+						"type": "on_rotate",
+						"cooldown": 1.1,
+						"n": 1,
+						"speed": 200
+					},
+					{
+						"type": "volley",
+						"every": 4.5,
+						"first": 3.0,
+						"n": 2,
+						"gap": 0.35,
+						"speed": 200,
+						"tell": 0.5
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "orbit",
+					"speed_deg": -16
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "on_rotate",
+						"cooldown": 0.9,
+						"n": 1,
+						"speed": 210
+					},
+					{
+						"type": "arc_burst",
+						"every": 4.5,
+						"first": 2.0,
+						"count": 6,
+						"width_deg": 100,
+						"offset_deg": 180,
+						"speed": 170,
+						"tell": 0.5
+					},
+					{
+						"type": "adds",
+						"every": 8.0,
+						"first": 4.0,
+						"enemy_type": "charger_drone",
+						"degrees": [
+							90,
+							-90
+						]
+					}
+				]
+			}
+		]
 	}
 }
