@@ -811,13 +811,14 @@ func _run(scenario: String) -> void:
 						print("[pilotcomms] %s_%s  %s" % [planet, lv, "  |  ".join(said)])
 			get_tree().quit()
 		"breakdown":
-			# Midas' breakdown call: fires once at relationship 1, freezes play
+			# Midas' death on the codec: the first story mission after his memory
+			# talk (relationship 2) freezes play, cuts him off and marks him dead
 			bot = true
 			auto_talk = false
 			Game.player_name = "Ari"
 			Game.chapter = "hub"
 			Game.testing = true
-			Game.story.relationships = {"hiro": 1, "pala": 1, "midas": 1}
+			Game.story.relationships = {"hiro": 1, "pala": 1, "midas": 2}
 			Game.story.midas_dead = false
 			Game.story.midas_breakdown_seen = false
 			main.start_mission("glacien_ix_level_01", false, false)
@@ -835,7 +836,7 @@ func _run(scenario: String) -> void:
 			var pos := []
 			for th in m.threats:
 				pos.append(th.position)
-			for i in 36:
+			for i in 40:
 				await wait(0.45)
 				await shot("breakdown_%02d" % i)
 				if i == 12:
@@ -844,13 +845,17 @@ func _run(scenario: String) -> void:
 						if is_instance_valid(m.threats[j]) and m.threats[j].position != pos[j]:
 							still = false
 					print("[breakdown] mid-call: cutin=%s clock frozen=%s threats still=%s pilot_on=%s" % [m._cutin, is_equal_approx(lt, m.level_t), still, m._pilot_on])
-			print("[breakdown] after: cutin=%s hp at call %s, now %s seen=%s pilot_on='%s'" % [m._cutin, hp0, m.hp, Game.story.midas_breakdown_seen, m._pilot_on])
+			print("[breakdown] after: cutin=%s hp at call %s, now %s midas_dead=%s pilot_on='%s'" % [m._cutin, hp0, m.hp, Game.midas_dead(), m._pilot_on])
 			m._arm_breakdown()
-			print("[breakdown] re-arm after seen: %.1f (want -1)" % m._breakdown_at)
-			Game.story.midas_breakdown_seen = false
+			print("[breakdown] re-arm once dead: %.1f (want -1)" % m._breakdown_at)
+			Game.story.midas_dead = false
+			Game.story.relationships.midas = 1
+			m._arm_breakdown()
+			print("[breakdown] arm at relationship 1: %.1f (want -1), dead()=%s (want false)" % [m._breakdown_at, Game.midas_dead()])
 			Game.story.relationships.midas = 2
 			m._arm_breakdown()
-			print("[breakdown] re-arm with midas dead: %.1f (want -1)" % m._breakdown_at)
+			m._finish("retreat")
+			print("[breakdown] retreat before the call: midas_dead=%s (want true)" % Game.midas_dead())
 			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then

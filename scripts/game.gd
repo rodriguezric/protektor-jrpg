@@ -253,16 +253,21 @@ func home_contacts() -> int:
 func record_conversation(choice: String, response: String = "") -> void:
 	story.conversations.append({"choice": choice, "response": response, "mission": completed_count()})
 	if PILOTS.has(choice):
+		# Midas' second talk (relationship 2) doesn't kill him here: he dies
+		# on the codec in the next story mission (Mission._midas_breakdown)
 		story.relationships[choice] = relationship(choice) + 1
-		if choice == "midas" and relationship("midas") >= 2:
-			story.midas_dead = true
 	elif choice == "home":
 		story.home_contacts = home_contacts() + 1
 	save()
 
 
 func midas_dead() -> bool:
-	return bool(story.midas_dead) or relationship("midas") >= 2
+	return bool(story.midas_dead)
+
+
+func midas_doomed() -> bool:
+	## He has told you about his mother; the next story mission is his last.
+	return relationship("midas") >= 2 and not midas_dead()
 
 
 func ending_type() -> String:

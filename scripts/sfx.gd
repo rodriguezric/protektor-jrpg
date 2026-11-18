@@ -245,6 +245,8 @@ func _make(name: String) -> PackedFloat32Array:
 			return _mix([_noise(1.2, 0.3, 0.3, false, true), _crackle(1.2, 0.2)])
 		"shutdown":
 			return _tone(900, 40, 1.1, "sq", 0.2)
+		"flatline":
+			return _tone(988, 988, 2.6, "sq", 0.12)
 		"thrust":
 			return _mix([_noise(1.4, 0.5, 0.12, false, true), _tone(70, 110, 1.4, "sq", 0.12, true)])
 		"static":

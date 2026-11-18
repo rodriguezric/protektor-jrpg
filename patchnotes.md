@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 14:55 EST — `feature_midas_dies_in_breakdown` (v0.45.0)
+
+Midas' breakdown on the codec is now the moment he dies, instead of a warning he survives.
+
+- Hearing his memory in the Commons no longer kills him off-screen: he stays in the Commons (he only says he's okay if you try to talk again). The first story mission after that plays his breakdown about a fifth of the way in. His last words ('Mom, I c-') cut off, static swallows his face over a flatline tone, the arena reads SIGNAL LOST, then your face returns in shock, play resumes, and SYSTEM logs 'Pilot channel 3 offline. Continue engagement.' The Commons announcement of his death follows that mission as before.
+- If that mission ends before the call comes through (a loss or retreat), he is marked dead anyway. The breakdown no longer plays after the first talk.
+- Code: `scripts/game.gd` (relationship 2 no longer sets `midas_dead`; `midas_dead()` reads the flag; new `midas_doomed()`), `scripts/mission.gd` (`_arm_breakdown()` keyed on `midas_doomed()`, death ending in `_midas_breakdown()`, `_keep_face`, `_finish` fallback), `scripts/sfx.gd` (`flatline`), `scripts/story_hub.gd` (`_midas()` at relationship 2), `tools/autotest.gd` (`PK_TEST=breakdown`).
+
 ## 2026-11-18 14:49 EST — `feature_midas_breakdown_transmission` (v0.44.0)
 
 Once you've talked with Midas, a priority transmission stops the next story mission: Midas, terrified, breaking down on the codec.
