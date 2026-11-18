@@ -255,6 +255,47 @@ class Level:
         self.t += sec
         return self
 
+    def echo(self, kind: str, delay: float = 0.8, offset: float = 0.0, dt: float = 0.0):
+        """delayed_rotation_echo: arrives from where you faced `delay` seconds
+        ago (offset 180: from behind that)."""
+        self._ev({"type": "spawn_enemy", "enemy_type": kind, "spawn_side": "echo", "delay": delay, "offset": offset}, self.t + dt)
+        return self
+
+    def echo_wave(self, n: int, gap: float, kinds: list, delay: float = 0.8):
+        """Drones in front of where you were, rocks behind where you were:
+        keep a rhythm and they line up; change it and they don't."""
+        for i in range(n):
+            k = kinds[i % len(kinds)]
+            self.echo(k, delay, 180 if k.startswith("asteroid") else 0, i * gap)
+        self.t += n * gap
+        return self
+
+    def symmetric_pairs(self, degs: list, gap: float, lag: float = 0.5):
+        """close_range_mirror_spawn: a rock and a drone from mirrored sides."""
+        for i, d in enumerate(degs):
+            self.spawn("asteroid", d, i * gap)
+            self.spawn("drone_basic", d + 180, i * gap + lag)
+        self.t += len(degs) * gap
+        return self
+
+    def symmetry_break(self, a: float, b: float, n: int, gap: float, kind: str = "asteroid", break_to: float = None):
+        """symmetry_break_test: a steady a-b-a-b rhythm whose last beat comes
+        from somewhere else. Don't play the rhythm; read the threat."""
+        for i in range(n):
+            d = a if i % 2 == 0 else b
+            if i == n - 1:
+                d = break_to if break_to is not None else d + 90
+            self.spawn(kind, d, i * gap)
+        self.t += n * gap
+        return self
+
+    def pressure_wave(self, start: float, step: float, n: int, gap: float, kind: str = "drone_fast"):
+        """zoom_shift_pressure_wave: fast drones round all the lanes in turn."""
+        for i in range(n):
+            self.spawn(kind, start + i * step, i * gap)
+        self.t += n * gap
+        return self
+
     def build(self) -> dict:
         return {"events": sorted(self.events, key=lambda e: e["time"]), "phases": self.phases,
                 "timeline_sec": round(max([e["time"] for e in self.events] or [0]), 1)}
@@ -719,8 +760,78 @@ def umbra_vacua():
     return out
 
 
+# ======================================================== Mechanon Ascens ===
+# Machine perfection (Ascended only). Core skill: break_learned_rhythm.
+# Pool: drone_basic, drone_fast, drone_tank, drone_shifter, asteroid.
+# Rhythm: L1 alien_but_teachable, L2 spatial_disruption, L3 compressed_mirror_pressure.
+# Signature: symmetry that breaks (mirrored pairs, a-b rhythms with a wrong
+# last beat, threats echoing where you faced). Mini-boss: Mirror Twins.
+# Boss: Paragon Protektor (follows your facing on a delay).
+
+def mechanon_ascens():
+    out = []
+    # ---- L1: Calibration (~90 s), alien but teachable ----
+    L = Level("mechanon_ascens", 1)
+    L.phase("intro_teach", "Machine symmetry detected. Do not mirror it.").wait(2.0)
+    L.symmetric_pairs([0, 90, 180, 270], 3.4).wait(1.5)
+    L.symmetry_break(0, 180, 6, 1.6, break_to=90).wait(2.5)
+    L.phase("development", "They are learning your rhythm.")
+    L.echo_wave(6, 2.2, ["drone_basic", "asteroid"]).wait(2.0)
+    L.spawn("drone_shifter", 45).spawn("drone_shifter", 225, 1.5).wait(5.0)
+    L.symmetry_break(90, 270, 6, 1.5, break_to=0).wait(2.5)
+    L.phase("signature", "Break the pattern before it breaks you.")
+    L.symmetric_pairs([45, 225, 135, 315], 2.8).wait(1.0)
+    L.echo_wave(6, 1.8, ["asteroid", "drone_basic"]).wait(2.0)
+    L.phase("final_clear", "Final contact sweep.")
+    L.pressure_wave(0, 45, 8, 1.2)
+    out.append(L)
+
+    # ---- L2: Disruption (~120 s), spatial disruption, mini-boss ----
+    L = Level("mechanon_ascens", 2)
+    L.phase("intro_teach", "Machine symmetry detected. Do not mirror it.").wait(2.0)
+    L.symmetric_pairs([0, 180, 90, 270, 45, 225], 2.6).wait(1.0)
+    L.phase("development", "They are learning your rhythm.")
+    L.pressure_wave(0, 90, 8, 1.1).wait(1.5)
+    L.symmetry_break(45, 225, 8, 1.3, break_to=135).wait(2.0)
+    L.echo_wave(8, 1.7, ["drone_basic", "asteroid", "drone_fast"]).wait(1.5)
+    L.phase("compression", "Spatial lock failing.")
+    L.spawn("drone_tank", 0).spawn("drone_tank", 180, 1.0).wait(3.0)
+    L.spawn("drone_shifter", 90).spawn("drone_shifter", 270, 1.0).wait(4.0)
+    L.phase("signature", "Break the pattern before it breaks you.")
+    L.echo_wave(10, 1.4, ["asteroid", "drone_basic", "drone_fast"]).wait(1.0)
+    L.symmetric_pairs([135, 315, 45, 225], 2.2)
+    L.wait(2.0).gate()
+    L.phase("mini_boss", "Twin units. They copy you, late.")
+    L.wait(1.5).boss("mirror_twin_a", 0, mini=True)
+    L._ev({"type": "spawn_miniboss", "boss_id": "mirror_twin_b", "degrees": 180, "intro": False}, L.t + 1.0)
+    L.t += 1.5
+    L.gate()
+    out.append(L)
+
+    # ---- L3: Paragon (~150 s), compressed mirror pressure, boss ----
+    L = Level("mechanon_ascens", 3)
+    L.phase("intro_teach", "Machine symmetry detected. Do not mirror it.").wait(2.0)
+    L.symmetric_pairs([0, 90, 180, 270], 2.2).wait(1.0)
+    L.phase("development", "They are learning your rhythm.")
+    L.echo_wave(8, 1.5, ["drone_basic", "asteroid"]).wait(1.0)
+    L.pressure_wave(0, -45, 8, 1.0).wait(1.0)
+    L.phase("compression", "Spatial lock failing.")
+    L.spawn("drone_tank", 45).spawn("drone_tank", 225, 1.0).wait(2.5)
+    L.echo_wave(10, 1.25, ["asteroid", "drone_fast", "drone_basic"]).wait(1.0)
+    L.spawn("drone_shifter", 0).spawn("drone_shifter", 180, 0.8).wait(3.5)
+    L.phase("signature", "Break the pattern before it breaks you.")
+    L.symmetry_break(0, 180, 10, 1.0, break_to=90).wait(1.0)
+    L.symmetric_pairs([45, 225, 135, 315, 0, 180], 2.0)
+    L.wait(2.0).gate()
+    L.phase("boss", "")
+    L.wait(0.5).boss("paragon_protektor", 0)
+    L.gate()
+    out.append(L)
+    return out
+
+
 PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime, "tempestris": tempestris,
-           "viscera_nova": viscera_nova, "umbra_vacua": umbra_vacua}
+           "viscera_nova": viscera_nova, "umbra_vacua": umbra_vacua, "mechanon_ascens": mechanon_ascens}
 
 
 def write(level: Level) -> str:
