@@ -399,6 +399,12 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 			b.rect(ex - 1, ey - 1, 4, 1, Pal.INK2)
 			b.pset(ex - 1, ey + 2, Pal.INK2)
 			b.pset(ex + 2, ey + 2, Pal.INK2)
+		if s.get("shades", false):
+			# dark sunglasses: lenses over the eyes with a glint
+			b.rect(ex - 1, ey, 4, 3, Pal.INK)
+			b.pset(ex, ey, Pal.SLATE)
+	if s.get("shades", false) and dir != 1:
+		b.rect(eyes[0] + 3, ey, eyes[1] - eyes[0] - 3, 1, Pal.INK)
 	if s.get("patch", false):
 		# the strap is tied to the patch: back from its outer edge to the side
 		# of the head, and up from its top corner into the hair

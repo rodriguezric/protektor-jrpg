@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 17:02 EST — `feature_tv_serial_cheesy_drama` (v0.52.0)
+
+HEARTS OF THE SHIELD GRID: channel 4's six-episode soap opera, acted with total commitment and no restraint.
+
+- One new episode each time it airs (with 'Previously on HEARTS OF THE SHIELD GRID...' first), and the place is kept in the profile, so it carries across playthroughs; after the finale it reruns from the top, marked RERUN.
+- The cast: Captain Brick Steele (sunglasses, epaulettes, a sash), Lady Veronica (auburn, floral, pink), the villainous Dr. Noir (moustache), Nurse Pearl, a priest, and Brick's evil twin Brack (dark coat, moustache). Episodes: 1 A Love in Orbit (Brick slowly removes his sunglasses... 'Not so fast!'), 2 The Slap Heard Round the Grid (SLAP!, 'How could you not tell me you had a TWIN?' '...I don't.'), 3 Who Is Brick Steele? (amnesia: '...Brick? What a ridiculous name.'), 4 Two Bricks, One Heart (the evil twin arrives; Veronica faints), 5 I Object! (the wedding, both twins burst in), 6 Hearts Forever? ('I am your FATHER.' 'NOOOOO!' ...it was all a dream? 'Or... WAS it?' He takes off his sunglasses: another pair underneath. THE END?).
+- Dramatic zooms on every gasp, freeze frames in sepia with TO BE CONTINUED, music stings. Watching the whole run earns Must-See TV (GAMES).
+- Art: a new `shades` look (sunglasses) for characters.
+- Code: `scripts/tv_serial.gd` (TvSerial: episodes, recaps, cast, progress), `scripts/tv_sets.gd` (observation deck, parlor, hospital, chapel, bedroom sets), `scripts/tv_stage.gd` (freeze_frame), `scripts/art_people.gd` (shades), `scripts/achievements.gd` + `scripts/art_achieve.gd` (Must-See TV, tv icon), `tools/autotest.gd` (`PK_EP`).
+
 ## 2026-11-18 16:52 EST — `feature_home_tv_channels` (v0.51.0)
 
 The home TV works: flip through six channels of short animated shows on the family set.

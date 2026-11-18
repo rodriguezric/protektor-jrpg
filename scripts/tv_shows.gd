@@ -99,7 +99,7 @@ static func news(st: TvStage) -> void:
 	st.actor("anchor", ANCHOR, Vector2(46, 60), 0, "smile")
 	_front(st, "desk", "desk", Vector2(46, 64))
 	await st.say("CORVIN VALE", "Tomorrow, new pilots join the parade.")
-	await st.zoom(1.6, Vector2(46, 38), 0.5)
+	await st.zoom(1.6, Vector2(46, 46), 0.5)
 	await st.say("CORVIN VALE", "Remember: the Protektor never sleeps... so you can.", 1.6)
 	st.sting("happy")
 	await st.zoom(1.0, Vector2.ZERO, 0.3)
