@@ -947,6 +947,8 @@ func _run(scenario: String) -> void:
 			main.fade_rect.color.a = 0.0
 			main.load_map(pr._house("home"), Vector2i(11, 3), 1)
 			await wait(0.6)
+			if OS.get_environment("PK_EP") != "":
+				Game.profile.tv_serial_ep = int(OS.get_environment("PK_EP")) - 1
 			var t := TvScreen.new()
 			main.ui.add_child(t)
 			var ch := int(OS.get_environment("PK_CH")) if OS.get_environment("PK_CH") != "" else 1
@@ -962,7 +964,7 @@ func _run(scenario: String) -> void:
 					await tap("up", 1.5)
 					await shot("tv_flip_%d" % k)
 			await tap("cancel", 0.8)
-			print("[tv] seen=%s left on=%s" % [t.seen.keys(), t.channel_id()])
+			print("[tv] seen=%s left on=%s serial_ep=%s ach=%s" % [t.seen.keys(), t.channel_id(), Game.profile.get("tv_serial_ep", 0), Game.achieved.keys()])
 			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then

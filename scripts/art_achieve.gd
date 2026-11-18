@@ -125,6 +125,15 @@ static func icon(a: Dictionary, unlocked: bool) -> PixBuf:
 			b.ball(12, 12, 7.5, 7.5, Pal.HONEY)
 			b.ball(12, 12, 3, 3, Pal.PANEL2)
 			b.pset(9, 8, Pal.hi(Pal.HONEY))
+		"tv":
+			# the family set, a heart on its screen
+			b.rect(2, 4, 20, 16, Color("5a3a24"))
+			b.rect(4, 6, 16, 11, Pal.INK)
+			b.ascii([".R.R.", "RRRRR", ".RRR.", "..R.."], {"R": Color("ff9ae0")}, 10, 9)
+			b.line(8, 0, 11, 4, Pal.STEEL)
+			b.line(16, 0, 13, 4, Pal.STEEL)
+			b.rect(5, 20, 3, 2, Color("3a2414"))
+			b.rect(16, 20, 3, 2, Color("3a2414"))
 		"console":
 			# the Starbox controller; more lit buttons for higher tiers
 			var pad := Color("2a2633").lerp(Pal.STEEL, 0.35)

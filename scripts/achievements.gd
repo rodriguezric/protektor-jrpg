@@ -102,6 +102,8 @@ static func defs() -> Array:
 		"desc": "Play all three Starbox games.", "stat": "console_played", "target": CONSOLE_GAMES.size()})
 	d.append({"id": "console_scores", "cat": "games", "icon": "console", "tier": 2, "name": "Name on Every Board",
 		"desc": "Set a high score in every Starbox game.", "stat": "console_scored", "target": CONSOLE_GAMES.size()})
+	d.append({"id": "tv_serial", "cat": "games", "icon": "tv", "tier": 1, "name": "Must-See TV",
+		"desc": "Watch every episode of Hearts of the Shield Grid.", "stat": "serial_eps", "target": TvSerial.EPISODES.size()})
 	for g in GAME_ACH:
 		for a in GAME_ACH[g]:
 			d.append({"id": "cg_%s_%s" % [g, a[0]], "cat": "games", "icon": "cg_" + g, "tier": int(a[5]), "name": a[1],

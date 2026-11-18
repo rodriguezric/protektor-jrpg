@@ -316,6 +316,21 @@ func big_text(text: String, col: Color, hold: float = 0.8) -> void:
 		l.queue_free()
 
 
+func freeze_frame(text: String) -> void:
+	## The serial's last shot: everything stops, the colour drains to sepia
+	## and the words slam in.
+	if cancelled:
+		return
+	set_root.process_mode = Node.PROCESS_MODE_DISABLED
+	var tw := create_tween()
+	tw.tween_property(set_root, "modulate", Color(1.15, 0.95, 0.7), 0.15)
+	flash(Color.WHITE, 0.2)
+	sting("drama")
+	await big_text(text, Color("ffd36b"), 2.4)
+	set_root.process_mode = Node.PROCESS_MODE_INHERIT
+	set_root.modulate = Color.WHITE
+
+
 func ticker_text(text: String) -> void:
 	if cancelled:
 		return

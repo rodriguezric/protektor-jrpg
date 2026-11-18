@@ -63,6 +63,54 @@ static func draw(kind: String) -> PixBuf:
 			b.circ(72, 28, 14, Color(0, 0, 0, 0.0))
 		"black":
 			b.rect(0, 0, W, H, Color("05040a"))
+		# --- Hearts of the Shield Grid: lavish, soft-focus, very pink ---
+		"observation":
+			_grad(b, Color("2a1a4a"), Color("4a2a5a"))
+			b.rect(10, 6, 124, 40, Color("0b0a1e"))
+			for k in 30:
+				b.pset(12 + int(Pal.hash2(k, 4) * 120), 8 + int(Pal.hash2(k, 5) * 36), Pal.WHITE)
+			b.circ(100, 30, 12, Color("3b8f6a"))
+			for x in range(10, 135, 31):
+				b.rect(x, 6, 2, 40, Color("c9ccd8"))
+			b.rect(0, 56, W, 24, Color("6a3a6a"))
+			b.rect(0, 56, W, 2, Color("9a5a9a"))
+		"parlor":
+			_grad(b, Color("7a2a4a"), Color("5a1a3a"))
+			for x in range(0, W, 10):
+				b.rect(x, 0, 1, 56, Color("8a3a5a"))
+			b.rect(60, 4, 24, 4, Color("ffd36b"))
+			for k in 5:
+				b.rect(62 + k * 5, 8, 1, 4 + k % 2 * 2, Color("ffe8a0"))
+			b.rect(0, 56, W, 24, Color("4a2a1a"))
+			b.rect(16, 40, 30, 16, Color("c04060"))
+			b.rect(16, 38, 30, 4, Color("e06080"))
+			b.rect(104, 24, 20, 30, Color("ffd36b"))
+			b.rect(106, 26, 16, 26, Color("3a2a4a"))
+		"hospital":
+			_grad(b, Color("d8e8f0"), Color("b8d0e0"))
+			b.rect(0, 56, W, 24, Color("a8c0d0"))
+			b.rect(96, 10, 30, 22, Color("8ad1e0"))
+			b.rect(98, 12, 26, 18, Color("c0e8f4"))
+			for k in 3:
+				b.rect(20 + k * 6, 14, 2, 10, Color("e05a6a") if k == 1 else Color("90a8b8"))
+			b.rect(16, 24, 22, 2, Color("90a8b8"))
+		"chapel":
+			_grad(b, Color("f0e0f0"), Color("d8c0e0"))
+			for k in 3:
+				var x := 30 + k * 36
+				b.rect(x, 4, 16, 30, Color("8ad1e0").lerp(Color("ff9ae0"), k * 0.4))
+				b.rect(x + 7, 4, 2, 30, Pal.WHITE)
+			b.rect(0, 56, W, 24, Color("c8a0b8"))
+			b.rect(62, 56, 20, 24, Color("e05a7a"))
+			for k in 6:
+				b.circ(10 + k * 25, 52, 3, Color("ff9ae0"))
+		"bedroom":
+			_grad(b, Color("3a2a5a"), Color("2a1a40"))
+			b.rect(0, 56, W, 24, Color("3a2a2a"))
+			b.rect(100, 8, 28, 24, Color("0b0a1e"))
+			b.circ(114, 18, 5, Color("ffe8a0"))
+			b.rect(113, 8, 2, 24, Color("5a4a6a"))
+			b.rect(100, 19, 28, 2, Color("5a4a6a"))
 	return b
 
 
