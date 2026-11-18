@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-18 09:57 EST — `feature_ignara_prime_music` (v0.32.0)
+
+Every Ignara Prime level now plays the Ignara Prime track; the boss theme is kept for bosses.
+
+- Ignara Prime level 1 used to open with boss_theme.mp3; it now uses ignara_prime.mp3 like levels 2 and 3. boss_theme is only played by the boss intro.
+- data/missions/ignara_prime_level_01.json header.music.
+
 ## 2026-11-18 09:56 EST — `feature_boss_intro_staging` (v0.31.0)
 
 Bosses now make an entrance: silence, a WARNING build-up, a flash and the boss theme; and they die in a chain of explosions.
