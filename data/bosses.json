@@ -710,5 +710,204 @@
 				]
 			}
 		]
+	},
+	"storm_eye": {
+		"name": "STORM EYE",
+		"mini": true,
+		"hp": 16,
+		"size": 66,
+		"dist": 160,
+		"fight_sec": 22,
+		"color": [
+			0.55,
+			0.62,
+			0.85
+		],
+		"art": {
+			"shape": "cyclone"
+		},
+		"subtitle": "THE CALM AT THE CENTRE",
+		"phases": [
+			{
+				"until": 0.5,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 24
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "spin_stream",
+						"every": 5.0,
+						"first": 1.5,
+						"duration": 3.0,
+						"gap": 0.4,
+						"deg_per_sec": 45,
+						"offset_deg": 180,
+						"speed": 175
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "orbit",
+					"speed_deg": -30
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "spin_stream",
+						"every": 4.5,
+						"first": 1.0,
+						"duration": 3.0,
+						"gap": 0.35,
+						"deg_per_sec": -50,
+						"offset_deg": 180,
+						"speed": 180
+					},
+					{
+						"type": "volley",
+						"every": 4.5,
+						"first": 3.0,
+						"n": 1,
+						"speed": 200,
+						"tell": 0.5
+					}
+				]
+			}
+		]
+	},
+	"cyclarch": {
+		"name": "THE CYCLARCH",
+		"hp": 60,
+		"size": 104,
+		"dist": 165,
+		"fight_sec": 48,
+		"color": [
+			0.48,
+			0.55,
+			0.82
+		],
+		"art": {
+			"shape": "cyclone",
+			"nodes": 3
+		},
+		"warning": "PRESSURE SYSTEM COLLAPSING",
+		"subtitle": "THE STORM THAT THINKS",
+		"phases": [
+			{
+				"until": 0.6,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 12
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 4.6,
+						"first": 2.0,
+						"count": 7,
+						"width_deg": 120,
+						"offset_deg": 180,
+						"speed": 160,
+						"tell": 0.6
+					},
+					{
+						"type": "spin_stream",
+						"every": 7.0,
+						"first": 4.5,
+						"duration": 3.0,
+						"gap": 0.45,
+						"deg_per_sec": 40,
+						"offset_deg": 180,
+						"speed": 170
+					}
+				]
+			},
+			{
+				"until": 0.3,
+				"move": {
+					"type": "orbit",
+					"speed_deg": -22
+				},
+				"open": {
+					"type": "cycle",
+					"open": 3.5,
+					"closed": 2.0
+				},
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 4.0,
+						"first": 1.5,
+						"count": 8,
+						"width_deg": 130,
+						"offset_deg": 180,
+						"speed": 165,
+						"tell": 0.5
+					},
+					{
+						"type": "spin_stream",
+						"every": 6.0,
+						"first": 3.0,
+						"duration": 3.0,
+						"gap": 0.4,
+						"deg_per_sec": -45,
+						"offset_deg": 180,
+						"speed": 175
+					},
+					{
+						"type": "adds",
+						"every": 8.0,
+						"first": 5.0,
+						"enemy_type": "spiral_drone_random",
+						"degrees": [
+							90,
+							-90
+						]
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 32
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 3.6,
+						"first": 1.5,
+						"count": 9,
+						"width_deg": 140,
+						"offset_deg": 180,
+						"speed": 170,
+						"tell": 0.45
+					},
+					{
+						"type": "volley",
+						"every": 4.0,
+						"first": 3.0,
+						"n": 1,
+						"speed": 210,
+						"tell": 0.5
+					},
+					{
+						"type": "adds",
+						"every": 7.0,
+						"first": 4.0,
+						"enemy_type": "drone_sine",
+						"degrees": [
+							60,
+							-60
+						]
+					}
+				]
+			}
+		]
 	}
 }

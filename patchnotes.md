@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 10:51 EST — `feature_tempestris_level_redesign` (v0.36.0)
+
+Tempestris rebuilt as a storm with hidden structure: the rock storm steps round the planet on a beat. Storm Eye mini-boss, The Cyclarch boss.
+
+- Signature, the moving calm: rocks pour from one quadrant, scattered so it looks random, while a drone comes from the opposite side; on a steady beat (with a lightning flash) the storm steps 90 degrees round. Read the beat and turn before it does: shoot forward, let the shield take the storm.
+- Level 1 "Squall Line" (~90 s), Level 2 "Eyewall" (~120 s) with false scrambles (a burst from everywhere, then a clean gap) and mirrored spiral pairs, ending on the STORM EYE (an orbiting mini-boss sweeping arcs of fire), Level 3 "Cyclone Season" (~150 s) ending on THE CYCLARCH: orbiting arcs of fire from behind that widen and speed up across three phases, with spiral and sine escorts.
+- Standard kit: the levelcheck bot clears all three with no hits (99 s, 112 s, 133 s); the old Tempestris 3 was the one level it couldn't clear.
+- Code: tools/build_levels.py `storm_front`, `false_scramble`, `mirrored_arcs`, `flash` (seeded, so every run is the same) and the Tempestris plans; `fx_flash` takes an `alpha`; data/bosses.json `storm_eye`, `cyclarch`.
+
 ## 2026-11-18 10:44 EST — `feature_ignara_prime_level_redesign` (v0.35.0)
 
 Ignara Prime rebuilt around fast rotation: lanes ignite in sequence round the planet. Flare Carrier mini-boss, Solar Crucible boss.
