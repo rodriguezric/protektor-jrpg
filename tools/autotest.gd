@@ -552,7 +552,8 @@ func _bot() -> void:
 		if OS.get_environment("PK_GOD") != "" and m.alive:
 			m.hp = 5.0
 		if not m.running:
-			if m.finished and Engine.get_process_frames() % 20 == 0:
+			# confirm the result screen, win or lose (a defeat used to stall here)
+			if (m.finished or not m.alive) and Engine.get_process_frames() % 20 == 0:
 				_send("accept", true)
 				_send.call_deferred("accept", false)
 			return
@@ -577,6 +578,78 @@ func _bot() -> void:
 		if not best.rock:
 			m._aim_mode = "mouse"
 			m._try_fire(true)
+
+
+# ---------------------------------------------------------- levelcheck ---
+
+func _levelcheck() -> void:
+	## Plays levels with the standard kit (no upgrades, basic shot) using the
+	## bot and prints one result line per level. PK_LEVEL=<id>|<substring>|all
+	## (default all); PK_SPEED=<n> runs the game n times faster (times are
+	## still reported in game seconds); PK_LIMIT=<s> gives up on a level after
+	## s game seconds (default 300). Pair with tools/level_report.py, which
+	## checks the timelines without playing them.
+	Game.testing = true
+	Game.player_name = "Ari"
+	Game.chapter = "hub"
+	auto_talk = false
+	Game.story.upgrades = {"cooldown": 0, "armor": 0, "missile": 0}
+	Game.story.specials = []
+	Game.story.weapons = ["basic"]
+	Game.story.weapon = "basic"
+	Game.story.stripped = false
+	var want := OS.get_environment("PK_LEVEL")
+	var ids := []
+	for f in DirAccess.get_files_at("res://data/missions"):
+		var id := f.get_basename()
+		if f.ends_with(".json") and (want == "" or want == "all" or id == want or id.contains(want)):
+			ids.append(id)
+	ids.sort()
+	var speed := maxf(1.0, float(OS.get_environment("PK_SPEED"))) if OS.get_environment("PK_SPEED") != "" else 1.0
+	var limit := float(OS.get_environment("PK_LIMIT")) if OS.get_environment("PK_LIMIT") != "" else 300.0
+	var rows := []
+	main.fade_rect.color.a = 0.0
+	for id in ids:
+		bot = true
+		Engine.time_scale = speed
+		main.start_mission(id, false, false)
+		var m: Mission = null
+		while m == null:
+			await get_tree().process_frame
+			var n: int = main.mission_layer.get_child_count()
+			if n > 0:
+				m = main.mission_layer.get_child(n - 1)
+		while not m.running:
+			await get_tree().process_frame
+		var t0 := Time.get_ticks_msec()
+		var game_t := 0.0
+		var outcome := ""
+		while outcome == "":
+			await get_tree().process_frame
+			game_t += get_process_delta_time()
+			if m.finished:
+				outcome = "WIN"
+			elif not m.alive:
+				outcome = "LOSE"
+			elif game_t > limit:
+				outcome = "TIMEOUT"
+		var line := "[levelcheck] %-26s %-7s %6.1fs  hits %2d  hp %d/%d  real %.0fs" % [id, outcome, game_t,
+			m.hits_taken, int(m.hp), int(m.MAX_HP), (Time.get_ticks_msec() - t0) / 1000.0]
+		print(line)
+		rows.append(line)
+		if outcome == "TIMEOUT":
+			m.alive = false
+			m.running = false
+			m._finish("retreat")
+		# the bot confirms the result screen; wait for the mission to go
+		while is_instance_valid(m) and not m.is_queued_for_deletion():
+			await get_tree().process_frame
+		Engine.time_scale = 1.0
+		await wait(0.5)
+	bot = false
+	print("[levelcheck] ---- summary (standard kit, speed x%.0f) ----" % speed)
+	for r in rows:
+		print(r)
 
 
 func _run(scenario: String) -> void:
@@ -622,6 +695,9 @@ func _run(scenario: String) -> void:
 		await _touch_test()
 		return
 	match scenario:
+		"levelcheck":
+			await _levelcheck()
+			get_tree().quit()
 		"title":
 			main.title()
 			await wait(2.5)
