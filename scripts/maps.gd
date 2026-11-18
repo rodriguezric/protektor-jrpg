@@ -70,6 +70,41 @@ static func home() -> Dictionary:
 			{"tile": Vector2i(8, 1), "id": "calendar"}]}
 
 
+static func midas_home() -> Dictionary:
+	## Midas' memory: his mother's kitchen, years before the Academy. A table
+	## with the chipped blue cup, the warm spot by the stove, the dresser
+	## where the toys were hidden, and the doorway Mom came through each
+	## morning (in the top wall, so it stays above the dialog box).
+	var rows := [
+		"#WW#####WW##D####WW##",
+		"#WW#####WW##D####WW##",
+		"#:::::::::::::::::::#",
+		"#:::::::::::::::::::#",
+		"#::::::,,,,,,:::::::#",
+		"#::::::,,,,,,:::::::#",
+		"#::::::,,,,,,:::::::#",
+		"#:::::::::::::::::::#",
+		"#####################",
+	]
+	var props := [
+		p("counter", 2, 2, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(2, 2, 2, 1)}),
+		p("stove", 4, 2, {"light": Pal.EMBER, "lr": 12, "light_off": Vector2(0, -10), "pulse": 3.0}),
+		p("counter", 5, 2, {"offset": Vector2(8, 0), "area": Rect2i(5, 2, 2, 1)}),
+		p("fridge", 7, 2, {}),
+		p("calendar", 6, 1, {"wall": true, "lift": 12, "area": Rect2i()}),
+		p("dresser", 14, 2, {"id": "dresser"}),
+		p("plant", 19, 2, {}),
+		p("table", 9, 5, {"offset": Vector2(8, 0), "area": Rect2i(9, 5, 2, 1)}),
+		p("cup", 10, 5, {"offset": Vector2(6, 1), "lift": 12, "area": Rect2i()}),
+		p("chair", 8, 5, {"offset": Vector2(2, 0), "area": Rect2i()}),
+		p("chair", 11, 5, {"offset": Vector2(-2, 0), "area": Rect2i()}),
+		p("lamp", 18, 7, {"light": Pal.LEMON, "lr": 24, "light_off": Vector2(0, -24), "pulse": 1.5}),
+		p("plant", 1, 7, {}),
+	]
+	return {"id": "midas_home", "name": "", "theme": "home", "tint": WARM, "outfit": "home", "rows": rows, "props": props,
+		"npcs": [], "triggers": [], "exits": [], "events": [], "no_player": true}
+
+
 static func home_up() -> Dictionary:
 	## Upstairs: your room, your parents' room and the bathroom, each behind a
 	## door off the hallway, and the stairs back down.

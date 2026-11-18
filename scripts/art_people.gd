@@ -426,6 +426,14 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 		var my := ey + (5 if s.get("mustache", false) else 4)
 		b.rect(mx, my, 2, 2, Pal.INK2)
 		b.pset(mx, my + 1, Pal.ROSE)
+	if s.get("flour", false):
+		# a dab of flour on one cheek
+		var fc := Pal.WHITE
+		if side:
+			b.rect(ix + 5, ey + 2, 2, 2, fc)
+		else:
+			b.rect(ix + 4, ey + 2, 2, 2, fc)
+			b.pset(ix + 6, ey + 3, Pal.CREAM)
 	if s.get("scar", false):
 		var so := -4 if side else 0
 		b.pset(ix + 4 + so, ey + 1, Pal.ROSE.lerp(skin, 0.4))
