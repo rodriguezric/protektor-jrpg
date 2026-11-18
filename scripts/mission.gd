@@ -160,6 +160,11 @@ var _pilot_on := ""
 var _pilot_mood := ""
 var portrait_name: Label
 var portrait_static: TextureRect
+## This level's scripted pilot calls (data/pilot_comms.json), soonest first:
+## [{t, pilot, text, mood}]. Story missions only.
+var _pilot_script: Array = []
+static var _pilot_comms_data: Dictionary = {}
+const PILOT_CALL_AT := {"start": 0.06, "mid": 0.45, "late": 0.75}
 const PILOT_COLOR := {"hiro": Color("8fc7e8"), "pala": Color("f0b48a"), "midas": Color("e8d27a")}
 
 signal mission_done
@@ -427,6 +432,7 @@ func run() -> Dictionary:
 		Sfx.music(music_path.get_file().get_basename(), 0.6)
 	running = true
 	_set_mood("")
+	_build_pilot_script()
 	if not _done_sig:
 		await mission_done
 	return _result
@@ -658,6 +664,7 @@ func _process(delta: float) -> void:
 	_update_beam(delta)
 	_update_missiles(delta)
 	_chatter(delta)
+	_pilot_tick()
 	if hp <= 1.0 and alive:
 		_heart_t -= delta
 		if _heart_t <= 0.0:
@@ -1653,6 +1660,70 @@ func pilot_call(pilot: String, text: String, mood: String = "", cps: float = 30.
 	_comms(str(Data.CAST[pilot].name).to_upper(), text, cps, hold, pilot, mood)
 
 
+var _pilot_scripted := false
+
+
+static func pilot_comms_data() -> Dictionary:
+	if _pilot_comms_data.is_empty():
+		var f := FileAccess.open("res://data/pilot_comms.json", FileAccess.READ)
+		if f:
+			_pilot_comms_data = JSON.parse_string(f.get_as_text())
+	return _pilot_comms_data
+
+
+static func pilot_line(call: Dictionary) -> Dictionary:
+	## The line a scripted call speaks for the current story: Midas' slot goes
+	## to its 'dead' call once he is gone, Pala is silent once she has left,
+	## and the tier is the pilot's relationship (highest written tier not above
+	## it). Empty when nobody should speak.
+	var pilot: String = call.get("pilot", "")
+	if pilot == "midas" and Game.midas_dead():
+		if not call.has("dead"):
+			return {}
+		return pilot_line(call.dead)
+	if pilot == "pala" and bool(Game.story.get("pala_unavailable", false)):
+		return {}
+	var lines: Dictionary = call.get("lines", {})
+	var r := Game.relationship(pilot)
+	var best := -1
+	for k: String in lines:
+		if int(k) <= r and int(k) > best:
+			best = int(k)
+	if best < 0:
+		return {}
+	var l: Array = lines[str(best)]
+	return {"pilot": pilot, "text": str(l[0]), "mood": str(l[1]) if l.size() > 1 else "", "tier": best}
+
+
+func _build_pilot_script() -> void:
+	_pilot_script.clear()
+	if arcade or training:
+		return
+	var calls: Array = pilot_comms_data().get(planet_type, {}).get(str(level_index), [])
+	_pilot_scripted = not calls.is_empty()
+	for c: Dictionary in calls:
+		var l := pilot_line(c)
+		if l.is_empty():
+			continue
+		l.t = maxf(4.0, last_spawn_t * float(PILOT_CALL_AT.get(str(c.get("at", "mid")), 0.45)))
+		_pilot_script.append(l)
+	_pilot_script.sort_custom(func(a, b): return a.t < b.t)
+
+
+func _pilot_tick() -> void:
+	## Scripted calls wait out boss staging (the intro holds the clock) and
+	## never start while a boss is on the field.
+	if _pilot_script.is_empty() or not alive or finished or _hold > 0:
+		return
+	if float(_pilot_script[0].t) > level_t:
+		return
+	for th in threats:
+		if is_instance_valid(th) and th is Boss:
+			return
+	var l: Dictionary = _pilot_script.pop_front()
+	pilot_call(l.pilot, l.text, l.mood)
+
+
 func _player_label() -> String:
 	return Game.player_name if not arcade else "PILOT"
 
@@ -1828,7 +1899,7 @@ func _comms_show(lines: PackedStringArray, n: int, cursor: bool) -> void:
 
 
 func _chatter(delta: float) -> void:
-	if arcade or training:
+	if arcade or training or not _pilot_script.is_empty() or _pilot_scripted:
 		return
 	_chatter_t -= delta
 	if _chatter_t > 0.0:

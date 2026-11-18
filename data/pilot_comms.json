@@ -1,0 +1,1011 @@
+{
+ "terra_virex": {
+  "1": [
+   {
+    "pilot": "hiro",
+    "at": "start",
+    "lines": {
+     "0": [
+      "First real drop! Bet I clear my side before you clear yours.",
+      "smile"
+     ],
+     "1": [
+      "Feel that hum when the link takes? Don't hesitate. Just turn.",
+      "smile"
+     ],
+     "2": [
+      "Terra again. I could fly this one asleep. Maybe I do.",
+      ""
+     ],
+     "3": [
+      "Terra Virex. Baseline. Nothing here requires thought.",
+      "hollow"
+     ]
+    }
+   },
+   {
+    "pilot": "midas",
+    "at": "mid",
+    "lines": {
+     "0": [
+      "Is that a colony down there? Are people watching us?",
+      "sad"
+     ],
+     "1": [
+      "Did you call home yet? Tell me you called home.",
+      "smile"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "Midas used to watch the colony lights from up here. ...Keep going.",
+       "sad"
+      ],
+      "2": [
+       "They took Midas off the roster like he was never on it.",
+       "angry"
+      ]
+     }
+    }
+   }
+  ],
+  "2": [
+   {
+    "pilot": "pala",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Shots from both sides on this one. Don't chase. Turn with it.",
+      "sad"
+     ],
+     "1": [
+      "Crossfire. Breathe between volleys. I'm right here.",
+      "smile"
+     ],
+     "2": [
+      "They log every turn we make. Make yours look ordinary.",
+      "angry"
+     ]
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Relay sentinel coming up. First one to tag it buys dinner.",
+      "smile"
+     ],
+     "1": [
+      "The sentinel pulses before it fires. Stop thinking and you'll feel it.",
+      "smile"
+     ],
+     "2": [
+      "Don't talk. Turn.",
+      ""
+     ],
+     "3": [
+      "Sentinel inbound. Its pattern is already in me.",
+      "hollow"
+     ]
+    }
+   }
+  ],
+  "3": [
+   {
+    "pilot": "midas",
+    "at": "start",
+    "lines": {
+     "0": [
+      "The Aegis Relay is so big. I'll be listening, okay?",
+      "sad"
+     ],
+     "1": [
+      "Mom says big things are only small things standing close together.",
+      "smile"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "Midas would have said something kind right about now. So: you've got this.",
+       "sad"
+      ],
+      "2": [
+       "Midas didn't transfer. I'm going to prove it.",
+       "angry"
+      ]
+     }
+    }
+   },
+   {
+    "pilot": "pala",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Almost through. When we land, let's sit somewhere quiet.",
+      "smile"
+     ],
+     "1": [
+      "Watch the relay's shield. It opens when it breathes. So do you.",
+      "smile"
+     ],
+     "2": [
+      "If anything happens after this drill, my notes are in my locker.",
+      "sad"
+     ]
+    }
+   }
+  ]
+ },
+ "glacien_ix": {
+  "1": [
+   {
+    "pilot": "pala",
+    "at": "start",
+    "lines": {
+     "0": [
+      "It's so quiet out here. Quiet makes me count my heartbeats.",
+      "sad"
+     ],
+     "1": [
+      "Ice holds things still until it doesn't. Watch the frozen ones.",
+      ""
+     ],
+     "2": [
+      "The cold scrambles their channel. We can talk a little more freely.",
+      "angry"
+     ]
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "mid",
+    "lines": {
+     "0": [
+      "They just hang there! Hit the frozen ones before they wake!",
+      "smile"
+     ],
+     "1": [
+      "Stillness is a lie. Everything here waits for you to blink.",
+      "smile"
+     ],
+     "2": [
+      "Frozen targets. Free points. Faster.",
+      ""
+     ],
+     "3": [
+      "Stillness. Release. Impact. Predictable.",
+      "hollow"
+     ]
+    }
+   }
+  ],
+  "2": [
+   {
+    "pilot": "midas",
+    "at": "start",
+    "lines": {
+     "0": [
+      "It's so cold I can feel it through the link. Can you?",
+      "sad"
+     ],
+     "1": [
+      "It snowed at home once. Mom made me wear three scarves.",
+      "smile"
+     ]
+    },
+    "dead": {
+     "pilot": "hiro",
+     "lines": {
+      "0": [
+       "Midas' channel is still on my display. Somebody should clear it.",
+       ""
+      ],
+      "2": [
+       "Midas' channel is dead weight. Ignore it.",
+       ""
+      ],
+      "3": [
+       "One fewer signal. Less noise.",
+       "hollow"
+      ]
+     }
+    }
+   },
+   {
+    "pilot": "pala",
+    "at": "late",
+    "lines": {
+     "0": [
+      "They're crowding in. Don't let them make you panic.",
+      "sad"
+     ],
+     "1": [
+      "Frost Sentinel ahead. I've seen you do harder. Go.",
+      "smile"
+     ],
+     "2": [
+      "Another pilot dropped off the roster this morning. Stay sharp.",
+      "angry"
+     ]
+    }
+   }
+  ],
+  "3": [
+   {
+    "pilot": "hiro",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Colossus run! Loser does the other's sim drills for a week.",
+      "smile"
+     ],
+     "1": [
+      "When the Colossus moves the whole planet groans. I love it.",
+      "smile"
+     ],
+     "2": [
+      "The Colossus is slow. I'm not.",
+      ""
+     ],
+     "3": [
+      "Large target. Low threat. Proceed.",
+      "hollow"
+     ]
+    }
+   },
+   {
+    "pilot": "midas",
+    "at": "late",
+    "lines": {
+     "0": [
+      "I'm scared of the big one. But I'm glad it's you down there.",
+      "sad"
+     ],
+     "1": [
+      "If I don't make it back, call my mom for me? ...Joking. Mostly.",
+      "sad"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "I keep waiting for Midas to check in. The quiet is worse than the cold.",
+       "sad"
+      ],
+      "2": [
+       "Midas' last log stops mid-sentence. Same as the others.",
+       "angry"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "ignara_prime": {
+  "1": [
+   {
+    "pilot": "hiro",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Ignara! Finally something with some heat. Keep up.",
+      "smile"
+     ],
+     "1": [
+      "The heat sharpens everything. I see the shots before they fire.",
+      "smile"
+     ],
+     "2": [
+      "Hot. Fast. Good.",
+      ""
+     ],
+     "3": [
+      "Thermal load irrelevant. Continue.",
+      "hollow"
+     ]
+    }
+   },
+   {
+    "pilot": "pala",
+    "at": "mid",
+    "lines": {
+     "0": [
+      "The heat warnings are screaming. Turn early, not hard.",
+      "sad"
+     ],
+     "1": [
+      "Your sync spiked just now. Breathe. Come back to yourself.",
+      ""
+     ],
+     "2": [
+      "The heat masks our telemetry. They hear less of us down here.",
+      "angry"
+     ]
+    }
+   }
+  ],
+  "2": [
+   {
+    "pilot": "midas",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Everything's on fire. Is it supposed to look like this?",
+      "shock"
+     ],
+     "1": [
+      "This heat smells like Mom's oven. Is that weird? It's weird.",
+      "smile"
+     ]
+    },
+    "dead": {
+     "pilot": "hiro",
+     "lines": {
+      "0": [
+       "Midas would've freaked out at all this fire. ...Let's just go.",
+       ""
+      ],
+      "2": [
+       "Empty channel. Fine.",
+       ""
+      ],
+      "3": [
+       "Midas is a closed channel.",
+       "hollow"
+      ]
+     }
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Flare Carrier! Don't let it out-turn you!",
+      "smile"
+     ],
+     "1": [
+      "Watch the flares. Or don't. I stopped watching.",
+      "smile"
+     ],
+     "2": [
+      "The carrier's mine.",
+      ""
+     ],
+     "3": [
+      "Flare pattern known.",
+      "hollow"
+     ]
+    }
+   }
+  ],
+  "3": [
+   {
+    "pilot": "pala",
+    "at": "start",
+    "lines": {
+     "0": [
+      "The Crucible burns hot enough to melt a relay. Stay calm in there.",
+      "sad"
+     ],
+     "1": [
+      "Whatever happens in the Crucible, you come back. Promise me.",
+      "sad"
+     ],
+     "2": [
+      "After this, we talk. Somewhere they can't record.",
+      "angry"
+     ]
+    }
+   },
+   {
+    "pilot": "midas",
+    "at": "late",
+    "lines": {
+     "0": [
+      "I'm on your channel. You're doing it. You're really doing it!",
+      "smile"
+     ],
+     "1": [
+      "I-I'm here. I'm okay. My hands just won't stop shaking.",
+      "sad"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "Midas used to talk us through the Crucible. I'll try. ...Stay with me.",
+       "sad"
+      ],
+      "2": [
+       "Midas' sync logs are sealed now. So were the others'.",
+       "angry"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "tempestris": {
+  "1": [
+   {
+    "pilot": "pala",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Storm static on every channel. If I cut out, keep turning.",
+      "sad"
+     ],
+     "1": [
+      "There's a rhythm under the storm. Find it, then trust it.",
+      ""
+     ],
+     "2": [
+      "The storm blinds their monitors. Talk to me while it lasts.",
+      "angry"
+     ]
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "mid",
+    "lines": {
+     "0": [
+      "The wind throws them everywhere! Best drop yet!",
+      "smile"
+     ],
+     "1": [
+      "Chaos is a pattern you haven't finished feeling.",
+      "smile"
+     ],
+     "2": [
+      "Stop fighting the wind.",
+      ""
+     ],
+     "3": [
+      "There is no chaos. Only latency.",
+      "hollow"
+     ]
+    }
+   }
+  ],
+  "2": [
+   {
+    "pilot": "midas",
+    "at": "start",
+    "lines": {
+     "0": [
+      "The lightning keeps lighting up your shield. It's kind of pretty.",
+      "smile"
+     ],
+     "1": [
+      "When storms came at home, Mom told stories until they passed.",
+      "sad"
+     ]
+    },
+    "dead": {
+     "pilot": "hiro",
+     "lines": {
+      "0": [
+       "Storm's loud enough. Nobody needs to fill the quiet. ...Right?",
+       ""
+      ],
+      "2": [
+       "No one checking in. Good. Less static.",
+       ""
+      ],
+      "3": [
+       "Silence on channel three. Optimal.",
+       "hollow"
+      ]
+     }
+    }
+   },
+   {
+    "pilot": "pala",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Storm Eye ahead. It's calm in the middle. Don't trust it.",
+      "sad"
+     ],
+     "1": [
+      "Eye of the storm. Stay in it with me.",
+      "smile"
+     ],
+     "2": [
+      "I mapped a way out. When this storm passes, I'll show you.",
+      "angry"
+     ]
+    }
+   }
+  ],
+  "3": [
+   {
+    "pilot": "hiro",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Cyclarch! Bet it spins faster than you can turn.",
+      "smile"
+     ],
+     "1": [
+      "I dreamed about this fight. I already know how it ends.",
+      "smile"
+     ],
+     "2": [
+      "Stay out of my lane.",
+      ""
+     ],
+     "3": [
+      "The Cyclarch is a rotation. So am I.",
+      "hollow"
+     ]
+    }
+   },
+   {
+    "pilot": "midas",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Hang on! You're almost through the storm!",
+      "smile"
+     ],
+     "1": [
+      "Something's humming in my head. It's fine. Keep going.",
+      "sad"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "Midas always cheered right about here. So, for him: go!",
+       "smile"
+      ],
+      "2": [
+       "I won't let them erase him like the others.",
+       "angry"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "viscera_nova": {
+  "1": [
+   {
+    "pilot": "hiro",
+    "at": "start",
+    "lines": {
+     "0": [
+      "It's alive! The whole planet's alive! Can you feel it looking?",
+      "smile"
+     ],
+     "1": [
+      "It reacts to us. Like it wants to be faster too.",
+      "smile"
+     ],
+     "2": [
+      "It's alive. Doesn't matter.",
+      ""
+     ],
+     "3": [
+      "Organic interference. It will learn to yield.",
+      "hollow"
+     ]
+    }
+   },
+   {
+    "pilot": "pala",
+    "at": "mid",
+    "lines": {
+     "0": [
+      "It flinches when we fire. Is that... pain?",
+      "shock"
+     ],
+     "1": [
+      "It reacts to fear. Ours. Stay calm and it calms.",
+      ""
+     ],
+     "2": [
+      "It feels like the sync room. Something listening back.",
+      "angry"
+     ]
+    }
+   }
+  ],
+  "2": [
+   {
+    "pilot": "midas",
+    "at": "start",
+    "lines": {
+     "0": [
+      "The ground is breathing. I want to go home.",
+      "sad"
+     ],
+     "1": [
+      "It's like it's dreaming. I hope it's dreaming something nice.",
+      "sad"
+     ]
+    },
+    "dead": {
+     "pilot": "hiro",
+     "lines": {
+      "0": [
+       "It keeps pinging Midas' old channel. Creepy.",
+       ""
+      ],
+      "2": [
+       "It keeps calling an empty channel. So did I, once.",
+       ""
+      ],
+      "3": [
+       "It searches for a dead signal. Inefficient.",
+       "hollow"
+      ]
+     }
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Pulse Node! Hit it between beats!",
+      "smile"
+     ],
+     "1": [
+      "Feel its heartbeat. Get inside it.",
+      "smile"
+     ],
+     "2": [
+      "Between beats. Now.",
+      ""
+     ],
+     "3": [
+      "Synchronizing with the node.",
+      "hollow"
+     ]
+    }
+   }
+  ],
+  "3": [
+   {
+    "pilot": "pala",
+    "at": "start",
+    "lines": {
+     "0": [
+      "The Heart is at the center. Whatever it wants, don't let it in.",
+      "sad"
+     ],
+     "1": [
+      "Honestly? I'm scared. I'm glad it's you beside me.",
+      "sad"
+     ],
+     "2": [
+      "They sent us here to see how far sync can go. Don't give them that.",
+      "angry"
+     ]
+    }
+   },
+   {
+    "pilot": "midas",
+    "at": "late",
+    "lines": {
+     "0": [
+      "You can do this! I believe in you. Really!",
+      "smile"
+     ],
+     "1": [
+      "It sounds like a heartbeat... it sounds like mine.",
+      "shock"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "Midas said it sounded like a heartbeat. I didn't listen enough.",
+       "sad"
+      ],
+      "2": [
+       "Midas heard it first. Then they took him off the roster.",
+       "angry"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "umbra_vacua": {
+  "1": [
+   {
+    "pilot": "hiro",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Umbra! I found this route myself. Don't embarrass me.",
+      "smile"
+     ],
+     "1": [
+      "No noise out here. Just us and the link. This is where I belong.",
+      "smile"
+     ],
+     "2": [
+      "Quiet. Finally.",
+      ""
+     ],
+     "3": [
+      "The void and I agree.",
+      "hollow"
+     ]
+    }
+   },
+   {
+    "pilot": "pala",
+    "at": "mid",
+    "lines": {
+     "0": [
+      "Don't fire at shadows. Out here, panic is what gets you hit.",
+      "sad"
+     ],
+     "1": [
+      "Slow down. The void punishes rushing. So do I.",
+      "smile"
+     ],
+     "2": [
+      "Hiro found this route on his own? Command knew. They wanted him to.",
+      "angry"
+     ]
+    }
+   }
+  ],
+  "2": [
+   {
+    "pilot": "midas",
+    "at": "start",
+    "lines": {
+     "0": [
+      "It's so dark. I can't see the stars from here.",
+      "sad"
+     ],
+     "1": [
+      "There were so many stars at home. I can't find any of them.",
+      "sad"
+     ]
+    },
+    "dead": {
+     "pilot": "hiro",
+     "lines": {
+      "0": [
+       "Midas hated the dark. He'd have hated this.",
+       ""
+      ],
+      "2": [
+       "Midas would have hated the dark. I don't, anymore.",
+       ""
+      ],
+      "3": [
+       "Darkness. Absence. Equivalent.",
+       "hollow"
+      ]
+     }
+    }
+   },
+   {
+    "pilot": "pala",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Void Sentinel ahead. Commit to a turn, then hold it.",
+      "sad"
+     ],
+     "1": [
+      "Pick a side and keep it. I'll watch the other.",
+      "smile"
+     ],
+     "2": [
+      "Whatever's watching out here, it isn't the only one.",
+      "angry"
+     ]
+    }
+   }
+  ],
+  "3": [
+   {
+    "pilot": "hiro",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Something huge is watching us. Let's give it a show!",
+      "smile"
+     ],
+     "1": [
+      "It sees every turn before you make it. So do I, now.",
+      "smile"
+     ],
+     "2": [
+      "Don't look away from it.",
+      ""
+     ],
+     "3": [
+      "It observes. I am observed. We are the same.",
+      "hollow"
+     ]
+    }
+   },
+   {
+    "pilot": "midas",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Don't look back! Don't look back at it!",
+      "shock"
+     ],
+     "1": [
+      "It's looking at me. Why is it looking at me?",
+      "shock"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "If Midas were here he'd tell you not to look back. So don't.",
+       "sad"
+      ],
+      "2": [
+       "He was watched like this too, wasn't he? Right to the end.",
+       "angry"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "mechanon_ascens": {
+  "1": [
+   {
+    "pilot": "pala",
+    "at": "start",
+    "lines": {
+     "0": [
+      "A machine world. Everything here runs on a schedule.",
+      "sad"
+     ],
+     "1": [
+      "Machines don't hesitate. That's why you can beat them. Break the rhythm.",
+      ""
+     ],
+     "2": [
+      "Helion built this place. Look at the patterns. They're ours.",
+      "angry"
+     ]
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "mid",
+    "lines": {
+     "0": [
+      "Perfect timing, perfect lanes. Finally a fair fight!",
+      "smile"
+     ],
+     "1": [
+      "Everything here is synchronized. It's beautiful.",
+      "smile"
+     ],
+     "2": [
+      "This is what we're meant to be.",
+      ""
+     ],
+     "3": [
+      "Perfection recognized. Joining rhythm.",
+      "hollow"
+     ]
+    }
+   }
+  ],
+  "2": [
+   {
+    "pilot": "midas",
+    "at": "start",
+    "lines": {
+     "0": [
+      "Everything moves in perfect lines. It's making me dizzy.",
+      "sad"
+     ],
+     "1": [
+      "It's so clean here. Nothing like a kitchen at all.",
+      "sad"
+     ]
+    },
+    "dead": {
+     "pilot": "pala",
+     "lines": {
+      "0": [
+       "This was Midas' last route. Let's not lose what he protected.",
+       "sad"
+      ],
+      "2": [
+       "Midas' final sync rate matches the missing pilots'. Exactly.",
+       "angry"
+      ]
+     }
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "late",
+    "lines": {
+     "0": [
+      "Mirror twins! Two of them, two of us. Fair.",
+      "smile"
+     ],
+     "1": [
+      "They copy you. Be faster than your copy.",
+      "smile"
+     ],
+     "2": [
+      "Mirrors. Beneath us.",
+      ""
+     ],
+     "3": [
+      "Twin signal. Single mind.",
+      "hollow"
+     ]
+    }
+   }
+  ],
+  "3": [
+   {
+    "pilot": "pala",
+    "at": "start",
+    "lines": {
+     "0": [
+      "The Paragon is a Protektor with no pilot. Or... with something else.",
+      "shock"
+     ],
+     "1": [
+      "That machine is what they want us to become. Don't let it be you.",
+      "sad"
+     ],
+     "2": [
+      "That's the end of the sync program. A pilot with nothing left. Fight it.",
+      "angry"
+     ]
+    }
+   },
+   {
+    "pilot": "hiro",
+    "at": "late",
+    "lines": {
+     "0": [
+      "A Protektor with no pilot? Nothing beats a real one. Prove it!",
+      "smile"
+     ],
+     "1": [
+      "Paragon. Perfect sync. ...I want to know how it feels.",
+      "smile"
+     ],
+     "2": [
+      "It's what I'm becoming. It's beautiful.",
+      ""
+     ],
+     "3": [
+      "It's calling me. I hear it.",
+      "hollow"
+     ]
+    }
+   }
+  ]
+ }
+}
