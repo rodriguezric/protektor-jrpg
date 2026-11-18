@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 14:45 EST — `feature_pilot_planet_transmissions` (v0.43.0)
+
+Hiro, Pala and Midas now have their own lines on every story level, and what they say follows how close you've grown to them.
+
+- Each of the 21 story levels has two scripted codec calls (early, middle or late), and every pilot is heard on every planet. Lines change with the pilot's relationship: Hiro goes from cocky to cold to hollow over four tiers, Pala from nervous to trusting to openly suspicious of Helion, and Midas from scared to homesick.
+- Once Midas is dead he never transmits again; his slots go to Hiro or Pala remarking on his absence (or stay silent). If Pala has left, she is silent too. Calls wait out boss intros and never start while a boss is on the field. Free Missions and training stay quiet.
+- The old random chatter is off on levels with scripted calls.
+- Code: `data/pilot_comms.json` (built by `tools/build_pilot_comms.py`), `scripts/mission.gd` (`pilot_comms_data()`, `pilot_line()`, `_build_pilot_script()`, `_pilot_tick()`), `tools/autotest.gd` (`PK_TEST=pilotcomms` prints every level's lines under three story states).
+
 ## 2026-11-18 14:39 EST — `feature_mission_codec_portraits` (v0.42.0)
 
 Pilots now call you mid-mission codec-style: their face blinks into your portrait panel while they talk, then blinks back to you.

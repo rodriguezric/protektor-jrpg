@@ -789,6 +789,27 @@ func _run(scenario: String) -> void:
 			await wait(0.3)
 			print("[codec] after dead midas call: pilot_on='%s' queue=%d" % [m._pilot_on, m._comms_queue.size()])
 			get_tree().quit()
+		"pilotcomms":
+			# every story level's scripted pilot calls under three story states
+			Game.new_game()
+			var M = load("res://scripts/mission.gd")
+			var states := [["fresh", {"hiro": 0, "pala": 0, "midas": 0}, false, false],
+				["close", {"hiro": 3, "pala": 2, "midas": 1}, false, false],
+				["midas_dead+pala_gone", {"hiro": 1, "pala": 1, "midas": 2}, true, true]]
+			for st in states:
+				Game.story.relationships = st[1].duplicate()
+				Game.story.midas_dead = st[2]
+				Game.story.pala_unavailable = st[3]
+				print("[pilotcomms] ---- %s ----" % st[0])
+				var data: Dictionary = M.pilot_comms_data()
+				for planet in Data.PLANETS:
+					for lv in ["1", "2", "3"]:
+						var said := []
+						for c in data[planet][lv]:
+							var l: Dictionary = M.pilot_line(c)
+							said.append("-" if l.is_empty() else "%s/%d: %s" % [l.pilot, l.tier, l.text])
+						print("[pilotcomms] %s_%s  %s" % [planet, lv, "  |  ".join(said)])
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up
