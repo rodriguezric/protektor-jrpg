@@ -2,7 +2,7 @@ class_name DialogBox
 extends Control
 ## Typewriter dialog box with portraits.
 ## `await dialog.say(lines, speaker, opts)`; `await dialog.ask(question, options, speaker, opts)`.
-## opts: portrait (spec | "system" | "comm"), mood, side ("left"/"right"), voice,
+## opts: portrait (spec | "comm"; "system" shows none), mood, side ("left"/"right"), voice,
 ## color, auto (advance by itself), sys (Helion box style).
 
 const TEXT_W := 292
@@ -117,6 +117,9 @@ func close() -> void:
 
 func _set_portrait(opts: Dictionary) -> void:
 	var p = opts.get("portrait", null)
+	# the one-eyed machine is never used as a talking portrait
+	if p is String and p == "system":
+		p = null
 	if p == null:
 		pframe.visible = false
 		_portrait_key = ""
