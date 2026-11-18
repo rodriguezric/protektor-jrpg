@@ -1124,5 +1124,192 @@
 				]
 			}
 		]
+	},
+	"void_sentinel": {
+		"name": "VOID SENTINEL",
+		"mini": true,
+		"hp": 30,
+		"size": 66,
+		"dist": 160,
+		"fight_sec": 28,
+		"color": [
+			0.35,
+			0.32,
+			0.5
+		],
+		"art": {
+			"shape": "eye",
+			"spikes": 4
+		},
+		"subtitle": "IT MOVES WHEN YOU MOVE",
+		"phases": [
+			{
+				"until": 0.5,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 6,
+					"speed": 1.0
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "on_rotate",
+						"cooldown": 2.2,
+						"lunge": true
+					},
+					{
+						"type": "volley",
+						"every": 6.0,
+						"first": 4.0,
+						"n": 1,
+						"speed": 180,
+						"tell": 0.6
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "hop",
+					"every": 7.0,
+					"step_deg": 90,
+					"speed": 1.2
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "on_rotate",
+						"cooldown": 1.8,
+						"lunge": true
+					},
+					{
+						"type": "volley",
+						"every": 5.0,
+						"first": 3.0,
+						"n": 1,
+						"speed": 190,
+						"tell": 0.5
+					}
+				]
+			}
+		]
+	},
+	"observer": {
+		"name": "THE OBSERVER",
+		"hp": 80,
+		"size": 104,
+		"dist": 165,
+		"fight_sec": 50,
+		"color": [
+			0.32,
+			0.3,
+			0.48
+		],
+		"art": {
+			"shape": "eye",
+			"nodes": 4
+		},
+		"warning": "YOU ARE BEING WATCHED",
+		"subtitle": "IT ONLY ACTS WHEN YOU DO",
+		"phases": [
+			{
+				"until": 0.6,
+				"move": {
+					"type": "hold"
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "on_rotate",
+						"cooldown": 0.8,
+						"n": 2,
+						"gap": 0.3,
+						"speed": 200,
+						"from": "behind"
+					},
+					{
+						"type": "arc_burst",
+						"every": 8.0,
+						"first": 5.0,
+						"count": 4,
+						"width_deg": 60,
+						"offset_deg": 180,
+						"speed": 150,
+						"tell": 0.8
+					}
+				]
+			},
+			{
+				"until": 0.3,
+				"move": {
+					"type": "hop",
+					"every": 8.0,
+					"step_deg": 90
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "on_rotate",
+						"cooldown": 0.7,
+						"n": 2,
+						"gap": 0.28,
+						"speed": 200,
+						"from": "behind"
+					},
+					{
+						"type": "adds",
+						"every": 12.0,
+						"first": 3.0,
+						"enemy_type": "drone_basic",
+						"degrees": [
+							30,
+							-30
+						],
+						"hold_dist": 150,
+						"hold_sec": 10,
+						"hold_style": "watch",
+						"fire_on_turn": true
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "hop",
+					"every": 6.0,
+					"step_deg": 90
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "on_rotate",
+						"cooldown": 0.6,
+						"n": 3,
+						"gap": 0.25,
+						"speed": 200,
+						"from": "behind"
+					},
+					{
+						"type": "arc_burst",
+						"every": 6.0,
+						"first": 3.0,
+						"count": 5,
+						"width_deg": 80,
+						"offset_deg": 180,
+						"speed": 160,
+						"tell": 0.7
+					},
+					{
+						"type": "adds",
+						"every": 10.0,
+						"first": 5.0,
+						"enemy_type": "drone_fast",
+						"degrees": [
+							180
+						]
+					}
+				]
+			}
+		]
 	}
 }

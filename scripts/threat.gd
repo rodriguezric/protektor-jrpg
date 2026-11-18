@@ -81,6 +81,10 @@ var hold_style := "frost"
 var wake_on := ""
 var lunge_mult := 1.0
 var retaliate := false
+## Umbra Vacua: a watcher with fire_on_turn stays put and fires each time the
+## player turns (punish_on_rotation), until its hold runs out.
+var fire_on_turn := false
+var _turn_cd := 0.0
 var _hold_facing := Vector2.ZERO
 var _hold_blocks := 0
 var _ret_t := -1.0
@@ -224,6 +228,14 @@ func _check_hold(sd: float) -> bool:
 			m.fx.ring(position, 2, d * 0.8, 0.3, Pal.FROST, 1.0, 1.0)
 			Sfx.play("plate", 1.6, -16.0)
 	_release_left -= sd
+	if fire_on_turn:
+		_turn_cd = maxf(0.0, _turn_cd - sd)
+		if absf(m.facing.angle_to(_hold_facing)) > 0.6:
+			_hold_facing = m.facing
+			if _turn_cd <= 0.0 and m.alive:
+				_turn_cd = 0.9
+				m.on_tell(self, "tank")
+				_fire(240.0, 1.0, 7.0, "boss")
 	var woke: bool = (wake_on == "block" and m.block_count > _hold_blocks) or (wake_on == "turn" and absf(m.facing.angle_to(_hold_facing)) > 0.6)
 	if _release_left <= 0.0 or woke:
 		_frozen = false

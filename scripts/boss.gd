@@ -25,7 +25,9 @@ extends Threat
 ##   adds        spawn enemy_type at the boss's angle + each of degrees[]
 ##               (optional hold_dist + hold_sec: they freeze there, then thaw
 ##               together hold_sec after the attack)
-##   on_rotate   a shot from the boss each time the player turns (cooldown)
+##   on_rotate   a shot from the boss each time the player turns (cooldown),
+##               or with lunge: true a lunge at the planet, or with
+##               from: "behind" shots at the player's back as they now face
 ## Every attack can carry tell (seconds of warning flash before it fires).
 
 signal phase_changed(index: int)
@@ -233,6 +235,22 @@ func _fire_attack(a: Dictionary) -> void:
 	var spd := float(a.get("speed", 220.0))
 	var r := float(a.get("radius", 8.0))
 	var dmg := float(a.get("damage", 1.0))
+	if str(a.get("type", "")) == "on_rotate" and bool(a.get("lunge", false)):
+		# a lunge at the planet instead of a shot
+		if _lunging <= 0.0:
+			_lunging = 1.0
+			_tell(0.3)
+		return
+	if str(a.get("type", "")) == "on_rotate" and str(a.get("from", "boss")) == "behind":
+		# punish panic: shots at the player's back as they face now; hold
+		# that facing and the shield takes them, keep turning and they land
+		var back: Vector2 = -m.facing
+		for k in int(a.get("n", 1)):
+			var ang: float = back.angle() + (k - (int(a.get("n", 1)) - 1) / 2.0) * deg_to_rad(float(a.get("spread_deg", 18.0)))
+			get_tree().create_timer((0.25 + k * float(a.get("gap", 0.25))) / maxf(0.05, m.speed_scale), false).timeout.connect(func() -> void:
+				if not dying and is_inside_tree() and m.alive and not m.finished:
+					_shoot_from(m._edge_point(Vector2.from_angle(ang), -10.0), spd, r, dmg))
+		return
 	match str(a.get("type", "")):
 		"volley", "on_rotate":
 			var n := int(a.get("n", 1))
@@ -263,7 +281,7 @@ func _fire_attack(a: Dictionary) -> void:
 				if a.has("hold_dist"):
 					ev.hold_dist = float(a.hold_dist)
 					ev.hold_sec = float(a.get("hold_sec", 2.5))
-				for k in ["hold_style", "wake_on", "lunge_mult", "retaliate"]:
+				for k in ["hold_style", "wake_on", "lunge_mult", "retaliate", "fire_on_turn"]:
 					if a.has(k):
 						ev[k] = a[k]
 				m._spawn(ev)
