@@ -271,7 +271,7 @@ func _endings_seen() -> int:
 
 
 func talk(_n: Actor) -> void:
-	await s.say("pala", "Not now. Keep moving.", "anxious")
+	await NpcTalk.say(s, "launch_wing.pala")
 
 
 func examine(_ev: Dictionary) -> void:

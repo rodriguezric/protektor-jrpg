@@ -1,5 +1,17 @@
 # Patch Notes
 
+## 2026-11-18 17:38 EST — `feature_npc_conversation_expansion` (v0.57.0)
+
+Everyone you can walk up to has more to say, it changes with the story, and they move on a line each time you come back.
+
+- Home (the evening before): your mother and father each have a run of lines that reacts to what you said about the letter, whether you went out into Block 7, and Juno's bracelet ('Keep it on. Don't let them take it off you.').
+- The parade: Hiro, Pala, Midas, the announcer and your parents in the crowd now talk before you line up, and the crowd and the other recruits have a wider spread of lines ('Which one's yours, sweetheart? Oh, you don't get to pick?').
+- The academy corridor: the Instructor, Hiro, Pala, Midas and the recruits each have more than one line ('There are more pods than recruits.').
+- The Commons: the background recruits are now people with names and portraits (Nell, who counts the chairs at dinner; Dov, who wants a ping-pong rematch; Sefa, who can't hear her sister's voice any more; Kit, who watches the leaderboard; Bram, who tells the same joke). What they say follows the story: how many deployments you've flown, a win or a loss last time, your sync level, calls home, your rally record, Hiro's state, and Midas' death ('Midas laughed at all my jokes. Even the bad ones.'). As the intake 'transfers', fewer of them are left. The maintenance unit gets a paper smile, then a name.
+- The escape: Pala has a few lines in the launch wing.
+- Lines never repeat twice in a row; once someone's lines are used up, their last few cycle.
+- Code: new `scripts/npc_talk.gd` (NpcTalk: conditions, rotation) and `data/npc_talk.json` (built by `tools/build_npc_talk.py`), `scripts/data.gd` (RECRUITS), `scripts/game.gd` (recruits in cast()), `scripts/story_prologue.gd`, `scripts/story_academy.gd`, `scripts/story_hub.gd` (named recruits; last_result), `scripts/story_endings.gd`, `tools/autotest.gd` (`PK_TEST=npctalk` prints every person's lines under three story states; `PK_TEST=commonstalk`).
+
 ## 2026-11-18 17:32 EST — `feature_protektor_propaganda_lore` (v0.56.0)
 
 How they sell us: 13 pieces of Protektor propaganda to find and file, a FILES page to read them, and two scenes where the truth breaks through.

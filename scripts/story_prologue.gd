@@ -179,32 +179,20 @@ func exit(e: Dictionary) -> void:
 
 func talk(n: Actor) -> void:
 	match n.info.get("id", ""):
-		"mother":
-			if s.w.def.id == "parade":
-				return
-			await s.say("mother", ["Did you eat? You should eat something.", "...I keep reading it. As if the words will change if I look long enough."], "tired")
-		"father":
-			if s.w.def.id == "parade":
-				return
-			await s.say("father", ["The shield's breathing slower tonight. They say that's normal.", "Get some sleep. I'll check the heater."], "flat")
-		"hiro":
-			await s.say("hiro", "Look at those things. Bet they hit harder than anything on this planet.", "still_smiling")
-		"pala":
-			await s.say("pala", "Their joints don't flex like armor. They flex like... something grown.", "anxious")
-		"midas":
-			await s.say("midas", "My mom's out there somewhere. I can't find her face.", "uneasy")
-		"announcer":
-			await s.say("announcer", "Recruits will hold formation until called!")
+		"mother", "father":
+			var place := "parade" if s.w.def.id == "parade" else "home"
+			n.face_toward(s.w.player.position)
+			await NpcTalk.say(s, "%s.%s" % [place, n.info.get("id", "")])
+		"hiro", "pala", "midas", "announcer":
+			await NpcTalk.say(s, "parade." + str(n.info.get("id", "")))
 		"okafor", "hale", "benno", "tomas", "juno", "pip", "wren":
 			await _neighbour(n.info.get("id", ""))
 		_:
 			var id: String = n.info.get("id", "")
 			if id.begins_with("crowd"):
-				var lines := ["We're so proud of you!", "Helion keeps us safe!", "Wave! Wave to us!", "My boy went up last spring. He writes every month."]
-				await s.say("", "\"%s\"" % lines[id.hash() % lines.size()])
+				await NpcTalk.say(s, "parade.crowd", id)
 			elif id.begins_with("rec"):
-				var lines2 := ["Don't step out of line. They're watching.", "My uniform's too big too.", "I heard you get your own Protektor.", "..."]
-				await s.say("", "\"%s\"" % lines2[id.hash() % lines2.size()])
+				await NpcTalk.say(s, "parade.rec", id)
 			else:
 				await s.say("", "...")
 

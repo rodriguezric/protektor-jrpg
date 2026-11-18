@@ -1117,6 +1117,58 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[propaganda] found=%d/%d %s footage_seen=%s ach=%s" % [Propaganda.count(), Propaganda.ORDER.size(), Propaganda.found_all().keys(), Game.story.get("footage_seen"), Game.achieved.keys()])
 			get_tree().quit()
+		"commonstalk":
+			# the Commons' named recruits and the bot, talked to in the field
+			auto_talk = false
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			main.fade_rect.color.a = 0.0
+			main.load_map(main.story.hub._map(), Vector2i(12, 8), 1)
+			await wait(0.5)
+			var w = main.world
+			var k := 0
+			for id in ["rec0", "rec1", "rec2", "rec3", "rec4", "bot"]:
+				var act = w.actor(id)
+				if act == null:
+					continue
+				var go := func() -> void:
+					await main.story.talk(act)
+				go.call()
+				await wait(1.6)
+				await shot("ct_%d" % k)
+				k += 1
+				for j in 4:
+					await tap("accept", 0.3)
+			get_tree().quit()
+		"npctalk":
+			# every talkable person, three talks each, under three story states
+			Game.new_game()
+			Game.player_name = "Ari"
+			var states := [["fresh", {}, 0],
+				["middle", {"block7_seen": true, "bracelet": true, "last_result": "win"}, 4],
+				["late", {"midas_dead": true, "last_result": "lose"}, 7]]
+			for st in states:
+				Game.new_game()
+				for k in st[1]:
+					Game.story[k] = st[1][k]
+				var lv := 0
+				for p in Data.PLANETS:
+					if lv >= st[2]:
+						break
+					Game.story.completed_levels[p] = mini(3, st[2] - lv)
+					lv += mini(3, st[2] - lv)
+				Game.vars.letter_choice = "resolve" if st[0] == "middle" else "silent"
+				print("[npctalk] ---- %s (done=%d) ----" % [st[0], Game.completed_count()])
+				for key in NpcTalk.data():
+					var said := []
+					var inst := "crowd3" if key.ends_with(".crowd") else ("rec1" if key.ends_with(".rec") else "")
+					for i in 3:
+						var l := NpcTalk.line(key, inst)
+						said.append("-" if l.is_empty() else l[1])
+					var rep: bool = said[0] == said[1] or said[1] == said[2]
+					print("[npctalk] %s%s  %s" % [key, "  REPEAT!" if rep else "", "  |  ".join(said)])
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up

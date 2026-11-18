@@ -37,6 +37,8 @@ func enter(res: Dictionary) -> void:
 	await m.fade_in(0.8)
 	s.w.show_area_name()
 	var r := str(res.get("result", ""))
+	if r != "":
+		Game.story.last_result = r
 	if r == "lose" or r == "retreat":
 		await s.say("system", ["Deployment failed. Recovery protocol complete.", "Failed deployments are recorded. Readiness is not optional."])
 		if Game.use_medicine():
@@ -73,7 +75,7 @@ func _map() -> Dictionary:
 	var extra_n := clampi(5 - Game.completed_count() / 3, 1, 5)
 	var spots := [Vector2i(16, 6), Vector2i(8, 10), Vector2i(19, 9), Vector2i(3, 9), Vector2i(24, 11)]
 	for i in extra_n:
-		npcs.append({"id": "rec%d" % i, "spec": Data.EXTRAS[(i * 3 + 1) % Data.EXTRAS.size()], "tile": spots[i], "dir": i % 4, "wander": i % 2 == 0, "range": 2.0})
+		npcs.append({"id": "rec%d" % i, "who": Data.RECRUIT_ORDER[i], "tile": spots[i], "dir": i % 4, "wander": i % 2 == 0, "range": 2.0})
 	npcs.append({"id": "bot", "bot": true, "tile": Vector2i(15, 7), "dir": 0, "wander": true, "range": 4.0})
 	mp.npcs = npcs
 	# The roster: names get struck as pilots "transfer".
@@ -114,8 +116,12 @@ func talk(n: Actor) -> void:
 		"bot":
 			Sfx.play("beep", 1.4, -8.0)
 			n.emote("...")
-			await s.say("", "A maintenance unit polishes the same panel of floor. It has been polishing it since you arrived.")
+			await NpcTalk.say(s, "commons.bot")
 		_:
+			if NpcTalk.has("commons." + id):
+				n.face_toward(s.w.player.position)
+				await NpcTalk.say(s, "commons." + id)
+				return
 			var lines := [
 				["Did you see the leaderboard? Nobody's beaten Hiro's turn speed.", "I sleep better after a deployment. Is that weird?"],
 				["My roommate transferred. That's what they said. Transferred.", "The food's better than at home. That's something."],
