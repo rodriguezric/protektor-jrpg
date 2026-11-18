@@ -14,8 +14,19 @@ const ENDING_NAMES := {
 }
 
 ## Categories, in tab order.
-const CATS := ["combat", "worlds", "story", "protektor"]
-const CAT_NAMES := {"combat": "COMBAT", "worlds": "WORLDS", "story": "STORY", "protektor": "PROTEKTOR"}
+const CATS := ["combat", "worlds", "bosses", "story", "protektor"]
+const CAT_NAMES := {"combat": "COMBAT", "worlds": "WORLDS", "bosses": "BOSSES", "story": "STORY", "protektor": "PROTEKTOR"}
+
+## Each planet's boss (data/bosses.json) and its achievement.
+const BOSSES := {
+	"terra_virex": ["aegis_relay", "Relay Silenced"],
+	"glacien_ix": ["boreal_colossus", "Thaw"],
+	"ignara_prime": ["solar_crucible", "Heat Death"],
+	"tempestris": ["cyclarch", "Eye of the Storm"],
+	"viscera_nova": ["gestalt_heart", "Still Heart"],
+	"umbra_vacua": ["observer", "Unobserved"],
+	"mechanon_ascens": ["paragon_protektor", "Imperfect"],
+}
 
 
 static func defs() -> Array:
@@ -43,6 +54,15 @@ static func defs() -> Array:
 				"desc": "Unlock %s on the star map." % nm})
 		d.append({"id": "clear_" + p, "cat": "worlds", "icon": "clear", "planet": p, "name": nm + " Secured",
 			"desc": "Clear all three levels of %s." % nm})
+	for p in Data.PLANETS:
+		if not BOSSES.has(p):
+			continue
+		var bid: String = BOSSES[p][0]
+		var bname: String = str(Boss.defs().get(bid, {}).get("name", bid.to_upper())).capitalize().trim_prefix("The ")
+		d.append({"id": "boss_" + bid, "cat": "bosses", "icon": "boss", "boss_id": bid, "name": BOSSES[p][1],
+			"desc": "Defeat the %s on %s." % [bname, Data.PLANET_INFO[p].name]})
+	d.append({"id": "all_bosses", "cat": "bosses", "icon": "all_bosses", "name": "Every Shield Broken",
+		"desc": "Defeat every planetary boss.", "stat": "bosses_defeated", "target": BOSSES.size()})
 	for e in ENDING_NAMES:
 		d.append({"id": "ending_" + e, "cat": "story", "icon": "ending_" + e, "name": ENDING_NAMES[e][0], "desc": ENDING_NAMES[e][1]})
 	d.append({"id": "all_endings", "cat": "story", "icon": "all_endings", "name": "Every Version of You",
@@ -82,6 +102,13 @@ static func stat(name: String) -> int:
 			for m in Data.TRAINING_MODULES:
 				t += Game.training_level(m)
 			return t
+		"bosses_defeated":
+			var beaten: Dictionary = Game.achv_stats.get("bosses", {})
+			var n := 0
+			for p in BOSSES:
+				if beaten.has(BOSSES[p][0]):
+					n += 1
+			return n
 		"upgrades_owned":
 			var n := Game.upgrade_level("cooldown") + Game.upgrade_level("armor")
 			if Game.has_special("ext_shield"):
@@ -120,6 +147,8 @@ static func _met(a: Dictionary) -> bool:
 		return Game.is_planet_unlocked(a.planet)
 	if id.begins_with("clear_"):
 		return Game.highest(a.planet) >= 3 or int(Game.arcade.get(a.planet, 0)) >= 3
+	if id.begins_with("boss_"):
+		return Game.achv_stats.get("bosses", {}).has(a.boss_id)
 	if id.begins_with("ending_"):
 		for h in Game.history:
 			if "ending_" + str(h.get("ending", "")) == id:
@@ -161,6 +190,19 @@ static func blocked() -> void:
 
 static func took_damage() -> void:
 	Game.achv_stats.block_chain = 0
+
+
+static func boss_defeated(boss_id: String, is_mini: bool) -> void:
+	## Called the moment a boss dies (story or Free Missions), so it counts
+	## even if the mission is abandoned afterwards. Mini-bosses don't count.
+	if is_mini:
+		return
+	var beaten: Dictionary = Game.achv_stats.get("bosses", {})
+	if not beaten.has(boss_id):
+		beaten[boss_id] = int(Time.get_unix_time_from_system())
+	Game.achv_stats.bosses = beaten
+	Game.save_achievements()
+	check()
 
 
 static func mission_cleared(level: int, hits_taken: int) -> void:

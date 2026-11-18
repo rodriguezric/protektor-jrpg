@@ -98,6 +98,26 @@ static func icon(a: Dictionary, unlocked: bool) -> PixBuf:
 						b.pset(int(c.x + cos(ang) * r), int(c.y + sin(ang) * r * 0.5 + 4), Pal.SYNC.lerp(Pal.WHITE, 0.4 - r * 0.03))
 			b.ball(12, 8, 4, 4, Pal.SYNC.lerp(Pal.NAVY, 0.3))
 			b.ascii(["X.X.X"], {"X": Pal.LEMON}, 10, 20)
+		"boss":
+			# the boss itself, small, on a red warning ring
+			for k in 28:
+				var ang := k * TAU / 28.0
+				if k % 2 == 0:
+					b.pset(int(c.x + cos(ang) * 11), int(c.y + sin(ang) * 11), Pal.BLOOD)
+			var bd: Dictionary = Boss.defs().get(str(a.get("boss_id", "")), {})
+			var bc: Array = bd.get("color", [0.8, 0.4, 0.5])
+			var spr := ArtMission.boss(bd.get("art", {}), Color(bc[0], bc[1], bc[2]), 16, 2, 0, true).img
+			b.img.blend_rect(spr, Rect2i(Vector2i.ZERO, spr.get_size()), Vector2i(12 - spr.get_width() / 2, 12 - spr.get_height() / 2))
+		"all_bosses":
+			# seven eyes round a cracked shield
+			b.ball(12, 12, 6, 6, Pal.STEEL)
+			b.line(9, 7, 12, 12, Pal.INK)
+			b.line(12, 12, 15, 17, Pal.INK)
+			for k in 7:
+				var ang := -PI / 2 + k * TAU / 7.0
+				var p := c + Vector2(cos(ang), sin(ang)) * 9.5
+				b.ball(p.x, p.y, 2.2, 2.2, Pal.WHITE)
+				b.pset(int(p.x), int(p.y), Pal.BLOOD)
 		"upgrades":
 			for k in 8:
 				var ang := k * TAU / 8.0
