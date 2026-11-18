@@ -56,6 +56,9 @@ var _lunge_t := 0.0
 var _lunging := 0.0
 var _streams: Array = []
 var _shut_spark_t := 0.0
+## The boss's own clock: the level clock stands still behind the
+## wait_until_clear gate a boss fight sits behind.
+var _clock := 0.0
 const ENTER_SEC := 1.6
 
 
@@ -112,6 +115,7 @@ func tick(delta: float) -> void:
 		return
 	var sd: float = delta * m.speed_scale
 	_anim += sd
+	_clock += sd
 	if _flash_t > 0.0:
 		_flash_t = maxf(0.0, _flash_t - sd)
 	if _enter_t > 0.0:
@@ -150,9 +154,9 @@ func _move(mv: Dictionary, sd: float) -> void:
 				_glide_to(angle + step * (1.0 if randf() < 0.5 else -1.0))
 		"mirror":
 			# follows where the player faced `delay` seconds ago
-			_hist.push_back([m.level_t, m.facing.angle()])
+			_hist.push_back([_clock, m.facing.angle()])
 			var delay := float(mv.get("delay", 0.6))
-			while _hist.size() > 1 and float(_hist[1][0]) <= m.level_t - delay:
+			while _hist.size() > 1 and float(_hist[1][0]) <= _clock - delay:
 				_hist.pop_front()
 			var want: float = float(_hist[0][1]) + deg_to_rad(float(mv.get("offset_deg", 0.0)))
 			angle = lerp_angle(angle, want, clampf(sd * 6.0, 0.0, 1.0))

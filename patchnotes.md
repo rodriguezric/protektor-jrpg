@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 11:29 EST — `feature_mechanon_ascens_level_redesign` (v0.39.0)
+
+Mechanon Ascens rebuilt around breaking your own rhythm: symmetry that breaks, threats that echo where you faced. Mirror Twins mini-boss, Paragon Protektor boss.
+
+- Mirrored rock/drone pairs; steady a-b rhythms whose last beat comes from somewhere else; echo waves that arrive where you were facing a moment ago (drones in front of it, rocks behind it), so a fixed rhythm lines them up and a changed one doesn't; fast pressure waves round all the lanes; lane shifters.
+- Level 1 "Calibration" (~90 s), Level 2 "Disruption" (~120 s) ending on the MIRROR TWINS (two units that sit where you faced a second ago, one in front and one behind), Level 3 "Paragon" (~150 s) ending on the PARAGON PROTEKTOR: it drifts in behind wherever you faced, on a delay that shortens each phase, and fires bursts at your front, so turn to it (shield to the bursts) and shoot in the gap before it slides behind you again.
+- Standard kit: the levelcheck bot clears all three (98 s, 108 s, 144 s; 1 hit on the boss).
+- Fix: a boss's mirror movement used the level clock, which stands still during boss fights; bosses now keep their own clock.
+- Code: scripts/mission.gd spawn_side "echo" (facing log); scripts/boss.gd `_clock`; tools/build_levels.py `echo`, `echo_wave`, `symmetric_pairs`, `symmetry_break`, `pressure_wave` and the Mechanon plans; data/bosses.json `mirror_twin_a`, `mirror_twin_b`, `paragon_protektor`.
+
 ## 2026-11-18 11:21 EST — `feature_umbra_vacua_level_redesign` (v0.38.0)
 
 Umbra Vacua rebuilt around restraint: long silences, few but lethal threats, and enemies that punish turning. Void Sentinel mini-boss, The Observer boss.

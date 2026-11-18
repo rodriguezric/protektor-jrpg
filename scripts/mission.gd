@@ -148,6 +148,9 @@ var _boss_name: Label
 var _hold := 0
 ## Everything the shield has stopped (rocks and shots); intent threats wake on it.
 var block_count := 0
+## Where the player has faced lately ([level-clock seconds, angle]), for
+## spawn_side "echo" (Mechanon: threats arrive where you were facing).
+var _facing_log: Array = []
 var _comms_busy := false
 
 signal mission_done
@@ -620,6 +623,9 @@ func _process(delta: float) -> void:
 	if not running:
 		return
 	_handle_fire(delta)
+	_facing_log.push_back([level_t, facing.angle()])
+	if _facing_log.size() > 400:
+		_facing_log.pop_front()
 	if _hold <= 0:
 		level_t += delta
 	while _hold <= 0 and t_index < timeline.size() and float(timeline[t_index].get("time", 0.0)) <= level_t:
@@ -1148,6 +1154,15 @@ func _margin(kind: String) -> float:
 func _spawn_pos(e: Dictionary, side: String, kind: String) -> Vector2:
 	var margin := _margin(kind)
 	var s := side.to_lower()
+	if s == "echo":
+		# where the player faced `delay` seconds ago, turned by `offset` degrees
+		var want := level_t - float(e.get("delay", 0.8))
+		var ang := facing.angle()
+		for rec in _facing_log:
+			if float(rec[0]) <= want:
+				ang = float(rec[1])
+		ang += deg_to_rad(float(e.get("offset", 0.0)))
+		return _edge_point(Vector2.from_angle(ang), margin)
 	if s == "degrees":
 		var a := deg_to_rad(float(posmod(int(e.get("degrees", 0)), 360)) - 90.0)
 		return _edge_point(Vector2(cos(a), sin(a)), margin)

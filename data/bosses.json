@@ -1311,5 +1311,202 @@
 				]
 			}
 		]
+	},
+	"mirror_twin_a": {
+		"name": "MIRROR TWINS",
+		"mini": true,
+		"hp": 12,
+		"size": 60,
+		"dist": 160,
+		"fight_sec": 24,
+		"color": [
+			0.7,
+			0.72,
+			0.8
+		],
+		"art": {
+			"shape": "mirror"
+		},
+		"subtitle": "THEY FOLLOW WHERE YOU WERE",
+		"phases": [
+			{
+				"until": 0.0,
+				"move": {
+					"type": "mirror",
+					"delay": 1.0,
+					"offset_deg": 0
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "volley",
+						"every": 3.4,
+						"first": 2.0,
+						"n": 1,
+						"speed": 200,
+						"tell": 0.5
+					}
+				]
+			}
+		]
+	},
+	"mirror_twin_b": {
+		"name": "MIRROR TWINS",
+		"mini": true,
+		"hp": 12,
+		"size": 60,
+		"dist": 160,
+		"fight_sec": 0,
+		"color": [
+			0.62,
+			0.66,
+			0.78
+		],
+		"art": {
+			"shape": "mirror"
+		},
+		"subtitle": "",
+		"phases": [
+			{
+				"until": 0.0,
+				"move": {
+					"type": "mirror",
+					"delay": 1.0,
+					"offset_deg": 180
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "volley",
+						"every": 3.4,
+						"first": 3.7,
+						"n": 1,
+						"speed": 200,
+						"tell": 0.5
+					}
+				]
+			}
+		]
+	},
+	"paragon_protektor": {
+		"name": "PARAGON PROTEKTOR",
+		"hp": 70,
+		"size": 100,
+		"dist": 160,
+		"fight_sec": 50,
+		"color": [
+			0.75,
+			0.78,
+			0.88
+		],
+		"art": {
+			"shape": "mirror",
+			"nodes": 4
+		},
+		"warning": "PERFECT SYNC DETECTED",
+		"subtitle": "WHAT YOU WOULD BECOME",
+		"phases": [
+			{
+				"until": 0.6,
+				"move": {
+					"type": "mirror",
+					"delay": 1.1,
+					"offset_deg": 180
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 4.6,
+						"first": 2.5,
+						"count": 4,
+						"width_deg": 60,
+						"offset_deg": 180,
+						"speed": 160,
+						"tell": 0.6
+					},
+					{
+						"type": "volley",
+						"every": 5.0,
+						"first": 4.0,
+						"n": 1,
+						"speed": 190,
+						"tell": 0.5
+					}
+				]
+			},
+			{
+				"until": 0.3,
+				"move": {
+					"type": "mirror",
+					"delay": 0.8,
+					"offset_deg": 180
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 4.0,
+						"first": 2.0,
+						"count": 5,
+						"width_deg": 80,
+						"offset_deg": 180,
+						"speed": 165,
+						"tell": 0.5
+					},
+					{
+						"type": "adds",
+						"every": 9.0,
+						"first": 4.0,
+						"enemy_type": "drone_shifter",
+						"degrees": [
+							90,
+							-90
+						]
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "mirror",
+					"delay": 0.55,
+					"offset_deg": 180
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 3.6,
+						"first": 1.5,
+						"count": 6,
+						"width_deg": 90,
+						"offset_deg": 180,
+						"speed": 170,
+						"tell": 0.45
+					},
+					{
+						"type": "spin_stream",
+						"every": 7.0,
+						"first": 4.0,
+						"duration": 2.5,
+						"gap": 0.4,
+						"deg_per_sec": 60,
+						"offset_deg": 180,
+						"speed": 170
+					},
+					{
+						"type": "adds",
+						"every": 9.0,
+						"first": 5.0,
+						"enemy_type": "drone_fast",
+						"degrees": [
+							90,
+							-90
+						]
+					}
+				]
+			}
+		]
 	}
 }
