@@ -345,7 +345,8 @@ func apply_damage(amount: float) -> bool:
 			m.on_boss_deflect(self)
 		return false
 	hp -= amount
-	_flash_t = 0.12
+	# a quick half-flash per hit: a stream of bolts mustn't keep it white
+	_flash_t = maxf(_flash_t, 0.05)
 	if hp <= 0.0:
 		hp = 0.0
 		die(false)
@@ -391,7 +392,7 @@ func _visual_tick(delta: float) -> void:
 	if _invuln_t > 0.0:
 		flash = maxf(flash, 0.6 if int(t * 16.0) % 2 == 0 else 0.0)
 	if _flash_t > 0.0:
-		flash = 1.0
+		flash = maxf(flash, 1.0 if _flash_t > 0.06 else 0.5)
 		fcol = Pal.WHITE
 		_jitter += Vector2(randf_range(-1, 1), randf_range(-1, 1))
 	if _enter_t > 0.0:

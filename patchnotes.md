@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 09:56 EST — `feature_boss_intro_staging` (v0.31.0)
+
+Bosses now make an entrance: silence, a WARNING build-up, a flash and the boss theme; and they die in a chain of explosions.
+
+- Boss intro: the arena empties, the level music fades out, a beat of silence, then six WARNING pulses (red screen, alarms, rising shake, the HUD and planet glitching, the pilot's portrait in shock), the boss glides in, a white flash with hit-stop, boss_theme starts and its name card ("<NAME> / PLANETARY THREAT") pops up. Flashes stay at two a second.
+- Boss death: hit-stop, six blasts across its body, a white-out, the shatter, music stops, then the normal victory.
+- Mini-bosses: a short version over ducked level music (one red flash, "! WARNING !", name card "ELITE THREAT"), music restored when it dies.
+- Boss hits now give a quick half-flash so a stream of bolts doesn't keep the boss white.
+- scripts/mission.gd: `_boss_entrance`, `_boss_intro`, `_mini_intro`, `_name_card`, `_boss_death`, `_dissolve_threats`, `_staged_wait` (pause-aware); the timeline and the level end hold while staging (`_hold`). Event option `intro: false` skips it; boss defs may set `music`, `warning`, `subtitle`. data/bosses.json gains a `test_mini` placeholder.
+
 ## 2026-11-18 09:48 EST — `feature_boss_encounter_runtime` (v0.30.0)
 
 Engine support for bosses and mini-bosses: big multi-phase enemies with an HP bar, plus new mission events.

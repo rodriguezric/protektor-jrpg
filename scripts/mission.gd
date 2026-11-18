@@ -143,6 +143,9 @@ var bosses_beaten: Array = []
 var boss_bar: Control
 var _boss_fill: ColorRect
 var _boss_name: Label
+## While a boss intro (or death) is being staged the timeline holds and the
+## level can't end.
+var _hold := 0
 var _comms_busy := false
 
 signal mission_done
@@ -615,8 +618,9 @@ func _process(delta: float) -> void:
 	if not running:
 		return
 	_handle_fire(delta)
-	level_t += delta
-	while t_index < timeline.size() and float(timeline[t_index].get("time", 0.0)) <= level_t:
+	if _hold <= 0:
+		level_t += delta
+	while _hold <= 0 and t_index < timeline.size() and float(timeline[t_index].get("time", 0.0)) <= level_t:
 		var e: Dictionary = timeline[t_index]
 		if str(e.get("type", "")) == "wait_until_clear" and not threats.is_empty():
 			# hold the clock here until every threat (and boss) is gone
@@ -754,7 +758,7 @@ func _run_event(e: Dictionary) -> void:
 		"scene_handoff":
 			_begin_victory()
 		"spawn_boss", "spawn_miniboss":
-			spawn_boss(e)
+			_boss_entrance(e)
 		"music":
 			_music_event(e)
 		"fx_flash":
@@ -840,20 +844,200 @@ func on_boss_deflect(b: Boss) -> void:
 
 
 func on_boss_died(b: Boss) -> void:
+	bosses_beaten.append(b.boss_id)
+	bosses.erase(b)
+	boss_defeated.emit(b.boss_id, b.is_mini)
+	_boss_death(b)
+
+
+# ------------------------------------------------------------ boss staging --
+## A boss gets a staged entrance: the arena empties, the music dies, a beat
+## of silence, then a WARNING build-up (red pulses, alarms, rising shake, the
+## HUD glitching), the boss glides in, a white flash and hit-stop, the boss
+## theme and its name card. Its death is a chain of explosions and a
+## white-out. Mini-bosses get a short version over ducked level music.
+## Flashes stay at two a second or slower. {intro: false} on the event skips it.
+
+func _boss_entrance(e: Dictionary) -> void:
+	var id := str(e.get("boss_id", ""))
+	var mini := str(e.get("type", "")) == "spawn_miniboss" or bool(Boss.defs().get(id, {}).get("mini", false))
+	if not bool(e.get("intro", true)):
+		spawn_boss(e)
+		return
+	_hold += 1
+	if mini:
+		await _mini_intro(e)
+	else:
+		await _boss_intro(e)
+	_hold = maxi(0, _hold - 1)
+
+
+func _staged_wait(t: float) -> bool:
+	## Waits t seconds of unpaused mission time; false if the mission ended.
+	var left := t
+	while left > 0.0:
+		await get_tree().process_frame
+		if not is_inside_tree() or not alive or finished:
+			return false
+		if not paused:
+			left -= get_process_delta_time()
+	return true
+
+
+func _dissolve_threats() -> void:
+	## Whatever is left in the arena fades out without scoring.
+	for th in threats.duplicate():
+		if is_instance_valid(th) and not (th is Boss):
+			fx.ring(th.position, 2, th.d + 4, 0.35, Pal.STEEL.lerp(Pal.WHITE, 0.3), 1.0, 1.0)
+			threats.erase(th)
+			th.queue_free()
+	shots.clear()
+
+
+func _boss_intro(e: Dictionary) -> void:
+	var def: Dictionary = Boss.defs().get(str(e.get("boss_id", "")), {})
+	_dissolve_threats()
+	Sfx.stop_music(1.4)
+	if not await _staged_wait(1.8):
+		return
+	# the build-up
+	var warn := Art.shadow_label("WARNING", Pal.BLOOD.lerp(Pal.WHITE, 0.2), 2)
+	warn.position = Vector2(88 - Art.text_width("WARNING", 2) / 2.0, 58)
+	overlay.add_child(warn)
+	var sub := Art.label(str(def.get("warning", "MASSIVE SIGNAL CONVERGING")), Pal.BLOOD.lerp(Pal.WHITE, 0.45))
+	sub.position = Vector2(88 - Art.text_width(sub.text) / 2.0, 84)
+	overlay.add_child(sub)
+	_set_mood("shock", 6.0)
+	var lp0 := left_panel.position
+	var rp0 := right_panel.position
+	for i in 6:
+		var k := float(i) / 5.0
+		warn.visible = true
+		sub.visible = i % 2 == 0
+		danger.color.a = 0.35 + 0.15 * k
+		create_tween().tween_property(danger, "color:a", 0.0, 0.42)
+		Sfx.play("alarm", 0.9 + k * 0.15, -8.0)
+		shake(1.0 + k * 3.0, 0.45)
+		# the HUD and the planet glitch harder each pulse
+		left_panel.position = lp0 + Vector2(randi_range(-1, 1), randi_range(-1, 1)) * (1 + int(k * 2))
+		right_panel.position = rp0 + Vector2(randi_range(-1, 1), randi_range(-1, 1)) * (1 + int(k * 2))
+		core.modulate.a = 0.55 if i % 2 == 0 else 1.0
+		if i >= 3:
+			Sfx.play("static", 1.0, -14.0)
+		if not await _staged_wait(0.25):
+			break
+		warn.visible = false
+		left_panel.position = lp0
+		right_panel.position = rp0
+		core.modulate.a = 1.0
+		if not await _staged_wait(0.25):
+			break
+	warn.queue_free()
+	sub.queue_free()
+	left_panel.position = lp0
+	right_panel.position = rp0
+	core.modulate.a = 1.0
+	if not alive or finished:
+		return
+	# the arrival
+	Sfx.play("warp", 0.6, -4.0)
+	var b := spawn_boss(e)
+	while is_instance_valid(b) and b._enter_t > 0.0:
+		if not await _staged_wait(0.02):
+			return
+	_arena_flash(Pal.WHITE, 0.7)
+	freeze = maxf(freeze, 0.3)
+	shake(6.0, 0.8)
+	Sfx.play("explode", 0.55, -2.0)
+	Sfx.play("heavy_door", 0.7, -6.0)
+	fx.ring(b.position, 4, b.d + 30, 0.6, Pal.WHITE, 2.0, 1.0)
+	Sfx.music(str(def.get("music", "boss_theme")), 0.4)
+	_name_card(b.title, str(def.get("subtitle", "PLANETARY THREAT")), 2)
+	await _staged_wait(1.2)
+
+
+func _mini_intro(e: Dictionary) -> void:
+	var def: Dictionary = Boss.defs().get(str(e.get("boss_id", "")), {})
+	Sfx.music_volume(-20.0, 0.6)
+	_arena_flash(Pal.BLOOD, 0.4)
+	Sfx.play("alarm", 1.2, -10.0)
+	shake(2.0, 0.4)
+	var warn := Art.shadow_label("! WARNING !", Pal.BLOOD.lerp(Pal.WHITE, 0.2))
+	warn.position = Vector2(88 - Art.text_width(warn.text) / 2.0, 70)
+	overlay.add_child(warn)
+	var tw := warn.create_tween()
+	for i in 2:
+		tw.tween_property(warn, "modulate:a", 0.25, 0.25)
+		tw.tween_property(warn, "modulate:a", 1.0, 0.25)
+	tw.tween_property(warn, "modulate:a", 0.0, 0.2)
+	tw.tween_callback(warn.queue_free)
+	var b := spawn_boss(e)
+	while is_instance_valid(b) and b._enter_t > 0.0:
+		if not await _staged_wait(0.02):
+			return
+	fx.ring(b.position, 3, b.d + 16, 0.4, Pal.WHITE, 1.0, 1.0)
+	freeze = maxf(freeze, 0.12)
+	Sfx.play("heavy_door", 1.0, -8.0)
+	Sfx.music_volume(Sfx.MUSIC_DB - 4.0, 0.8)
+	_name_card(b.title, str(def.get("subtitle", "ELITE THREAT")), 1)
+
+
+func _name_card(title: String, subtitle: String, size_k: int) -> void:
+	var box := Control.new()
+	overlay.add_child(box)
+	var t := Art.shadow_label(title, Pal.WHITE, size_k)
+	t.position = Vector2(88 - Art.text_width(title, size_k) / 2.0, 72)
+	box.add_child(t)
+	var st := Art.label(subtitle, Pal.BLOOD.lerp(Pal.WHITE, 0.4))
+	st.position = Vector2(88 - Art.text_width(subtitle) / 2.0, 72 + 11 * size_k + 2)
+	box.add_child(st)
+	box.pivot_offset = Vector2(88, 80)
+	box.scale = Vector2(1.5, 1.5)
+	box.modulate.a = 0.0
+	var tw := box.create_tween()
+	tw.tween_property(box, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(box, "modulate:a", 1.0, 0.12)
+	tw.tween_interval(1.8 if size_k > 1 else 1.2)
+	tw.tween_property(box, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(box.queue_free)
+
+
+func _boss_death(b: Boss) -> void:
+	## Hit-stop, a chain of blasts across the body, a white-out, then the
+	## pieces. The boss leaves the arena (and the level may end) after it.
 	var p := b.position
+	_hold += 1
+	freeze = maxf(freeze, 0.35 if not b.is_mini else 0.18)
+	Sfx.play("shutdown", 0.8, -4.0)
+	if not b.is_mini:
+		Sfx.stop_music(0.4)
+	var n := 6 if not b.is_mini else 3
+	for i in n:
+		var o := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * b.d * 0.45
+		fx.burst(p + o, 14, [Pal.WHITE, Pal.LEMON, Pal.EMBER, b.color], Vector2(20, 90), Vector2(0.2, 0.5))
+		fx.ring(p + o, 2, 12 + i * 2, 0.3, Pal.EMBER, 1.0, 1.0)
+		Sfx.play("explode", randf_range(0.8, 1.2), -6.0)
+		shake(2.0 + i * 0.6, 0.25)
+		b._flash_t = 0.1
+		await get_tree().create_timer(0.16).timeout
+		if not is_inside_tree():
+			return
+	if not b.is_mini:
+		_arena_flash(Pal.WHITE, 1.0)
 	_shatter(b.pixel_image(), p, b.color.lerp(Pal.EMBER, 0.4))
 	for k in 3:
 		fx.ring(p, 4 + k * 6, b.d + 20 + k * 14, 0.4 + k * 0.15, [Pal.WHITE, b.color, Pal.EMBER][k], 2.0, 1.0)
 	fx.burst(p, 40, [Pal.WHITE, Pal.LEMON, Pal.EMBER, b.color], Vector2(30, 140), Vector2(0.3, 0.9))
-	Sfx.play("explode", 0.7, -2.0)
-	freeze = maxf(freeze, 0.25)
-	shake(5.0, 0.6)
+	Sfx.play("explode", 0.6, -1.0)
+	shake(6.0 if not b.is_mini else 3.0, 0.7)
 	_on_defeated(b.score_value(), false, p)
-	bosses_beaten.append(b.boss_id)
-	bosses.erase(b)
-	boss_defeated.emit(b.boss_id, b.is_mini)
+	if b.is_mini:
+		Sfx.music_volume(Sfx.MUSIC_DB, 1.0)
+	b.visible = false
+	if not b.is_mini:
+		await get_tree().create_timer(0.9).timeout
+	_hold = maxi(0, _hold - 1)
 	remove_threat(b, true)
-
 
 func _bg_color(e: Dictionary) -> void:
 	var name := str(e.get("color", "black")).to_lower()
@@ -1253,7 +1437,7 @@ func _check_all_destroyed() -> void:
 	for i in range(t_index, timeline.size()):
 		if ["spawn_enemy", "spawn_boss", "spawn_miniboss"].has(str(timeline[i].get("type", ""))):
 			return
-	if not alive or finished:
+	if not alive or finished or _hold > 0:
 		return
 	var any := false
 	for e in triggers:
