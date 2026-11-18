@@ -9,6 +9,7 @@ extends Node
 var prologue: StoryPrologue
 var academy: StoryAcademy
 var hub: StoryHub
+var wing: StoryWing
 var endings: StoryEndings
 
 
@@ -16,6 +17,7 @@ func _ready() -> void:
 	prologue = StoryPrologue.new(self)
 	academy = StoryAcademy.new(self)
 	hub = StoryHub.new(self)
+	wing = StoryWing.new(self)
 	endings = StoryEndings.new(self)
 
 
@@ -47,11 +49,15 @@ func begin(chapter: String) -> void:
 func _owner() -> Object:
 	if w == null:
 		return null
+	if str(w.def.id).begins_with("room_"):
+		return wing
 	match w.def.id:
 		"home", "home_up", "parade", "block7":
 			return prologue
 		"commons":
 			return hub
+		"wing":
+			return wing
 		"launch_wing":
 			return endings
 	return academy
@@ -75,6 +81,17 @@ func trigger(id: String) -> void:
 	var o := _owner()
 	if o and o.has_method("trigger"):
 		await o.trigger(id)
+
+
+func hub_minigame(kind: String) -> void:
+	## The pilot wing's little games (feature hub_room_minigames).
+	match kind:
+		"pingpong":
+			await say("", "A ping-pong table. The net sags in the middle. Nobody can find the paddles.")
+		"cards":
+			await say("", "A deck of cards with three missing. Someone has drawn the missing ones by hand.")
+		"drill":
+			await say("system", "SYNC-REFLEX DRILL. Calibrating. Please return later.")
 
 
 func exit(e: Dictionary) -> void:

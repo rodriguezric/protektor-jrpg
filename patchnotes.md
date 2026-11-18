@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 17:22 EST — `feature_hub_extra_rooms` (v0.54.0)
+
+The Pilot Wing: seven rooms off the Commons to wander between missions, with lore, games and a few quiet moments. None of it uses up the interval's one conversation.
+
+- A new door in the Commons' top wall (left of the dorm) opens onto the Pilot Wing corridor; each room has a door there (face it and press Z), and you leave a room by walking out of its doorway. Rooms open with seniority: Rec Room, Mess Hall and Training Gym from the start, the Archive after two deployments, the Observation Deck after three, the Memorial Hall after four (or once Midas is gone), the Rooftop Garden after five. Sealed doors say when they'll open.
+- Rec Room: the same TV as home (all six channels), a Starbox bolted to the shelf (HIRO WAS HERE), a ping-pong table, a card table, and a recruit glued to the couch who is obsessed with Hearts of the Shield Grid and reacts to whichever episode you've reached. Mess Hall: Nutri-Loaf (three ways, all sliced), water (blue), the calorie allowance by sync tier, and two gossiping recruits. Archive: two lore terminals with six entries that unlock over time (Helion's history, the Initiative, the planet roster, and pilot records for LISE HALE and A. DELACROIX, the children Block 7 lost), the locked transfer-records cabinet, and Pala's hidden printouts. Training Gym: sim pods (training), treadmill, a punching bag that swings, the turn-time board (Hiro, Hiro, Hiro, Hiro), and a reflex-drill station. Observation Deck: a wall of window and a telescope. Memorial Hall: a wall of names that grows with the roster (Lise Hale and Delacroix are on it; Midas, with a tin rocket tucked beside his name), ration candles you can light, and a secret guestbook. Rooftop Garden: hydroponic planters under the open night sky.
+- Staged scenes: the first night on the Observation Deck, Pala comes in and shows you the constellations she made up (The Kitchen Chair, The Cup My Brother Broke, and a dog), drawn in light across the window. The first visit to the Rooftop finds Midas tending tomatoes like his mother's, or, once he's gone, his labelled planter going dry, which you can water.
+- Art: new props (ping-pong table, telescope, hydroponic planters, candles, punching bag, treadmill).
+- Code: new `scripts/story_wing.gd` (StoryWing: unlocks, doors, first-visit scenes, room talk/examines, lore), `scripts/maps.gd` (wing(), wing_room(id); Commons door), `scripts/story.gd` (routing; hub_minigame() stubs for the games), `scripts/story_hub.gd` (the door), `scripts/art_props.gd`, `tools/autotest.gd` (`PK_TEST=wing`, `PK_ROOM`, `PK_DEAD`).
+
 ## 2026-11-18 17:10 EST — `feature_neighborhood_opening_area` (v0.53.0)
 
 Block 7: the street outside your front door, with the neighbours and friends you're leaving, and a dawn send-off on the way to the parade.
