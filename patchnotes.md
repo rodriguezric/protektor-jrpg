@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-18 17:58 EST — `bugfix_rooftop_tomato_not_wilted_on_return` (v0.58.2)
+
+Midas' rooftop planter now stays wilted after he's gone until you water it, instead of springing back to ripe tomatoes on the next visit.
+
+- While Midas is alive his planter has tomatoes; once he's dead it is wilted on every visit until you water it, and then it stays watered-green.
+- Code: `scripts/maps.gd` (wing_room('rooftop') picks the planter's look from the story), `tools/autotest.gd` (`PK_TEST=tomato`).
+
 ## 2026-11-18 17:58 EST — `bugfix_departure_walks_backward` (v0.58.1)
 
 The dawn send-off in Block 7 walks steadily down the street instead of stepping back a tile to reach Tomas.
