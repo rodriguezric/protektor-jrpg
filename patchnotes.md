@@ -1,5 +1,17 @@
 # Patch Notes
 
+## 2026-11-18 10:17 EST — `feature_terra_virex_level_redesign` (v0.33.0)
+
+Terra Virex rebuilt to its design: block-then-shoot teaching, a Relay Sentinel mini-boss and the Aegis Relay boss.
+
+- Level 1 "First Watch" (~90 s): single-lane blocks, then a rock from one side and a drone from the other (block, then turn and shoot), a faster diagonal version, chargers, a drone clean-up.
+- Level 2 "Crossfire Watch" (~120 s): alternating lanes, layered block-then-shoot with sine drones, a compression stretch, then the Relay Sentinel mini-boss: it only opens for ~3 s after you block one of its shots.
+- Level 3 "Aegis Drill" (~150 s): compressed but readable waves, then THE AEGIS RELAY: an orbiting satellite array whose weak point rotates open and shut; its bursts come from behind you (face it and your shield takes them), aimed volleys force you to turn; three phases ending in hops between quadrants and drone escorts.
+- Boss and mini-boss name cards now sit in the upper arena, clear of the planet.
+- Standard kit: the levelcheck bot clears all three with no hits (90 s, 116 s, 130 s).
+- tools/build_levels.py (new): builds mission JSON from pattern helpers (single_lane_block, block_then_shoot, alternating_lanes, drone_cleanup, gate, boss), keeping each level's header and completion/story-handoff triggers. data/bosses.json: `relay_sentinel`, `aegis_relay` (with `fight_sec`, used by tools/level_report.py for boss-level estimates).
+- Test bot fix: it switched to mouse aim to shoot and never back, so the mission kept snapping its facing to the cursor and its blocks failed. With the fix, the old levels' baseline is 20 of 21 cleared (only Tempestris 3 lost), not the 6 reported in v0.29.0. levelcheck gains PK_VERBOSE=1 (logs each hit and what was nearest).
+
 ## 2026-11-18 09:57 EST — `feature_ignara_prime_music` (v0.32.0)
 
 Every Ignara Prime level now plays the Ignara Prime track; the boss theme is kept for bosses.

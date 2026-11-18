@@ -110,5 +110,203 @@
 				]
 			}
 		]
+	},
+	"relay_sentinel": {
+		"name": "RELAY SENTINEL",
+		"mini": true,
+		"hp": 10,
+		"size": 66,
+		"dist": 160,
+		"fight_sec": 20,
+		"color": [
+			0.55,
+			0.62,
+			0.7
+		],
+		"art": {
+			"shape": "orb",
+			"nodes": 4
+		},
+		"subtitle": "BLOCK TO EXPOSE",
+		"phases": [
+			{
+				"until": 0.5,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 10
+				},
+				"open": {
+					"type": "after_block",
+					"sec": 3.2
+				},
+				"attacks": [
+					{
+						"type": "volley",
+						"every": 3.0,
+						"first": 1.5,
+						"n": 1,
+						"speed": 200,
+						"tell": 0.6
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "orbit",
+					"speed_deg": -18
+				},
+				"open": {
+					"type": "after_block",
+					"sec": 2.8
+				},
+				"attacks": [
+					{
+						"type": "volley",
+						"every": 2.6,
+						"first": 1.0,
+						"n": 1,
+						"speed": 220,
+						"tell": 0.5
+					},
+					{
+						"type": "adds",
+						"every": 9.0,
+						"first": 4.0,
+						"enemy_type": "drone_basic",
+						"degrees": [
+							180
+						]
+					}
+				]
+			}
+		]
+	},
+	"aegis_relay": {
+		"name": "THE AEGIS RELAY",
+		"hp": 60,
+		"size": 100,
+		"dist": 165,
+		"fight_sec": 45,
+		"color": [
+			0.45,
+			0.6,
+			0.78
+		],
+		"art": {
+			"shape": "relay",
+			"nodes": 6
+		},
+		"warning": "ORBITAL ARRAY ALIGNING",
+		"subtitle": "GUARDIAN OF TERRA VIREX",
+		"phases": [
+			{
+				"until": 0.6,
+				"move": {
+					"type": "orbit",
+					"speed_deg": 14
+				},
+				"open": {
+					"type": "cycle",
+					"open": 3.5,
+					"closed": 2.5
+				},
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 4.2,
+						"first": 2.0,
+						"count": 3,
+						"width_deg": 60,
+						"offset_deg": 180,
+						"speed": 170,
+						"tell": 0.5
+					},
+					{
+						"type": "volley",
+						"every": 5.0,
+						"first": 4.0,
+						"n": 2,
+						"gap": 0.35,
+						"speed": 200,
+						"tell": 0.6
+					}
+				]
+			},
+			{
+				"until": 0.25,
+				"move": {
+					"type": "orbit",
+					"speed_deg": -24
+				},
+				"open": {
+					"type": "cycle",
+					"open": 3.0,
+					"closed": 2.5
+				},
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 3.8,
+						"first": 1.5,
+						"count": 5,
+						"width_deg": 100,
+						"offset_deg": 180,
+						"speed": 170,
+						"tell": 0.5
+					},
+					{
+						"type": "spin_stream",
+						"every": 8.0,
+						"first": 4.5,
+						"duration": 3.0,
+						"gap": 0.45,
+						"deg_per_sec": 70,
+						"offset_deg": 180,
+						"speed": 180
+					}
+				]
+			},
+			{
+				"until": 0.0,
+				"move": {
+					"type": "hop",
+					"every": 4.0,
+					"step_deg": 90
+				},
+				"open": "always",
+				"attacks": [
+					{
+						"type": "arc_burst",
+						"every": 3.4,
+						"first": 1.5,
+						"count": 5,
+						"width_deg": 110,
+						"offset_deg": 180,
+						"speed": 180,
+						"tell": 0.4
+					},
+					{
+						"type": "volley",
+						"every": 4.5,
+						"first": 3.0,
+						"n": 3,
+						"gap": 0.3,
+						"speed": 210,
+						"tell": 0.5
+					},
+					{
+						"type": "adds",
+						"every": 9.0,
+						"first": 5.0,
+						"enemy_type": "drone_basic",
+						"degrees": [
+							90,
+							-90
+						]
+					}
+				]
+			}
+		]
 	}
 }
