@@ -25,6 +25,12 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"console": return console(v)
 		"starbox": return starbox(v)
 		"kiosk": return kiosk(v)
+		"pingpong": return ping_table()
+		"telescope": return telescope()
+		"planter": return planter(v)
+		"candles": return candles(v)
+		"punchbag": return punchbag()
+		"treadmill": return treadmill(v)
 		"noticeboard": return noticeboard(v)
 		"swings": return swings(v)
 		"slide": return slide()
@@ -1241,6 +1247,96 @@ static func streetlamp(v: int) -> PixBuf:
 	b.rect(2, 4, 8, 5, Pal.INK2)
 	b.rect(3, 5, 6, 3, Pal.LEMON if v == 0 else Pal.LEMON.lerp(Pal.INK2, 0.5))
 	b.rect(4, 2, 4, 2, Pal.INK2)
+	b.outline()
+	return b
+
+
+# ----------------------------------------------------------- pilot wing ---
+
+static func ping_table() -> PixBuf:
+	var b := PixBuf.new(40, 22)
+	var top := Pal.TEAL.lerp(Pal.NAVY, 0.35)
+	b.rect(3, 12, 2, 10, Pal.STEEL)
+	b.rect(35, 12, 2, 10, Pal.STEEL)
+	b.rect(0, 4, 40, 9, top)
+	b.rect(0, 4, 40, 1, Pal.hi(top))
+	b.rect(19, 4, 2, 9, Pal.WHITE)
+	b.rect(0, 8, 40, 1, Pal.WHITE.lerp(top, 0.5))
+	b.rect(19, 0, 2, 5, Pal.STONE)
+	b.rect(6, 6, 4, 3, Pal.RED)
+	b.circ(30, 7, 1, Pal.WHITE)
+	b.outline()
+	return b
+
+
+static func telescope() -> PixBuf:
+	var b := PixBuf.new(18, 28)
+	b.line(9, 14, 3, 27, Pal.STEEL)
+	b.line(9, 14, 15, 27, Pal.STEEL)
+	b.line(9, 14, 9, 27, Pal.shade(Pal.STEEL))
+	b.poly([Vector2(2, 10), Vector2(14, 2), Vector2(16, 5), Vector2(4, 13)], Pal.NAVY.lerp(Pal.STEEL, 0.4))
+	b.rect(13, 2, 3, 4, Pal.LEMON)
+	b.outline()
+	return b
+
+
+static func planter(v: int) -> PixBuf:
+	## A hydroponic planter: v0 greens, v1 a tomato plant, v2 wilted.
+	var b := PixBuf.new(30, 22)
+	var box := Pal.STEEL.lerp(Pal.SAGE, 0.3)
+	b.rect(1, 12, 28, 9, box)
+	b.rect(1, 12, 28, 1, Pal.hi(box))
+	b.rect(3, 14, 24, 2, Pal.SYNC.lerp(box, 0.6))
+	var leaf := Pal.GRASS if v != 2 else Pal.WOOD.lerp(Pal.SAGE, 0.4)
+	for k in 5:
+		var x := 4 + k * 5
+		if v == 2:
+			b.line(x, 12, x + 2, 8, leaf)
+			b.pset(x + 3, 9, leaf)
+		else:
+			b.ball(x + 1, 8 - (k % 2) * 2, 2.5, 3.0, leaf)
+			b.pset(x + 1, 6 - (k % 2) * 2, Pal.hi(leaf))
+	if v == 1:
+		for t in [Vector2(8, 7), Vector2(16, 5), Vector2(22, 8)]:
+			b.circ(t.x, t.y, 1.6, Pal.RED)
+			b.pset(int(t.x), int(t.y) - 1, Pal.hi(Pal.RED))
+	b.outline()
+	return b
+
+
+static func candles(v: int) -> PixBuf:
+	## Ration candles in paper cups, flickering (v0/v1).
+	var b := PixBuf.new(26, 12)
+	for k in 4:
+		var x := 2 + k * 6
+		b.rect(x, 6, 4, 5, Pal.CREAM)
+		b.rect(x + 1, 3, 2, 3, Pal.WHITE)
+		var f := (k + v) % 2
+		b.rect(x + 1 + f, 0, 1, 3, Pal.LEMON)
+		b.pset(x + 1 + f, 2, Pal.ORANGE)
+	b.outline()
+	return b
+
+
+static func punchbag() -> PixBuf:
+	var b := PixBuf.new(14, 34)
+	b.rect(6, 0, 2, 6, Pal.STEEL)
+	b.ball(7, 18, 6, 12, Pal.RED.lerp(Pal.INK2, 0.3))
+	b.rect(1, 10, 12, 1, Pal.INK2)
+	b.rect(1, 26, 12, 1, Pal.INK2)
+	b.pset(5, 12, Pal.hi(Pal.RED))
+	b.outline()
+	return b
+
+
+static func treadmill(v: int) -> PixBuf:
+	var b := PixBuf.new(32, 24)
+	b.rect(2, 16, 28, 6, Pal.INK2.lerp(Pal.STEEL, 0.3))
+	for k in 7:
+		b.rect(3 + ((k * 4 + v * 2) % 26), 17, 2, 1, Pal.STEEL)
+	b.rect(24, 2, 2, 15, Pal.STEEL)
+	b.rect(20, 2, 10, 4, Pal.NAVY.lerp(Pal.STEEL, 0.3))
+	b.rect(21, 3, 5, 2, Pal.SYNC if v == 0 else Pal.GLOW)
 	b.outline()
 	return b
 

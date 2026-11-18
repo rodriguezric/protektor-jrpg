@@ -1003,6 +1003,51 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[block7] departure done, map=%s" % main.world.def.id)
 			get_tree().quit()
+		"wing":
+			# the pilot wing: the corridor, then every room (all unlocked), its
+			# first-visit scene and a couple of its things. PK_DEAD=1 kills Midas.
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			for p in ["terra_virex", "glacien_ix"]:
+				Game.story.completed_levels[p] = 3
+			Game.story.relationships = {"hiro": 1, "pala": 1, "midas": 1}
+			if OS.get_environment("PK_DEAD") != "":
+				Game.story.midas_dead = true
+				Game.story.midas_death_announced = true
+			main.fade_rect.color.a = 0.0
+			main.load_map(main.story.hub._map(), Vector2i(22, 2), 1)
+			await wait(0.5)
+			var snap := {"on": true, "k": 0}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(0.8)
+					await shot("wing_%03d" % snap.k)
+					snap.k += 1
+			snapper.call()
+			await main.story.examine({"id": "wing"})
+			await wait(0.6)
+			var only := OS.get_environment("PK_ROOM")
+			for id in Maps.WING_ROOMS:
+				if only != "" and id != only:
+					continue
+				await main.story.examine({"id": "room:" + id})
+				await wait(1.0)
+				var w = main.world
+				for ev in w.def.get("events", []).slice(0, 1):
+					if not ["rec_tv"].has(ev.id):
+						await main.story.examine(ev)
+				for pr in w.def.props:
+					if pr.has("event") and not ["rec_tv", "rec_starbox", "simpod", "lore"].has(pr.event.id):
+						await main.story.examine(pr.event)
+						break
+				print("[wing] %s ok (map %s)" % [id, w.def.id])
+				await main.story.exit({"to": "wing"})
+				await wait(0.4)
+			await main.story.exit({"to": "commons", "tile": Vector2i(22, 3), "dir": 0})
+			snap.on = false
+			print("[wing] back in %s; flags stargazed=%s tomato=%s" % [main.world.def.id, Game.story.get("stargazed"), Game.story.get("midas_tomato")])
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up

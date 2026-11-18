@@ -677,6 +677,8 @@ func examine(ev: Dictionary) -> void:
 				await s.say("", "Stars, slow and enormous. Somewhere out there, worlds are waiting to be defended.")
 		"dorm":
 			await s.say("", "The dormitory. Lights-out has not been called.")
+		"wing":
+			await s.wing.enter_wing()
 		"exitdoor":
 			await s.say("", "The door to the briefing halls. It only opens from the other side.")
 
