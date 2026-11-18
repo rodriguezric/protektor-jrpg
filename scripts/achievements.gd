@@ -90,6 +90,8 @@ static func defs() -> Array:
 		d.append({"id": "ending_" + e, "cat": "story", "icon": "ending_" + e, "name": ENDING_NAMES[e][0], "desc": ENDING_NAMES[e][1]})
 	d.append({"id": "all_endings", "cat": "story", "icon": "all_endings", "name": "Every Version of You",
 		"desc": "See all five endings.", "stat": "endings_seen", "target": 5})
+	d.append({"id": "all_propaganda", "cat": "story", "icon": "propaganda", "tier": 1, "name": "Read Between the Lines",
+		"desc": "File every piece of Protektor propaganda.", "stat": "propaganda_found", "target": Propaganda.ORDER.size()})
 	d.append({"id": "no_upgrades", "cat": "story", "icon": "no_upgrades", "name": "As They Made You",
 		"desc": "Reach an ending without buying a single upgrade."})
 	d.append({"id": "all_training", "cat": "protektor", "icon": "training", "name": "Top of the Class",
@@ -150,6 +152,8 @@ static func stat(name: String) -> int:
 				if beaten.has(BOSSES[p][0]):
 					n += 1
 			return n
+		"propaganda_found":
+			return Propaganda.count()
 		"console_played":
 			var played: Dictionary = Game.achv_stats.get("console_played", {})
 			var n := 0

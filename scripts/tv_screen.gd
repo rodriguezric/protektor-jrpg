@@ -217,6 +217,13 @@ func _run_channel(st: TvStage, id: String) -> void:
 		return
 	noise.visible = false
 	st.visible = true
+	if id == "news" or id == "cartoon":
+		# watch a few seconds of it and it goes in your files
+		var file_it := func() -> void:
+			await get_tree().create_timer(5.0).timeout
+			if is_instance_valid(st) and not st.cancelled:
+				Propaganda.find(id)
+		file_it.call()
 	while not st.cancelled:
 		await TvShows.play(id, st)
 		if st.cancelled:

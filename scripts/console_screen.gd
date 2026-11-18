@@ -311,6 +311,8 @@ func _play(def: Dictionary) -> int:
 	state = "playing"
 	_clear()
 	game_def = def
+	if def.id == "protektor":
+		Propaganda.find("cartridge")
 	game = load(def.script).new()
 	screen_root.add_child(game)
 	# while a game runs the console takes no taps: the stick and A/B do it all

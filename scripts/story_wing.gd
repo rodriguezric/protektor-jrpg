@@ -230,6 +230,9 @@ func examine(ev: Dictionary) -> void:
 		"rec_tv":
 			var res: Dictionary = await s.m.tv(int(Game.story.get("tv_channel", 0)))
 			Game.story.tv_channel = int(res.get("index", 0))
+			if bool(Game.story.get("footage_pending", false)):
+				Game.story.footage_pending = false
+				await _footage_reveal()
 		"rec_starbox":
 			if not bool(Game.story.get("rec_starbox_seen", false)):
 				Game.story.rec_starbox_seen = true
@@ -242,6 +245,9 @@ func examine(ev: Dictionary) -> void:
 		# mess hall
 		"tray":
 			await s.say("", "Today: Nutri-Loaf. A card on the counter reads THREE WAYS. All three are sliced.")
+		"cereal":
+			await s.say("", ["PROTEKTOR CRUNCH. A cartoon robot flexes on the box.", "The prize inside is a pamphlet for your family: 'Could YOUR child be chosen?'"])
+			Propaganda.find("cereal")
 		"dispenser":
 			Sfx.play("beep", 1.2, -8.0)
 			await s.say("", "WATER (BLUE). WATER (CLEAR). The blue one tastes like the clear one, but bluer.")
@@ -324,6 +330,49 @@ func examine(ev: Dictionary) -> void:
 			await s.say("", "Open sky, for once. Somewhere far below, the shield grid hums.")
 
 
+# ---------------------------------------------------------------- reveals ---
+
+func _brief_reveal() -> void:
+	## The brief lands: every robot you grew up with flashes past, and then
+	## what was always behind it.
+	s.w.busy = true
+	Sfx.stop_music(0.6)
+	await s.wait(0.4)
+	var c := Cinema.open(Color(0, 0, 0, 1))
+	var cuts := [[Art.prop("noticeboard", 0), "STEEL THAT NEVER SLEEPS"], [Art.prop("mech", 0), "BRAVE MACHINES"],
+		[Art.prop("toy", 0), "AGES 5 AND UP"], [Art.prop("starbox", 1), "DEFEND THE PLANET!"]]
+	for cut in cuts:
+		var sp := c.sprite(cut[0], Vector2(160, 84))
+		sp.scale = Vector2(3, 3) if (cut[0] as Texture2D).get_height() < 40 else Vector2(1.6, 1.6)
+		var l := Art.shadow_label(cut[1], Pal.LEMON, 2)
+		l.position = Vector2(160 - Art.text_width(cut[1], 2) / 2.0, 140)
+		c.add_child(l)
+		Sfx.play("static", 1.4, -12.0)
+		s.m.flash(Pal.WHITE, 0.15, 0.5)
+		await s.wait(0.55)
+		sp.queue_free()
+		l.queue_free()
+	await s.wait(0.6)
+	await s.say("", ["There was never a robot.", "There was always a child in a chair, somewhere a camera never went."])
+	await c.close(0.6)
+	s.w.player.emote("...", 1.4)
+	await s.say("~", ["Every poster. Every cartoon. Every toy.", "They were pictures of us, with the children painted out."])
+	Sfx.music("low_mechanical_ambient", 1.5)
+	s.w.busy = false
+
+
+func _footage_reveal() -> void:
+	## After the special bulletin: what you just saw on the rec room TV.
+	s.w.busy = true
+	await s.say("~", ["That was my turn. The way I swing the shield wide before a block.", "They painted a robot over me."])
+	var fan := s.a("fan")
+	if fan:
+		fan.emote("note", 1.0)
+		await s.say("", "\"Wasn't that robot AMAZING?\" says the recruit on the couch. \"I want to be just like it.\"")
+	await s.say("~", "...You were. You are.")
+	s.w.busy = false
+
+
 func _prop_at(t: Vector2i) -> Sprite2D:
 	var want := s.w.tile_center(t)
 	for c in s.w.get_children():
@@ -348,6 +397,9 @@ static func lore_entries() -> Array:
 			"Family correspondence: automated, annual. Template 4-B."]],
 		["PILOT RECORD: A. DELACROIX", n >= 5, ["Intake 19. Peak synchronization: 96%. Status: TRANSFERRED.",
 			"Family relocated to priority housing. Case closed."]],
+		["MARKETING BRIEF 7-C", n >= 4, ["PUBLIC COMMUNICATIONS: THE PROTEKTOR INITIATIVE. Public-facing materials must depict autonomous units.",
+			"Imagery of pilots, and of minors in particular, is prohibited. The public must never picture a child.",
+			"Tested phrasing: 'brave machines'. 'Steel that never sleeps.' 'The Protektor never sleeps, so you can.'"]],
 		["SYNCHRONIZATION THRESHOLDS", n >= 6 or Game.relationship("pala") >= 2, ["Above 85%, ego boundaries begin to degrade. Pilots report reduced appetite, flattened affect, and a sense of 'being everywhere'.",
 			"Recommended action: continue deployment."]],
 	]
@@ -368,9 +420,17 @@ func _lore() -> void:
 			await s.say("system", "Clearance insufficient. Clearance increases with service.")
 			continue
 		var read: Dictionary = Game.story.get("lore_read", {})
+		var first: bool = not read.has(entries[c][0])
 		read[entries[c][0]] = true
 		Game.story.lore_read = read
 		await s.say("system", entries[c][2])
+		if entries[c][0] == "THE PROTEKTOR INITIATIVE":
+			Propaganda.find("initiative")
+		elif entries[c][0] == "MARKETING BRIEF 7-C":
+			Propaganda.find("brief")
+			if first:
+				await _brief_reveal()
+				return
 
 
 func _names() -> void:

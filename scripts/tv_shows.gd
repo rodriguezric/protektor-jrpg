@@ -66,6 +66,9 @@ static func news(st: TvStage) -> void:
 	# the footage: the machine at work over a planet
 	st.clear_set()
 	st.backdrop("space")
+	if Game.chapter == "hub" and Game.completed_count() >= 6 and not bool(Game.story.get("footage_seen", false)):
+		await _your_footage(st)
+		return
 	var mech := st.sprite("mech", Art.prop("mech", 0), Vector2(40, 120), 0.55)
 	st.say("", "Protektor units held the line over Terra Virex.", 0.6)
 	await st.move("mech", Vector2(44, 42), 1.4)
@@ -105,6 +108,42 @@ static func news(st: TvStage) -> void:
 	await st.zoom(1.0, Vector2.ZERO, 0.3)
 	await st.say("CORVIN VALE", "Goodnight.", 1.0)
 	st.caption_off()
+
+
+static func _your_footage(st: TvStage) -> void:
+	## A special bulletin: this week's defense, a robot painted over it, and
+	## the shield swinging exactly the way you swing it.
+	var last := str(Game.story.get("last_mission", "terra_virex_level_01"))
+	var pkey := last.split("_level_")[0]
+	var info: Dictionary = Data.PLANET_INFO.get(pkey, Data.PLANET_INFO["terra_virex"])
+	st.sprite("planet", Art.planet(info.tex, 30, 0), Vector2(72, 40))
+	var mech := st.sprite("mech", Art.prop("mech", 0), Vector2(72, 30), 0.35)
+	await st.say("CORVIN VALE", "A special bulletin! This week, over %s..." % info.name, 0.3)
+	# the shield arc, swinging wide before each block: your habit
+	var arc := Line2D.new()
+	arc.width = 2.0
+	arc.default_color = Color(Pal.SYNC, 0.9)
+	arc.antialiased = false
+	if mech:
+		mech.add_child(arc)
+	for k in 4:
+		if st.cancelled:
+			return
+		arc.clear_points()
+		var a0 := -PI / 2 + k * 1.3 - 0.4
+		for j in 9:
+			var a := a0 + j * 0.12
+			arc.add_point(Vector2.from_angle(a) * 70.0)
+		Sfx.play("block", 1.2, -12.0)
+		st.flash(Color("9fe8ff"), 0.12)
+		await st.wait(0.5)
+	await st.say("CORVIN VALE", "...our brave machines held the line once more!", 0.6)
+	st.sting("happy")
+	await st.say("CORVIN VALE", "The Protektor never sleeps, so you can. Goodnight.", 0.8)
+	st.caption_off()
+	Game.story.footage_seen = true
+	Game.story.footage_pending = true
+	Propaganda.find("footage")
 
 
 # -------------------------------------------------------------- cartoon ---

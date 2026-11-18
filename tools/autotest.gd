@@ -1070,6 +1070,53 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[hubgame] %s -> %s ach=%s" % [OS.get_environment("PK_HG"), res, Game.achieved.keys()])
 			get_tree().quit()
+		"propaganda":
+			# the FILES page, the archive's brief reveal, and the rec room TV's
+			# special bulletin with its reveal
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			for p in ["terra_virex", "glacien_ix"]:
+				Game.story.completed_levels[p] = 3
+			Game.story.last_mission = "glacien_ix_level_03"
+			main.fade_rect.color.a = 0.0
+			for id in ["poster", "toy", "news", "cartridge"]:
+				Propaganda.find(id)
+			await wait(0.5)
+			var f := PropagandaScreen.new()
+			main.ui.add_child(f)
+			f.run()
+			await wait(0.5)
+			await tap("down", 0.2)
+			await shot("prop_files")
+			await tap("down", 0.2)
+			await tap("down", 0.2)
+			await tap("down", 0.2)
+			await tap("down", 0.4)
+			await shot("prop_files_unfound")
+			await tap("cancel", 0.5)
+			f.queue_free()
+			var snap := {"on": true, "k": 0}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(0.6)
+					await shot("prop_%03d" % snap.k)
+					snap.k += 1
+			snapper.call()
+			main.load_map(Maps.wing_room("archive"), Vector2i(7, 7), 1)
+			Game.story.room_archive_seen = true
+			await wait(0.5)
+			await main.story.wing._brief_reveal()
+			main.load_map(Maps.wing_room("rec"), Vector2i(7, 7), 1)
+			await wait(0.5)
+			var closer := func() -> void:
+				await wait(26.0)
+				await tap("cancel", 0.3)
+			closer.call()
+			await main.story.examine({"id": "rec_tv"})
+			snap.on = false
+			print("[propaganda] found=%d/%d %s footage_seen=%s ach=%s" % [Propaganda.count(), Propaganda.ORDER.size(), Propaganda.found_all().keys(), Game.story.get("footage_seen"), Game.achieved.keys()])
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up

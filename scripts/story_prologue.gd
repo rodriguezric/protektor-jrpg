@@ -240,6 +240,7 @@ func examine(ev: Dictionary) -> void:
 			await s.say("", ["Ration chits, tea tins, spare bulbs. A hand-lettered card in the window:", "RECRUIT FAMILIES - ONE EXTRA CHIT THIS WEEK. CONGRATULATIONS."])
 		"noticeboard":
 			await s.say("", ["A Helion poster: a chrome robot striding over a green planet. STEEL THAT NEVER SLEEPS.", "Under it, older notices. A lost cat (FOUND, in pen). Ration hours. A choir that meets on fifth-days."])
+			Propaganda.find("poster")
 		"swings":
 			await s.say("", "Your initials are still scratched into the left swing. Juno's are next to them, bigger.")
 		"slide":
@@ -247,13 +248,17 @@ func examine(ev: Dictionary) -> void:
 		"cat":
 			await s.say("", "The block cat. It belongs to nobody, which means it belongs to everybody. It ignores you, as a kindness.")
 		"bin":
-			await s.say("", "Someone threw away a recruitment flyer. Someone else fished it out again and smoothed it flat.")
+			await s.say("", ["Someone threw away a recruitment flyer. Someone else fished it out again and smoothed it flat.", "COULD YOUR CHILD BE CHOSEN? Full nutrition. Permanent housing. A hero in the family."])
+			Propaganda.find("flyer")
 		"homedoor":
 			await s.say("", "Your door. The paint is chipped where your father's toolbox always catches it.")
 		"okafordoor":
 			await s.say("", "Mrs. Okafor's door, and a wind chime made of old spoons.")
 		"nwindow":
 			await s.say("", "Behind a curtain, a family eats dinner around a radio. Someone laughs, then remembers what tomorrow is.")
+		"parade_mech":
+			await s.say("", ["A Protektor on display, taller than the plaza lamps.", "Up close, the seams are glued. There's a hatch on its back, and nothing behind it."])
+			Propaganda.find("parade_mech")
 		"dark_window":
 			await s.say("", "The Delacroix window. Dark for twelve years.")
 		"desk":
@@ -262,6 +267,7 @@ func examine(ev: Dictionary) -> void:
 			await s.say("", "Your wardrobe is half empty. The clothes that are left all suddenly feel too small.")
 		"toy":
 			await s.say("", "A plastic Protektor. You glued its arm back on years ago, and it has pointed slightly the wrong way ever since.")
+			Propaganda.find("toy")
 		"bag":
 			await s.say("", "A bag, packed and zipped, waiting by the door. You didn't pack it.")
 		"parentsbed":
@@ -441,6 +447,8 @@ func _kids_game() -> void:
 		await s.say("wren", "PIP!", "angry")
 	else:
 		await s.say("pip", "You don't KNOW? It's the best thing that can happen to a person! It says so on the poster!", "")
+	await s.say("", "Pip's costume is a ration box with two eyeholes and a pipe-cleaner antenna, made from the pattern Helion printed on the kids' page.")
+	Propaganda.find("costume")
 	s.w.busy = false
 
 
@@ -489,6 +497,7 @@ func _starbox() -> void:
 		Game.story.starbox_seen = true
 		await s.say("", ["Your Starbox. The A button is worn smooth, and the PROTEKTOR cartridge label has peeled down to a robot's grin.",
 			"Every kid on the block had one. Helion made sure of it."])
+		Propaganda.find("cartridge")
 	if await s.ask("Play the Starbox?", ["Play", "Not now"]) != 0:
 		return
 	await s.m.console()
