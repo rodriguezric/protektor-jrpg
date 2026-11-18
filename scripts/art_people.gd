@@ -371,6 +371,14 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 			"shock":
 				b.rect(ex, ey, 2, 3, Pal.WHITE)
 				b.pset(ex + (1 if i == 0 else 0), ey + 1, Pal.INK)
+			"terrified":
+				# wide whites, pinprick pupils sunk low, brows pulled up in the middle
+				b.rect(ex, ey, 2, 3, Pal.WHITE)
+				var inner := ex + (1 if i == 0 else 0)
+				b.pset(inner, ey + 2, Pal.INK)
+				b.pset(inner, ey - 2, Pal.INK2)
+				b.pset(ex + (0 if i == 0 else 1), ey - 1, Pal.INK2)
+				b.pset(ex + (0 if i == 0 else 1), ey + 3, Pal.shade(skin))
 			"sad", "cry":
 				b.rect(ex, ey + 1, 2, 2, Pal.INK)
 				b.pset(ex, ey + 1, Pal.WHITE)
@@ -403,7 +411,12 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 	var mouth := Pal.shade(skin).lerp(Pal.INK2, 0.4)
 	# the mouth sits on the face's centre line, which turns with the head
 	var mx := ix + 2 if side else ix - 1
-	if mood != "hollow" and not s.get("adult", false):
+	if mood == "terrified":
+		# a bead of sweat at the temple instead of the blush
+		var sx := ix + (6 if side else 6)
+		b.pset(sx, ey - 1, Pal.hi(Pal.SKY))
+		b.pset(sx, ey, Pal.SKY)
+	elif mood != "hollow" and not s.get("adult", false):
 		if side:
 			b.rect(ix - 3, ey + 3, 2, 1, blush)
 			b.pset(ix + 6, ey + 3, blush)
@@ -420,6 +433,10 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 		b.pset(mx + 1, ey + 4, mouth)
 	elif mood == "shock":
 		b.rect(mx, ey + 4, 2, 2, Pal.INK2)
+	elif mood == "terrified":
+		# clenched, trembling grimace: a wide dark mouth over gritted teeth
+		b.rect(mx - 1, ey + 4, 4, 2, Pal.INK2)
+		b.rect(mx, ey + 4, 2, 1, Pal.WHITE)
 	else:
 		b.pset(mx + 1, ey + 4, mouth)
 	if open:

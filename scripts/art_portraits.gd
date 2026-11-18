@@ -9,7 +9,7 @@ const CROP := Rect2i(4, 4, 24, 24)
 
 ## Dialog moods that the field sprite's face doesn't have, mapped to ones it does.
 const FIELD_MOOD := {"worried": "sad", "flat": "", "smile": "smile", "sad": "sad", "angry": "angry",
-	"hollow": "hollow", "closed": "closed", "shock": "shock", "cry": "cry"}
+	"hollow": "hollow", "closed": "closed", "shock": "shock", "cry": "cry", "terrified": "terrified"}
 
 
 static func from_sprite(s: Dictionary, mood: String = "", blink: bool = false, open: bool = false, zoom: int = 3) -> PixBuf:

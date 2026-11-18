@@ -810,6 +810,48 @@ func _run(scenario: String) -> void:
 							said.append("-" if l.is_empty() else "%s/%d: %s" % [l.pilot, l.tier, l.text])
 						print("[pilotcomms] %s_%s  %s" % [planet, lv, "  |  ".join(said)])
 			get_tree().quit()
+		"breakdown":
+			# Midas' breakdown call: fires once at relationship 1, freezes play
+			bot = true
+			auto_talk = false
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			Game.testing = true
+			Game.story.relationships = {"hiro": 1, "pala": 1, "midas": 1}
+			Game.story.midas_dead = false
+			Game.story.midas_breakdown_seen = false
+			main.start_mission("glacien_ix_level_01", false, false)
+			await wait(0.5)
+			var m: Node = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+			print("[breakdown] armed at %.1f, midas calls left: %d" % [m._breakdown_at, m._pilot_script.filter(func(l): return l.pilot == "midas").size()])
+			# the clock runs naturally up to the call (skipping ahead floods spawns)
+			var hp0: float = m.hp
+			var k := 0
+			while not m._cutin and k < 450:
+				await wait(0.1)
+				k += 1
+			hp0 = m.hp
+			var lt: float = m.level_t
+			var pos := []
+			for th in m.threats:
+				pos.append(th.position)
+			for i in 36:
+				await wait(0.45)
+				await shot("breakdown_%02d" % i)
+				if i == 12:
+					var still := true
+					for j in mini(pos.size(), m.threats.size()):
+						if is_instance_valid(m.threats[j]) and m.threats[j].position != pos[j]:
+							still = false
+					print("[breakdown] mid-call: cutin=%s clock frozen=%s threats still=%s pilot_on=%s" % [m._cutin, is_equal_approx(lt, m.level_t), still, m._pilot_on])
+			print("[breakdown] after: cutin=%s hp at call %s, now %s seen=%s pilot_on='%s'" % [m._cutin, hp0, m.hp, Game.story.midas_breakdown_seen, m._pilot_on])
+			m._arm_breakdown()
+			print("[breakdown] re-arm after seen: %.1f (want -1)" % m._breakdown_at)
+			Game.story.midas_breakdown_seen = false
+			Game.story.relationships.midas = 2
+			m._arm_breakdown()
+			print("[breakdown] re-arm with midas dead: %.1f (want -1)" % m._breakdown_at)
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up
