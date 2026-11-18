@@ -106,6 +106,37 @@ class Level:
         self.t += n * gap
         return self
 
+    def slow_encircle(self, start: float, step: float, n: int, gap: float, kinds: list):
+        """One threat at a time, each a step further round the circle."""
+        for i in range(n):
+            self.spawn(kinds[i % len(kinds)], start + i * step, i * gap)
+        self.t += n * gap
+        return self
+
+    def staggered_lane_freeze(self, degs: list, gap: float, hold: float, dist: float = 150, kind: str = "asteroid"):
+        """Each threat stops at dist for `hold` seconds, then comes on: wait
+        for the thaw, then block."""
+        for i, d in enumerate(degs):
+            self.spawn(kind, d, i * gap, hold_dist=dist, hold_sec=hold)
+        self.t += len(degs) * gap
+        return self
+
+    def accumulation_wall(self, centre: float, width: float, n: int, release_after: float, rock: str = "asteroid",
+                          drones: int = 0, drone: str = "drone_basic", dist: float = 150, gap: float = 0.35):
+        """n rocks fan across an arc and freeze at dist, then all thaw at
+        once `release_after` seconds after the first appears. `drones` frozen
+        drones sit on the far side: shoot them in the quiet window, then turn
+        your back on the wall before it thaws."""
+        release = round(self.t + release_after, 2)
+        for i in range(n):
+            frac = 0.5 if n == 1 else i / (n - 1)
+            self.spawn(rock, centre - width / 2 + width * frac, i * gap, hold_dist=dist, release_at=release)
+        for i in range(drones):
+            frac = 0.5 if drones == 1 else i / (drones - 1)
+            self.spawn(drone, centre + 180 - 40 + 80 * frac, n * gap + i * gap, hold_dist=dist + 20, release_at=release + 1.2)
+        self.t += release_after + 1.0
+        return self
+
     def build(self) -> dict:
         return {"events": sorted(self.events, key=lambda e: e["time"]), "phases": self.phases,
                 "timeline_sec": round(max([e["time"] for e in self.events] or [0]), 1)}
@@ -182,7 +213,80 @@ def terra_virex():
     return out
 
 
-PLANETS = {"terra_virex": terra_virex}
+# ============================================================= Glacien IX ===
+# Frozen silence and delayed danger. Core skill: calm_under_accumulation.
+# Pool: asteroid, drone_basic, drone_tank, drone_sine.
+# Rhythm: L1 slow_and_readable, L2 crowding_build, L3 oppressive_accumulation.
+# Signature: accumulation_wall / delayed_release_window (threats freeze round
+# the planet and thaw together). Mini-boss: Frost Sentinel. Boss: Boreal
+# Colossus (long dormant spells, sudden bursts).
+
+def glacien_ix():
+    out = []
+    # ---- L1: Thin Ice (~90 s), slow and readable ----
+    L = Level("glacien_ix", 1)
+    L.phase("intro_teach", "Cold front holding. Hold your nerve.").wait(2.0)
+    L.slow_encircle(0, 45, 8, 2.6, ["drone_basic", "drone_sine"]).wait(1.5)
+    L.phase("development", "Signals stalling in orbit.")
+    L.staggered_lane_freeze([0, 90, 180, 270], 3.4, 1.6).wait(1.0)
+    L.staggered_lane_freeze([45, 225, 135, 315], 3.0, 2.0).wait(1.0)
+    L.phase("signature", "Ice wall forming. Thin it before the thaw.")
+    L.accumulation_wall(180, 70, 3, 5.0, drones=2).wait(1.0)
+    L.accumulation_wall(90, 70, 4, 5.0, drones=2).wait(1.0)
+    L.accumulation_wall(315, 80, 4, 5.0, drones=2).wait(1.0)
+    L.phase("final_clear", "Final contact sweep.")
+    L.spawn("drone_tank", 0).wait(4.0)
+    L.spawn("drone_tank", 180).wait(4.0)
+    L.slow_encircle(90, 90, 4, 1.8, ["drone_sine"])
+    out.append(L)
+
+    # ---- L2: Crowding (~120 s), crowding build, mini-boss ----
+    L = Level("glacien_ix", 2)
+    L.phase("intro_teach", "Cold front holding. Hold your nerve.").wait(2.0)
+    L.slow_encircle(0, 60, 6, 2.2, ["drone_basic", "drone_sine", "drone_basic"]).wait(1.0)
+    L.staggered_lane_freeze([90, 270, 0, 180], 2.6, 2.2).wait(1.0)
+    L.phase("development", "Signals stalling in orbit.")
+    L.accumulation_wall(0, 80, 4, 5.0, drones=2).wait(0.5)
+    L.spawn("drone_tank", 90).wait(3.0)
+    L.accumulation_wall(225, 90, 5, 5.0, drones=3).wait(0.5)
+    L.phase("compression", "Pressure accumulating.")
+    L.staggered_lane_freeze([0, 120, 240, 60, 180, 300], 1.9, 2.4).wait(0.5)
+    L.spawn("drone_tank", 270).spawn("drone_tank", 90, 2.0).wait(5.0)
+    L.slow_encircle(45, 90, 4, 1.8, ["drone_sine"]).wait(1.0)
+    L.phase("signature", "Ice wall forming. Thin it before the thaw.")
+    L.accumulation_wall(135, 90, 5, 4.6, drones=3).wait(0.5)
+    L.accumulation_wall(315, 90, 5, 4.6, drones=3)
+    L.wait(2.0).gate()
+    L.phase("mini_boss", "Frost sentinel inbound. Shoot it while it rebuilds.")
+    L.wait(1.5).boss("frost_sentinel", 0, mini=True)
+    L.gate()
+    out.append(L)
+
+    # ---- L3: Deep Freeze (~150 s), oppressive accumulation, boss ----
+    L = Level("glacien_ix", 3)
+    L.phase("intro_teach", "Cold front holding. Hold your nerve.").wait(2.0)
+    L.staggered_lane_freeze([0, 180, 90, 270], 2.2, 2.0).wait(1.0)
+    L.phase("development", "Signals stalling in orbit.")
+    L.accumulation_wall(90, 90, 5, 4.6, drones=2).wait(0.5)
+    L.slow_encircle(0, 45, 6, 1.6, ["drone_sine", "drone_basic"]).wait(0.5)
+    L.accumulation_wall(270, 90, 5, 4.4, drones=3).wait(0.5)
+    L.phase("compression", "Pressure accumulating.")
+    L.spawn("drone_tank", 45).spawn("drone_tank", 225, 1.5).wait(3.0)
+    L.staggered_lane_freeze([0, 90, 180, 270, 45, 135, 225, 315], 1.5, 2.6).wait(0.5)
+    L.accumulation_wall(45, 100, 6, 4.4, drones=3).wait(0.5)
+    L.spawn("drone_tank", 135).spawn("drone_tank", 315, 1.2).wait(3.5)
+    L.phase("signature", "The ice is listening.")
+    L.accumulation_wall(0, 100, 6, 4.4, drones=3).wait(0.5)
+    L.accumulation_wall(180, 100, 6, 4.4, drones=3)
+    L.wait(2.0).gate()
+    L.phase("boss", "")
+    L.wait(0.5).boss("boreal_colossus", 0)
+    L.gate()
+    out.append(L)
+    return out
+
+
+PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix}
 
 
 def write(level: Level) -> str:

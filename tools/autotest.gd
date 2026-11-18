@@ -574,6 +574,21 @@ func _bot() -> void:
 		if best == null:
 			return
 		var to: Vector2 = (best.lp - m.CENTER).normalized()
+		if best.rock:
+			# block toward the middle of everything blockable that's close,
+			# weighted to the nearest (a wall of rocks, not just one of them)
+			var sum := Vector2.ZERO
+			for s in m.shots:
+				var d: float = s.lp.distance_to(m.CENTER)
+				if d < 170.0:
+					sum += (s.lp - m.CENTER).normalized() / maxf(20.0, d)
+			for th in m.threats:
+				if th.is_asteroid:
+					var d: float = th.lp.distance_to(m.CENTER)
+					if d < 170.0:
+						sum += (th.lp - m.CENTER).normalized() / maxf(20.0, d)
+			if sum.length() > 0.0001:
+				to = sum.normalized()
 		# "key" aim with no keys held leaves facing alone ("mouse" aim would
 		# snap it back to the cursor every frame and undo the block)
 		m._aim_mode = "key"

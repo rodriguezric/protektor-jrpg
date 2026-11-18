@@ -60,6 +60,19 @@ var tank_flash_hz := 10.0
 var tank_projectile_speed := 285.0
 var tank_projectile_damage := 1.0
 var tank_projectile_radius := 8.0
+## Freeze-and-release (Glacien IX): a threat with hold_dist > 0 stops when it
+## gets that close to the planet and waits, frosted, until the mission clock
+## reaches release_at (or hold_sec after it froze), then carries on. It
+## shakes and flashes for RELEASE_TELL seconds first. Frozen drones can be shot.
+var hold_dist := 0.0
+var hold_sec := 0.0
+var release_at := -1.0
+var _frozen := false
+var _released := false
+## Seconds until the thaw, counted down while frozen (the level clock can
+## stand still behind a wait_until_clear gate, so it can't be used directly).
+var _release_left := -1.0
+const RELEASE_TELL := 0.8
 
 # --- runtime --------------------------------------------------------------
 var m  # Mission
@@ -160,6 +173,9 @@ func tick(delta: float) -> void:
 		_hit_stun_left = maxf(0.0, _hit_stun_left - sd)
 	if _flash_t > 0.0:
 		_flash_t = maxf(0.0, _flash_t - sd)
+	if _check_hold(sd):
+		_visual_tick(sd)
+		return
 	if _hit_stun_left <= 0.0 and m.alive:
 		_update_movement(sd)
 		_handle_target_contact()
@@ -169,6 +185,36 @@ func tick(delta: float) -> void:
 	var area := Rect2(Vector2.ZERO, Vector2(m.L, m.L)).grow(120.0)
 	if not area.has_point(lp):
 		m.remove_threat(self, false)
+
+
+func _check_hold(sd: float) -> bool:
+	## True while frozen in place.
+	if hold_dist <= 0.0 or _released:
+		return false
+	if _release_left < 0.0 and release_at >= 0.0:
+		# an absolute release time becomes a countdown from the spawn
+		_release_left = maxf(0.3, release_at - m.level_t)
+	if not _frozen:
+		_release_left -= sd if _release_left > 0.0 else 0.0
+		if lp.distance_to(target()) > hold_dist:
+			return false
+		_frozen = true
+		if _release_left <= 0.0:
+			_release_left = maxf(0.3, hold_sec)
+		m.fx.ring(position, 2, d * 0.8, 0.3, Pal.FROST, 1.0, 1.0)
+		Sfx.play("plate", 1.6, -16.0)
+	_release_left -= sd
+	if _release_left <= 0.0:
+		_frozen = false
+		_released = true
+		m.fx.burst(position, 8, [Pal.FROST, Pal.WHITE, Pal.SKY], Vector2(15, 50), Vector2(0.15, 0.35))
+		Sfx.play("knock", 1.5, -12.0)
+		return false
+	return true
+
+
+func is_thawing() -> bool:
+	return _frozen and _release_left <= RELEASE_TELL
 
 
 func _update_movement(delta: float) -> void:
@@ -560,6 +606,14 @@ func _visual_tick(delta: float) -> void:
 		var k := 1.0 - _tank_left / maxf(tank_tell_sec, 0.001)
 		flash = lerpf(0.35, 1.0, k) * (sin(t * TAU * tank_flash_hz) * 0.5 + 0.5)
 		fcol = Pal.WHITE
+	if _frozen:
+		spr.modulate = Color(0.72, 0.9, 1.2)
+		if is_thawing():
+			flash = 0.4 + 0.5 * (sin(t * TAU * 6.0) * 0.5 + 0.5)
+			fcol = Pal.FROST
+			_jitter = Vector2(randf_range(-1, 1), randf_range(-1, 1))
+	elif hold_dist > 0.0 and behavior_type != "charger":
+		spr.modulate = Color.WHITE
 	if _flash_t > 0.0:
 		flash = 1.0
 		fcol = Pal.WHITE

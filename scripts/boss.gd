@@ -21,6 +21,8 @@ extends Threat
 ##   spin_stream one shot every gap from an edge angle that turns at
 ##               deg_per_sec, for duration
 ##   adds        spawn enemy_type at the boss's angle + each of degrees[]
+##               (optional hold_dist + hold_sec: they freeze there, then thaw
+##               together hold_sec after the attack)
 ##   on_rotate   a shot from the boss each time the player turns (cooldown)
 ## Every attack can carry tell (seconds of warning flash before it fires).
 
@@ -250,7 +252,12 @@ func _fire_attack(a: Dictionary) -> void:
 		"adds":
 			for dg in a.get("degrees", [0]):
 				var deg := rad_to_deg(angle) + 90.0 + float(dg)
-				m._spawn({"enemy_type": str(a.get("enemy_type", "drone_basic")), "spawn_side": "degrees", "degrees": posmod(int(round(deg)), 360)})
+				var ev := {"enemy_type": str(a.get("enemy_type", "drone_basic")), "spawn_side": "degrees", "degrees": posmod(int(round(deg)), 360)}
+				# adds can freeze at a distance and thaw together (Glacien)
+				if a.has("hold_dist"):
+					ev.hold_dist = float(a.hold_dist)
+					ev.hold_sec = float(a.get("hold_sec", 2.5))
+				m._spawn(ev)
 	var o = (phases[phase] if phase >= 0 and phase < phases.size() else {}).get("open", "always")
 	if o is Dictionary and str(o.get("type", "")) == "after_attack":
 		_open_t = float(o.get("sec", 2.5))

@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-18 10:32 EST — `feature_glacien_ix_level_redesign` (v0.34.0)
+
+Glacien IX rebuilt around patience: threats freeze around the planet and thaw together. Frost Sentinel mini-boss, Boreal Colossus boss.
+
+- New threat behaviour: frozen threats. They stop at a set distance, frost over (they can be shot), shake and flash for 0.8 s, then carry on together.
+- Level 1 "Thin Ice" (~90 s): a slow circle of drones, single lanes that pause before coming in, then three small ice walls: rocks freeze in an arc behind you while drones wait in front; shoot the drones in the quiet, turn your back on the wall before it thaws.
+- Level 2 "Crowding" (~120 s): bigger walls, tanks, staggered freezes, then the FROST SENTINEL: it calls frozen rock walls behind you and opens for a few seconds after each call.
+- Level 3 "Deep Freeze" (~150 s): oppressive walls on opposite sides, then the BOREAL COLOSSUS: long dormant spells broken by sudden 7-9 shot bursts from behind (long red tell), later hopping between quadrants and calling frozen rocks.
+- Standard kit: the levelcheck bot clears all three (89 s, 124 s, 124 s). Terra Virex still clears with no hits.
+- Code: scripts/threat.gd `hold_dist` / `hold_sec` / `release_at` with a thaw countdown that keeps running behind wait_until_clear gates; spawn events and boss `adds` accept them. tools/build_levels.py: `slow_encircle`, `staggered_lane_freeze`, `accumulation_wall`, Glacien plans. data/bosses.json: `frost_sentinel`, `boreal_colossus`. Test bot blocks toward the centre of all nearby rocks and shots.
+
 ## 2026-11-18 10:17 EST — `feature_terra_virex_level_redesign` (v0.33.0)
 
 Terra Virex rebuilt to its design: block-then-shoot teaching, a Relay Sentinel mini-boss and the Aegis Relay boss.
