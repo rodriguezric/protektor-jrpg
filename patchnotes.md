@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 11:55 EST — `bugfix_touch_pause_button_covers_mission_hud` (v0.40.1)
+
+On 16:9 touch screens the pause button no longer covers the planet name and level in a deployment.
+
+- With no side bars, the deployment's pause button now sits in the empty right half of the SCORE box instead of over "TERRA VIREX / LEVEL 01". Wider phones (button in the side bar) are unchanged. The "Esc pause" hint is hidden while playing by touch.
+- scripts/touch_controls.gd `relayout()` + `MISSION_SLOT`; scripts/mission.gd `pause_hint` hidden when `Game.touch_active`.
+- A very long block streak label ("BLOCK x12") can still pass under the button for a moment.
+
 ## 2026-11-18 11:31 EST — `feature_boss_achievements` (v0.40.0)
 
 Achievements for every planetary boss, and one for beating them all, on a new BOSSES tab.
