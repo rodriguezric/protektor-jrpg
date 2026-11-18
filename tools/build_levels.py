@@ -20,6 +20,7 @@ Angles are compass degrees: 0 top, 90 right, 180 bottom, 270 left.
 """
 import json
 import os
+import random
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -172,6 +173,45 @@ class Level:
         """Fast threats flipping between sides: turn, shoot, turn back."""
         for i in range(n):
             self.spawn(kind, degs[i % len(degs)], i * gap)
+        self.t += n * gap
+        return self
+
+    def flash(self, dt: float = 0.0, alpha: float = 0.35, dur: float = 0.15, color: str = "white"):
+        self._ev({"type": "fx_flash", "color": color, "duration_sec": dur, "alpha": alpha}, self.t + dt)
+        return self
+
+    def storm_front(self, centre: float, beats: int, beat: float, step: float, per_beat: int, spread: float = 40,
+                    drones: list = None, seed: int = 1):
+        """A storm of rocks from one quadrant, scattered and jittered so it
+        looks random; the quadrant steps round by `step` every `beat`
+        seconds (lightning on each step). A drone comes from the opposite
+        side each beat. Read the beat and you can turn before the front does."""
+        rng = random.Random(seed)
+        drones = drones or ["drone_basic"]
+        for b in range(beats):
+            c = centre + b * step
+            self.flash(b * beat)
+            for k in range(per_beat):
+                self.spawn("asteroid", c + rng.uniform(-spread, spread), b * beat + 0.6 + rng.uniform(0, beat - 1.0))
+            self.spawn(drones[b % len(drones)], c + 180 + rng.uniform(-20, 20), b * beat + 0.4)
+        self.t += beats * beat
+        return self
+
+    def false_scramble(self, n: int, window: float, kinds: list, seed: int = 2):
+        """A burst from all over that looks like chaos, then a clean gap."""
+        rng = random.Random(seed)
+        for i in range(n):
+            self.spawn(kinds[i % len(kinds)], rng.choice([0, 45, 90, 135, 180, 225, 270, 315]) + rng.uniform(-10, 10),
+                       rng.uniform(0, window))
+        self.t += window + 3.0
+        return self
+
+    def mirrored_arcs(self, deg: float, n: int, gap: float):
+        """Spiral drones in mirrored pairs from opposite sides."""
+        for i in range(n):
+            d = deg + i * 30
+            self.spawn("spiral_drone_clock", d, i * gap)
+            self.spawn("spiral_drone_counter", d + 180, i * gap)
         self.t += n * gap
         return self
 
@@ -393,7 +433,69 @@ def ignara_prime():
     return out
 
 
-PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime}
+# ============================================================= Tempestris ===
+# Storm chaos with hidden structure. Core skill: implicit_pattern_recognition.
+# Pool: asteroid, drone_basic, drone_fast, drone_sine, charger_drone, spirals.
+# Rhythm: L1 structured_noise, L2 obscured_cycle, L3 intuitive_safe_zone_reading.
+# Signature: rotating_safe_quadrants (storm_front: the rock storm steps round
+# on a beat, so the safe facing rotates with it). Mini-boss: Storm Eye.
+# Boss: The Cyclarch.
+
+def tempestris():
+    out = []
+    # ---- L1: Squall Line (~90 s), structured noise ----
+    L = Level("tempestris", 1)
+    L.phase("intro_teach", "Storm cells forming. Look for the pattern.").wait(2.0)
+    L.storm_front(0, 4, 4.5, 0, 3, 35, ["drone_basic"], seed=11).wait(1.5)
+    L.false_scramble(6, 5.0, ["drone_basic", "drone_sine"], seed=12)
+    L.phase("development", "The storm is turning.")
+    L.storm_front(90, 5, 4.5, 90, 3, 35, ["drone_basic", "drone_sine"], seed=13).wait(1.5)
+    L.mirrored_arcs(0, 3, 3.0).wait(2.0)
+    L.phase("signature", "Find the calm. It moves.")
+    L.storm_front(0, 6, 4.0, 90, 4, 40, ["drone_sine", "drone_basic"], seed=14).wait(1.5)
+    L.phase("final_clear", "Final contact sweep.")
+    L.false_scramble(6, 4.0, ["drone_basic", "drone_fast"], seed=15)
+    out.append(L)
+
+    # ---- L2: Eyewall (~120 s), obscured cycle, mini-boss ----
+    L = Level("tempestris", 2)
+    L.phase("intro_teach", "Storm cells forming. Look for the pattern.").wait(2.0)
+    L.storm_front(180, 4, 4.0, -90, 3, 40, ["drone_basic", "drone_sine"], seed=21).wait(1.0)
+    L.false_scramble(8, 5.0, ["drone_basic", "drone_sine", "drone_fast"], seed=22)
+    L.phase("development", "The storm is turning.")
+    L.mirrored_arcs(45, 4, 2.6).wait(1.0)
+    L.storm_front(45, 5, 3.8, 90, 4, 40, ["drone_sine", "charger_drone"], seed=23).wait(1.0)
+    L.phase("compression", "Pressure dropping. Brace.")
+    L.false_scramble(10, 6.0, ["drone_basic", "drone_fast", "drone_sine"], seed=24)
+    L.phase("signature", "Find the calm. It moves.")
+    L.storm_front(270, 7, 3.5, 90, 4, 45, ["drone_basic", "drone_fast", "drone_sine"], seed=25)
+    L.wait(2.0).gate()
+    L.phase("mini_boss", "Storm eye closing in. Keep turning.")
+    L.wait(1.5).boss("storm_eye", 0, mini=True)
+    L.gate()
+    out.append(L)
+
+    # ---- L3: Cyclone Season (~150 s), safe-zone reading, boss ----
+    L = Level("tempestris", 3)
+    L.phase("intro_teach", "Storm cells forming. Look for the pattern.").wait(2.0)
+    L.storm_front(90, 4, 3.6, 90, 3, 40, ["drone_basic", "drone_sine"], seed=31).wait(1.0)
+    L.phase("development", "The storm is turning.")
+    L.mirrored_arcs(0, 4, 2.4).wait(1.0)
+    L.false_scramble(10, 6.0, ["drone_fast", "drone_sine", "charger_drone"], seed=32)
+    L.storm_front(0, 5, 3.4, -90, 4, 45, ["drone_sine", "drone_fast"], seed=33).wait(1.0)
+    L.phase("compression", "Pressure dropping. Brace.")
+    L.storm_front(180, 3, 3.2, 90, 4, 45, ["drone_basic", "charger_drone", "drone_fast"], seed=34).wait(1.0)
+    L.phase("signature", "Find the calm. It moves.")
+    L.storm_front(45, 5, 3.2, 90, 5, 45, ["drone_fast", "drone_sine"], seed=35)
+    L.wait(2.0).gate()
+    L.phase("boss", "")
+    L.wait(0.5).boss("cyclarch", 0)
+    L.gate()
+    out.append(L)
+    return out
+
+
+PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime, "tempestris": tempestris}
 
 
 def write(level: Level) -> str:

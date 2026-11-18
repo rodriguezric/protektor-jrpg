@@ -584,10 +584,10 @@ func _sim_banner() -> void:
 	sub_l.queue_free()
 
 
-func _arena_flash(c: Color, t: float) -> void:
+func _arena_flash(c: Color, t: float, a: float = 0.9) -> void:
 	var r := ColorRect.new()
 	r.size = ARENA.size
-	r.color = Color(c, 0.9)
+	r.color = Color(c, a)
 	overlay.add_child(r)
 	var tw := create_tween()
 	tw.tween_property(r, "color:a", 0.0, t)
@@ -762,7 +762,7 @@ func _run_event(e: Dictionary) -> void:
 		"music":
 			_music_event(e)
 		"fx_flash":
-			_arena_flash(_named_color(str(e.get("color", "white"))), float(e.get("duration_sec", 0.3)))
+			_arena_flash(_named_color(str(e.get("color", "white"))), float(e.get("duration_sec", 0.3)), float(e.get("alpha", 0.9)))
 		"fx_shake":
 			shake(float(e.get("amount", 3.0)), float(e.get("duration_sec", 0.5)))
 		"fx_lane":

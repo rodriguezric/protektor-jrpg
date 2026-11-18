@@ -3,8 +3,7 @@
   "level_id": "tempestris_level_02",
   "planet_type": "tempestris",
   "level_index": 2,
-  "target_duration_sec": 64.05,
-  "enemy_pool_override": [],
+  "target_duration_sec": 120,
   "completion": {
     "message_text": "Tempestris 02 clear: Crosswind Feint.",
     "message_hold_sec": 1.8,
@@ -14,13 +13,6 @@
       "dialog_path": "res://dialog/scene_2_5.dialog.json",
       "delay_sec": 2
     }
-  },
-  "boss_phase": {
-    "enabled": false,
-    "music_file_path": "",
-    "music_volume_db": -6,
-    "crossfade_sec": 1.2,
-    "warning_text": ""
   },
   "header": {
     "background_color": "black",
@@ -33,1504 +25,1031 @@
   },
   "phases": [
     {
-      "phase_id": "wait_01",
-      "duration_sec": 2,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
+      "phase_id": "intro_teach",
+      "start_sec": 0.0
     },
     {
-      "phase_id": "phase_01",
-      "duration_sec": 5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_cardinal",
-          "spawn_interval_sec": 0.5
-        }
-      ]
+      "phase_id": "development",
+      "start_sec": 27.0
     },
     {
-      "phase_id": "phase_02",
-      "duration_sec": 5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_diagonal",
-          "spawn_interval_sec": 0.5
-        }
-      ]
+      "phase_id": "compression",
+      "start_sec": 58.4
     },
     {
-      "phase_id": "wait_02",
-      "duration_sec": 0.5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
+      "phase_id": "signature",
+      "start_sec": 67.4
     },
     {
-      "phase_id": "phase_03",
-      "duration_sec": 5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_cardinal",
-          "spawn_interval_sec": 0.5
-        },
-        {
-          "pattern_id": "sine_diagonal",
-          "spawn_interval_sec": 2
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_03",
-      "duration_sec": 0.5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
-    },
-    {
-      "phase_id": "phase_04",
-      "duration_sec": 5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_diagonal",
-          "spawn_interval_sec": 0.5
-        },
-        {
-          "pattern_id": "sine_cardinal",
-          "spawn_interval_sec": 2
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_04",
-      "duration_sec": 2,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
-    },
-    {
-      "phase_id": "phase_05",
-      "duration_sec": 5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_cardinal",
-          "spawn_interval_sec": 0.25
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_05",
-      "duration_sec": 2,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
-    },
-    {
-      "phase_id": "phase_06",
-      "duration_sec": 5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_cardinal",
-          "spawn_interval_sec": 0.5
-        },
-        {
-          "pattern_id": "fast_diagonal",
-          "spawn_interval_sec": 2
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_06",
-      "duration_sec": 0.5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
-    },
-    {
-      "phase_id": "phase_07",
-      "duration_sec": 5,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_diagonal",
-          "spawn_interval_sec": 0.5
-        },
-        {
-          "pattern_id": "charger_cardinal",
-          "spawn_interval_sec": 3
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_07",
-      "duration_sec": 2,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
-    },
-    {
-      "phase_id": "phase_08",
-      "duration_sec": 3,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_cardinal",
-          "spawn_interval_sec": 0.3
-        }
-      ]
-    },
-    {
-      "phase_id": "phase_09",
-      "duration_sec": 3,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_diagonal",
-          "spawn_interval_sec": 0.3
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_08",
-      "duration_sec": 0.3,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
-    },
-    {
-      "phase_id": "phase_10",
-      "duration_sec": 3,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_cardinal",
-          "spawn_interval_sec": 0.25
-        }
-      ]
-    },
-    {
-      "phase_id": "phase_11",
-      "duration_sec": 3,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_diagonal",
-          "spawn_interval_sec": 0.25
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_09",
-      "duration_sec": 0.25,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
-    },
-    {
-      "phase_id": "phase_12",
-      "duration_sec": 2,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_cardinal",
-          "spawn_interval_sec": 0.2
-        }
-      ]
-    },
-    {
-      "phase_id": "phase_13",
-      "duration_sec": 2,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": [
-        {
-          "pattern_id": "asteroid_diagonal",
-          "spawn_interval_sec": 0.2
-        }
-      ]
-    },
-    {
-      "phase_id": "wait_10",
-      "duration_sec": 3,
-      "allow_wave_overlap": true,
-      "fx_tags": [],
-      "patterns": []
+      "phase_id": "mini_boss",
+      "start_sec": 94.4
     }
   ],
   "authoring": {
-    "summary": "Tempestris 02 runs concurrent rate-driven cardinal and diagonal streams through thirteen combat phases separated by ten explicit recovery waits.",
-    "boss_replaces_signature_phase": false,
-    "generation_notes": [
-      "The mission_mds/tempestris_level_02.md sequence is the authoritative phase and rate design.",
-      "Each phase pattern uses spawn_interval_sec as its rate in seconds and runs concurrently for the full phase duration.",
-      "Wait phases contain no patterns and advance the timeline without spawning enemies.",
-      "Cardinal streams use exact degrees 0, 90, 180, and 270; diagonal streams use exact degrees 45, 135, 225, and 315.",
-      "Each stream independently chooses a random degree that differs from both of its previous two choices.",
-      "Spiral stream patterns accept rotation values of clockwise or counter_clockwise."
-    ],
-    "compiled_from_phases": true,
-    "compiled_event_count": 157,
-    "preserved_timeline_event_count": 0,
-    "preserved_trigger_event_count": 0
+    "built_by": "tools/build_levels.py",
+    "timeline_sec": 96.4
   },
   "events": [
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_001",
-      "type": "spawn_enemy",
-      "time": 2.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
+      "type": "fx_async_message",
+      "text": "Storm cells forming. Look for the pattern.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_02_001",
+      "time": 0.0
     },
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_002",
-      "type": "spawn_enemy",
-      "time": 2.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_002",
+      "time": 2.0
     },
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_003",
       "type": "spawn_enemy",
-      "time": 3.0,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 12,
+      "id": "tempestris_level_02_006",
+      "time": 2.4
     },
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_004",
       "type": "spawn_enemy",
-      "time": 3.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 190,
+      "id": "tempestris_level_02_004",
+      "time": 4.04
     },
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_005",
       "type": "spawn_enemy",
-      "time": 4.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 153,
+      "id": "tempestris_level_02_003",
+      "time": 4.67
     },
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_006",
       "type": "spawn_enemy",
-      "time": 4.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 157,
+      "id": "tempestris_level_02_005",
+      "time": 4.98
     },
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_007",
-      "type": "spawn_enemy",
-      "time": 5.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_007",
+      "time": 6.0
     },
     {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_008",
       "type": "spawn_enemy",
-      "time": 5.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_009",
-      "type": "spawn_enemy",
-      "time": 6.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_01_asteroid_cardinal_01_spawn_010",
-      "type": "spawn_enemy",
-      "time": 6.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_001",
-      "type": "spawn_enemy",
-      "time": 7.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_002",
-      "type": "spawn_enemy",
-      "time": 7.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 45
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_003",
-      "type": "spawn_enemy",
-      "time": 8.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 225
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_004",
-      "type": "spawn_enemy",
-      "time": 8.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_005",
-      "type": "spawn_enemy",
-      "time": 9.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_006",
-      "type": "spawn_enemy",
-      "time": 9.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 45
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_007",
-      "type": "spawn_enemy",
-      "time": 10.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_008",
-      "type": "spawn_enemy",
-      "time": 10.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_009",
-      "type": "spawn_enemy",
-      "time": 11.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 45
-    },
-    {
-      "id": "tempestris_level_02_phase_02_asteroid_diagonal_01_spawn_010",
-      "type": "spawn_enemy",
-      "time": 11.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_001",
-      "type": "spawn_enemy",
-      "time": 12.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_03_sine_diagonal_01_spawn_001",
-      "type": "spawn_enemy",
-      "time": 12.5,
       "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 252,
+      "id": "tempestris_level_02_011",
+      "time": 6.4
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_002",
       "type": "spawn_enemy",
-      "time": 13.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 68,
+      "id": "tempestris_level_02_009",
+      "time": 6.61
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_003",
       "type": "spawn_enemy",
-      "time": 13.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 90,
+      "id": "tempestris_level_02_008",
+      "time": 8.12
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_004",
       "type": "spawn_enemy",
-      "time": 14.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 79,
+      "id": "tempestris_level_02_010",
+      "time": 8.36
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_005",
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_012",
+      "time": 10.0
+    },
+    {
       "type": "spawn_enemy",
-      "time": 14.5,
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 195,
+      "id": "tempestris_level_02_016",
+      "time": 10.4
+    },
+    {
+      "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 339,
+      "id": "tempestris_level_02_014",
+      "time": 10.73
     },
     {
-      "id": "tempestris_level_02_phase_03_sine_diagonal_01_spawn_002",
       "type": "spawn_enemy",
-      "time": 14.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 23,
+      "id": "tempestris_level_02_013",
+      "time": 11.3
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 39,
+      "id": "tempestris_level_02_015",
+      "time": 12.82
+    },
+    {
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_017",
+      "time": 14.0
+    },
+    {
+      "type": "spawn_enemy",
       "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 84,
+      "id": "tempestris_level_02_021",
+      "time": 14.4
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_006",
       "type": "spawn_enemy",
-      "time": 15.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 280,
+      "id": "tempestris_level_02_018",
+      "time": 14.7
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_007",
       "type": "spawn_enemy",
-      "time": 15.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 257,
+      "id": "tempestris_level_02_019",
+      "time": 16.09
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_008",
       "type": "spawn_enemy",
-      "time": 16.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 240,
+      "id": "tempestris_level_02_020",
+      "time": 17.46
     },
     {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_009",
       "type": "spawn_enemy",
-      "time": 16.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_03_sine_diagonal_01_spawn_003",
-      "type": "spawn_enemy",
-      "time": 16.5,
-      "enemy_type": "drone_sine",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_03_asteroid_cardinal_02_spawn_010",
-      "type": "spawn_enemy",
-      "time": 17.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_001",
-      "type": "spawn_enemy",
-      "time": 18.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 225
-    },
-    {
-      "id": "tempestris_level_02_phase_04_sine_cardinal_01_spawn_001",
-      "type": "spawn_enemy",
-      "time": 18.0,
-      "enemy_type": "drone_sine",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_002",
-      "type": "spawn_enemy",
-      "time": 18.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_003",
-      "type": "spawn_enemy",
-      "time": 19.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 45
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_004",
-      "type": "spawn_enemy",
-      "time": 19.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 225
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_005",
-      "type": "spawn_enemy",
-      "time": 20.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315
-    },
-    {
-      "id": "tempestris_level_02_phase_04_sine_cardinal_01_spawn_002",
-      "type": "spawn_enemy",
-      "time": 20.0,
-      "enemy_type": "drone_sine",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_006",
-      "type": "spawn_enemy",
-      "time": 20.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_007",
-      "type": "spawn_enemy",
-      "time": 21.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 45
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_008",
-      "type": "spawn_enemy",
-      "time": 21.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_009",
-      "type": "spawn_enemy",
-      "time": 22.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_04_sine_cardinal_01_spawn_003",
-      "type": "spawn_enemy",
-      "time": 22.0,
-      "enemy_type": "drone_sine",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_04_asteroid_diagonal_02_spawn_010",
-      "type": "spawn_enemy",
-      "time": 22.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 225
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_001",
-      "type": "spawn_enemy",
-      "time": 25.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_002",
-      "type": "spawn_enemy",
-      "time": 25.25,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_003",
-      "type": "spawn_enemy",
-      "time": 25.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_004",
-      "type": "spawn_enemy",
-      "time": 25.75,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_005",
-      "type": "spawn_enemy",
-      "time": 26.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_006",
-      "type": "spawn_enemy",
-      "time": 26.25,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_007",
-      "type": "spawn_enemy",
-      "time": 26.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_008",
-      "type": "spawn_enemy",
-      "time": 26.75,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_009",
-      "type": "spawn_enemy",
-      "time": 27.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_010",
-      "type": "spawn_enemy",
-      "time": 27.25,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_011",
-      "type": "spawn_enemy",
-      "time": 27.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_012",
-      "type": "spawn_enemy",
-      "time": 27.75,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_013",
-      "type": "spawn_enemy",
-      "time": 28.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_014",
-      "type": "spawn_enemy",
-      "time": 28.25,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_015",
-      "type": "spawn_enemy",
-      "time": 28.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_016",
-      "type": "spawn_enemy",
-      "time": 28.75,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_017",
-      "type": "spawn_enemy",
-      "time": 29.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_018",
-      "type": "spawn_enemy",
-      "time": 29.25,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_019",
-      "type": "spawn_enemy",
-      "time": 29.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_05_asteroid_cardinal_03_spawn_020",
-      "type": "spawn_enemy",
-      "time": 29.75,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_001",
-      "type": "spawn_enemy",
-      "time": 32.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_06_fast_diagonal_01_spawn_001",
-      "type": "spawn_enemy",
-      "time": 32.0,
       "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 274,
+      "id": "tempestris_level_02_027",
+      "time": 19.24
     },
     {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_002",
       "type": "spawn_enemy",
-      "time": 32.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_003",
-      "type": "spawn_enemy",
-      "time": 33.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
-    },
-    {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_004",
-      "type": "spawn_enemy",
-      "time": 33.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 270
-    },
-    {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_005",
-      "type": "spawn_enemy",
-      "time": 34.0,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180
-    },
-    {
-      "id": "tempestris_level_02_phase_06_fast_diagonal_01_spawn_002",
-      "type": "spawn_enemy",
-      "time": 34.0,
       "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 230,
+      "id": "tempestris_level_02_024",
+      "time": 19.4
     },
     {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_006",
       "type": "spawn_enemy",
-      "time": 34.5,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 128,
+      "id": "tempestris_level_02_029",
+      "time": 19.56
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 308,
+      "id": "tempestris_level_02_023",
+      "time": 19.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 1,
+      "id": "tempestris_level_02_028",
+      "time": 20.55
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 189,
+      "id": "tempestris_level_02_025",
+      "time": 20.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 84,
+      "id": "tempestris_level_02_022",
+      "time": 22.07
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 98,
+      "id": "tempestris_level_02_026",
+      "time": 22.43
+    },
+    {
+      "type": "fx_async_message",
+      "text": "The storm is turning.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_02_030",
+      "time": 27.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "id": "tempestris_level_02_031",
+      "time": 27.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "id": "tempestris_level_02_032",
+      "time": 27.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 75,
+      "id": "tempestris_level_02_033",
+      "time": 29.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 255,
+      "id": "tempestris_level_02_034",
+      "time": 29.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 105,
+      "id": "tempestris_level_02_035",
+      "time": 32.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 285,
+      "id": "tempestris_level_02_036",
+      "time": 32.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "id": "tempestris_level_02_037",
+      "time": 34.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "id": "tempestris_level_02_038",
+      "time": 34.8
+    },
+    {
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_039",
+      "time": 38.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 212,
+      "id": "tempestris_level_02_044",
+      "time": 38.8
+    },
+    {
+      "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 76,
+      "id": "tempestris_level_02_041",
+      "time": 39.23
     },
     {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_007",
       "type": "spawn_enemy",
-      "time": 35.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 47,
+      "id": "tempestris_level_02_043",
+      "time": 39.36
     },
     {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_008",
       "type": "spawn_enemy",
-      "time": 35.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 52,
+      "id": "tempestris_level_02_042",
+      "time": 40.19
     },
     {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_009",
       "type": "spawn_enemy",
-      "time": 36.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 78,
+      "id": "tempestris_level_02_040",
+      "time": 41.66
     },
     {
-      "id": "tempestris_level_02_phase_06_fast_diagonal_01_spawn_003",
-      "type": "spawn_enemy",
-      "time": 36.0,
-      "enemy_type": "drone_fast",
-      "spawn_side": "degrees",
-      "degrees": 315
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_045",
+      "time": 42.2
     },
     {
-      "id": "tempestris_level_02_phase_06_asteroid_cardinal_04_spawn_010",
       "type": "spawn_enemy",
-      "time": 36.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
-    },
-    {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_001",
-      "type": "spawn_enemy",
-      "time": 37.5,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
-    },
-    {
-      "id": "tempestris_level_02_phase_07_charger_cardinal_01_spawn_001",
-      "type": "spawn_enemy",
-      "time": 37.5,
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 324,
+      "id": "tempestris_level_02_050",
+      "time": 42.6
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_002",
       "type": "spawn_enemy",
-      "time": 38.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 131,
+      "id": "tempestris_level_02_047",
+      "time": 42.87
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_003",
       "type": "spawn_enemy",
-      "time": 38.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 130,
+      "id": "tempestris_level_02_046",
+      "time": 43.42
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_004",
       "type": "spawn_enemy",
-      "time": 39.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 128,
+      "id": "tempestris_level_02_049",
+      "time": 44.24
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_005",
       "type": "spawn_enemy",
-      "time": 39.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 101,
+      "id": "tempestris_level_02_048",
+      "time": 44.79
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_006",
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_051",
+      "time": 46.0
+    },
+    {
       "type": "spawn_enemy",
-      "time": 40.0,
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 55,
+      "id": "tempestris_level_02_056",
+      "time": 46.4
+    },
+    {
+      "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 213,
+      "id": "tempestris_level_02_052",
+      "time": 46.76
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_007",
       "type": "spawn_enemy",
-      "time": 40.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 262,
+      "id": "tempestris_level_02_055",
+      "time": 47.62
     },
     {
-      "id": "tempestris_level_02_phase_07_charger_cardinal_01_spawn_002",
       "type": "spawn_enemy",
-      "time": 40.5,
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 247,
+      "id": "tempestris_level_02_053",
+      "time": 48.25
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 237,
+      "id": "tempestris_level_02_054",
+      "time": 48.34
+    },
+    {
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_057",
+      "time": 49.8
+    },
+    {
+      "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 132,
+      "id": "tempestris_level_02_062",
+      "time": 50.2
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_008",
       "type": "spawn_enemy",
-      "time": 41.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 327,
+      "id": "tempestris_level_02_059",
+      "time": 51.28
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_009",
       "type": "spawn_enemy",
-      "time": 41.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 281,
+      "id": "tempestris_level_02_060",
+      "time": 51.73
     },
     {
-      "id": "tempestris_level_02_phase_07_asteroid_diagonal_03_spawn_010",
       "type": "spawn_enemy",
-      "time": 42.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 304,
+      "id": "tempestris_level_02_058",
+      "time": 52.0
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_001",
       "type": "spawn_enemy",
-      "time": 44.5,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 332,
+      "id": "tempestris_level_02_061",
+      "time": 52.05
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_002",
-      "type": "spawn_enemy",
-      "time": 44.8,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_063",
+      "time": 53.6
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_003",
       "type": "spawn_enemy",
-      "time": 45.1,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 206,
+      "id": "tempestris_level_02_068",
+      "time": 54.0
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_004",
       "type": "spawn_enemy",
-      "time": 45.4,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 14,
+      "id": "tempestris_level_02_067",
+      "time": 54.48
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_005",
       "type": "spawn_enemy",
-      "time": 45.7,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 56,
+      "id": "tempestris_level_02_064",
+      "time": 54.71
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_006",
       "type": "spawn_enemy",
-      "time": 46.0,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 70,
+      "id": "tempestris_level_02_066",
+      "time": 54.75
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_007",
       "type": "spawn_enemy",
-      "time": 46.3,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 19,
+      "id": "tempestris_level_02_065",
+      "time": 55.11
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_008",
-      "type": "spawn_enemy",
-      "time": 46.6,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
+      "type": "fx_async_message",
+      "text": "Pressure dropping. Brace.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_02_069",
+      "time": 58.4
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_009",
       "type": "spawn_enemy",
-      "time": 46.9,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 234,
+      "id": "tempestris_level_02_079",
+      "time": 58.85
     },
     {
-      "id": "tempestris_level_02_phase_08_asteroid_cardinal_05_spawn_010",
       "type": "spawn_enemy",
-      "time": 47.2,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 186,
+      "id": "tempestris_level_02_078",
+      "time": 59.35
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_001",
       "type": "spawn_enemy",
-      "time": 47.5,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 35,
+      "id": "tempestris_level_02_075",
+      "time": 59.41
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_002",
       "type": "spawn_enemy",
-      "time": 47.8,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 276,
+      "id": "tempestris_level_02_070",
+      "time": 59.5
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_003",
       "type": "spawn_enemy",
-      "time": 48.1,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 319,
+      "id": "tempestris_level_02_076",
+      "time": 61.07
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_004",
       "type": "spawn_enemy",
-      "time": 48.4,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 83,
+      "id": "tempestris_level_02_071",
+      "time": 62.43
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_005",
       "type": "spawn_enemy",
-      "time": 48.7,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 314,
+      "id": "tempestris_level_02_074",
+      "time": 62.73
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_006",
       "type": "spawn_enemy",
-      "time": 49.0,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 184,
+      "id": "tempestris_level_02_073",
+      "time": 63.0
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_007",
       "type": "spawn_enemy",
-      "time": 49.3,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 179,
+      "id": "tempestris_level_02_077",
+      "time": 64.37
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_008",
       "type": "spawn_enemy",
-      "time": 49.6,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 49,
+      "id": "tempestris_level_02_072",
+      "time": 64.39
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_009",
-      "type": "spawn_enemy",
-      "time": 49.9,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
+      "type": "fx_async_message",
+      "text": "Find the calm. It moves.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_02_080",
+      "time": 67.4
     },
     {
-      "id": "tempestris_level_02_phase_09_asteroid_diagonal_04_spawn_010",
-      "type": "spawn_enemy",
-      "time": 50.2,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_081",
+      "time": 67.4
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_001",
       "type": "spawn_enemy",
-      "time": 50.8,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 80,
+      "id": "tempestris_level_02_086",
+      "time": 67.8
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_002",
       "type": "spawn_enemy",
-      "time": 51.05,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 300,
+      "id": "tempestris_level_02_083",
+      "time": 68.54
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_003",
       "type": "spawn_enemy",
-      "time": 51.3,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 303,
+      "id": "tempestris_level_02_084",
+      "time": 69.59
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_004",
       "type": "spawn_enemy",
-      "time": 51.55,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 258,
+      "id": "tempestris_level_02_082",
+      "time": 70.32
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_005",
       "type": "spawn_enemy",
-      "time": 51.8,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 228,
+      "id": "tempestris_level_02_085",
+      "time": 70.38
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_006",
-      "type": "spawn_enemy",
-      "time": 52.05,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_087",
+      "time": 70.9
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_007",
       "type": "spawn_enemy",
-      "time": 52.3,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 184,
+      "id": "tempestris_level_02_092",
+      "time": 71.3
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_008",
       "type": "spawn_enemy",
-      "time": 52.55,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 7,
+      "id": "tempestris_level_02_089",
+      "time": 71.81
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_009",
       "type": "spawn_enemy",
-      "time": 52.8,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 342,
+      "id": "tempestris_level_02_088",
+      "time": 72.56
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_010",
       "type": "spawn_enemy",
-      "time": 53.05,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 1,
+      "id": "tempestris_level_02_091",
+      "time": 73.49
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_011",
       "type": "spawn_enemy",
-      "time": 53.3,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 16,
+      "id": "tempestris_level_02_090",
+      "time": 73.58
     },
     {
-      "id": "tempestris_level_02_phase_10_asteroid_cardinal_06_spawn_012",
-      "type": "spawn_enemy",
-      "time": 53.55,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_093",
+      "time": 74.4
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_001",
       "type": "spawn_enemy",
-      "time": 53.8,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 273,
+      "id": "tempestris_level_02_098",
+      "time": 74.8
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_002",
       "type": "spawn_enemy",
-      "time": 54.05,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 102,
+      "id": "tempestris_level_02_097",
+      "time": 75.25
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_003",
       "type": "spawn_enemy",
-      "time": 54.3,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 119,
+      "id": "tempestris_level_02_094",
+      "time": 75.45
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_004",
       "type": "spawn_enemy",
-      "time": 54.55,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 77,
+      "id": "tempestris_level_02_095",
+      "time": 76.17
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_005",
       "type": "spawn_enemy",
-      "time": 54.8,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 54,
+      "id": "tempestris_level_02_096",
+      "time": 77.43
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_006",
-      "type": "spawn_enemy",
-      "time": 55.05,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 45
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_099",
+      "time": 77.9
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_007",
       "type": "spawn_enemy",
-      "time": 55.3,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 15,
+      "id": "tempestris_level_02_104",
+      "time": 78.3
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_008",
       "type": "spawn_enemy",
-      "time": 55.55,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 181,
+      "id": "tempestris_level_02_103",
+      "time": 78.82
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_009",
       "type": "spawn_enemy",
-      "time": 55.8,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 172,
+      "id": "tempestris_level_02_100",
+      "time": 78.97
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_010",
       "type": "spawn_enemy",
-      "time": 56.05,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 149,
+      "id": "tempestris_level_02_101",
+      "time": 79.65
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_011",
       "type": "spawn_enemy",
-      "time": 56.3,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 141,
+      "id": "tempestris_level_02_102",
+      "time": 79.91
     },
     {
-      "id": "tempestris_level_02_phase_11_asteroid_diagonal_05_spawn_012",
-      "type": "spawn_enemy",
-      "time": 56.55,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_105",
+      "time": 81.4
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_001",
       "type": "spawn_enemy",
-      "time": 57.05,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 90,
+      "id": "tempestris_level_02_110",
+      "time": 81.8
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_002",
       "type": "spawn_enemy",
-      "time": 57.25,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 228,
+      "id": "tempestris_level_02_106",
+      "time": 82.43
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_003",
       "type": "spawn_enemy",
-      "time": 57.45,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 298,
+      "id": "tempestris_level_02_107",
+      "time": 82.55
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_004",
       "type": "spawn_enemy",
-      "time": 57.65,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 264,
+      "id": "tempestris_level_02_109",
+      "time": 83.24
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_005",
       "type": "spawn_enemy",
-      "time": 57.85,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 263,
+      "id": "tempestris_level_02_108",
+      "time": 83.4
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_006",
-      "type": "spawn_enemy",
-      "time": 58.05,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_111",
+      "time": 84.9
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_007",
       "type": "spawn_enemy",
-      "time": 58.25,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 0
+      "degrees": 178,
+      "id": "tempestris_level_02_116",
+      "time": 85.3
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_008",
       "type": "spawn_enemy",
-      "time": 58.45,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180
+      "degrees": 358,
+      "id": "tempestris_level_02_112",
+      "time": 85.64
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_009",
       "type": "spawn_enemy",
-      "time": 58.65,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270
+      "degrees": 28,
+      "id": "tempestris_level_02_113",
+      "time": 86.21
     },
     {
-      "id": "tempestris_level_02_phase_12_asteroid_cardinal_07_spawn_010",
       "type": "spawn_enemy",
-      "time": 58.85,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90
+      "degrees": 319,
+      "id": "tempestris_level_02_114",
+      "time": 86.52
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_001",
       "type": "spawn_enemy",
-      "time": 59.05,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 28,
+      "id": "tempestris_level_02_115",
+      "time": 87.07
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_002",
-      "type": "spawn_enemy",
-      "time": 59.25,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 225
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_02_117",
+      "time": 88.4
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_003",
       "type": "spawn_enemy",
-      "time": 59.45,
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 285,
+      "id": "tempestris_level_02_122",
+      "time": 88.8
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_004",
       "type": "spawn_enemy",
-      "time": 59.65,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 315
+      "degrees": 50,
+      "id": "tempestris_level_02_120",
+      "time": 89.33
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_005",
       "type": "spawn_enemy",
-      "time": 59.85,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45
+      "degrees": 88,
+      "id": "tempestris_level_02_118",
+      "time": 89.55
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_006",
       "type": "spawn_enemy",
-      "time": 60.05,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 135
+      "degrees": 100,
+      "id": "tempestris_level_02_119",
+      "time": 89.88
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_007",
       "type": "spawn_enemy",
-      "time": 60.25,
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225
+      "degrees": 53,
+      "id": "tempestris_level_02_121",
+      "time": 90.71
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_008",
-      "type": "spawn_enemy",
-      "time": 60.45,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315
+      "type": "wait_until_clear",
+      "id": "tempestris_level_02_123",
+      "time": 93.9
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_009",
-      "type": "spawn_enemy",
-      "time": 60.65,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 135
+      "type": "fx_async_message",
+      "text": "Storm eye closing in. Keep turning.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_02_124",
+      "time": 94.4
     },
     {
-      "id": "tempestris_level_02_phase_13_asteroid_diagonal_06_spawn_010",
-      "type": "spawn_enemy",
-      "time": 60.85,
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 45
+      "type": "spawn_miniboss",
+      "boss_id": "storm_eye",
+      "degrees": 0,
+      "id": "tempestris_level_02_125",
+      "time": 95.9
+    },
+    {
+      "type": "wait_until_clear",
+      "id": "tempestris_level_02_126",
+      "time": 96.4
     },
     {
       "id": "tempestris_level_02_completion_message",
