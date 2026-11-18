@@ -10,6 +10,7 @@ var prologue: StoryPrologue
 var academy: StoryAcademy
 var hub: StoryHub
 var wing: StoryWing
+var scenes: StoryScenes
 var endings: StoryEndings
 
 
@@ -18,6 +19,7 @@ func _ready() -> void:
 	academy = StoryAcademy.new(self)
 	hub = StoryHub.new(self)
 	wing = StoryWing.new(self)
+	scenes = StoryScenes.new(self)
 	endings = StoryEndings.new(self)
 
 

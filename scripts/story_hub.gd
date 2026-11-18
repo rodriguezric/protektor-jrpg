@@ -50,6 +50,8 @@ func enter(res: Dictionary) -> void:
 		await s.say("", ["They don't send you back to the dorms right away.", "There's time.", "Not much. But enough."])
 	if Game.midas_dead() and not bool(Game.story.midas_death_announced):
 		await _midas_announcement()
+	await s.scenes.commons_scene()
+	s.w.busy = true
 	if used:
 		await s.say("system", "Report to the deployment terminal.")
 		s.w.show_marker(Vector2i(14, 9))
@@ -75,6 +77,8 @@ func _map() -> Dictionary:
 	var extra_n := clampi(5 - Game.completed_count() / 3, 1, 5)
 	var spots := [Vector2i(16, 6), Vector2i(8, 10), Vector2i(19, 9), Vector2i(3, 9), Vector2i(24, 11)]
 	for i in extra_n:
+		if i == 3 and bool(Game.story.get("kit_transferred", false)):
+			continue
 		npcs.append({"id": "rec%d" % i, "who": Data.RECRUIT_ORDER[i], "tile": spots[i], "dir": i % 4, "wander": i % 2 == 0, "range": 2.0})
 	npcs.append({"id": "bot", "bot": true, "tile": Vector2i(15, 7), "dir": 0, "wander": true, "range": 4.0})
 	mp.npcs = npcs

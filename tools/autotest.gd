@@ -1141,6 +1141,67 @@ func _run(scenario: String) -> void:
 				for j in 4:
 					await tap("accept", 0.3)
 			get_tree().quit()
+		"scenes":
+			# every staged field moment (StoryScenes), each under the story state
+			# that unlocks it; PK_SCENE runs just one
+			var all := {"nell_birthday": ["commons", {"interval_count": 2}, {}, 1],
+				"pala_files": ["commons", {}, {"pala": 1}, 1],
+				"hiro_alone": ["commons", {}, {"hiro": 2}, 1],
+				"transfer": ["commons", {}, {}, 4],
+				"forgot_name": ["commons", {"last_result": "lose"}, {}, 1],
+				"midas_bread": ["mess", {}, {}, 1],
+				"argument": ["rooftop", {}, {"hiro": 2, "pala": 2}, 5],
+				"pala_note": ["memorial", {"midas_dead": true, "midas_death_announced": true}, {"midas": 2}, 4],
+				"barrier": ["parade", {}, {}, 0]}
+			var only := OS.get_environment("PK_SCENE")
+			var snap := {"on": true, "k": 0, "tag": ""}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(0.7)
+					await shot("sc_%s_%03d" % [snap.tag, snap.k])
+					snap.k += 1
+			snapper.call()
+			for id in all:
+				if only != "" and id != only:
+					continue
+				var spec: Array = all[id]
+				Game.new_game()
+				Game.player_name = "Ari"
+				Game.chapter = "hub" if spec[0] != "parade" else "prologue"
+				for k in spec[1]:
+					Game.story[k] = spec[1][k]
+				var rel := {"hiro": 0, "pala": 0, "midas": 0}
+				rel.merge(spec[2], true)
+				Game.story.relationships = rel
+				var lv := 0
+				for pl in Data.PLANETS:
+					if lv >= spec[3]:
+						break
+					Game.story.completed_levels[pl] = mini(3, spec[3] - lv)
+					lv += mini(3, spec[3] - lv)
+				for other in all:
+					if other != id:
+						StoryScenes.mark(other)
+				snap.tag = id
+				snap.k = 0
+				main.fade_rect.color.a = 0.0
+				match spec[0]:
+					"commons":
+						main.load_map(main.story.hub._map(), Vector2i(12, 12), 1)
+						await wait(0.4)
+						await main.story.scenes.commons_scene()
+					"parade":
+						main.load_map(Maps.parade(), Vector2i(23, 10), 3)
+						await wait(0.4)
+						await main.story.scenes.barrier()
+					_:
+						main.load_map(Maps.wing_room(spec[0]), Vector2i(7, 7), 1)
+						await wait(0.4)
+						await main.story.scenes.room_scene(spec[0])
+				print("[scenes] %s played=%s" % [id, StoryScenes.seen(id)])
+				await wait(0.8)
+			snap.on = false
+			get_tree().quit()
 		"npctalk":
 			# every talkable person, three talks each, under three story states
 			Game.new_game()

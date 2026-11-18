@@ -564,6 +564,7 @@ func parade() -> void:
 	s.w.set_tint(Color(1.05, 1.02, 0.95), 1.6)
 	s.w.show_area_name()
 	await s.say("", ["They line you up with the others.", "New uniforms. Too clean. Too big. The fabric smells sealed, like it came from a machine and not a person."])
+	await s.scenes.barrier()
 	await s.say("~", "Take your place in the line.")
 	s.w.show_marker(Vector2i(17, 9))
 	s.w.busy = false
