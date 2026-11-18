@@ -83,6 +83,9 @@ static func _wall_top(theme: String, x: int, y: int, lx: int, ly: int, edge: boo
 		base = Pal.BARK.lerp(Pal.INK, 0.45)
 	elif theme == "outdoor":
 		base = Pal.PINE.lerp(Pal.INK, 0.5)
+	elif theme == "block":
+		# Block 7's roofs: tar and slate
+		base = Pal.SLATE.lerp(Pal.INK, 0.55)
 	var c := base
 	if (x / 32 + y / 32) % 2 == 0:
 		c = base.lerp(Pal.INK, 0.12)
@@ -94,7 +97,16 @@ static func _wall_top(theme: String, x: int, y: int, lx: int, ly: int, edge: boo
 static func _wall_face(theme: String, ch: String, x: int, y: int, lx: int, fy: int, at: Callable, tx: int, ty: int) -> Color:
 	## fy: 0..31 down the two-tile face.
 	var c: Color
-	if theme == "home":
+	if theme == "block":
+		# tenement fronts: soot-dark brick with a stone course
+		var brick := Pal.ROSE.lerp(Pal.BARK, 0.55)
+		c = brick
+		var row := fy / 4
+		if fy % 4 == 0 or (x + (row % 2) * 4) % 8 == 0:
+			c = Pal.shade(brick)
+		if fy <= 1 or fy == 30 or fy == 31:
+			c = Pal.STONE.lerp(Pal.SLATE, 0.3)
+	elif theme == "home":
 		var paper := Pal.CREAM.lerp(Pal.PEACH, 0.35)
 		c = paper if (x / 3) % 3 != 0 else paper.lerp(Pal.ROSE, 0.12)
 		if fy <= 1:
@@ -182,6 +194,18 @@ static func _step(theme: String, x: int, k: int, lx: int) -> Color:
 static func _window(theme: String, x: int, y: int, lx: int, fy: int, wall: Color) -> Color:
 	if fy < 4 or fy > 24 or lx < 1 or lx > 14:
 		return wall
+	if theme == "block":
+		# a neighbour's window: most lit warm behind a curtain, some dark
+		var frame := Pal.STONE
+		if fy == 4 or fy == 24 or lx == 1 or lx == 14 or lx == 7 or lx == 8 or fy == 14:
+			return frame
+		var lit := Pal.hash2(x / 16, y / 32, 77) > 0.3
+		if not lit:
+			return Pal.INK2.lerp(Pal.NAVY, 0.3)
+		var glow := Pal.LEMON.lerp(Pal.HONEY, 0.5)
+		if (lx == 2 or lx == 13) and fy > 5:
+			return Pal.ROSE.lerp(Pal.PLUM, 0.4)
+		return glow.lerp(Pal.ORANGE, float(fy) / 60.0)
 	var frame := Pal.SLATE if theme != "home" else Pal.WOOD
 	if fy == 4 or fy == 24 or lx == 1 or lx == 14:
 		return frame
@@ -206,6 +230,8 @@ static func _window(theme: String, x: int, y: int, lx: int, fy: int, wall: Color
 static func _door(theme: String, lx: int, fy: int, wall: Color) -> Color:
 	if lx < 2 or lx > 13 or fy < 6:
 		return wall
+	if theme == "block":
+		theme = "home"
 	var c := Pal.STEEL.lerp(Pal.NAVY, 0.4) if theme != "home" else Pal.WOOD
 	if lx == 2 or lx == 13 or fy == 6:
 		return Pal.deep(c)
@@ -319,7 +345,7 @@ static func _base_floor(theme: String, x: int, y: int, lx: int, ly: int, n: floa
 				c = Pal.shade(plank)
 			elif n > 0.5:
 				c = c.lerp(Pal.LEMON, 0.08)
-		"outdoor":
+		"outdoor", "block":
 			var tint := Pal.hash2(x / 8, y / 8, 3)
 			c = Pal.STONE.lerp(Pal.SLATE, 0.25 * tint)
 			if hs > 0.97:

@@ -24,6 +24,13 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"podium": return podium()
 		"console": return console(v)
 		"starbox": return starbox(v)
+		"kiosk": return kiosk(v)
+		"noticeboard": return noticeboard(v)
+		"swings": return swings(v)
+		"slide": return slide()
+		"cat": return cat(v)
+		"bin": return bin()
+		"streetlamp": return streetlamp(v)
 		"terminal": return terminal(v)
 		"holo": return holo_base()
 		"pod": return pod(v)
@@ -1101,3 +1108,139 @@ static func speaker() -> PixBuf:
 	b.ell(8, 6, 2, 1.2, Pal.SLATE)
 	b.outline()
 	return b
+
+
+# ------------------------------------------------------------- Block 7 ---
+
+static func kiosk(v: int) -> PixBuf:
+	## The ration kiosk: a striped awning over a counter window, chits pinned
+	## up inside, a little lamp.
+	var b := PixBuf.new(48, 36)
+	var wall := Pal.SAGE.lerp(Pal.SLATE, 0.45)
+	b.rect(2, 10, 44, 25, wall)
+	b.rect(2, 10, 44, 1, Pal.hi(wall))
+	b.rect(6, 14, 36, 12, Pal.INK2)
+	b.rect(7, 15, 34, 10, Pal.LEMON.lerp(Pal.HONEY, 0.6))
+	for k in 5:
+		b.rect(9 + k * 7, 16, 4, 5, Pal.WHITE if k % 2 == 0 else Pal.CREAM)
+	b.rect(4, 26, 40, 3, Pal.WOOD)
+	b.rect(4, 26, 40, 1, Pal.hi(Pal.WOOD))
+	for k in 8:
+		b.poly([Vector2(k * 6, 2), Vector2(k * 6 + 6, 2), Vector2(k * 6 + 6, 10), Vector2(k * 6, 10)], Pal.RED if k % 2 == 0 else Pal.WHITE)
+	for k in 8:
+		b.ball(k * 6 + 3, 10, 3, 1.5, Pal.RED if k % 2 == 0 else Pal.WHITE)
+	b.rect(0, 0, 48, 2, Pal.shade(Pal.RED))
+	b.rect(20, 29, 8, 6, Pal.shade(wall))
+	b.pset(40, 6, Pal.LEMON if v == 0 else Pal.WHITE)
+	b.outline()
+	return b
+
+
+static func noticeboard(v: int) -> PixBuf:
+	## The block noticeboard, papered in Helion posters: a chrome robot
+	## striding over a planet, 'STEEL THAT NEVER SLEEPS'. Under them, older
+	## notes about lost cats and ration hours.
+	var b := PixBuf.new(32, 34)
+	b.rect(4, 22, 2, 12, Pal.WOOD)
+	b.rect(26, 22, 2, 12, Pal.WOOD)
+	b.rect(1, 2, 30, 22, Pal.WOOD)
+	b.rect(2, 3, 28, 20, Pal.BARK.lerp(Pal.PEACH, 0.4))
+	# the big poster: a robot, sky blue, a slogan bar
+	b.rect(3, 4, 14, 17, Pal.NAVY.lerp(Pal.SKY, 0.35))
+	b.ball(10, 17, 5, 3, Pal.GRASS)
+	b.rect(8, 7, 5, 4, Pal.FROST)
+	b.rect(9, 8, 3, 1, Pal.SYNC)
+	b.rect(7, 11, 7, 5, Pal.FROST.lerp(Pal.STEEL, 0.3))
+	b.rect(8, 16, 2, 3, Pal.STEEL)
+	b.rect(11, 16, 2, 3, Pal.STEEL)
+	b.rect(3, 19, 14, 2, Pal.LEMON)
+	# notes
+	b.rect(19, 4, 9, 7, Pal.WHITE)
+	for k in 3:
+		b.rect(20, 5 + k * 2, 6 - k, 1, Pal.STONE)
+	b.rect(19, 13, 9, 8, Pal.CREAM)
+	b.rect(21, 14, 5, 3, Pal.BARK)
+	b.pset(22, 15, Pal.LEMON)
+	b.rect(20, 18, 7, 1, Pal.STONE)
+	b.pset(23, 4, Pal.RED)
+	b.pset(23, 13, Pal.SKY)
+	if v == 1:
+		b.rect(3, 19, 14, 2, Pal.WHITE)
+	b.outline()
+	return b
+
+
+static func swings(v: int) -> PixBuf:
+	## A swing set; v1 is the swing pushed forward.
+	var b := PixBuf.new(40, 34)
+	var frame := Pal.RED.lerp(Pal.STEEL, 0.4)
+	b.line(4, 33, 9, 2, frame)
+	b.line(5, 33, 10, 2, frame)
+	b.line(35, 33, 30, 2, frame)
+	b.line(36, 33, 31, 2, frame)
+	b.rect(9, 2, 23, 2, frame)
+	for k in 2:
+		var x := 15 + k * 10
+		var swing := 3 if v == 1 and k == 0 else 0
+		b.line(x, 4, x + swing, 24, Pal.STONE)
+		b.line(x + 5, 4, x + 5 + swing, 24, Pal.STONE)
+		b.rect(x - 1 + swing, 24, 8, 2, Pal.WOOD)
+	b.outline()
+	return b
+
+
+static func slide() -> PixBuf:
+	var b := PixBuf.new(36, 30)
+	var col := Pal.SKY.lerp(Pal.BLUE, 0.3)
+	b.rect(4, 4, 2, 26, Pal.STEEL)
+	b.rect(12, 4, 2, 26, Pal.STEEL)
+	for k in 5:
+		b.rect(4, 8 + k * 5, 10, 1, Pal.STEEL)
+	b.rect(3, 3, 12, 3, Pal.RED)
+	b.poly([Vector2(14, 4), Vector2(18, 4), Vector2(35, 26), Vector2(31, 28)], col)
+	b.line(14, 4, 33, 27, Pal.hi(col))
+	b.outline()
+	return b
+
+
+static func cat(v: int) -> PixBuf:
+	## The block cat, loafing; v1 flicks its tail.
+	var b := PixBuf.new(14, 10)
+	var fur := Pal.ORANGE.lerp(Pal.BARK, 0.35)
+	b.ball(6, 6, 5, 3.2, fur)
+	b.ball(10, 4, 2.6, 2.4, fur)
+	b.pset(9, 1, fur)
+	b.pset(11, 1, fur)
+	b.pset(10, 4, Pal.INK)
+	b.pset(12, 4, Pal.INK)
+	b.rect(3, 6, 6, 1, Pal.shade(fur))
+	if v == 0:
+		b.line(1, 7, 0, 3, fur)
+	else:
+		b.line(1, 7, 2, 2, fur)
+	b.outline()
+	return b
+
+
+static func bin() -> PixBuf:
+	var b := PixBuf.new(12, 16)
+	var c := Pal.SAGE.lerp(Pal.SLATE, 0.5)
+	b.rect(1, 3, 10, 12, c)
+	b.rect(0, 2, 12, 2, Pal.hi(c))
+	for k in 3:
+		b.rect(3 + k * 3, 5, 1, 9, Pal.shade(c))
+	b.outline()
+	return b
+
+
+static func streetlamp(v: int) -> PixBuf:
+	## An old block lamp post; v1 flickers dim.
+	var b := PixBuf.new(12, 44)
+	b.rect(5, 8, 2, 35, Pal.INK2.lerp(Pal.SLATE, 0.3))
+	b.rect(3, 41, 6, 3, Pal.INK2)
+	b.rect(2, 4, 8, 5, Pal.INK2)
+	b.rect(3, 5, 6, 3, Pal.LEMON if v == 0 else Pal.LEMON.lerp(Pal.INK2, 0.5))
+	b.rect(4, 2, 4, 2, Pal.INK2)
+	b.outline()
+	return b
+

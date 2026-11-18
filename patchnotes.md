@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-18 17:10 EST — `feature_neighborhood_opening_area` (v0.53.0)
+
+Block 7: the street outside your front door, with the neighbours and friends you're leaving, and a dawn send-off on the way to the parade.
+
+- In the evening the front door now opens onto Block 7 (step through it; the same door brings you home): tenement fronts with lit windows, your door and Mrs. Okafor's, flickering street lamps and a lazy block cat on the sidewalk, a road, the ration kiosk with its striped awning, the noticeboard papered with a chrome-robot Helion poster (STEEL THAT NEVER SLEEPS), a bench, and a scrap of park with swings and a slide. Everything has something to say when examined (your initials on the swing, the dark Delacroix window, the smoothed-out recruitment flyer in the bin...).
+- Neighbours, each with a run of lines that moves on each time you return: Mrs. Okafor (on her chair; they took the Delacroix boy twelve years ago, and the camera pans to his family's dark window), Mr. Hale (his daughter went up six years ago; a form letter every spring), Benno at the kiosk (the free tea tin), childhood friends Tomas (not picked: relieved or jealous?) and Juno, and the little ones Pip (in a cardboard Robo-Protektor costume) and Wren.
+- Animated scenes: walk into the park and Pip and Wren are playing Robo-Protektor versus the Slime Lord (KA-POW!, Wren goes down), then Pip runs over: 'Are you gonna be a ROBOT now?!' Talk to Tomas or Juno and they come over from the bench with a bracelet braided from blue parade ribbon.
+- Dawn: after the night scene the whole block lines the sidewalk and you walk its length with your parents a step behind; each neighbour sees you off (Hale, Benno's 'free' gift, Juno's 'Wear it!' if you have the bracelet, Tomas, Pip's BEEP BOOP salute, Mrs. Okafor), then on to the parade. The street is optional in the evening; the send-off always plays.
+- Art: a new 'block' tile theme (soot brick fronts, lit curtained windows, wooden doors), new props (kiosk, noticeboard, swings, slide, cat, bin, street lamp) and a cardboard-robot costume look for characters.
+- Code: `scripts/maps.gd` (block7(time)), `scripts/story_prologue.gd` (front-door exit, BLOCK7_TALK, _neighbour(), _friends_gift(), _kids_game(), _departure(), new examines), `scripts/story.gd` (block7 routed to the prologue), `scripts/data.gd` (the Block 7 cast), `scripts/art_tiles.gd`, `scripts/art_props.gd`, `scripts/art_people.gd` (boxbot), `tools/autotest.gd` (`PK_TEST=block7`).
+
 ## 2026-11-18 17:02 EST — `feature_tv_serial_cheesy_drama` (v0.52.0)
 
 HEARTS OF THE SHIELD GRID: channel 4's six-episode soap opera, acted with total commitment and no restraint.

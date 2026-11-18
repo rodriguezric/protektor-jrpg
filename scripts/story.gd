@@ -48,7 +48,7 @@ func _owner() -> Object:
 	if w == null:
 		return null
 	match w.def.id:
-		"home", "home_up", "parade":
+		"home", "home_up", "parade", "block7":
 			return prologue
 		"commons":
 			return hub
