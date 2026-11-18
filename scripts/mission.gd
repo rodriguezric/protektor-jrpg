@@ -986,12 +986,13 @@ func _name_card(title: String, subtitle: String, size_k: int) -> void:
 	var box := Control.new()
 	overlay.add_child(box)
 	var t := Art.shadow_label(title, Pal.WHITE, size_k)
-	t.position = Vector2(88 - Art.text_width(title, size_k) / 2.0, 72)
+	# up in the arena, clear of the planet in the middle
+	t.position = Vector2(88 - Art.text_width(title, size_k) / 2.0, 30)
 	box.add_child(t)
 	var st := Art.label(subtitle, Pal.BLOOD.lerp(Pal.WHITE, 0.4))
-	st.position = Vector2(88 - Art.text_width(subtitle) / 2.0, 72 + 11 * size_k + 2)
+	st.position = Vector2(88 - Art.text_width(subtitle) / 2.0, 30 + 11 * size_k + 2)
 	box.add_child(st)
-	box.pivot_offset = Vector2(88, 80)
+	box.pivot_offset = Vector2(88, 40)
 	box.scale = Vector2(1.5, 1.5)
 	box.modulate.a = 0.0
 	var tw := box.create_tween()

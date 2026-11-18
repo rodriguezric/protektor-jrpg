@@ -574,9 +574,11 @@ func _bot() -> void:
 		if best == null:
 			return
 		var to: Vector2 = (best.lp - m.CENTER).normalized()
+		# "key" aim with no keys held leaves facing alone ("mouse" aim would
+		# snap it back to the cursor every frame and undo the block)
+		m._aim_mode = "key"
 		m.facing = -to if best.rock else to
 		if not best.rock:
-			m._aim_mode = "mouse"
 			m._try_fire(true)
 
 
@@ -624,9 +626,22 @@ func _levelcheck() -> void:
 		var t0 := Time.get_ticks_msec()
 		var game_t := 0.0
 		var outcome := ""
+		var seen_hits := 0
+		var verbose := OS.get_environment("PK_VERBOSE") != ""
 		while outcome == "":
 			await get_tree().process_frame
 			game_t += get_process_delta_time()
+			if verbose and m.hits_taken > seen_hits:
+				# what was closest to the planet when it was hit, and where the bot faced
+				seen_hits = m.hits_taken
+				var near := []
+				for th in m.threats:
+					near.append([th.lp.distance_to(m.CENTER), "%s@%d" % [th.drone_type if not th.is_asteroid else "rock", int(rad_to_deg((th.lp - m.CENTER).angle()) + 450) % 360]])
+				for sh in m.shots:
+					near.append([sh.lp.distance_to(m.CENTER), "shot@%d" % (int(rad_to_deg((sh.lp - m.CENTER).angle()) + 450) % 360)])
+				near.sort_custom(func(a, b): return a[0] < b[0])
+				print("[levelcheck]   hit %d at %.1fs (level_t %.1f) facing %d, nearest: %s" % [seen_hits, game_t, m.level_t,
+					int(rad_to_deg(m.facing.angle()) + 450) % 360, ", ".join(near.slice(0, 3).map(func(x): return "%s d%d" % [x[1], int(x[0])]))])
 			if m.finished:
 				outcome = "WIN"
 			elif not m.alive:

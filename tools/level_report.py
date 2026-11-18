@@ -36,6 +36,11 @@ CLEAR_TAIL = 8.0
 BOSS_TYPES = ("spawn_boss", "spawn_miniboss")
 
 
+def load_bosses() -> dict:
+    p = os.path.join(ROOT, "data", "bosses.json")
+    return json.load(open(p)) if os.path.exists(p) else {}
+
+
 def level_index(level_id: str, data: dict) -> int:
     if "level_index" in data:
         return int(data["level_index"])
@@ -62,13 +67,17 @@ def report(path: str) -> dict:
     bosses = [e.get("boss_id", e.get("id", "?")) + ("*" if e.get("type") == "spawn_miniboss" else "")
               for e in events if e.get("type") in BOSS_TYPES]
     lv = level_index(level_id, data)
-    est = last + CLEAR_TAIL
+    # a boss fight's length isn't on the timeline: use the boss's fight_sec
+    # (data/bosses.json) plus its staged intro
+    boss_defs = load_bosses()
+    fight = sum(float(boss_defs.get(e.get("boss_id", ""), {}).get("fight_sec", 30)) + (7.0 if e.get("type") == "spawn_boss" else 2.0)
+                for e in events if e.get("type") in BOSS_TYPES)
+    est = last + CLEAR_TAIL + fight
     target = TARGET.get(lv, 120.0)
     flag = "ok"
     if est < max(WINDOW[0], target - TOLERANCE):
         flag = "SHORT"
-    elif est > min(WINDOW[1], target + TOLERANCE) and not bosses:
-        # a boss fight's length is decided in play, not by the timeline
+    elif est > min(WINDOW[1], target + TOLERANCE):
         flag = "LONG"
     music = os.path.basename(str(data.get("header", {}).get("music", {}).get("file_path", "")))
     return {"id": level_id, "lv": lv, "last": last, "est": est, "target": target, "flag": flag,
