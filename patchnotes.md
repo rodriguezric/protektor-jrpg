@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 09:46 EST — `feature_level_test_harness` (v0.29.0)
+
+Tools for checking levels against the redesign rules: a timeline report and a standard-kit play test.
+
+- No player-facing change.
+- tools/level_report.py: per mission, timeline length, estimated play time, spawns by type, busiest 10 s, music, bosses; flags levels away from their target (L1 90 s, L2 120 s, L3 150 s, +/-20 s inside 90-150 s). Today all 21 are SHORT.
+- tools/autotest.gd `levelcheck` scenario (PK_LEVEL=all|id|substring, PK_SPEED, PK_LIMIT): plays each level with the basic kit and prints WIN/LOSE/TIMEOUT, game time, hits and hp. First run: 6 wins, 15 losses (Terra Virex 2-3 and all of Ignara Prime, Tempestris, Viscera Nova among them).
+- The autotest bot now confirms the defeat screen too, so failed runs no longer stall.
+
 ## 2026-11-12 20:13 EST — `feature_options_menu` (v0.28.0)
 
 New Options screen: music volume, sound volume, text speed and vibration.
