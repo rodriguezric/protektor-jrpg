@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 11:31 EST — `feature_boss_achievements` (v0.40.0)
+
+Achievements for every planetary boss, and one for beating them all, on a new BOSSES tab.
+
+- Relay Silenced (The Aegis Relay), Thaw (Boreal Colossus), Heat Death (Solar Crucible), Eye of the Storm (The Cyclarch), Still Heart (The Gestalt Heart), Unobserved (The Observer), Imperfect (Paragon Protektor), and Every Shield Broken for all seven (with a 0/7 progress count). Each card shows the boss itself.
+- They unlock the moment the boss dies, in story or Free Missions (retreating afterwards doesn't take it back). Mini-bosses and training don't count; test runs never unlock anything.
+- Code: scripts/achievements.gd `BOSSES`, the `bosses` category, `boss_defeated()` and the `bosses_defeated` stat; scripts/mission.gd calls it from `on_boss_died`; scripts/art_achieve.gd `boss` / `all_bosses` emblems.
+
 ## 2026-11-18 11:29 EST — `feature_mechanon_ascens_level_redesign` (v0.39.0)
 
 Mechanon Ascens rebuilt around breaking your own rhythm: symmetry that breaks, threats that echo where you faced. Mirror Twins mini-boss, Paragon Protektor boss.

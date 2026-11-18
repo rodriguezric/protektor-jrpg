@@ -892,6 +892,8 @@ func on_boss_died(b: Boss) -> void:
 	bosses_beaten.append(b.boss_id)
 	bosses.erase(b)
 	boss_defeated.emit(b.boss_id, b.is_mini)
+	if not training:
+		Achievements.boss_defeated(b.boss_id, b.is_mini)
 	_boss_death(b)
 
 
