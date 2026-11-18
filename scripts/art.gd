@@ -70,6 +70,10 @@ func asteroid(d: int, v: int, frame: int) -> Texture2D:
 	return _cached("rock:%d:%d:%d" % [d, v, frame], func(): return ArtMission.asteroid(d, v, frame))
 
 
+func boss(id: String, art: Dictionary, col: Color, d: int, look: int, frame: int, open: bool) -> Texture2D:
+	return _cached("boss:%s:%d:%d:%d:%d" % [id, d, look, frame, int(open)], func(): return ArtMission.boss(art, col, d, look, frame, open))
+
+
 func portal(d: int, frame: int) -> Texture2D:
 	return _cached("portal:%d:%d" % [d, frame], func(): return ArtMission.spawn_portal(d, frame))
 

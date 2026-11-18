@@ -235,6 +235,85 @@ static func drone(kind: String, d: int, look: int, frame: int) -> PixBuf:
 	return b
 
 
+static func boss(art: Dictionary, col: Color, d: int, look: int, frame: int, open: bool) -> PixBuf:
+	## A boss body drawn from data: shape (orb | relay | colossus | crucible |
+	## cyclone | heart | eye | mirror), a ring of `nodes` that turns with the
+	## frame, `spikes` around the rim, and a big eye on the planet. When the
+	## boss is shut (can't be hurt) the eye is lidded and the rim armoured.
+	var pad := 6
+	var b := PixBuf.new(d + pad * 2, d + pad * 2)
+	var c := Vector2(b.w / 2.0, b.h / 2.0)
+	var r := d / 2.0
+	var dir := Vector2.from_angle(look * TAU / 8.0)
+	var shape := str(art.get("shape", "orb"))
+	var spin := frame * TAU / 16.0
+	var body := col
+	var nodes := int(art.get("nodes", 0))
+	var spikes := int(art.get("spikes", 0))
+	for k in spikes:
+		var a := k * TAU / spikes + (spin * 0.5 if shape == "crucible" else 0.0)
+		var tip := c + Vector2.from_angle(a) * r * (1.12 + (0.08 if (k + frame) % 2 == 0 and shape == "crucible" else 0.0))
+		var s1 := c + Vector2.from_angle(a - 0.22) * r * 0.75
+		var s2 := c + Vector2.from_angle(a + 0.22) * r * 0.75
+		b.tri(s1.x, s1.y, s2.x, s2.y, tip.x, tip.y, Pal.shade(body) if shape != "crucible" else Pal.EMBER.lerp(Pal.LEMON, 0.3))
+	match shape:
+		"relay":
+			b.ball(c.x, c.y, r * 0.62, r * 0.62, body)
+			for k in 4:
+				var a := k * TAU / 4.0 + PI / 4.0
+				var e := c + Vector2.from_angle(a) * r * 0.95
+				b.cap(c.x, c.y, e.x, e.y, 1.0, Pal.SLATE)
+				b.rect(e.x - 3, e.y - 1.5, 6, 3, Pal.STEEL.lerp(Pal.SKY, 0.3))
+		"colossus":
+			b.ball(c.x, c.y + r * 0.1, r * 0.95, r * 0.8, Pal.shade(body))
+			b.ball(c.x, c.y - r * 0.05, r * 0.85, r * 0.72, body)
+			for k in 5:
+				var x := c.x - r * 0.6 + k * r * 0.3
+				b.tri(x - 2, c.y - r * 0.5, x + 2, c.y - r * 0.5, x, c.y - r * (0.95 + 0.1 * (k % 2)), Pal.FROST)
+		"cyclone":
+			b.ball(c.x, c.y, r * 0.8, r * 0.8, Pal.shade(body))
+			for k in 40:
+				var t := k / 40.0
+				for arm in 3:
+					var a := spin + arm * TAU / 3.0 + t * TAU * 0.9
+					b.pset(int(c.x + cos(a) * r * (0.2 + t * 0.75)), int(c.y + sin(a) * r * (0.2 + t * 0.75)), Pal.hi(body))
+		"heart":
+			for k in 5:
+				var a := k * TAU / 5.0 + sin(spin + k) * 0.1
+				var p := c + Vector2.from_angle(a) * r * 0.42
+				b.ball(p.x, p.y, r * 0.5, r * 0.5, Pal.shade(body) if k % 2 == 0 else body)
+			b.ball(c.x, c.y, r * (0.62 + 0.04 * (frame % 2)), r * (0.62 + 0.04 * (frame % 2)), body)
+		"eye":
+			b.ball(c.x, c.y, r * 0.95, r * 0.75, Pal.INK2.lerp(body, 0.3))
+		"mirror":
+			b.ball(c.x, c.y, r * 0.7, r * 0.7, Pal.STEEL.lerp(body, 0.4))
+			var back := -dir
+			for k in 9:
+				var a := back.angle() + (k - 4) * 0.22
+				b.rect(c.x + cos(a) * r * 0.92 - 1, c.y + sin(a) * r * 0.92 - 1, 2.5, 2.5, Pal.SYNC)
+		_:
+			b.ball(c.x, c.y, r * 0.85, r * 0.85, body)
+	for k in nodes:
+		var a := k * TAU / nodes + spin
+		var p := c + Vector2.from_angle(a) * r * 0.95
+		b.ball(p.x, p.y, maxf(2.0, r * 0.16), maxf(2.0, r * 0.16), Pal.SYNC if k % 2 == 0 else Pal.hi(body))
+	# the eye, on the planet
+	var eye_r := maxf(3.0, r * (0.42 if shape == "eye" else 0.3))
+	var ec := c + dir * r * 0.18
+	if open:
+		b.circ(ec.x, ec.y, eye_r, Pal.WHITE)
+		var pc := ec + dir * eye_r * 0.4
+		b.circ(pc.x, pc.y, eye_r * 0.55, Pal.BLOOD)
+		b.circ(pc.x, pc.y, eye_r * 0.25, Pal.INK)
+		b.pset(int(ec.x - eye_r * 0.4), int(ec.y - eye_r * 0.5), Pal.WHITE)
+	else:
+		# shut: a lid and an armour band across the eye
+		b.circ(ec.x, ec.y, eye_r, Pal.deep(body))
+		b.rect(ec.x - eye_r, ec.y - 1, eye_r * 2, 2, Pal.STEEL.lerp(Pal.INK, 0.3))
+	b.outline()
+	return b
+
+
 static func asteroid(d: int, v: int, frame: int) -> PixBuf:
 	var b := PixBuf.new(d + 4, d + 4)
 	var c := Vector2(b.w / 2.0, b.h / 2.0)
