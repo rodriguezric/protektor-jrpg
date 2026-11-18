@@ -454,8 +454,8 @@ func _departure() -> void:
 	var stops := [
 		[14, "hale", "Keep your head down. Write, if they let you.", "sad"],
 		[17, "benno", "For the road. Don't tell your mother it was free.", "smile"],
-		[20, "juno", "Wear it!" if bool(Game.story.get("bracelet", false)) else "Bye! BYE!", "smile"],
 		[19, "tomas", "Don't forget us!", "sad"],
+		[20, "juno", "Wear it!" if bool(Game.story.get("bracelet", false)) else "Bye! BYE!", "smile"],
 		[22, "pip", "BEEP BOOP! Good luck, robot!", "smile"],
 		[24, "okafor", "Come back and tell me if they still smile.", ""],
 	]

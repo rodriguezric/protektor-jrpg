@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-18 17:58 EST — `bugfix_departure_walks_backward` (v0.58.1)
+
+The dawn send-off in Block 7 walks steadily down the street instead of stepping back a tile to reach Tomas.
+
+- The stops now run in order along the sidewalk: Mr. Hale, Benno, Tomas, Juno, Pip and Mrs. Okafor (Tomas used to come after Juno, one tile behind her).
+- Code: `scripts/story_prologue.gd` (_departure() stop order).
+
 ## 2026-11-18 17:42 EST — `feature_field_story_scenes_expansion` (v0.58.0)
 
 Nine new staged moments in the field, each played once when the story is ready for it.
