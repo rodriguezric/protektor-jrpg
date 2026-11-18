@@ -57,7 +57,7 @@ func new_game() -> void:
 	vars = {}
 	story = {
 		"completed_levels": {}, "relationships": {"hiro": 0, "pala": 0, "midas": 0}, "conversations": [],
-		"home_contacts": 0, "midas_dead": false, "midas_death_announced": false, "midas_death_response": "",
+		"home_contacts": 0, "midas_dead": false, "midas_death_announced": false, "midas_death_response": "", "midas_breakdown_seen": false,
 		"missions_failed": 0, "home_unavailable": false, "pala_unavailable": false, "pala_escape_chosen": false,
 		"story_ending_requested": false, "interval_used": false, "interval_count": 0, "last_mission": "",
 		"terminal_seen": false, "deployments": 0,

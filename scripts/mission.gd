@@ -626,7 +626,7 @@ func _process(delta: float) -> void:
 	_planet_frame += delta * 5.0
 	_update_shake(delta)
 	_update_hud(delta)
-	if paused:
+	if paused or _cutin:
 		return
 	if running and alive and not finished and Input.is_action_just_pressed("cancel"):
 		_pause_menu()
@@ -729,7 +729,7 @@ func _press_fire() -> void:
 func _try_fire(_unused: bool = false) -> bool:
 	## The cooldown (upgradeable) gates every shot; the weapon sets how many
 	## can be in the air at once.
-	if not running or not alive or finished or paused:
+	if not running or not alive or finished or paused or _cutin:
 		return false
 	if _fire_cd > 0.0:
 		return false
@@ -1661,6 +1661,96 @@ func pilot_call(pilot: String, text: String, mood: String = "", cps: float = 30.
 
 
 var _pilot_scripted := false
+## Midas' breakdown call (once per story, while relationship >= 1 and he is
+## alive): the level clock time it fires at, or -1. While it plays the
+## mission is frozen (_cutin) and his face shakes on the codec.
+var _breakdown_at := -1.0
+var _cutin := false
+const BREAKDOWN_LINES := [["I... I c-can't...", 8.0, 1.0], ["It's in my head. It won't stop. It won't-", 13.0, 0.7],
+	["I.. I can't control it.. I can't...", 8.0, 2.4]]
+
+
+func _arm_breakdown() -> void:
+	_breakdown_at = -1.0
+	if arcade or training or Game.midas_dead() or Game.relationship("midas") < 1:
+		return
+	if bool(Game.story.get("midas_breakdown_seen", false)):
+		return
+	_breakdown_at = maxf(10.0, last_spawn_t * 0.3)
+	# it takes the place of his ordinary lines this mission
+	_pilot_script = _pilot_script.filter(func(l): return l.pilot != "midas")
+
+
+func _midas_breakdown() -> void:
+	## A transmission that stops the fight: the arena darkens, the music drops
+	## out under static, Midas' terrified face shakes in the codec panel while
+	## he breaks down, then the protagonist's face returns and play resumes.
+	_cutin = true
+	Game.story.midas_breakdown_seen = true
+	_comms_queue.clear()
+	var waited := 0.0
+	while _comms_busy and waited < 4.0:
+		await get_tree().process_frame
+		if not is_inside_tree():
+			return
+		waited += get_process_delta_time()
+	Sfx.music_volume(-40.0, 0.5)
+	Sfx.play("static", 1.0, -4.0)
+	shake(2.0, 0.4)
+	var veil := ColorRect.new()
+	veil.size = ARENA.size
+	veil.color = Color(Pal.INK, 0.0)
+	overlay.add_child(veil)
+	var tag := Art.label("PRIORITY SIGNAL", Pal.BLOOD.lerp(Pal.WHITE, 0.3))
+	tag.position = Vector2(ARENA.size.x / 2.0 - Art.text_width("PRIORITY SIGNAL") / 2.0, 8)
+	veil.add_child(tag)
+	create_tween().tween_property(veil, "color:a", 0.6, 0.4)
+	for l in BREAKDOWN_LINES:
+		pilot_call("midas", l[0], "terrified", l[1], l[2])
+	var home := portrait.position
+	var t := 0.0
+	var jolt := 0.0
+	while _comms_busy:
+		await get_tree().process_frame
+		if not is_inside_tree():
+			return
+		var d := get_process_delta_time()
+		t += d
+		tag.visible = fmod(t, 0.9) < 0.6
+		jolt -= d
+		if _pilot_on == "midas":
+			portrait.position = home + Vector2(randi_range(-1, 1), randi_range(-1, 1))
+			if jolt <= 0.0:
+				# a stab of static across his face every so often
+				jolt = randf_range(0.5, 1.2)
+				Sfx.play("static", randf_range(0.8, 1.3), -12.0)
+				portrait_static.texture = _static_tex(randi())
+				portrait_static.visible = true
+				shake(1.0, 0.15)
+			elif jolt < randf_range(0.3, 1.0) and portrait_static.visible and portrait.visible:
+				portrait_static.visible = false
+		else:
+			portrait.position = home
+	portrait.position = home
+	portrait_static.visible = false
+	var tw := create_tween()
+	tw.tween_property(veil, "color:a", 0.0, 0.6)
+	tw.tween_callback(veil.queue_free)
+	_set_mood("shock", 2.5)
+	await get_tree().create_timer(0.7).timeout
+	if not is_inside_tree():
+		return
+	Sfx.music_volume(Sfx.MUSIC_DB, 1.2)
+	_cutin = false
+
+
+func _breakdown_ready() -> bool:
+	if _breakdown_at < 0.0 or level_t < _breakdown_at or not alive or finished or _hold > 0:
+		return false
+	for th in threats:
+		if is_instance_valid(th) and th is Boss:
+			return false
+	return true
 
 
 static func pilot_comms_data() -> Dictionary:
@@ -1708,11 +1798,16 @@ func _build_pilot_script() -> void:
 		l.t = maxf(4.0, last_spawn_t * float(PILOT_CALL_AT.get(str(c.get("at", "mid")), 0.45)))
 		_pilot_script.append(l)
 	_pilot_script.sort_custom(func(a, b): return a.t < b.t)
+	_arm_breakdown()
 
 
 func _pilot_tick() -> void:
 	## Scripted calls wait out boss staging (the intro holds the clock) and
 	## never start while a boss is on the field.
+	if _breakdown_ready():
+		_breakdown_at = -1.0
+		_midas_breakdown()
+		return
 	if _pilot_script.is_empty() or not alive or finished or _hold > 0:
 		return
 	if float(_pilot_script[0].t) > level_t:

@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 14:49 EST — `feature_midas_breakdown_transmission` (v0.44.0)
+
+Once you've talked with Midas, a priority transmission stops the next story mission: Midas, terrified, breaking down on the codec.
+
+- Fires once per story save, in the first story mission after Midas' first Commons talk (relationship 1) while he's alive, about a third of the way into the level. Never in Free Missions or training, never during a boss, never once he's dead. It replaces his ordinary lines for that mission.
+- The fight freezes (threats, shots, the level clock and your controls), the arena darkens under a flashing PRIORITY SIGNAL, the music drops out under static, and Midas' face blinks in with a new terrified look (wide eyes, pinprick pupils, sweat, clenched mouth), shaking with stabs of static while he stutters 'I... I c-can't...' / 'It's in my head. It won't stop.' / 'I.. I can't control it.. I can't...'. Then your face blinks back in shock, the music returns and play resumes.
+- Code: `scripts/mission.gd` (`_arm_breakdown()`, `_midas_breakdown()`, `_breakdown_ready()`, `_cutin` freeze), `scripts/art_people.gd` + `scripts/art_portraits.gd` (`terrified` mood), `scripts/game.gd` (`story.midas_breakdown_seen`), `tools/autotest.gd` (`PK_TEST=breakdown`).
+
 ## 2026-11-18 14:45 EST — `feature_pilot_planet_transmissions` (v0.43.0)
 
 Hiro, Pala and Midas now have their own lines on every story level, and what they say follows how close you've grown to them.
