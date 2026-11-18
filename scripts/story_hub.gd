@@ -283,6 +283,10 @@ func _midas() -> void:
 	var resp := ""
 	var act := s.a("midas")
 	act.face_toward(s.w.player.position)
+	if r >= 2:
+		# after the memory he has nothing left to say before the next drop
+		await s.say("midas", "I'm okay. I just... I'm okay. Go.", "sad")
+		return
 	if r == 0:
 		await s.say("midas", ["I found something in the terminal rules. Once someone here vouches for you, they'll permit outgoing calls home.", "They don't advertise it. The request only needs another pilot's authorization."], "uneasy")
 		var c := await s.ask("How do you respond?", ["Why help me?", "Thank you."])

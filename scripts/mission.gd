@@ -1667,26 +1667,30 @@ var _pilot_scripted := false
 var _breakdown_at := -1.0
 var _cutin := false
 const BREAKDOWN_LINES := [["I... I c-can't...", 8.0, 1.0], ["It's in my head. It won't stop. It won't-", 13.0, 0.7],
-	["I.. I can't control it.. I can't...", 8.0, 2.4]]
+	["I.. I can't control it.. I can't...", 8.0, 1.6], ["Mom, I c-", 7.0, 0.15]]
+## While true the comms pump leaves the pilot's face up when its queue runs out.
+var _keep_face := false
 
 
 func _arm_breakdown() -> void:
+	## Armed on the first story mission after his memory talk; it is how he dies.
 	_breakdown_at = -1.0
-	if arcade or training or Game.midas_dead() or Game.relationship("midas") < 1:
+	if arcade or training or not Game.midas_doomed():
 		return
-	if bool(Game.story.get("midas_breakdown_seen", false)):
-		return
-	_breakdown_at = maxf(10.0, last_spawn_t * 0.3)
+	_breakdown_at = maxf(10.0, last_spawn_t * 0.22)
 	# it takes the place of his ordinary lines this mission
 	_pilot_script = _pilot_script.filter(func(l): return l.pilot != "midas")
 
 
 func _midas_breakdown() -> void:
-	## A transmission that stops the fight: the arena darkens, the music drops
-	## out under static, Midas' terrified face shakes in the codec panel while
-	## he breaks down, then the protagonist's face returns and play resumes.
+	## Midas' death. A transmission that stops the fight: the arena darkens,
+	## the music drops out under static, his terrified face shakes in the codec
+	## panel while he breaks down, his last word cuts off, static swallows the
+	## channel over a flatline, SIGNAL LOST. Then the protagonist's face comes
+	## back, play resumes, and SYSTEM logs the channel offline.
 	_cutin = true
 	Game.story.midas_breakdown_seen = true
+	_keep_face = true
 	_comms_queue.clear()
 	var waited := 0.0
 	while _comms_busy and waited < 4.0:
@@ -1732,16 +1736,45 @@ func _midas_breakdown() -> void:
 		else:
 			portrait.position = home
 	portrait.position = home
-	portrait_static.visible = false
-	var tw := create_tween()
-	tw.tween_property(veil, "color:a", 0.0, 0.6)
-	tw.tween_callback(veil.queue_free)
-	_set_mood("shock", 2.5)
-	await get_tree().create_timer(0.7).timeout
+	# the line dies mid-word: static floods his face and the channel flatlines
+	Game.story.midas_dead = true
+	Game.save()
+	Sfx.play("static", 0.7, -2.0)
+	Sfx.play("flatline", 1.0, -8.0)
+	shake(3.0, 0.3)
+	portrait.visible = false
+	portrait_static.visible = true
+	tag.text = "SIGNAL LOST"
+	tag.position.x = ARENA.size.x / 2.0 - Art.text_width("SIGNAL LOST") / 2.0
+	tag.visible = true
+	var lost := 0.0
+	while lost < 2.8:
+		await get_tree().process_frame
+		if not is_inside_tree():
+			return
+		lost += get_process_delta_time()
+		portrait_static.texture = _static_tex(int(lost * 14.0))
+		portrait_static.modulate.a = clampf(1.0 - (lost - 1.6) / 1.2, 0.25, 1.0)
+		if lost > 1.0:
+			comms_name.text = "MIDAS"
+			comms_name.add_theme_color_override("font_color", Pal.TEXT_DIM)
+			comms_text.position.y = 0.0
+			comms_text.text = "SIGNAL LOST"
+	portrait_static.modulate.a = 1.0
+	_keep_face = false
+	await _portrait_swap("", "")
 	if not is_inside_tree():
 		return
-	Sfx.music_volume(Sfx.MUSIC_DB, 1.2)
+	var tw := create_tween()
+	tw.tween_property(veil, "color:a", 0.0, 0.8)
+	tw.tween_callback(veil.queue_free)
+	_set_mood("shock", 4.0)
+	await get_tree().create_timer(1.0).timeout
+	if not is_inside_tree():
+		return
+	Sfx.music_volume(Sfx.MUSIC_DB, 2.0)
 	_cutin = false
+	_comms("SYSTEM", "Pilot channel 3 offline. Continue engagement.", 26.0, 2.5)
 
 
 func _breakdown_ready() -> bool:
@@ -1935,7 +1968,7 @@ func _comms_pump() -> void:
 			hold -= get_process_delta_time()
 			blink += get_process_delta_time()
 			_comms_show(lines, n, fmod(blink, 0.8) < 0.4)
-	if _pilot_on != "":
+	if _pilot_on != "" and not _keep_face:
 		await _portrait_swap("", "")
 		if not is_inside_tree():
 			return
@@ -2239,6 +2272,11 @@ func _arcade_menu(parent: Control, cx: float, y: float, won: bool) -> String:
 
 
 func _finish(result: String, next: String = "") -> void:
+	if _breakdown_at >= 0.0 and Game.midas_doomed():
+		# the mission ended before his call came through: he is gone all the same
+		Game.story.midas_dead = true
+		Game.story.midas_breakdown_seen = true
+		_breakdown_at = -1.0
 	if result != "win" and not arcade and not training:
 		Game.record_failure()
 	_result = {"result": result, "next": next, "score": score, "planet": planet_type, "level": level_index, "unlocks": [], "bosses": bosses_beaten}
