@@ -936,6 +936,34 @@ func _run(scenario: String) -> void:
 			await shot("console_off")
 			print("[console] state=%s inside=%s ach=%s" % [c.state, c.is_inside_tree(), Game.achieved.keys()])
 			get_tree().quit()
+		"tv":
+			# the home TV: tune PK_CH (default 1) and screenshot its show for
+			# PK_SECS, then flip through every channel once and switch off
+			auto_talk = false
+			Game.new_game()
+			Game.player_name = "Ari"
+			var pr: StoryPrologue = main.story.prologue
+			pr.evening = true
+			main.fade_rect.color.a = 0.0
+			main.load_map(pr._house("home"), Vector2i(11, 3), 1)
+			await wait(0.6)
+			var t := TvScreen.new()
+			main.ui.add_child(t)
+			var ch := int(OS.get_environment("PK_CH")) if OS.get_environment("PK_CH") != "" else 1
+			t.run(ch - 1)
+			var secs := float(OS.get_environment("PK_SECS")) if OS.get_environment("PK_SECS") != "" else 20.0
+			var every := float(OS.get_environment("PK_EVERY")) if OS.get_environment("PK_EVERY") != "" else 1.0
+			var n := int(secs / every)
+			for i in n:
+				await wait(every)
+				await shot("tv_%d_%03d" % [ch, i])
+			if OS.get_environment("PK_FLIP") != "":
+				for k in TvShows.CHANNELS.size():
+					await tap("up", 1.5)
+					await shot("tv_flip_%d" % k)
+			await tap("cancel", 0.8)
+			print("[tv] seen=%s left on=%s" % [t.seen.keys(), t.channel_id()])
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up
