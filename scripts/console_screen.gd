@@ -313,6 +313,8 @@ func _play(def: Dictionary) -> int:
 	game_def = def
 	game = load(def.script).new()
 	screen_root.add_child(game)
+	# while a game runs the console takes no taps: the stick and A/B do it all
+	remove_from_group("tap_targets")
 	Game.touch_running = true
 	var res := {"score": 0, "done": false}
 	game.over.connect(func(s: int) -> void:
@@ -327,6 +329,7 @@ func _play(def: Dictionary) -> int:
 			if game.done:
 				break
 	Game.touch_running = false
+	add_to_group("tap_targets")
 	if not res.done:
 		res.score = game.score
 	Achievements.console_result(def.id, int(res.score), game.stats)

@@ -872,12 +872,14 @@ func _run(scenario: String) -> void:
 			await wait(0.8)
 			await shot("console_room")
 			var gid := OS.get_environment("PK_GAME")
+			if OS.get_environment("PK_TOUCH") != "":
+				Game.shell.touch._set_active(true)
 			var c := ConsoleScreen.new()
 			main.ui.add_child(c)
 			c.run()
 			await wait(0.4)
 			await shot("console_boot")
-			await wait(1.6)
+			await wait(2.8)
 			await shot("console_shelf")
 			var idx := 0
 			for i in ConsoleScreen.GAMES.size():
@@ -896,8 +898,26 @@ func _run(scenario: String) -> void:
 				var n := int(secs / 0.5)
 				for i in n:
 					await wait(0.5)
-					if c.game and is_instance_valid(c.game) and c.game.has_method("autoplay"):
-						c.game.autoplay()
+					if c.game and is_instance_valid(c.game) and "auto" in c.game and OS.get_environment("PK_HUMAN") == "":
+						c.game.auto = true
+					if OS.get_environment("PK_TOUCH") != "" and i == 4:
+						await window_shot("console_touch")
+						c.game.auto = false
+						var f0: float = c.game.facing if "facing" in c.game else 0.0
+						var win := get_viewport().get_visible_rect().size
+						var p0 := Vector2(win.x * 0.2, win.y * 0.6)
+						_finger(0, p0, true)
+						await wait(0.1)
+						_drag_to(0, p0 + Vector2(120, 0))
+						await wait(0.6)
+						print("[console] touch stick: facing %.2f -> %.2f (want toward 0)" % [f0, c.game.facing if "facing" in c.game else 0.0])
+						_finger(0, p0 + Vector2(120, 0), false)
+						var n0: int = c.game.shots.size() if "shots" in c.game else 0
+						_finger(1, _control("pa"), true)
+						await get_tree().process_frame
+						await get_tree().process_frame
+						print("[console] touch A: shots %d -> %d" % [n0, c.game.shots.size() if "shots" in c.game else 0])
+						_finger(1, _control("pa"), false)
 					if i % 2 == 0:
 						await shot("console_play_%02d" % i)
 					if c.state != "playing":
