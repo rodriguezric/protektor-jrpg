@@ -137,6 +137,44 @@ class Level:
         self.t += release_after + 1.0
         return self
 
+    def lane(self, deg: float, dt: float = 0.0, dur: float = 0.6):
+        """A lane ignites (telegraph streak) without spawning anything."""
+        self._ev({"type": "fx_lane", "degrees": int(deg) % 360, "duration_sec": dur}, self.t + dt)
+        return self
+
+    def chain_ignition(self, start: float, step: float, n: int, gap: float, kinds: list, warn: float = 0.6):
+        """Lanes ignite one after another round the planet; each fires a
+        fast threat `warn` seconds after its streak. Rotate with it."""
+        for i in range(n):
+            d = start + i * step
+            self.lane(d, i * gap, warn)
+            self.spawn(kinds[i % len(kinds)], d, i * gap + warn)
+        self.t += n * gap + warn
+        return self
+
+    def double_lane_rush(self, deg: float, n: int, gap: float, rock: str = "asteroid", drone: str = "drone_fast"):
+        """Rocks down one lane while fast drones come down the opposite one:
+        your back takes the rocks while your front shoots the drones."""
+        for i in range(n):
+            self.spawn(rock, deg, i * gap)
+            self.spawn(drone, deg + 180, i * gap + gap * 0.5)
+        self.t += n * gap
+        return self
+
+    def rapid_burst(self, deg: float, n: int, gap: float, spread: float = 30, kind: str = "asteroid"):
+        """A quick salvo from one side, fanned a little: one block holds it."""
+        for i in range(n):
+            self.spawn(kind, deg + (i % 3 - 1) * spread / 2, i * gap)
+        self.t += n * gap
+        return self
+
+    def alternating_sides(self, degs: list, n: int, gap: float, kind: str = "drone_fast"):
+        """Fast threats flipping between sides: turn, shoot, turn back."""
+        for i in range(n):
+            self.spawn(kind, degs[i % len(degs)], i * gap)
+        self.t += n * gap
+        return self
+
     def build(self) -> dict:
         return {"events": sorted(self.events, key=lambda e: e["time"]), "phases": self.phases,
                 "timeline_sec": round(max([e["time"] for e in self.events] or [0]), 1)}
@@ -286,7 +324,76 @@ def glacien_ix():
     return out
 
 
-PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix}
+# =========================================================== Ignara Prime ===
+# Heat, aggression, overload. Core skill: rapid_defensive_rotation.
+# Pool: asteroid, drone_fast, drone_basic.
+# Rhythm: L1 burst_with_breathers, L2 reduced_recovery, L3 relentless_pressure.
+# Signature: chain_lane_ignition (lanes light up in sequence round the planet).
+# Mini-boss: Flare Carrier (dashes between lanes). Boss: Solar Crucible.
+
+def ignara_prime():
+    out = []
+    # ---- L1: Kindling (~90 s), bursts with breathers ----
+    L = Level("ignara_prime", 1)
+    L.phase("intro_teach", "Thermal spikes detected. Turn fast.").wait(2.0)
+    L.rapid_burst(0, 4, 0.7).wait(3.0)
+    L.alternating_sides([90, 270], 6, 1.6).wait(3.0)
+    L.rapid_burst(180, 4, 0.7).wait(3.0)
+    L.phase("development", "Heat rising.")
+    L.double_lane_rush(270, 5, 1.6).wait(3.0)
+    L.double_lane_rush(0, 5, 1.6).wait(3.5)
+    L.phase("signature", "Lanes igniting. Follow the fire.")
+    L.chain_ignition(0, 90, 8, 1.6, ["drone_fast", "asteroid"]).wait(3.0)
+    L.chain_ignition(180, -45, 8, 1.4, ["drone_fast", "asteroid"]).wait(3.0)
+    L.phase("final_clear", "Final contact sweep.")
+    L.alternating_sides([0, 180, 90, 270], 8, 1.1)
+    out.append(L)
+
+    # ---- L2: Flashpoint (~120 s), reduced recovery, mini-boss ----
+    L = Level("ignara_prime", 2)
+    L.phase("intro_teach", "Thermal spikes detected. Turn fast.").wait(2.0)
+    L.rapid_burst(90, 5, 0.6).wait(2.0)
+    L.alternating_sides([0, 180], 8, 1.2).wait(2.0)
+    L.phase("development", "Heat rising.")
+    L.double_lane_rush(45, 6, 1.4).wait(2.0)
+    L.chain_ignition(90, 90, 8, 1.3, ["drone_fast", "asteroid", "drone_fast"]).wait(2.0)
+    L.double_lane_rush(180, 6, 1.3).wait(2.0)
+    L.rapid_burst(270, 5, 0.6).wait(1.5)
+    L.alternating_sides([45, 225], 6, 1.1, "drone_basic").wait(2.0)
+    L.phase("compression", "Thermal overload building.")
+    L.alternating_sides([0, 90, 180, 270], 12, 0.95).wait(1.5)
+    L.rapid_burst(315, 6, 0.55).wait(2.0)
+    L.phase("signature", "Lanes igniting. Follow the fire.")
+    L.chain_ignition(0, 45, 12, 1.15, ["drone_fast", "asteroid"])
+    L.wait(2.0).gate()
+    L.phase("mini_boss", "Flare carrier on approach. Track it.")
+    L.wait(1.5).boss("flare_carrier", 90, mini=True)
+    L.gate()
+    out.append(L)
+
+    # ---- L3: Crucible (~150 s), relentless pressure, boss ----
+    L = Level("ignara_prime", 3)
+    L.phase("intro_teach", "Thermal spikes detected. Turn fast.").wait(2.0)
+    L.alternating_sides([0, 180, 90, 270], 8, 1.0).wait(1.5)
+    L.phase("development", "Heat rising.")
+    L.double_lane_rush(90, 6, 1.25).wait(1.5)
+    L.chain_ignition(0, 90, 8, 1.15, ["drone_fast", "asteroid"]).wait(1.5)
+    L.double_lane_rush(225, 6, 1.2).wait(1.5)
+    L.phase("compression", "Thermal overload building.")
+    L.alternating_sides([45, 225, 135, 315], 12, 0.9).wait(1.0)
+    L.rapid_burst(0, 6, 0.5).rapid_burst(180, 6, 0.5).wait(1.5)
+    L.phase("signature", "Every lane is burning.")
+    L.chain_ignition(0, 45, 10, 1.05, ["drone_fast", "asteroid"]).wait(0.5)
+    L.chain_ignition(180, -90, 8, 1.0, ["asteroid", "drone_fast"])
+    L.wait(2.0).gate()
+    L.phase("boss", "")
+    L.wait(0.5).boss("solar_crucible", 0)
+    L.gate()
+    out.append(L)
+    return out
+
+
+PLANETS = {"terra_virex": terra_virex, "glacien_ix": glacien_ix, "ignara_prime": ignara_prime}
 
 
 def write(level: Level) -> str:

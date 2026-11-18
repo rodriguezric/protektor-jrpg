@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-18 10:44 EST — `feature_ignara_prime_level_redesign` (v0.35.0)
+
+Ignara Prime rebuilt around fast rotation: lanes ignite in sequence round the planet. Flare Carrier mini-boss, Solar Crucible boss.
+
+- New telegraph: a lane "ignites" with a pulsing heat streak just before something fast comes down it.
+- Level 1 "Kindling" (~90 s): rock salvos with breathers, fast drones flipping sides, rocks down one lane while fast drones rush the opposite one, then two chains of igniting lanes to follow round the planet.
+- Level 2 "Flashpoint" (~120 s): shorter breathers, a 12-lane chain, then the FLARE CARRIER: a mini-boss that hops between quadrants every couple of seconds firing paired shots.
+- Level 3 "Crucible" (~150 s): relentless chains and rushes, then the SOLAR CRUCIBLE: continuous rings of fire sweeping from behind you while its aimed shots force you to turn: shoot, block, shoot. Counter-rotating rings in phase 2, quadrant hops and fast escorts in phase 3.
+- Standard kit: the levelcheck bot clears all three (91 s, 114 s, 146 s, 3 hits on the boss).
+- Code: mission event `fx_lane` (scripts/mission.gd `_lane_fx`); tools/build_levels.py `lane`, `chain_ignition`, `double_lane_rush`, `rapid_burst`, `alternating_sides` and the Ignara plans; data/bosses.json `flare_carrier`, `solar_crucible`.
+
 ## 2026-11-18 10:32 EST — `feature_glacien_ix_level_redesign` (v0.34.0)
 
 Glacien IX rebuilt around patience: threats freeze around the planet and thaw together. Frost Sentinel mini-boss, Boreal Colossus boss.
