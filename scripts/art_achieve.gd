@@ -125,6 +125,23 @@ static func icon(a: Dictionary, unlocked: bool) -> PixBuf:
 			b.ball(12, 12, 7.5, 7.5, Pal.HONEY)
 			b.ball(12, 12, 3, 3, Pal.PANEL2)
 			b.pset(9, 8, Pal.hi(Pal.HONEY))
+		"pong":
+			b.ball(9, 11, 6, 6, Pal.RED)
+			b.rect(8, 16, 3, 7, Pal.WOOD)
+			b.circ(19, 6, 2.5, Pal.WHITE)
+			b.pset(16, 9, Pal.STONE)
+			b.pset(14, 11, Pal.STONE)
+		"cards":
+			b.rect(3, 4, 11, 16, Pal.WHITE)
+			b.rect(10, 3, 11, 16, Pal.CREAM)
+			b.ascii([".R.R.", "RRRRR", ".RRR.", "..R.."], {"R": Pal.RED}, 13, 8)
+			b.rect(5, 6, 2, 3, Pal.INK2)
+		"drill":
+			b.poly([Vector2(12, 1), Vector2(21, 11), Vector2(3, 11)], Pal.LEMON)
+			b.rect(9, 11, 6, 9, Pal.LEMON)
+			b.line(4, 22, 10, 16, Pal.SYNC)
+			b.line(10, 16, 14, 20, Pal.SYNC)
+			b.line(14, 20, 20, 14, Pal.SYNC)
 		"tv":
 			# the family set, a heart on its screen
 			b.rect(2, 4, 20, 16, Color("5a3a24"))

@@ -1,5 +1,17 @@
 # Patch Notes
 
+## 2026-11-18 17:27 EST — `feature_hub_room_minigames` (v0.55.0)
+
+Three little games in the Pilot Wing, each under a minute, with best scores, achievements and a few credits for a good result.
+
+- Rec Room ping-pong (the table): a rally against a recruit. Press Z (tap) as the ball reaches your paddle; PERFECT / GOOD / EARLY / WHIFF / MISS calls, the ball speeds up each return, and the rally ends on your first miss.
+- Rec Room high-low (the card table): Up if the next card is higher, Down if lower (ties win); cards flip with a little animation. Score: your streak.
+- Training Gym sync-reflex drill (the console): ten arrows light up one at a time; press that direction as fast as you can. Score: average reaction in ms (a wrong press costs 250 ms). Beat 300 ms and the system says 'well done' for the first time, and it doesn't feel like praise.
+- Each game has a short intro and reacts to how you did; a decent result pays 5 credits, once per game per interval. Best scores are kept in the profile. Achievements (GAMES): Table Tennis Ace (20-hit rally), Card Shark (7 in a row), Too Fast to Feel (drill under 300 ms).
+- The games don't change relationships: Midas' fate is tied to his relationship level, so a game with him can't be allowed to move it.
+- Touch: the games are arrow screens (the stick steers, a tap is Z, B leaves).
+- Code: new `scripts/hub_game.gd` (HubGame), `scripts/story.gd` (hub_minigame(): intros, reactions, credits), `scripts/main.gd` (hub_game()), `scripts/achievements.gd` (hub_result(), three achievements; the Starbox 'played' count now only counts Starbox games), `scripts/art_achieve.gd`, `scripts/touch_controls.gd`, `tools/autotest.gd` (`PK_TEST=hubgame`, `PK_HG`).
+
 ## 2026-11-18 17:22 EST — `feature_hub_extra_rooms` (v0.54.0)
 
 The Pilot Wing: seven rooms off the Commons to wander between missions, with lore, games and a few quiet moments. None of it uses up the interval's one conversation.

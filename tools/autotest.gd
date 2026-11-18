@@ -1048,6 +1048,28 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[wing] back in %s; flags stargazed=%s tomato=%s" % [main.world.def.id, Game.story.get("stargazed"), Game.story.get("midas_tomato")])
 			get_tree().quit()
+		"hubgame":
+			# a Pilot Wing game (PK_HG = pingpong / cards / drill) played by a bot
+			auto_talk = false
+			Game.player_name = "Ari"
+			var g := HubGame.new()
+			g.auto = OS.get_environment("PK_HUMAN") == ""
+			main.ui.add_child(g)
+			var snap := {"on": true, "k": 0}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(0.5)
+					await shot("hg_%03d" % snap.k)
+					snap.k += 1
+			snapper.call()
+			var stop := func() -> void:
+				await wait(float(OS.get_environment("PK_SECS")) if OS.get_environment("PK_SECS") != "" else 20.0)
+				g.auto = false
+			stop.call()
+			var res: Dictionary = await g.run(OS.get_environment("PK_HG"), Data.EXTRAS[2])
+			snap.on = false
+			print("[hubgame] %s -> %s ach=%s" % [OS.get_environment("PK_HG"), res, Game.achieved.keys()])
+			get_tree().quit()
 		"house":
 			# both floors of home: walk into your room through its door, then
 			# take the stairs down and back up

@@ -394,6 +394,23 @@ func tv(start_channel: int = 0) -> Dictionary:
     return res
 
 
+func hub_game(kind: String, opponent: Dictionary = {}) -> Dictionary:
+    ## One of the Pilot Wing's little games, full screen over the field.
+    if world:
+        world.paused = true
+    await fade_out(0.25)
+    var g := HubGame.new()
+    ui.add_child(g)
+    await fade_in(0.2)
+    var res: Dictionary = await g.run(kind, opponent)
+    await fade_out(0.25)
+    g.queue_free()
+    if world:
+        world.paused = false
+    await fade_in(0.25)
+    return res
+
+
 func console() -> void:
     ## The Starbox in your room: its own screen over the field.
     if world:
