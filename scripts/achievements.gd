@@ -22,7 +22,13 @@ const CAT_NAMES := {"combat": "COMBAT", "worlds": "WORLDS", "bosses": "BOSSES", 
 ## are the best value ever reached in one run, kept as cg_<game>_<key>
 ## (cg_<game>_score is the best score).
 const CONSOLE_GAMES := ["protektor", "duel", "sword"]
-const GAME_ACH := {}
+const GAME_ACH := {
+	"protektor": [["s1k", "Rookie Robot", "Score 1,000 in Starbox PROTEKTOR.", "score", 1000, 0],
+		["s5k", "Ace Robot", "Score 5,000 in Starbox PROTEKTOR.", "score", 5000, 1],
+		["s20k", "Robot Legend", "Score 20,000 in Starbox PROTEKTOR.", "score", 20000, 2],
+		["survive", "Three-Minute Hero", "Survive 3 minutes in Starbox PROTEKTOR.", "survive", 180, 1],
+		["chain", "Unbreakable Bot", "Block 50 in a row in Starbox PROTEKTOR.", "chain", 50, 2]],
+}
 
 ## Each planet's boss (data/bosses.json) and its achievement.
 const BOSSES := {

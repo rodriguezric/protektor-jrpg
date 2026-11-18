@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-18 16:35 EST — `feature_console_protektor_mini` (v0.48.0)
+
+PROTEKTOR, the first Starbox cartridge: the toy version of the real thing, starring a cartoon tin robot.
+
+- Title card (PROTEKTOR / STEEL THAT NEVER SLEEPS, the robot bobbing over its planet), then an endless run: turn with the arrows / stick, the shield arc in front blocks rocks and enemy bolts, Z (A) fires along the same line at drones, X (B) sets off an Overdrive that clears the screen (three charges, one more every 2000 points). Three hearts; spawns and speed ramp up over about two and a half minutes, and after 30 seconds drones park and shoot.
+- Scoring: drone 100, block 50 times a chain multiplier (x2 to x5 for blocks in a row, shown next to the score), bolt block 25, Overdrive kills 50. The robot's face cheers on kills and winces when the planet is hit; at zero hearts it blows up.
+- Achievements (GAMES): Rookie Robot (1,000), Ace Robot (5,000), Robot Legend (20,000), Three-Minute Hero (survive 3 minutes), Unbreakable Bot (50-block chain), with cartridge icons.
+- Console fix: while a game runs the console leaves the tap-target group, so on touch the stick works and the corner button is MENU (pause), not B.
+- Code: new `scripts/cg_protektor.gd`; `scripts/achievements.gd` (GAME_ACH protektor), `scripts/console_screen.gd`, `tools/autotest.gd` (console scenario: the cartridge's bot via `auto`, `PK_SECS`, `PK_TOUCH` stick/A checks).
+
 ## 2026-11-18 16:31 EST — `feature_bedroom_game_console` (v0.47.0)
 
 The Starbox: a home game console in the protagonist's room (and on the title screen), with a cartridge shelf, high scores and a GAMES achievements tab.
