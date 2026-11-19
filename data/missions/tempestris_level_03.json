@@ -31,24 +31,24 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 16.4
+      "start_sec": 16.24
     },
     {
       "phase_id": "compression",
-      "start_sec": 33.92
+      "start_sec": 32.36
     },
     {
       "phase_id": "signature",
-      "start_sec": 52.12
+      "start_sec": 50.56
     },
     {
       "phase_id": "boss",
-      "start_sec": 67.49
+      "start_sec": 65.67
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 68.0
+    "timeline_sec": 66.2
   },
   "events": [
     {
@@ -73,7 +73,8 @@
       "spawn_side": "degrees",
       "degrees": 146,
       "id": "tempestris_level_03_006",
-      "time": 2.4
+      "time": 2.4,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -81,7 +82,8 @@
       "spawn_side": "degrees",
       "degrees": 354,
       "id": "tempestris_level_03_003",
-      "time": 2.89
+      "time": 2.89,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -89,7 +91,26 @@
       "spawn_side": "degrees",
       "degrees": 344,
       "id": "tempestris_level_03_005",
-      "time": 2.89
+      "time": 2.89,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 343,
+      "id": "tempestris_level_03_118",
+      "time": 3.27,
+      "move_speed": 136.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 140,
+      "id": "tempestris_level_03_117",
+      "time": 3.6,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -97,7 +118,8 @@
       "spawn_side": "degrees",
       "degrees": 324,
       "id": "tempestris_level_03_004",
-      "time": 4.38
+      "time": 4.38,
+      "move_speed": 336.0
     },
     {
       "type": "fx_flash",
@@ -113,7 +135,8 @@
       "spawn_side": "degrees",
       "degrees": 47,
       "id": "tempestris_level_03_011",
-      "time": 6.0
+      "time": 5.88,
+      "move_speed": 119.0
     },
     {
       "type": "spawn_enemy",
@@ -121,7 +144,26 @@
       "spawn_side": "degrees",
       "degrees": 204,
       "id": "tempestris_level_03_008",
-      "time": 6.58
+      "time": 6.46,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 214,
+      "id": "tempestris_level_03_121",
+      "time": 6.58,
+      "move_speed": 136.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 349,
+      "id": "tempestris_level_03_119",
+      "time": 7.09,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -129,7 +171,8 @@
       "spawn_side": "degrees",
       "degrees": 254,
       "id": "tempestris_level_03_010",
-      "time": 7.59
+      "time": 7.47,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -137,7 +180,17 @@
       "spawn_side": "degrees",
       "degrees": 206,
       "id": "tempestris_level_03_009",
-      "time": 7.92
+      "time": 7.8,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 52,
+      "id": "tempestris_level_03_120",
+      "time": 8.31,
+      "move_speed": 136.4
     },
     {
       "type": "fx_flash",
@@ -145,7 +198,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_012",
-      "time": 9.2
+      "time": 9.08
     },
     {
       "type": "spawn_enemy",
@@ -153,7 +206,8 @@
       "spawn_side": "degrees",
       "degrees": 327,
       "id": "tempestris_level_03_016",
-      "time": 9.6
+      "time": 9.48,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -161,7 +215,8 @@
       "spawn_side": "degrees",
       "degrees": 168,
       "id": "tempestris_level_03_014",
-      "time": 9.85
+      "time": 9.73,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -169,7 +224,8 @@
       "spawn_side": "degrees",
       "degrees": 100,
       "id": "tempestris_level_03_015",
-      "time": 10.85
+      "time": 10.73,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -177,7 +233,8 @@
       "spawn_side": "degrees",
       "degrees": 142,
       "id": "tempestris_level_03_013",
-      "time": 12.39
+      "time": 12.23,
+      "move_speed": 336.0
     },
     {
       "type": "fx_flash",
@@ -185,7 +242,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_017",
-      "time": 12.8
+      "time": 12.64
     },
     {
       "type": "spawn_enemy",
@@ -193,7 +250,17 @@
       "spawn_side": "degrees",
       "degrees": 223,
       "id": "tempestris_level_03_021",
-      "time": 13.2
+      "time": 13.04,
+      "move_speed": 119.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 17,
+      "id": "tempestris_level_03_124",
+      "time": 13.61,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -201,7 +268,8 @@
       "spawn_side": "degrees",
       "degrees": 9,
       "id": "tempestris_level_03_019",
-      "time": 13.95
+      "time": 13.79,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -209,7 +277,17 @@
       "spawn_side": "degrees",
       "degrees": 59,
       "id": "tempestris_level_03_018",
-      "time": 14.35
+      "time": 14.19,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 186,
+      "id": "tempestris_level_03_122",
+      "time": 14.63,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -217,7 +295,17 @@
       "spawn_side": "degrees",
       "degrees": 68,
       "id": "tempestris_level_03_020",
-      "time": 14.92
+      "time": 14.76,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 253,
+      "id": "tempestris_level_03_123",
+      "time": 15.08,
+      "move_speed": 136.4
     },
     {
       "type": "fx_async_message",
@@ -225,7 +313,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "tempestris_level_03_022",
-      "time": 16.4
+      "time": 16.24
     },
     {
       "type": "spawn_enemy",
@@ -233,7 +321,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "tempestris_level_03_023",
-      "time": 16.4
+      "time": 16.24,
+      "move_speed": 89.3
     },
     {
       "type": "spawn_enemy",
@@ -241,7 +330,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "tempestris_level_03_024",
-      "time": 16.4
+      "time": 16.24,
+      "move_speed": 89.3
     },
     {
       "type": "spawn_enemy",
@@ -249,7 +339,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "tempestris_level_03_025",
-      "time": 18.6
+      "time": 17.74,
+      "move_speed": 89.3
     },
     {
       "type": "spawn_enemy",
@@ -257,7 +348,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "tempestris_level_03_026",
-      "time": 18.6
+      "time": 17.74,
+      "move_speed": 89.3
     },
     {
       "type": "spawn_enemy",
@@ -265,7 +357,8 @@
       "spawn_side": "degrees",
       "degrees": 183,
       "id": "tempestris_level_03_031",
-      "time": 20.8
+      "time": 19.24,
+      "move_speed": 119.0
     },
     {
       "type": "spawn_enemy",
@@ -273,7 +366,8 @@
       "spawn_side": "degrees",
       "degrees": 125,
       "id": "tempestris_level_03_035",
-      "time": 21.47
+      "time": 19.91,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -281,7 +375,17 @@
       "spawn_side": "degrees",
       "degrees": 81,
       "id": "tempestris_level_03_027",
-      "time": 21.67
+      "time": 20.11,
+      "move_speed": 280.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 230,
+      "id": "tempestris_level_03_125",
+      "time": 20.87,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -289,7 +393,8 @@
       "spawn_side": "degrees",
       "degrees": 94,
       "id": "tempestris_level_03_029",
-      "time": 22.78
+      "time": 21.22,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -297,7 +402,8 @@
       "spawn_side": "degrees",
       "degrees": 1,
       "id": "tempestris_level_03_034",
-      "time": 22.81
+      "time": 21.25,
+      "move_speed": 119.0
     },
     {
       "type": "spawn_enemy",
@@ -305,7 +411,8 @@
       "spawn_side": "degrees",
       "degrees": 46,
       "id": "tempestris_level_03_036",
-      "time": 23.39
+      "time": 21.83,
+      "move_speed": 280.0
     },
     {
       "type": "spawn_enemy",
@@ -313,7 +420,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "tempestris_level_03_032",
-      "time": 23.71
+      "time": 22.15,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -321,7 +429,17 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "tempestris_level_03_028",
-      "time": 25.12
+      "time": 23.56,
+      "move_speed": 119.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 149,
+      "id": "tempestris_level_03_126",
+      "time": 24.39,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -329,7 +447,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "tempestris_level_03_030",
-      "time": 26.47
+      "time": 24.91,
+      "move_speed": 280.0
     },
     {
       "type": "spawn_enemy",
@@ -337,7 +456,17 @@
       "spawn_side": "degrees",
       "degrees": 353,
       "id": "tempestris_level_03_033",
-      "time": 26.52
+      "time": 24.96,
+      "move_speed": 280.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 327,
+      "id": "tempestris_level_03_127",
+      "time": 25.66,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -345,21 +474,22 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "tempestris_level_03_038",
-      "time": 28.72
+      "time": 27.16,
+      "move_speed": 280.0
     },
     {
       "type": "fx_lane",
       "degrees": 345,
       "duration_sec": 0.8,
       "id": "tempestris_level_03_039",
-      "time": 29.72
+      "time": 28.16
     },
     {
       "type": "fx_lane",
       "degrees": 165,
       "duration_sec": 0.8,
       "id": "tempestris_level_03_037",
-      "time": 29.8
+      "time": 28.24
     },
     {
       "type": "spawn_enemy",
@@ -367,14 +497,15 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "tempestris_level_03_040",
-      "time": 30.12
+      "time": 28.56,
+      "move_speed": 280.0
     },
     {
       "type": "fx_lane",
       "degrees": 75,
       "duration_sec": 0.8,
       "id": "tempestris_level_03_041",
-      "time": 31.12
+      "time": 29.56
     },
     {
       "type": "spawn_enemy",
@@ -382,14 +513,15 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "tempestris_level_03_042",
-      "time": 31.52
+      "time": 29.96,
+      "move_speed": 280.0
     },
     {
       "type": "fx_lane",
       "degrees": 255,
       "duration_sec": 0.8,
       "id": "tempestris_level_03_043",
-      "time": 32.52
+      "time": 30.96
     },
     {
       "type": "spawn_enemy",
@@ -397,7 +529,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "tempestris_level_03_044",
-      "time": 32.92
+      "time": 31.36,
+      "move_speed": 280.0
     },
     {
       "type": "fx_async_message",
@@ -405,7 +538,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "tempestris_level_03_045",
-      "time": 33.92
+      "time": 32.36
     },
     {
       "type": "fx_flash",
@@ -413,7 +546,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_046",
-      "time": 33.92
+      "time": 32.36
     },
     {
       "type": "spawn_enemy",
@@ -421,7 +554,8 @@
       "spawn_side": "degrees",
       "degrees": 278,
       "id": "tempestris_level_03_051",
-      "time": 34.32
+      "time": 32.76,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -429,7 +563,8 @@
       "spawn_side": "degrees",
       "degrees": 56,
       "id": "tempestris_level_03_049",
-      "time": 35.32
+      "time": 33.76,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -437,7 +572,8 @@
       "spawn_side": "degrees",
       "degrees": 50,
       "id": "tempestris_level_03_050",
-      "time": 35.45
+      "time": 33.89,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -445,7 +581,17 @@
       "spawn_side": "degrees",
       "degrees": 87,
       "id": "tempestris_level_03_047",
-      "time": 35.81
+      "time": 34.25,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 246,
+      "id": "tempestris_level_03_129",
+      "time": 34.71,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -453,7 +599,17 @@
       "spawn_side": "degrees",
       "degrees": 59,
       "id": "tempestris_level_03_048",
-      "time": 36.5
+      "time": 34.94,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 305,
+      "id": "tempestris_level_03_128",
+      "time": 35.09,
+      "move_speed": 136.4
     },
     {
       "type": "fx_flash",
@@ -461,7 +617,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_052",
-      "time": 37.12
+      "time": 35.56
     },
     {
       "type": "spawn_enemy",
@@ -469,7 +625,8 @@
       "spawn_side": "degrees",
       "degrees": 18,
       "id": "tempestris_level_03_057",
-      "time": 37.52
+      "time": 35.96,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -477,7 +634,8 @@
       "spawn_side": "degrees",
       "degrees": 157,
       "id": "tempestris_level_03_056",
-      "time": 37.91
+      "time": 36.35,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -485,7 +643,8 @@
       "spawn_side": "degrees",
       "degrees": 211,
       "id": "tempestris_level_03_054",
-      "time": 38.32
+      "time": 36.76,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -493,7 +652,8 @@
       "spawn_side": "degrees",
       "degrees": 216,
       "id": "tempestris_level_03_053",
-      "time": 38.85
+      "time": 37.29,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -501,7 +661,8 @@
       "spawn_side": "degrees",
       "degrees": 170,
       "id": "tempestris_level_03_055",
-      "time": 39.43
+      "time": 37.87,
+      "move_speed": 336.0
     },
     {
       "type": "fx_flash",
@@ -509,7 +670,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_058",
-      "time": 40.32
+      "time": 38.76
     },
     {
       "type": "spawn_enemy",
@@ -517,7 +678,8 @@
       "spawn_side": "degrees",
       "degrees": 97,
       "id": "tempestris_level_03_063",
-      "time": 40.72
+      "time": 39.16,
+      "move_speed": 280.0
     },
     {
       "type": "spawn_enemy",
@@ -525,7 +687,8 @@
       "spawn_side": "degrees",
       "degrees": 258,
       "id": "tempestris_level_03_062",
-      "time": 41.56
+      "time": 40.0,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -533,7 +696,8 @@
       "spawn_side": "degrees",
       "degrees": 292,
       "id": "tempestris_level_03_059",
-      "time": 42.13
+      "time": 40.57,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -541,7 +705,17 @@
       "spawn_side": "degrees",
       "degrees": 231,
       "id": "tempestris_level_03_061",
-      "time": 42.22
+      "time": 40.66,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 90,
+      "id": "tempestris_level_03_131",
+      "time": 40.86,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -549,7 +723,17 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "tempestris_level_03_060",
-      "time": 42.68
+      "time": 41.12,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 94,
+      "id": "tempestris_level_03_130",
+      "time": 41.6,
+      "move_speed": 136.4
     },
     {
       "type": "fx_flash",
@@ -557,7 +741,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_064",
-      "time": 43.52
+      "time": 41.96
     },
     {
       "type": "spawn_enemy",
@@ -565,7 +749,8 @@
       "spawn_side": "degrees",
       "degrees": 177,
       "id": "tempestris_level_03_069",
-      "time": 43.92
+      "time": 42.36,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -573,7 +758,8 @@
       "spawn_side": "degrees",
       "degrees": 10,
       "id": "tempestris_level_03_067",
-      "time": 45.05
+      "time": 43.49,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -581,7 +767,8 @@
       "spawn_side": "degrees",
       "degrees": 26,
       "id": "tempestris_level_03_065",
-      "time": 45.3
+      "time": 43.74,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -589,7 +776,17 @@
       "spawn_side": "degrees",
       "degrees": 350,
       "id": "tempestris_level_03_066",
-      "time": 45.38
+      "time": 43.82,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 162,
+      "id": "tempestris_level_03_132",
+      "time": 43.91,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -597,7 +794,8 @@
       "spawn_side": "degrees",
       "degrees": 23,
       "id": "tempestris_level_03_068",
-      "time": 45.91
+      "time": 44.35,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -605,7 +803,8 @@
       "spawn_side": "degrees",
       "degrees": 348,
       "id": "tempestris_level_03_070",
-      "time": 46.72
+      "time": 45.16,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -613,7 +812,8 @@
       "spawn_side": "degrees",
       "degrees": 336,
       "id": "tempestris_level_03_071",
-      "time": 46.84
+      "time": 45.28,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -621,7 +821,8 @@
       "spawn_side": "degrees",
       "degrees": 324,
       "id": "tempestris_level_03_072",
-      "time": 46.96
+      "time": 45.4,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -629,7 +830,35 @@
       "spawn_side": "degrees",
       "degrees": 312,
       "id": "tempestris_level_03_073",
-      "time": 47.08
+      "time": 45.52,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 171,
+      "id": "tempestris_level_03_133",
+      "time": 45.53,
+      "move_speed": 136.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 144,
+      "id": "tempestris_level_03_134",
+      "time": 45.83,
+      "move_speed": 136.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 159,
+      "id": "tempestris_level_03_135",
+      "time": 46.14,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -637,7 +866,8 @@
       "spawn_side": "degrees",
       "degrees": 147,
       "id": "tempestris_level_03_074",
-      "time": 47.72
+      "time": 46.16,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -645,7 +875,8 @@
       "spawn_side": "degrees",
       "degrees": 159,
       "id": "tempestris_level_03_075",
-      "time": 47.84
+      "time": 46.28,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -653,7 +884,8 @@
       "spawn_side": "degrees",
       "degrees": 171,
       "id": "tempestris_level_03_076",
-      "time": 47.96
+      "time": 46.4,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -661,7 +893,26 @@
       "spawn_side": "degrees",
       "degrees": 183,
       "id": "tempestris_level_03_077",
-      "time": 48.08
+      "time": 46.52,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 292,
+      "id": "tempestris_level_03_136",
+      "time": 46.77,
+      "move_speed": 136.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 358,
+      "id": "tempestris_level_03_137",
+      "time": 47.13,
+      "move_speed": 136.4
     },
     {
       "type": "fx_async_message",
@@ -669,7 +920,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "tempestris_level_03_078",
-      "time": 52.12
+      "time": 50.56
     },
     {
       "type": "fx_flash",
@@ -677,7 +928,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_079",
-      "time": 52.12
+      "time": 50.56
     },
     {
       "type": "spawn_enemy",
@@ -685,7 +936,17 @@
       "spawn_side": "degrees",
       "degrees": 81,
       "id": "tempestris_level_03_085",
-      "time": 52.52
+      "time": 50.96,
+      "move_speed": 280.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 273,
+      "id": "tempestris_level_03_140",
+      "time": 51.64,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -693,7 +954,8 @@
       "spawn_side": "degrees",
       "degrees": 276,
       "id": "tempestris_level_03_083",
-      "time": 54.21
+      "time": 52.65,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -701,7 +963,8 @@
       "spawn_side": "degrees",
       "degrees": 274,
       "id": "tempestris_level_03_080",
-      "time": 54.22
+      "time": 52.66,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -709,7 +972,8 @@
       "spawn_side": "degrees",
       "degrees": 292,
       "id": "tempestris_level_03_081",
-      "time": 54.45
+      "time": 52.89,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -717,7 +981,8 @@
       "spawn_side": "degrees",
       "degrees": 293,
       "id": "tempestris_level_03_084",
-      "time": 54.58
+      "time": 53.02,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -725,7 +990,17 @@
       "spawn_side": "degrees",
       "degrees": 251,
       "id": "tempestris_level_03_082",
-      "time": 54.65
+      "time": 53.09,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 56,
+      "id": "tempestris_level_03_139",
+      "time": 53.35,
+      "move_speed": 136.4
     },
     {
       "type": "fx_flash",
@@ -733,7 +1008,16 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_086",
-      "time": 55.12
+      "time": 53.56
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 101,
+      "id": "tempestris_level_03_138",
+      "time": 53.65,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -741,7 +1025,8 @@
       "spawn_side": "degrees",
       "degrees": 187,
       "id": "tempestris_level_03_092",
-      "time": 55.52
+      "time": 53.96,
+      "move_speed": 119.0
     },
     {
       "type": "spawn_enemy",
@@ -749,7 +1034,8 @@
       "spawn_side": "degrees",
       "degrees": 349,
       "id": "tempestris_level_03_091",
-      "time": 55.77
+      "time": 54.21,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -757,7 +1043,8 @@
       "spawn_side": "degrees",
       "degrees": 348,
       "id": "tempestris_level_03_087",
-      "time": 57.15
+      "time": 55.59,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -765,7 +1052,8 @@
       "spawn_side": "degrees",
       "degrees": 316,
       "id": "tempestris_level_03_090",
-      "time": 57.16
+      "time": 55.6,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -773,7 +1061,8 @@
       "spawn_side": "degrees",
       "degrees": 8,
       "id": "tempestris_level_03_088",
-      "time": 57.22
+      "time": 55.66,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -781,7 +1070,17 @@
       "spawn_side": "degrees",
       "degrees": 348,
       "id": "tempestris_level_03_089",
-      "time": 57.63
+      "time": 56.07,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 207,
+      "id": "tempestris_level_03_141",
+      "time": 56.29,
+      "move_speed": 136.4
     },
     {
       "type": "fx_flash",
@@ -789,7 +1088,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_093",
-      "time": 58.12
+      "time": 56.56
     },
     {
       "type": "spawn_enemy",
@@ -797,7 +1096,8 @@
       "spawn_side": "degrees",
       "degrees": 286,
       "id": "tempestris_level_03_099",
-      "time": 58.52
+      "time": 56.96,
+      "move_speed": 280.0
     },
     {
       "type": "spawn_enemy",
@@ -805,7 +1105,8 @@
       "spawn_side": "degrees",
       "degrees": 60,
       "id": "tempestris_level_03_096",
-      "time": 58.87
+      "time": 57.31,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -813,7 +1114,8 @@
       "spawn_side": "degrees",
       "degrees": 59,
       "id": "tempestris_level_03_098",
-      "time": 58.87
+      "time": 57.31,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -821,7 +1123,8 @@
       "spawn_side": "degrees",
       "degrees": 121,
       "id": "tempestris_level_03_097",
-      "time": 58.89
+      "time": 57.33,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -829,7 +1132,8 @@
       "spawn_side": "degrees",
       "degrees": 74,
       "id": "tempestris_level_03_095",
-      "time": 59.03
+      "time": 57.47,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -837,7 +1141,35 @@
       "spawn_side": "degrees",
       "degrees": 50,
       "id": "tempestris_level_03_094",
-      "time": 59.19
+      "time": 57.63,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 247,
+      "id": "tempestris_level_03_144",
+      "time": 57.81,
+      "move_speed": 136.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 283,
+      "id": "tempestris_level_03_142",
+      "time": 57.97,
+      "move_speed": 136.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 322,
+      "id": "tempestris_level_03_143",
+      "time": 58.07,
+      "move_speed": 136.4
     },
     {
       "type": "fx_flash",
@@ -845,7 +1177,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_100",
-      "time": 61.12
+      "time": 59.56
     },
     {
       "type": "spawn_enemy",
@@ -853,7 +1185,8 @@
       "spawn_side": "degrees",
       "degrees": 10,
       "id": "tempestris_level_03_106",
-      "time": 61.39
+      "time": 59.57,
+      "move_speed": 119.0
     },
     {
       "type": "spawn_enemy",
@@ -861,7 +1194,8 @@
       "spawn_side": "degrees",
       "degrees": 171,
       "id": "tempestris_level_03_103",
-      "time": 62.37
+      "time": 60.55,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -869,7 +1203,8 @@
       "spawn_side": "degrees",
       "degrees": 223,
       "id": "tempestris_level_03_102",
-      "time": 62.58
+      "time": 60.76,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -877,7 +1212,8 @@
       "spawn_side": "degrees",
       "degrees": 222,
       "id": "tempestris_level_03_105",
-      "time": 62.6
+      "time": 60.78,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -885,7 +1221,8 @@
       "spawn_side": "degrees",
       "degrees": 159,
       "id": "tempestris_level_03_104",
-      "time": 62.78
+      "time": 60.96,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -893,7 +1230,17 @@
       "spawn_side": "degrees",
       "degrees": 184,
       "id": "tempestris_level_03_101",
-      "time": 63.23
+      "time": 61.41,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 347,
+      "id": "tempestris_level_03_145",
+      "time": 61.46,
+      "move_speed": 136.4
     },
     {
       "type": "fx_flash",
@@ -901,7 +1248,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_03_107",
-      "time": 63.99
+      "time": 62.17
     },
     {
       "type": "spawn_enemy",
@@ -909,7 +1256,17 @@
       "spawn_side": "degrees",
       "degrees": 93,
       "id": "tempestris_level_03_113",
-      "time": 64.39
+      "time": 62.57,
+      "move_speed": 280.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 262,
+      "id": "tempestris_level_03_147",
+      "time": 63.22,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -917,7 +1274,8 @@
       "spawn_side": "degrees",
       "degrees": 286,
       "id": "tempestris_level_03_112",
-      "time": 65.11
+      "time": 63.29,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -925,7 +1283,8 @@
       "spawn_side": "degrees",
       "degrees": 234,
       "id": "tempestris_level_03_110",
-      "time": 65.34
+      "time": 63.52,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -933,7 +1292,8 @@
       "spawn_side": "degrees",
       "degrees": 302,
       "id": "tempestris_level_03_111",
-      "time": 65.47
+      "time": 63.65,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -941,7 +1301,17 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "tempestris_level_03_109",
-      "time": 65.69
+      "time": 63.87,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 43,
+      "id": "tempestris_level_03_146",
+      "time": 64.33,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -949,24 +1319,25 @@
       "spawn_side": "degrees",
       "degrees": 305,
       "id": "tempestris_level_03_108",
-      "time": 66.25
+      "time": 64.43,
+      "move_speed": 336.0
     },
     {
       "type": "wait_until_clear",
       "id": "tempestris_level_03_114",
-      "time": 66.99
+      "time": 65.17
     },
     {
       "type": "spawn_boss",
       "boss_id": "cyclarch",
       "degrees": 0,
       "id": "tempestris_level_03_115",
-      "time": 67.49
+      "time": 65.67
     },
     {
       "type": "wait_until_clear",
       "id": "tempestris_level_03_116",
-      "time": 67.99
+      "time": 66.17
     },
     {
       "id": "tempestris_level_03_completion_message",

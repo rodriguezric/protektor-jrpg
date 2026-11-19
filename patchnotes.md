@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-19 13:45 EST — `bugfix_level_difficulty_scaling` (v0.59.8)
+
+Difficulty now ramps within each planet: level 1 is unchanged, level 2 is reasonably hard and level 3 is very hard.
+
+- Level 1s are untouched; their rebuilt files are byte-for-byte the same.
+- Level 2: threats move 12% faster, one arrival in five brings a drone from the far side (so there's always something to turn for), and quiet stretches cap at 1.8 s.
+- Level 3: threats move 24% faster, one arrival in three brings a far-side drone, and quiet stretches cap at 1.5 s.
+- Rocks, fast drones and chargers, which are already quick, get half the speed-up, so they stay readable. Escorts are basic drones. Umbra Vacua gets no escorts (its threats are few on purpose); its quiets shorten instead (3.2 / 2.8 / 2.4 s).
+- Bot playthroughs (standard kit, no foresight): level 2s take 0-4 hits, level 3s 1-5 (some are bot losses, mostly in boss fights). Before, level 2 and 3 played much like level 1.
+- Code: `tools/build_levels.py` (RAMP and SPARSE tables, _escorts() and _speed_up() passes in build(), per-level max_gap), rebuilt `data/missions/*_level_02.json` and `*_level_03.json`.
+
 ## 2026-11-19 13:23 EST — `bugfix_wave_pattern_variety` (v0.59.7)
 
 Waves vary much more within a level: patterns come from fresh angles, in new shapes, and rarely repeat.
