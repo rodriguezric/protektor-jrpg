@@ -31,24 +31,24 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 11.8
+      "start_sec": 11.3
     },
     {
       "phase_id": "compression",
-      "start_sec": 33.8
+      "start_sec": 33.0
     },
     {
       "phase_id": "signature",
-      "start_sec": 53.3
+      "start_sec": 54.95
     },
     {
       "phase_id": "boss",
-      "start_sec": 78.8
+      "start_sec": 78.45
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 79.8
+    "timeline_sec": 79.0
   },
   "events": [
     {
@@ -129,7 +129,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "mechanon_ascens_level_03_010",
-      "time": 11.8
+      "time": 11.3
     },
     {
       "type": "spawn_enemy",
@@ -138,7 +138,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_011",
-      "time": 11.8
+      "time": 11.3
     },
     {
       "type": "spawn_enemy",
@@ -147,7 +147,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_012",
-      "time": 13.3
+      "time": 12.8
     },
     {
       "type": "spawn_enemy",
@@ -156,7 +156,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_013",
-      "time": 14.8
+      "time": 14.3
     },
     {
       "type": "spawn_enemy",
@@ -165,7 +165,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_014",
-      "time": 16.3
+      "time": 15.8
     },
     {
       "type": "spawn_enemy",
@@ -174,7 +174,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_015",
-      "time": 17.8
+      "time": 17.3
     },
     {
       "type": "spawn_enemy",
@@ -183,7 +183,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_016",
-      "time": 19.3
+      "time": 18.8
     },
     {
       "type": "spawn_enemy",
@@ -192,7 +192,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_017",
-      "time": 20.8
+      "time": 20.3
     },
     {
       "type": "spawn_enemy",
@@ -201,7 +201,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_018",
-      "time": 22.3
+      "time": 21.8
     },
     {
       "type": "spawn_enemy",
@@ -209,7 +209,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_019",
-      "time": 24.8
+      "time": 24.0
     },
     {
       "type": "spawn_enemy",
@@ -217,7 +217,7 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "mechanon_ascens_level_03_020",
-      "time": 25.8
+      "time": 25.0
     },
     {
       "type": "spawn_enemy",
@@ -225,7 +225,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "mechanon_ascens_level_03_021",
-      "time": 26.8
+      "time": 26.0
     },
     {
       "type": "spawn_enemy",
@@ -233,7 +233,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "mechanon_ascens_level_03_022",
-      "time": 27.8
+      "time": 27.0
     },
     {
       "type": "spawn_enemy",
@@ -241,7 +241,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_023",
-      "time": 28.8
+      "time": 28.0
     },
     {
       "type": "spawn_enemy",
@@ -249,7 +249,7 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "mechanon_ascens_level_03_024",
-      "time": 29.8
+      "time": 29.0
     },
     {
       "type": "spawn_enemy",
@@ -257,7 +257,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "mechanon_ascens_level_03_025",
-      "time": 30.8
+      "time": 30.0
     },
     {
       "type": "spawn_enemy",
@@ -265,7 +265,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "mechanon_ascens_level_03_026",
-      "time": 31.8
+      "time": 31.0
     },
     {
       "type": "fx_async_message",
@@ -273,7 +273,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "mechanon_ascens_level_03_027",
-      "time": 33.8
+      "time": 33.0
     },
     {
       "type": "spawn_enemy",
@@ -281,7 +281,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "mechanon_ascens_level_03_028",
-      "time": 33.8
+      "time": 33.0
     },
     {
       "type": "spawn_enemy",
@@ -289,7 +289,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "mechanon_ascens_level_03_029",
-      "time": 34.8
+      "time": 34.0
     },
     {
       "type": "spawn_enemy",
@@ -298,7 +298,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_030",
-      "time": 36.3
+      "time": 35.5
     },
     {
       "type": "spawn_enemy",
@@ -307,7 +307,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_031",
-      "time": 37.55
+      "time": 36.75
     },
     {
       "type": "spawn_enemy",
@@ -316,7 +316,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_032",
-      "time": 38.8
+      "time": 38.0
     },
     {
       "type": "spawn_enemy",
@@ -325,7 +325,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_033",
-      "time": 40.05
+      "time": 39.25
     },
     {
       "type": "spawn_enemy",
@@ -334,7 +334,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_034",
-      "time": 41.3
+      "time": 40.5
     },
     {
       "type": "spawn_enemy",
@@ -343,7 +343,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_035",
-      "time": 42.55
+      "time": 41.75
     },
     {
       "type": "spawn_enemy",
@@ -352,7 +352,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_036",
-      "time": 43.8
+      "time": 43.0
     },
     {
       "type": "spawn_enemy",
@@ -361,7 +361,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_037",
-      "time": 45.05
+      "time": 44.25
     },
     {
       "type": "spawn_enemy",
@@ -370,7 +370,7 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_03_038",
-      "time": 46.3
+      "time": 45.5
     },
     {
       "type": "spawn_enemy",
@@ -379,7 +379,7 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_03_039",
-      "time": 47.55
+      "time": 46.75
     },
     {
       "type": "spawn_enemy",
@@ -387,7 +387,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_040",
-      "time": 49.8
+      "time": 48.95
     },
     {
       "type": "spawn_enemy",
@@ -395,7 +395,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_041",
-      "time": 50.6
+      "time": 49.75
     },
     {
       "type": "fx_async_message",
@@ -403,7 +403,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "mechanon_ascens_level_03_042",
-      "time": 53.3
+      "time": 54.95
     },
     {
       "type": "spawn_enemy",
@@ -411,7 +411,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_043",
-      "time": 53.3
+      "time": 54.95
     },
     {
       "type": "spawn_enemy",
@@ -419,7 +419,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_044",
-      "time": 54.3
+      "time": 55.95
     },
     {
       "type": "spawn_enemy",
@@ -427,7 +427,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_045",
-      "time": 55.3
+      "time": 56.95
     },
     {
       "type": "spawn_enemy",
@@ -435,7 +435,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_046",
-      "time": 56.3
+      "time": 57.95
     },
     {
       "type": "spawn_enemy",
@@ -443,7 +443,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_047",
-      "time": 57.3
+      "time": 58.95
     },
     {
       "type": "spawn_enemy",
@@ -451,7 +451,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_048",
-      "time": 58.3
+      "time": 59.95
     },
     {
       "type": "spawn_enemy",
@@ -459,7 +459,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_049",
-      "time": 59.3
+      "time": 60.95
     },
     {
       "type": "spawn_enemy",
@@ -467,7 +467,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_050",
-      "time": 60.3
+      "time": 61.95
     },
     {
       "type": "spawn_enemy",
@@ -475,7 +475,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_051",
-      "time": 61.3
+      "time": 62.95
     },
     {
       "type": "spawn_enemy",
@@ -483,7 +483,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "mechanon_ascens_level_03_052",
-      "time": 62.3
+      "time": 63.95
     },
     {
       "type": "spawn_enemy",
@@ -491,7 +491,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "mechanon_ascens_level_03_053",
-      "time": 64.3
+      "time": 65.95
     },
     {
       "type": "spawn_enemy",
@@ -499,7 +499,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "mechanon_ascens_level_03_054",
-      "time": 64.8
+      "time": 66.45
     },
     {
       "type": "spawn_enemy",
@@ -507,7 +507,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "mechanon_ascens_level_03_055",
-      "time": 66.3
+      "time": 67.95
     },
     {
       "type": "spawn_enemy",
@@ -515,7 +515,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "mechanon_ascens_level_03_056",
-      "time": 66.8
+      "time": 68.45
     },
     {
       "type": "spawn_enemy",
@@ -523,7 +523,7 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "mechanon_ascens_level_03_057",
-      "time": 68.3
+      "time": 69.95
     },
     {
       "type": "spawn_enemy",
@@ -531,7 +531,7 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "mechanon_ascens_level_03_058",
-      "time": 68.8
+      "time": 70.45
     },
     {
       "type": "spawn_enemy",
@@ -539,7 +539,7 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "mechanon_ascens_level_03_059",
-      "time": 70.3
+      "time": 71.95
     },
     {
       "type": "spawn_enemy",
@@ -547,7 +547,7 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "mechanon_ascens_level_03_060",
-      "time": 70.8
+      "time": 72.45
     },
     {
       "type": "spawn_enemy",
@@ -555,7 +555,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_061",
-      "time": 72.3
+      "time": 73.95
     },
     {
       "type": "spawn_enemy",
@@ -563,7 +563,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_062",
-      "time": 72.8
+      "time": 74.45
     },
     {
       "type": "spawn_enemy",
@@ -571,7 +571,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_03_063",
-      "time": 74.3
+      "time": 75.95
     },
     {
       "type": "spawn_enemy",
@@ -579,24 +579,24 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_064",
-      "time": 74.8
+      "time": 76.45
     },
     {
       "type": "wait_until_clear",
       "id": "mechanon_ascens_level_03_065",
-      "time": 78.3
+      "time": 77.95
     },
     {
       "type": "spawn_boss",
       "boss_id": "paragon_protektor",
       "degrees": 0,
       "id": "mechanon_ascens_level_03_066",
-      "time": 79.3
+      "time": 78.45
     },
     {
       "type": "wait_until_clear",
       "id": "mechanon_ascens_level_03_067",
-      "time": 79.8
+      "time": 78.95
     },
     {
       "id": "mechanon_ascens_level_03_completion_message",

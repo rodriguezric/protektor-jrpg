@@ -35,20 +35,20 @@
     },
     {
       "phase_id": "compression",
-      "start_sec": 29.3
+      "start_sec": 24.9
     },
     {
       "phase_id": "signature",
-      "start_sec": 61.6
+      "start_sec": 56.8
     },
     {
       "phase_id": "boss",
-      "start_sec": 72.6
+      "start_sec": 65.5
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 73.6
+    "timeline_sec": 66.0
   },
   "events": [
     {
@@ -135,7 +135,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "umbra_vacua_level_03_009",
-      "time": 16.3
+      "time": 15.5
     },
     {
       "type": "spawn_enemy",
@@ -143,7 +143,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "umbra_vacua_level_03_010",
-      "time": 20.3
+      "time": 18.7
     },
     {
       "type": "spawn_enemy",
@@ -151,7 +151,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "umbra_vacua_level_03_011",
-      "time": 20.3
+      "time": 18.7
     },
     {
       "type": "spawn_enemy",
@@ -159,7 +159,7 @@
       "spawn_side": "degrees",
       "degrees": 30,
       "id": "umbra_vacua_level_03_012",
-      "time": 23.3
+      "time": 21.7
     },
     {
       "type": "spawn_enemy",
@@ -167,7 +167,7 @@
       "spawn_side": "degrees",
       "degrees": 210,
       "id": "umbra_vacua_level_03_013",
-      "time": 23.3
+      "time": 21.7
     },
     {
       "type": "fx_async_message",
@@ -175,7 +175,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "umbra_vacua_level_03_014",
-      "time": 29.3
+      "time": 24.9
     },
     {
       "type": "spawn_enemy",
@@ -187,7 +187,7 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_015",
-      "time": 29.3
+      "time": 24.9
     },
     {
       "type": "spawn_enemy",
@@ -199,7 +199,7 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_016",
-      "time": 29.8
+      "time": 25.4
     },
     {
       "type": "spawn_enemy",
@@ -207,7 +207,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "umbra_vacua_level_03_017",
-      "time": 31.3
+      "time": 26.9
     },
     {
       "type": "spawn_enemy",
@@ -215,7 +215,7 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "umbra_vacua_level_03_018",
-      "time": 32.9
+      "time": 28.5
     },
     {
       "type": "spawn_enemy",
@@ -225,7 +225,7 @@
       "hold_dist": 150,
       "hold_sec": 3.5,
       "id": "umbra_vacua_level_03_019",
-      "time": 34.3
+      "time": 29.9
     },
     {
       "type": "spawn_enemy",
@@ -235,7 +235,7 @@
       "hold_dist": 150,
       "hold_sec": 3.5,
       "id": "umbra_vacua_level_03_020",
-      "time": 37.3
+      "time": 32.9
     },
     {
       "type": "spawn_enemy",
@@ -243,7 +243,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "umbra_vacua_level_03_021",
-      "time": 42.3
+      "time": 36.1
     },
     {
       "type": "spawn_enemy",
@@ -256,7 +256,7 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "umbra_vacua_level_03_022",
-      "time": 45.3
+      "time": 39.1
     },
     {
       "type": "spawn_enemy",
@@ -269,7 +269,7 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "umbra_vacua_level_03_023",
-      "time": 45.7
+      "time": 39.5
     },
     {
       "type": "spawn_enemy",
@@ -277,7 +277,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "umbra_vacua_level_03_024",
-      "time": 47.1
+      "time": 40.9
     },
     {
       "type": "spawn_enemy",
@@ -285,7 +285,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "umbra_vacua_level_03_025",
-      "time": 49.6
+      "time": 43.4
     },
     {
       "type": "spawn_enemy",
@@ -297,7 +297,7 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_026",
-      "time": 53.1
+      "time": 46.6
     },
     {
       "type": "spawn_enemy",
@@ -309,7 +309,7 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_027",
-      "time": 53.6
+      "time": 47.1
     },
     {
       "type": "spawn_enemy",
@@ -317,7 +317,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "umbra_vacua_level_03_028",
-      "time": 55.6
+      "time": 49.1
     },
     {
       "type": "spawn_enemy",
@@ -325,7 +325,7 @@
       "spawn_side": "degrees",
       "degrees": 20,
       "id": "umbra_vacua_level_03_029",
-      "time": 57.1
+      "time": 50.6
     },
     {
       "type": "fx_async_message",
@@ -333,7 +333,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "umbra_vacua_level_03_030",
-      "time": 61.6
+      "time": 56.8
     },
     {
       "type": "spawn_enemy",
@@ -345,7 +345,7 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_031",
-      "time": 61.6
+      "time": 56.8
     },
     {
       "type": "spawn_enemy",
@@ -357,7 +357,7 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_032",
-      "time": 62.1
+      "time": 57.3
     },
     {
       "type": "spawn_enemy",
@@ -369,7 +369,7 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_033",
-      "time": 62.6
+      "time": 57.8
     },
     {
       "type": "spawn_enemy",
@@ -377,7 +377,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "umbra_vacua_level_03_034",
-      "time": 64.1
+      "time": 59.3
     },
     {
       "type": "spawn_enemy",
@@ -385,7 +385,7 @@
       "spawn_side": "degrees",
       "degrees": 200,
       "id": "umbra_vacua_level_03_035",
-      "time": 65.6
+      "time": 60.8
     },
     {
       "type": "spawn_enemy",
@@ -393,24 +393,24 @@
       "spawn_side": "degrees",
       "degrees": 160,
       "id": "umbra_vacua_level_03_036",
-      "time": 67.1
+      "time": 62.3
     },
     {
       "type": "wait_until_clear",
       "id": "umbra_vacua_level_03_037",
-      "time": 72.1
+      "time": 65.3
     },
     {
       "type": "spawn_boss",
       "boss_id": "observer",
       "degrees": 0,
       "id": "umbra_vacua_level_03_038",
-      "time": 73.1
+      "time": 65.5
     },
     {
       "type": "wait_until_clear",
       "id": "umbra_vacua_level_03_039",
-      "time": 73.6
+      "time": 66.0
     },
     {
       "id": "umbra_vacua_level_03_completion_message",

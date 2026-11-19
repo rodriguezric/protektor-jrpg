@@ -31,24 +31,24 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 20.3
+      "start_sec": 18.5
     },
     {
       "phase_id": "compression",
-      "start_sec": 47.0
+      "start_sec": 43.6
     },
     {
       "phase_id": "signature",
-      "start_sec": 64.5
+      "start_sec": 63.75
     },
     {
       "phase_id": "boss",
-      "start_sec": 82.0
+      "start_sec": 79.0
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 83.0
+    "timeline_sec": 79.5
   },
   "events": [
     {
@@ -105,7 +105,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_007",
-      "time": 10.3
+      "time": 10.1
     },
     {
       "type": "spawn_enemy",
@@ -113,7 +113,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_008",
-      "time": 10.9
+      "time": 10.7
     },
     {
       "type": "spawn_enemy",
@@ -121,7 +121,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_009",
-      "time": 13.3
+      "time": 12.9
     },
     {
       "type": "spawn_enemy",
@@ -129,7 +129,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_010",
-      "time": 13.9
+      "time": 13.5
     },
     {
       "type": "spawn_enemy",
@@ -137,7 +137,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_011",
-      "time": 16.3
+      "time": 15.7
     },
     {
       "type": "spawn_enemy",
@@ -145,7 +145,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_012",
-      "time": 16.9
+      "time": 16.3
     },
     {
       "type": "fx_async_message",
@@ -153,7 +153,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "terra_virex_level_03_013",
-      "time": 20.3
+      "time": 18.5
     },
     {
       "type": "spawn_enemy",
@@ -161,7 +161,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "terra_virex_level_03_014",
-      "time": 20.3
+      "time": 18.5
     },
     {
       "type": "spawn_enemy",
@@ -169,7 +169,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "terra_virex_level_03_015",
-      "time": 21.8
+      "time": 20.0
     },
     {
       "type": "spawn_enemy",
@@ -177,7 +177,7 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "terra_virex_level_03_016",
-      "time": 23.3
+      "time": 21.5
     },
     {
       "type": "spawn_enemy",
@@ -185,7 +185,7 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "terra_virex_level_03_017",
-      "time": 24.8
+      "time": 23.0
     },
     {
       "type": "spawn_enemy",
@@ -193,7 +193,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "terra_virex_level_03_018",
-      "time": 26.3
+      "time": 24.5
     },
     {
       "type": "spawn_enemy",
@@ -201,7 +201,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "terra_virex_level_03_019",
-      "time": 27.8
+      "time": 26.0
     },
     {
       "type": "spawn_enemy",
@@ -209,7 +209,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_020",
-      "time": 30.3
+      "time": 28.2
     },
     {
       "type": "spawn_enemy",
@@ -217,7 +217,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_021",
-      "time": 32.3
+      "time": 30.2
     },
     {
       "type": "spawn_enemy",
@@ -225,7 +225,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_022",
-      "time": 34.8
+      "time": 32.4
     },
     {
       "type": "spawn_enemy",
@@ -233,7 +233,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_023",
-      "time": 35.4
+      "time": 33.0
     },
     {
       "type": "spawn_enemy",
@@ -241,7 +241,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_024",
-      "time": 37.6
+      "time": 35.2
     },
     {
       "type": "spawn_enemy",
@@ -249,7 +249,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_025",
-      "time": 38.2
+      "time": 35.8
     },
     {
       "type": "spawn_enemy",
@@ -257,7 +257,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_026",
-      "time": 40.4
+      "time": 38.0
     },
     {
       "type": "spawn_enemy",
@@ -265,7 +265,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_027",
-      "time": 41.0
+      "time": 38.6
     },
     {
       "type": "spawn_enemy",
@@ -273,7 +273,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_028",
-      "time": 43.2
+      "time": 40.8
     },
     {
       "type": "spawn_enemy",
@@ -281,7 +281,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_029",
-      "time": 43.8
+      "time": 41.4
     },
     {
       "type": "fx_async_message",
@@ -289,7 +289,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "terra_virex_level_03_030",
-      "time": 47.0
+      "time": 43.6
     },
     {
       "type": "spawn_enemy",
@@ -297,7 +297,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_031",
-      "time": 47.0
+      "time": 43.6
     },
     {
       "type": "spawn_enemy",
@@ -305,7 +305,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_032",
-      "time": 48.25
+      "time": 44.85
     },
     {
       "type": "spawn_enemy",
@@ -313,7 +313,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_033",
-      "time": 49.5
+      "time": 46.1
     },
     {
       "type": "spawn_enemy",
@@ -321,7 +321,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_034",
-      "time": 50.75
+      "time": 47.35
     },
     {
       "type": "spawn_enemy",
@@ -329,7 +329,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_035",
-      "time": 52.0
+      "time": 48.6
     },
     {
       "type": "spawn_enemy",
@@ -337,7 +337,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_036",
-      "time": 53.25
+      "time": 49.85
     },
     {
       "type": "spawn_enemy",
@@ -345,7 +345,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_037",
-      "time": 54.5
+      "time": 51.1
     },
     {
       "type": "spawn_enemy",
@@ -353,7 +353,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_038",
-      "time": 55.75
+      "time": 52.35
     },
     {
       "type": "spawn_enemy",
@@ -361,7 +361,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_039",
-      "time": 57.0
+      "time": 53.6
     },
     {
       "type": "spawn_enemy",
@@ -369,7 +369,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_040",
-      "time": 58.25
+      "time": 54.85
     },
     {
       "type": "spawn_enemy",
@@ -377,7 +377,7 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "terra_virex_level_03_041",
-      "time": 60.5
+      "time": 57.05
     },
     {
       "type": "spawn_enemy",
@@ -385,7 +385,7 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "terra_virex_level_03_042",
-      "time": 62.0
+      "time": 58.55
     },
     {
       "type": "fx_async_message",
@@ -393,7 +393,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "terra_virex_level_03_043",
-      "time": 64.5
+      "time": 63.75
     },
     {
       "type": "spawn_enemy",
@@ -401,7 +401,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_044",
-      "time": 64.5
+      "time": 63.75
     },
     {
       "type": "spawn_enemy",
@@ -409,7 +409,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_045",
-      "time": 65.05
+      "time": 64.3
     },
     {
       "type": "spawn_enemy",
@@ -417,7 +417,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "terra_virex_level_03_046",
-      "time": 67.0
+      "time": 66.25
     },
     {
       "type": "spawn_enemy",
@@ -425,7 +425,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "terra_virex_level_03_047",
-      "time": 67.55
+      "time": 66.8
     },
     {
       "type": "spawn_enemy",
@@ -433,7 +433,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "terra_virex_level_03_048",
-      "time": 69.5
+      "time": 68.75
     },
     {
       "type": "spawn_enemy",
@@ -441,7 +441,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "terra_virex_level_03_049",
-      "time": 70.05
+      "time": 69.3
     },
     {
       "type": "spawn_enemy",
@@ -449,7 +449,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "terra_virex_level_03_050",
-      "time": 72.0
+      "time": 71.25
     },
     {
       "type": "spawn_enemy",
@@ -457,7 +457,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "terra_virex_level_03_051",
-      "time": 72.55
+      "time": 71.8
     },
     {
       "type": "spawn_enemy",
@@ -465,7 +465,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_052",
-      "time": 74.5
+      "time": 73.75
     },
     {
       "type": "spawn_enemy",
@@ -473,7 +473,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_053",
-      "time": 75.05
+      "time": 74.3
     },
     {
       "type": "spawn_enemy",
@@ -481,7 +481,7 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "terra_virex_level_03_054",
-      "time": 77.0
+      "time": 76.25
     },
     {
       "type": "spawn_enemy",
@@ -489,24 +489,24 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "terra_virex_level_03_055",
-      "time": 77.55
+      "time": 76.8
     },
     {
       "type": "wait_until_clear",
       "id": "terra_virex_level_03_056",
-      "time": 81.5
+      "time": 78.75
     },
     {
       "type": "spawn_boss",
       "boss_id": "aegis_relay",
       "degrees": 0,
       "id": "terra_virex_level_03_057",
-      "time": 82.5
+      "time": 79.0
     },
     {
       "type": "wait_until_clear",
       "id": "terra_virex_level_03_058",
-      "time": 83.0
+      "time": 79.5
     },
     {
       "id": "terra_virex_level_03_completion_message",

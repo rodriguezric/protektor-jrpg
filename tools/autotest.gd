@@ -649,9 +649,21 @@ func _levelcheck() -> void:
 		var outcome := ""
 		var seen_hits := 0
 		var verbose := OS.get_environment("PK_VERBOSE") != ""
+		# dead time: the field empty while the level (not a boss intro) runs;
+		# gaps of 2 s or more are listed with when they started
+		var idle := 0.0
+		var idle_run := 0.0
+		var gaps := []
 		while outcome == "":
 			await get_tree().process_frame
 			game_t += get_process_delta_time()
+			if m.running and m.threats.is_empty() and m.shots.is_empty():
+				idle += get_process_delta_time()
+				idle_run += get_process_delta_time()
+			else:
+				if idle_run >= 2.0:
+					gaps.append("%.0f@%.0f" % [idle_run, game_t - idle_run])
+				idle_run = 0.0
 			if verbose and m.hits_taken > seen_hits:
 				# what was closest to the planet when it was hit, and where the bot faced
 				seen_hits = m.hits_taken
@@ -669,8 +681,8 @@ func _levelcheck() -> void:
 				outcome = "LOSE"
 			elif game_t > limit:
 				outcome = "TIMEOUT"
-		var line := "[levelcheck] %-26s %-7s %6.1fs  hits %2d  hp %d/%d  real %.0fs" % [id, outcome, game_t,
-			m.hits_taken, int(m.hp), int(m.MAX_HP), (Time.get_ticks_msec() - t0) / 1000.0]
+		var line := "[levelcheck] %-26s %-7s %6.1fs  hits %2d  hp %d/%d  idle %4.1fs  real %.0fs  gaps %s" % [id, outcome, game_t,
+			m.hits_taken, int(m.hp), int(m.MAX_HP), idle, (Time.get_ticks_msec() - t0) / 1000.0, " ".join(gaps)]
 		print(line)
 		rows.append(line)
 		if outcome == "TIMEOUT":

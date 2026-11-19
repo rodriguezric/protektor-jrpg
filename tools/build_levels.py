@@ -17,6 +17,12 @@ L3 ~150 s (ends on the planet boss); check with tools/level_report.py and the
 levelcheck autotest.
 
 Angles are compass degrees: 0 top, 90 right, 180 bottom, 270 left.
+
+Flow: build() compacts the clock so the arena is never quiet for long. Any
+gap between one arrival (spawn or boss) and the next longer than the
+level's max_gap is closed up, and everything after it moves earlier
+(freeze release times too). The only long quiet is one you ask for with
+breather(sec), meant for just before a hard, constant-pressure stretch.
 """
 import json
 import os
@@ -36,6 +42,9 @@ class Level:
         self.events = []
         self.phases = []
         self._n = 0
+        ## longest quiet between arrivals before build() closes it up
+        self.max_gap = 2.2
+        self._breathers = []
 
     # -- clock ---------------------------------------------------------------
     def phase(self, phase_id: str, message: str = ""):
@@ -69,6 +78,13 @@ class Level:
         """Hold the timeline until the arena is empty."""
         self._ev({"type": "wait_until_clear"})
         self.t += 0.5
+        return self
+
+    def breather(self, sec: float = 3.0):
+        """A deliberate quiet the flow pass keeps: use it once, right before
+        a stretch of constant pressure, so the player can reset and brace."""
+        self._breathers.append((self.t, self.t + sec))
+        self.t += sec
         return self
 
     def boss(self, boss_id: str, deg: float = 0, mini: bool = False):
@@ -296,7 +312,29 @@ class Level:
         self.t += n * gap
         return self
 
+    def _flow(self):
+        """Close every quiet between arrivals that is longer than max_gap
+        (plus any breather inside it); returns old time -> new time."""
+        arrivals = sorted({e["time"] for e in self.events if e["type"] in ("spawn_enemy", "spawn_boss", "spawn_miniboss")})
+        cuts = []  # (time from which the cut applies, seconds removed)
+        for a, b in zip(arrivals, arrivals[1:]):
+            kept = sum(max(0.0, min(b, hi) - max(a, lo)) for lo, hi in self._breathers)
+            extra = (b - a) - self.max_gap - kept
+            if extra > 0.0:
+                cuts.append((b, extra))
+
+        def remap(t: float) -> float:
+            return round(t - sum(sec for at, sec in cuts if t >= at - 1e-6), 2)
+        return remap
+
     def build(self) -> dict:
+        remap = self._flow()
+        for e in self.events:
+            e["time"] = remap(e["time"])
+            if "release_at" in e:
+                e["release_at"] = remap(e["release_at"])
+        for ph in self.phases:
+            ph["start_sec"] = remap(ph["start_sec"])
         return {"events": sorted(self.events, key=lambda e: e["time"]), "phases": self.phases,
                 "timeline_sec": round(max([e["time"] for e in self.events] or [0]), 1)}
 
@@ -322,6 +360,8 @@ def terra_virex():
     L.block_then_shoot([135, 315, 45, 225, 0, 180], 3.0, lag=0.7)
     L.spawn("charger_drone", 270).wait(3.0)
     L.spawn("charger_drone", 90).wait(3.5)
+    L.block_then_shoot([60, 240, 150], 3.0, lag=0.7)
+    L.drone_cleanup([30, 210], 2.6)
     L.phase("final_clear", "Final contact sweep.")
     L.drone_cleanup([0, 120, 240, 60, 180, 300], 1.8)
     out.append(L)
@@ -340,11 +380,12 @@ def terra_virex():
     L.alternating_lanes([0, 90, 180, 270], 10, 1.4, ["asteroid", "asteroid", "drone_basic"]).wait(1.0)
     L.spawn("charger_drone", 45).wait(2.5)
     L.spawn("drone_sine", 225).wait(2.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Opposing vectors detected.")
     L.block_then_shoot([0, 180, 90, 270, 45, 225], 2.7, lag=0.6)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("mini_boss", "Relay signal hardening. Block to expose its core.")
-    L.wait(1.5).boss("relay_sentinel", 0, mini=True)
+    L.boss("relay_sentinel", 0, mini=True)
     L.gate()
     out.append(L)
 
@@ -362,11 +403,12 @@ def terra_virex():
     L.alternating_lanes([0, 90, 180, 270], 10, 1.25, ["asteroid", "asteroid", "drone_basic", "asteroid", "drone_sine"]).wait(1.0)
     L.spawn("charger_drone", 135).wait(1.5)
     L.spawn("charger_drone", 315).wait(2.5)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Opposing vectors detected.")
     L.block_then_shoot([0, 180, 45, 225, 90, 270], 2.5, lag=0.55)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("boss", "")
-    L.wait(0.5).boss("aegis_relay", 0)
+    L.boss("aegis_relay", 0)
     L.gate()
     out.append(L)
     return out
@@ -393,6 +435,10 @@ def glacien_ix():
     L.accumulation_wall(180, 35, 2, 5.0, drones=2).wait(1.0)
     L.accumulation_wall(90, 47, 3, 5.0, drones=2).wait(1.0)
     L.accumulation_wall(315, 53, 3, 5.0, drones=2).wait(1.0)
+    L.staggered_lane_freeze([60, 240, 150, 330], 3.0, 1.8)
+    L.slow_encircle(30, 60, 5, 2.2, ["drone_basic", "drone_sine"])
+    L.spawn("drone_tank", 270).wait(3.0)
+    L.slow_encircle(135, 90, 3, 2.0, ["drone_sine", "drone_basic"])
     L.phase("final_clear", "Final contact sweep.")
     L.spawn("drone_tank", 0).wait(4.0)
     L.spawn("drone_tank", 180).wait(4.0)
@@ -412,12 +458,13 @@ def glacien_ix():
     L.staggered_lane_freeze([0, 120, 240, 60, 180, 300], 1.9, 2.4).wait(0.5)
     L.spawn("drone_tank", 270).spawn("drone_tank", 90, 2.0).wait(5.0)
     L.slow_encircle(45, 90, 4, 1.8, ["drone_sine"]).wait(1.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Ice wall forming. Thin it before the thaw.")
     L.accumulation_wall(135, 68, 4, 4.6, drones=3).wait(0.5)
     L.accumulation_wall(315, 68, 4, 4.6, drones=3)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("mini_boss", "Frost sentinel inbound. Shoot it while it rebuilds.")
-    L.wait(1.5).boss("frost_sentinel", 0, mini=True)
+    L.boss("frost_sentinel", 0, mini=True)
     L.gate()
     out.append(L)
 
@@ -434,12 +481,13 @@ def glacien_ix():
     L.staggered_lane_freeze([0, 90, 180, 270, 45, 135, 225, 315], 1.5, 2.6).wait(0.5)
     L.accumulation_wall(45, 60, 4, 4.4, drones=3).wait(0.5)
     L.spawn("drone_tank", 135).spawn("drone_tank", 315, 1.2).wait(3.5)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "The ice is listening.")
     L.accumulation_wall(0, 60, 4, 4.4, drones=3).wait(0.5)
     L.accumulation_wall(180, 60, 4, 4.4, drones=3)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("boss", "")
-    L.wait(0.5).boss("boreal_colossus", 0)
+    L.boss("boreal_colossus", 0)
     L.gate()
     out.append(L)
     return out
@@ -466,6 +514,8 @@ def ignara_prime():
     L.phase("signature", "Lanes igniting. Follow the fire.")
     L.chain_ignition(0, 90, 8, 1.6, ["drone_fast", "asteroid"]).wait(3.0)
     L.chain_ignition(180, -45, 8, 1.4, ["drone_fast", "asteroid"]).wait(3.0)
+    L.rapid_burst(90, 4, 0.7)
+    L.alternating_sides([45, 225], 5, 1.4)
     L.phase("final_clear", "Final contact sweep.")
     L.alternating_sides([0, 180, 90, 270], 8, 1.1)
     out.append(L)
@@ -484,11 +534,12 @@ def ignara_prime():
     L.phase("compression", "Thermal overload building.")
     L.alternating_sides([0, 90, 180, 270], 12, 0.95).wait(1.5)
     L.rapid_burst(315, 6, 0.55).wait(2.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Lanes igniting. Follow the fire.")
     L.chain_ignition(0, 45, 12, 1.15, ["drone_fast", "asteroid"])
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("mini_boss", "Flare carrier on approach. Track it.")
-    L.wait(1.5).boss("flare_carrier", 90, mini=True)
+    L.boss("flare_carrier", 90, mini=True)
     L.gate()
     out.append(L)
 
@@ -503,12 +554,13 @@ def ignara_prime():
     L.phase("compression", "Thermal overload building.")
     L.alternating_sides([45, 225, 135, 315], 12, 0.9).wait(1.0)
     L.rapid_burst(0, 6, 0.5).rapid_burst(180, 6, 0.5).wait(1.5)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Every lane is burning.")
     L.chain_ignition(0, 45, 10, 1.05, ["drone_fast", "asteroid"]).wait(0.5)
     L.chain_ignition(180, -90, 8, 1.0, ["asteroid", "drone_fast"])
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("boss", "")
-    L.wait(0.5).boss("solar_crucible", 0)
+    L.boss("solar_crucible", 0)
     L.gate()
     out.append(L)
     return out
@@ -548,11 +600,12 @@ def tempestris():
     L.storm_front(45, 5, 3.8, 90, 4, 40, ["drone_sine", "charger_drone"], seed=23).wait(1.0)
     L.phase("compression", "Pressure dropping. Brace.")
     L.false_scramble(10, 6.0, ["drone_basic", "drone_fast", "drone_sine"], seed=24)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Find the calm. It moves.")
     L.storm_front(270, 7, 3.5, 90, 4, 45, ["drone_basic", "drone_fast", "drone_sine"], seed=25)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("mini_boss", "Storm eye closing in. Keep turning.")
-    L.wait(1.5).boss("storm_eye", 0, mini=True)
+    L.boss("storm_eye", 0, mini=True)
     L.gate()
     out.append(L)
 
@@ -566,11 +619,12 @@ def tempestris():
     L.storm_front(0, 5, 3.4, -90, 4, 45, ["drone_sine", "drone_fast"], seed=33).wait(1.0)
     L.phase("compression", "Pressure dropping. Brace.")
     L.storm_front(180, 3, 3.2, 90, 4, 45, ["drone_basic", "charger_drone", "drone_fast"], seed=34).wait(1.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Find the calm. It moves.")
     L.storm_front(45, 5, 3.2, 90, 5, 45, ["drone_fast", "drone_sine"], seed=35)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("boss", "")
-    L.wait(0.5).boss("cyclarch", 0)
+    L.boss("cyclarch", 0)
     L.gate()
     out.append(L)
     return out
@@ -605,6 +659,12 @@ def viscera_nova():
     L.spawn("asteroid", 60).wait(4.0)
     L.chargers([270], 1.0).retaliators([30, 150], 1.5).wait(4.0)
     L.chargers([90, 270], 2.5).wait(1.5)
+    L.chargers([45, 225], 3.0)
+    L.retaliators([135, 315], 3.0)
+    L.watchers([180], "block").wait(2.0)
+    L.spawn("asteroid", 0)
+    L.slow_encircle(36, 72, 5, 2.0, ["drone_basic", "drone_sine"])
+    L.chargers([0, 120, 240], 2.6)
     L.phase("final_clear", "Final contact sweep.")
     L.slow_encircle(0, 72, 5, 1.8, ["drone_sine", "drone_basic"]).wait(1.0)
     L.retaliators([0, 180], 2.0)
@@ -626,13 +686,14 @@ def viscera_nova():
     L.watchers([0, 180], "block").wait(2.0)
     L.rapid_burst(90, 3, 0.8).wait(3.0)
     L.chargers([45, 225, 135], 2.0).wait(1.5)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Mixed intent detected.")
     L.chargers([0], 1.0).retaliators([90, 270], 1.0).watchers([180], "block").wait(3.0)
     L.spawn("asteroid", 45).wait(3.5)
     L.watchers([45, 315], "turn").chargers([135, 225], 1.4).wait(4.0)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("mini_boss", "A node is pulsing. Strike on the beat.")
-    L.wait(1.5).boss("pulse_node", 0, mini=True)
+    L.boss("pulse_node", 0, mini=True)
     L.gate()
     out.append(L)
 
@@ -651,13 +712,14 @@ def viscera_nova():
     L.retaliators([90, 270], 1.0).chargers([0, 180], 1.6).wait(2.5)
     L.watchers([45, 225], "turn").wait(2.0)
     L.spawn("drone_basic", 135).spawn("drone_basic", 315, 1.5).wait(4.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Mixed intent detected.")
     L.watchers([45, 135, 225, 315], "block", hold=10.0).wait(2.0)
     L.chargers([0, 180], 2.0).retaliators([90, 270], 1.6, "drone_tank").wait(2.0)
     L.spawn("asteroid", 0).wait(4.0)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("boss", "")
-    L.wait(0.5).boss("gestalt_heart", 0)
+    L.boss("gestalt_heart", 0)
     L.gate()
     out.append(L)
     return out
@@ -674,6 +736,7 @@ def umbra_vacua():
     out = []
     # ---- L1: Stillness (~90 s), few threats and long gaps ----
     L = Level("umbra_vacua", 1)
+    L.max_gap = 3.2
     L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
     L.spawn("drone_basic", 0).void(6.0)
     L.spawn("asteroid", 180).void(5.0)
@@ -694,6 +757,13 @@ def umbra_vacua():
     L.spawn("drone_sine", 45).void(5.0)
     L.turn_sentries([0]).wait(2.0)
     L.spawn("asteroid", 180).spawn("asteroid", 200, 2.0).void(7.0)
+    L.turn_sentries([270]).void(3.0)
+    L.spawn("asteroid", 90).void(3.0)
+    L.spawn("drone_sine", 180).void(3.0)
+    L.watchers([300], "turn", dist=150, hold=8.0).void(2.0)
+    L.spawn("drone_basic", 45).void(3.0)
+    L.spawn("drone_fast", 135).void(3.0)
+    L.spawn("asteroid", 315).void(3.0)
     L.phase("final_clear", "The void closes.")
     L.spawn("drone_fast", 270).void(4.0)
     L.spawn("charger_drone", 90).void(4.0)
@@ -702,6 +772,7 @@ def umbra_vacua():
 
     # ---- L2: Commitment (~120 s), delayed commitments, mini-boss ----
     L = Level("umbra_vacua", 2)
+    L.max_gap = 3.2
     L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
     L.spawn("drone_basic", 45).spawn("drone_basic", 315, 2.5).void(6.0)
     L.turn_sentries([0, 330]).wait(3.0)
@@ -721,17 +792,19 @@ def umbra_vacua():
     L.spawn("asteroid", 90).spawn("asteroid", 120, 1.5).void(6.0)
     L.staggered_lane_freeze([0, 180], 3.5, 4.0, kind="drone_fast").void(3.0)
     L.spawn("charger_drone", 90).void(5.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Stillness is the answer.")
     L.turn_sentries([0, 30, 330]).wait(1.5)
     L.spawn("asteroid", 180).spawn("asteroid", 150, 2.0).spawn("asteroid", 210, 4.0).void(7.0)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("mini_boss", "A sentinel in the void. It moves when you move.")
-    L.wait(1.5).boss("void_sentinel", 0, mini=True)
+    L.boss("void_sentinel", 0, mini=True)
     L.gate()
     out.append(L)
 
     # ---- L3: The Observer (~150 s), mirrored discipline, boss ----
     L = Level("umbra_vacua", 3)
+    L.max_gap = 3.2
     L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
     L.turn_sentries([0]).wait(2.0)
     L.spawn("asteroid", 180).spawn("asteroid", 160, 2.0).void(5.0)
@@ -749,12 +822,13 @@ def umbra_vacua():
     L.spawn("drone_sine", 90).spawn("drone_sine", 270, 2.5).void(6.0)
     L.turn_sentries([180, 150]).wait(1.5)
     L.spawn("asteroid", 0).spawn("asteroid", 20, 1.5).void(6.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Stillness is the answer.")
     L.turn_sentries([0, 330, 30]).wait(1.0)
     L.spawn("asteroid", 180).spawn("asteroid", 200, 1.5).spawn("asteroid", 160, 3.0).void(6.0)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("boss", "")
-    L.wait(0.5).boss("observer", 0)
+    L.boss("observer", 0)
     L.gate()
     out.append(L)
     return out
@@ -782,6 +856,7 @@ def mechanon_ascens():
     L.phase("signature", "Break the pattern before it breaks you.")
     L.symmetric_pairs([45, 225, 135, 315], 2.8).wait(1.0)
     L.echo_wave(6, 1.8, ["asteroid", "drone_basic"]).wait(2.0)
+    L.symmetric_pairs([135, 315], 3.0)
     L.phase("final_clear", "Final contact sweep.")
     L.pressure_wave(0, 45, 8, 1.2)
     out.append(L)
@@ -797,12 +872,13 @@ def mechanon_ascens():
     L.phase("compression", "Spatial lock failing.")
     L.spawn("drone_tank", 0).spawn("drone_tank", 180, 1.0).wait(3.0)
     L.spawn("drone_shifter", 90).spawn("drone_shifter", 270, 1.0).wait(4.0)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Break the pattern before it breaks you.")
     L.echo_wave(10, 1.4, ["asteroid", "drone_basic", "drone_fast"]).wait(1.0)
     L.symmetric_pairs([135, 315, 45, 225], 2.2)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("mini_boss", "Twin units. They copy you, late.")
-    L.wait(1.5).boss("mirror_twin_a", 0, mini=True)
+    L.boss("mirror_twin_a", 0, mini=True)
     L._ev({"type": "spawn_miniboss", "boss_id": "mirror_twin_b", "degrees": 180, "intro": False}, L.t + 1.0)
     L.t += 1.5
     L.gate()
@@ -819,12 +895,13 @@ def mechanon_ascens():
     L.spawn("drone_tank", 45).spawn("drone_tank", 225, 1.0).wait(2.5)
     L.echo_wave(10, 1.25, ["asteroid", "drone_fast", "drone_basic"]).wait(1.0)
     L.spawn("drone_shifter", 0).spawn("drone_shifter", 180, 0.8).wait(3.5)
+    L.breather(3.0)  # brace: the signature is constant pressure
     L.phase("signature", "Break the pattern before it breaks you.")
     L.symmetry_break(0, 180, 10, 1.0, break_to=90).wait(1.0)
     L.symmetric_pairs([45, 225, 135, 315, 0, 180], 2.0)
-    L.wait(2.0).gate()
+    L.gate()
     L.phase("boss", "")
-    L.wait(0.5).boss("paragon_protektor", 0)
+    L.boss("paragon_protektor", 0)
     L.gate()
     out.append(L)
     return out

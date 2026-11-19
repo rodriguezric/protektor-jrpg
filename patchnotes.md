@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-19 12:58 EST — `bugfix_wave_dead_time` (v0.59.6)
+
+Missions keep up the action: the long empty stretches between waves are gone, and the remaining pauses are deliberate.
+
+- The level builder now closes up every quiet between arrivals longer than 2.2 s (3.2 s on Umbra Vacua, whose silences are part of its identity), pulling the rest of the level earlier, freeze release times included. In bot playthroughs the field-empty gaps of 2 s or more dropped from 3-21 per level to none outside the deliberate beats, and total empty time fell on every level (Viscera Nova 02: 52 s to 31 s).
+- The one long pause left in a level is a breather placed right before its signature stretch on levels 2 and 3, so the quiet now means "brace yourself".
+- Bosses arrive as soon as the arena is clear (the extra 2-3.5 s of waiting before each boss is gone).
+- Level 1s got a little more of the same-intensity content to stay near 90 s after the gaps closed (their difficulty is unchanged).
+- Code: `tools/build_levels.py` (Level.max_gap, breather(), _flow() compaction in build(), gate/boss waits removed, level 1 additions), all `data/missions/*.json` rebuilt. `tools/autotest.gd` levelcheck now prints idle time and every empty gap of 2 s or more; `tools/level_report.py` counts bosses that arrive together (Mirror Twins) as one fight.
+
 ## 2026-11-19 12:32 EST — `bugfix_glacien_frozen_cluster_size` (v0.59.5)
 
 Glacien IX's frozen meteor clusters are about 30% smaller, so they can be blocked fairly.

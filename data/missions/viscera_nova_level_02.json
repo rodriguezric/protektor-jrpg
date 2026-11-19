@@ -31,24 +31,24 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 19.5
+      "start_sec": 15.2
     },
     {
       "phase_id": "compression",
-      "start_sec": 36.5
+      "start_sec": 28.4
     },
     {
       "phase_id": "signature",
-      "start_sec": 69.1
+      "start_sec": 58.2
     },
     {
       "phase_id": "mini_boss",
-      "start_sec": 89.1
+      "start_sec": 70.0
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 91.1
+    "timeline_sec": 73.2
   },
   "events": [
     {
@@ -73,7 +73,7 @@
       "spawn_side": "degrees",
       "degrees": 120,
       "id": "viscera_nova_level_02_003",
-      "time": 4.6
+      "time": 4.2
     },
     {
       "type": "spawn_enemy",
@@ -81,7 +81,7 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "viscera_nova_level_02_004",
-      "time": 7.2
+      "time": 6.4
     },
     {
       "type": "spawn_enemy",
@@ -90,7 +90,7 @@
       "degrees": 90,
       "retaliate": true,
       "id": "viscera_nova_level_02_005",
-      "time": 10.8
+      "time": 8.6
     },
     {
       "type": "spawn_enemy",
@@ -99,7 +99,7 @@
       "degrees": 270,
       "retaliate": true,
       "id": "viscera_nova_level_02_006",
-      "time": 13.2
+      "time": 10.8
     },
     {
       "type": "spawn_enemy",
@@ -108,7 +108,7 @@
       "degrees": 180,
       "retaliate": true,
       "id": "viscera_nova_level_02_007",
-      "time": 15.6
+      "time": 13.0
     },
     {
       "type": "fx_async_message",
@@ -116,7 +116,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "viscera_nova_level_02_008",
-      "time": 19.5
+      "time": 15.2
     },
     {
       "type": "spawn_enemy",
@@ -129,7 +129,7 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_009",
-      "time": 19.5
+      "time": 15.2
     },
     {
       "type": "spawn_enemy",
@@ -142,7 +142,7 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_010",
-      "time": 19.9
+      "time": 15.6
     },
     {
       "type": "spawn_enemy",
@@ -150,7 +150,7 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "viscera_nova_level_02_011",
-      "time": 22.8
+      "time": 17.8
     },
     {
       "type": "spawn_enemy",
@@ -158,7 +158,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "viscera_nova_level_02_012",
-      "time": 23.6
+      "time": 18.6
     },
     {
       "type": "spawn_enemy",
@@ -166,7 +166,7 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "viscera_nova_level_02_013",
-      "time": 24.4
+      "time": 19.4
     },
     {
       "type": "spawn_enemy",
@@ -179,7 +179,7 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_014",
-      "time": 28.2
+      "time": 21.6
     },
     {
       "type": "spawn_enemy",
@@ -192,7 +192,7 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_015",
-      "time": 28.6
+      "time": 22.0
     },
     {
       "type": "spawn_enemy",
@@ -200,7 +200,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "viscera_nova_level_02_016",
-      "time": 31.5
+      "time": 24.2
     },
     {
       "type": "spawn_enemy",
@@ -208,7 +208,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "viscera_nova_level_02_017",
-      "time": 33.5
+      "time": 26.2
     },
     {
       "type": "fx_async_message",
@@ -216,7 +216,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "viscera_nova_level_02_018",
-      "time": 36.5
+      "time": 28.4
     },
     {
       "type": "spawn_enemy",
@@ -225,7 +225,7 @@
       "degrees": 0,
       "retaliate": true,
       "id": "viscera_nova_level_02_019",
-      "time": 36.5
+      "time": 28.4
     },
     {
       "type": "spawn_enemy",
@@ -234,7 +234,7 @@
       "degrees": 90,
       "retaliate": true,
       "id": "viscera_nova_level_02_020",
-      "time": 38.3
+      "time": 30.2
     },
     {
       "type": "spawn_enemy",
@@ -243,7 +243,7 @@
       "degrees": 180,
       "retaliate": true,
       "id": "viscera_nova_level_02_021",
-      "time": 40.1
+      "time": 32.0
     },
     {
       "type": "spawn_enemy",
@@ -252,7 +252,7 @@
       "degrees": 270,
       "retaliate": true,
       "id": "viscera_nova_level_02_022",
-      "time": 41.9
+      "time": 33.8
     },
     {
       "type": "spawn_enemy",
@@ -260,7 +260,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "viscera_nova_level_02_023",
-      "time": 44.7
+      "time": 36.0
     },
     {
       "type": "spawn_enemy",
@@ -268,7 +268,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "viscera_nova_level_02_024",
-      "time": 44.7
+      "time": 36.0
     },
     {
       "type": "spawn_enemy",
@@ -276,7 +276,7 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "viscera_nova_level_02_025",
-      "time": 47.1
+      "time": 38.2
     },
     {
       "type": "spawn_enemy",
@@ -284,7 +284,7 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "viscera_nova_level_02_026",
-      "time": 47.1
+      "time": 38.2
     },
     {
       "type": "spawn_enemy",
@@ -292,7 +292,7 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "viscera_nova_level_02_027",
-      "time": 49.5
+      "time": 40.4
     },
     {
       "type": "spawn_enemy",
@@ -300,7 +300,7 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "viscera_nova_level_02_028",
-      "time": 49.5
+      "time": 40.4
     },
     {
       "type": "spawn_enemy",
@@ -313,7 +313,7 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_029",
-      "time": 53.4
+      "time": 42.6
     },
     {
       "type": "spawn_enemy",
@@ -326,7 +326,7 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_030",
-      "time": 53.8
+      "time": 43.0
     },
     {
       "type": "spawn_enemy",
@@ -334,7 +334,7 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "viscera_nova_level_02_031",
-      "time": 56.2
+      "time": 45.2
     },
     {
       "type": "spawn_enemy",
@@ -342,7 +342,7 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "viscera_nova_level_02_032",
-      "time": 57.0
+      "time": 46.0
     },
     {
       "type": "spawn_enemy",
@@ -350,7 +350,7 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "viscera_nova_level_02_033",
-      "time": 57.8
+      "time": 46.8
     },
     {
       "type": "spawn_enemy",
@@ -358,7 +358,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "viscera_nova_level_02_034",
-      "time": 61.6
+      "time": 49.0
     },
     {
       "type": "spawn_enemy",
@@ -366,7 +366,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "viscera_nova_level_02_035",
-      "time": 63.6
+      "time": 51.0
     },
     {
       "type": "spawn_enemy",
@@ -374,7 +374,7 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "viscera_nova_level_02_036",
-      "time": 65.6
+      "time": 53.0
     },
     {
       "type": "fx_async_message",
@@ -382,7 +382,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "viscera_nova_level_02_037",
-      "time": 69.1
+      "time": 58.2
     },
     {
       "type": "spawn_enemy",
@@ -390,7 +390,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "viscera_nova_level_02_038",
-      "time": 69.1
+      "time": 58.2
     },
     {
       "type": "spawn_enemy",
@@ -399,7 +399,7 @@
       "degrees": 90,
       "retaliate": true,
       "id": "viscera_nova_level_02_039",
-      "time": 70.1
+      "time": 59.2
     },
     {
       "type": "spawn_enemy",
@@ -408,7 +408,7 @@
       "degrees": 270,
       "retaliate": true,
       "id": "viscera_nova_level_02_040",
-      "time": 71.1
+      "time": 60.2
     },
     {
       "type": "spawn_enemy",
@@ -421,7 +421,7 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_041",
-      "time": 72.1
+      "time": 61.2
     },
     {
       "type": "spawn_enemy",
@@ -429,7 +429,7 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "viscera_nova_level_02_042",
-      "time": 75.5
+      "time": 63.4
     },
     {
       "type": "spawn_enemy",
@@ -442,7 +442,7 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_043",
-      "time": 79.0
+      "time": 65.6
     },
     {
       "type": "spawn_enemy",
@@ -455,7 +455,7 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_02_044",
-      "time": 79.4
+      "time": 66.0
     },
     {
       "type": "spawn_enemy",
@@ -463,7 +463,7 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "viscera_nova_level_02_045",
-      "time": 79.8
+      "time": 66.4
     },
     {
       "type": "spawn_enemy",
@@ -471,12 +471,7 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "viscera_nova_level_02_046",
-      "time": 81.2
-    },
-    {
-      "type": "wait_until_clear",
-      "id": "viscera_nova_level_02_047",
-      "time": 88.6
+      "time": 67.8
     },
     {
       "type": "fx_async_message",
@@ -484,19 +479,24 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "viscera_nova_level_02_048",
-      "time": 89.1
+      "time": 70.0
     },
     {
       "type": "spawn_miniboss",
       "boss_id": "pulse_node",
       "degrees": 0,
       "id": "viscera_nova_level_02_049",
-      "time": 90.6
+      "time": 70.0
     },
     {
       "type": "wait_until_clear",
       "id": "viscera_nova_level_02_050",
-      "time": 91.1
+      "time": 70.5
+    },
+    {
+      "type": "wait_until_clear",
+      "id": "viscera_nova_level_02_047",
+      "time": 73.2
     },
     {
       "id": "viscera_nova_level_02_completion_message",
