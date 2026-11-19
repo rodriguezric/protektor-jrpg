@@ -345,6 +345,41 @@ static func _hair_front(b: PixBuf, s: Dictionary, style: String, hair: Color, di
 			b.tri(hx - 2.5 + o, hy - 4.6, hx + 2.0 + o, hy - 4.6, hx - 0.5 + o, hy - 2.4, hair)
 
 
+static func _brow(b: PixBuf, s: Dictionary, ex: int, ey: int, left: bool, mood: String, skin: Color) -> void:
+	## One eyebrow over the eye at ex (2 px wide, eyes are 2 x 3 from ey).
+	## Its two pixels sit in the row under the hairline, tilted by the mood:
+	## level when calm, the inner end up when sad or scared, down when angry,
+	## both up in shock. Coloured from the hair, darkened so light hair still
+	## reads against skin.
+	# glasses frames sit where the brows go and read as brows themselves;
+	# only a startled lift shows above them
+	if (s.get("glasses", false) or s.get("shades", false)) and mood != "shock":
+		return
+	var hair: Color = s.get("hair", Pal.BARK)
+	var col := hair.lerp(Pal.INK2, 0.35 if hair.get_luminance() < 0.5 else 0.55)
+	if mood == "hollow":
+		col = Pal.shade(skin).lerp(col, 0.35)
+	var inner := ex + (1 if left else 0)
+	var outer := ex + (0 if left else 1)
+	var iy := ey - 2
+	var oy := ey - 2
+	match mood:
+		"sad", "cry", "terrified":
+			iy = ey - 3
+			oy = ey - 2
+		"angry":
+			iy = ey - 1
+			oy = ey - 2
+		"shock":
+			iy = ey - 3
+			oy = ey - 3
+	b.pset(inner, iy, col)
+	b.pset(outer, oy, col)
+	# a third pixel trailing outward on the stronger feelings, so the tilt reads
+	if mood in ["sad", "cry", "terrified", "angry"]:
+		b.pset(outer + (-1 if left else 1), oy + (0 if mood == "angry" else 1), col)
+
+
 static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, hy: float, skin: Color, head: Array) -> void:
 	var side := dir == 2
 	var fx := hx + (1.2 if side else 0.0)
@@ -389,25 +424,21 @@ static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, h
 				b.rect(ex, ey, 2, 3, Pal.WHITE)
 				var inner := ex + (1 if i == 0 else 0)
 				b.pset(inner, ey + 2, Pal.INK)
-				b.pset(inner, ey - 2, Pal.INK2)
-				b.pset(ex + (0 if i == 0 else 1), ey - 1, Pal.INK2)
 				b.pset(ex + (0 if i == 0 else 1), ey + 3, Pal.shade(skin))
 			"sad", "cry":
 				b.rect(ex, ey + 1, 2, 2, Pal.INK)
 				b.pset(ex, ey + 1, Pal.WHITE)
-				b.pset(ex + (1 if i == 0 else 0) - (0 if i == 0 else 0), ey - 1, Pal.shade(skin).lerp(Pal.INK2, 0.5))
 				if mood == "cry":
 					b.pset(ex + 1, ey + 3, Pal.SKY)
 					b.pset(ex + 1, ey + 4, Pal.hi(Pal.SKY))
 			"angry":
 				b.rect(ex, ey + 1, 2, 2, Pal.INK)
 				b.pset(ex + (1 if i == 0 else 0), ey + 1, Pal.WHITE)
-				b.pset(ex + (1 if i == 0 else 0), ey - 1, Pal.INK2)
-				b.pset(ex + (0 if i == 0 else 1), ey, Pal.INK2)
 			_:
 				b.rect(ex, ey, 2, 3, Pal.INK)
 				b.pset(ex, ey, Pal.WHITE)
 				b.pset(ex + 1, ey + 2, iris)
+		_brow(b, s, ex, ey, i == 0, "closed" if blink and mood == "" else mood, skin)
 		if s.get("glasses", false):
 			b.rect(ex - 1, ey - 1, 4, 1, Pal.INK2)
 			b.pset(ex - 1, ey + 2, Pal.INK2)

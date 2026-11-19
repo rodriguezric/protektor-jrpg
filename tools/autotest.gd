@@ -1572,6 +1572,29 @@ func _run(scenario: String) -> void:
 				await shot("pt_" + who)
 				await tap("accept", 0.4)
 			get_tree().quit()
+		"brows":
+			# the cast's faces in every mood: portraits (zoom 3) and field
+			# sprites front and side, saved as one sheet (PK_OUT/brows.png)
+			Game.player_name = "Ari"
+			var specs := [Game.player_spec("academy"), Game.cast("hiro"), Game.cast("pala"), Game.cast("midas"),
+				Game.cast("mother"), Game.cast("father"), Game.cast("instructor"), Game.cast("okafor")]
+			var moods := ["", "smile", "sad", "cry", "angry", "shock", "terrified", "hollow", "closed"]
+			var cw := 72
+			var ch := 72 + 40
+			var img := Image.create(cw * moods.size(), ch * specs.size(), false, Image.FORMAT_RGBA8)
+			img.fill(Color("1a1626"))
+			for r in specs.size():
+				for c in moods.size():
+					var pt: Image = Art.portrait(specs[r], moods[c], false, false, 3).get_image()
+					img.blend_rect(pt, Rect2i(Vector2i.ZERO, pt.get_size()), Vector2i(c * cw + 0, r * ch))
+					for k in 2:
+						var sp: Image = Art.person(specs[r], [0, 2][k], 0, moods[c], "walk").get_image()
+						sp.resize(sp.get_width() * 1, sp.get_height() * 1, Image.INTERPOLATE_NEAREST)
+						img.blend_rect(sp, Rect2i(Vector2i.ZERO, sp.get_size()), Vector2i(c * cw + 4 + k * 34, r * ch + 74))
+			img.resize(img.get_width() * 2, img.get_height() * 2, Image.INTERPOLATE_NEAREST)
+			img.save_png(out + "/brows.png")
+			print("[brows] saved %dx%d" % [img.get_width(), img.get_height()])
+			get_tree().quit()
 		"facecheck":
 			auto_talk = false
 			Game.chapter = "hub"

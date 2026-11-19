@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 23:31 EST — `feature_character_eyebrows` (v0.59.0)
+
+Everyone has eyebrows now, and they move with the mood.
+
+- A two-pixel brow over each eye, on the field sprites and so on every dialog portrait, sitting in the row between the hairline and the eyes. They're coloured from the hair and darkened so even light hair (Hiro's) reads against skin.
+- The brows act: level when calm or smiling, inner ends lifted when sad, crying or terrified (with a third pixel trailing out so the worry reads), inner ends pulled down when angry, both raised in shock, faint when hollow. The few one-off brow pixels some moods had before are folded in (the old angry brow was tilted the worried way round).
+- People in glasses or sunglasses keep their frames as their brows (a brow over a frame doubled the line), except a startled lift in shock. Hiro's patched eye has none.
+- Code: `scripts/art_people.gd` (_brow(), called from _face()), `tools/autotest.gd` (`PK_TEST=brows` saves a sheet of the cast in every mood, portrait and field, front and side).
+
 ## 2026-11-18 22:09 EST — `bugfix_stuck_after_door` (v0.58.5)
 
 You can't get stuck after a door any more, and walking mode always comes back.
