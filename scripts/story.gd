@@ -23,6 +23,17 @@ func _ready() -> void:
 	endings = StoryEndings.new(self)
 
 
+## How many talk / examine / trigger / exit interactions are running, and
+## when story code last did something (a line, a walk, a pan, a wait). The
+## field uses these to tell a real cutscene from a lock nobody will lift.
+var active := 0
+var last_activity := 0
+
+
+func touch() -> void:
+	last_activity = Time.get_ticks_msec()
+
+
 var m: Node:
 	get:
 		return Game.main
@@ -67,27 +78,39 @@ func _owner() -> Object:
 
 func talk(n: Actor) -> void:
 	var start := w.get_instance_id() if w else 0
+	active += 1
+	touch()
 	var o := _owner()
 	if o and o.has_method("talk"):
 		await o.talk(n)
 	else:
 		await say("", "...")
+	active = maxi(0, active - 1)
+	touch()
 	_release_if_moved(start)
 
 
 func examine(ev: Dictionary) -> void:
 	var start := w.get_instance_id() if w else 0
+	active += 1
+	touch()
 	var o := _owner()
 	if o and o.has_method("examine"):
 		await o.examine(ev)
+	active = maxi(0, active - 1)
+	touch()
 	_release_if_moved(start)
 
 
 func trigger(id: String) -> void:
 	var start := w.get_instance_id() if w else 0
+	active += 1
+	touch()
 	var o := _owner()
 	if o and o.has_method("trigger"):
 		await o.trigger(id)
+	active = maxi(0, active - 1)
+	touch()
 	_release_if_moved(start)
 
 
@@ -151,9 +174,13 @@ func hub_minigame(kind: String) -> void:
 
 func exit(e: Dictionary) -> void:
 	var start := w.get_instance_id() if w else 0
+	active += 1
+	touch()
 	var o := _owner()
 	if o and o.has_method("exit"):
 		await o.exit(e)
+	active = maxi(0, active - 1)
+	touch()
 	_release_if_moved(start)
 
 
@@ -198,12 +225,17 @@ func say(who: String, text, mood: String = "", extra: Dictionary = {}) -> void:
 	var actor := _actor_for(who)
 	if actor and mood != "" and who != "you":
 		actor.set_mood(MOOD.get(mood, mood))
+	touch()
 	await m.dialog.say(lines, sp[0], opts)
+	touch()
 
 
 func ask(question: String, options: Array, who: String = "", mood: String = "") -> int:
 	var sp := speaker(who, mood)
-	return await m.dialog.ask(question, options, sp[0], sp[1])
+	touch()
+	var r: int = await m.dialog.ask(question, options, sp[0], sp[1])
+	touch()
+	return r
 
 
 func _actor_for(who: String) -> Actor:
@@ -225,7 +257,9 @@ func walk(id: String, tiles: Array, speed: float = 48.0) -> void:
 	var pts := []
 	for t in tiles:
 		pts.append(w.tile_center(t) if t is Vector2i else t)
+	touch()
 	await act.walk_to(pts, speed)
+	touch()
 
 
 func walk_bg(id: String, tiles: Array, speed: float = 48.0) -> void:
@@ -265,7 +299,9 @@ func pan(target, t: float = 0.7) -> void:
 		p = a(target).position
 	else:
 		p = target
+	touch()
 	await w.pan_to(p, t)
+	touch()
 
 
 func pan_back(t: float = 0.6) -> void:
@@ -273,7 +309,9 @@ func pan_back(t: float = 0.6) -> void:
 
 
 func wait(t: float) -> void:
+	touch()
 	await m.get_tree().create_timer(t).timeout
+	touch()
 
 
 # ------------------------------------------------------ entrances & exits ---
@@ -285,6 +323,7 @@ func wait(t: float) -> void:
 func enter(n: Dictionary, from: Vector2i, path: Array = [], speed: float = 48.0) -> Actor:
 	## n: an npc dict ({id, who|spec, dir, mood, ...}); path: tiles or points
 	## to walk to after arriving. Await it to wait until they're in place.
+	touch()
 	var d := n.duplicate()
 	d.tile = from
 	var act := w.add_npc(d)
@@ -320,6 +359,7 @@ func leave(id: String, path: Array = [], speed: float = 48.0, keep: bool = false
 	if act == null:
 		return
 	act.set_meta("leaving", true)
+	touch()
 	var pts := []
 	for t in path:
 		pts.append(w.tile_center(t) if t is Vector2i else t)

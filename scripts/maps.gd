@@ -511,7 +511,7 @@ static func wing() -> Dictionary:
 		events.append({"tile": Vector2i(WING_DOOR_X[id], 1), "id": "room:" + id})
 	return {"id": "wing", "name": "Pilot Wing", "theme": "academy", "tint": Color(0.84, 0.88, 1.0), "rows": rows, "props": props, "npcs": [],
 		"music": "low_mechanical_ambient", "events": events,
-		"exits": [{"rect": Rect2i(13, 5, 2, 1), "to": "commons", "tile": Vector2i(22, 3), "dir": 0}]}
+		"exits": [{"rect": Rect2i(13, 5, 2, 1), "to": "commons", "tile": Vector2i(22, 2), "dir": 0}]}
 
 
 static func wing_room(id: String) -> Dictionary:

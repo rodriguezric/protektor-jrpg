@@ -311,6 +311,10 @@ func _process(delta: float) -> void:
 	var target := _clamp_cam((player.position if cam_follow else cam_focus) + Vector2(0, cam_bias))
 	cam.position = cam.position.lerp(target, minf(1.0, delta * 8.0)) if not cam_follow else target
 	cam.position = cam.position.round()
+	_safety_net(delta)
+	if not busy and not paused and player.visible and not player.scripted and not Game.main.dialog.visible:
+		# only in walking mode: cutscenes seat people on benches on purpose
+		_unstick_player()
 	if busy or paused or Game.main.dialog.visible or not player.visible:
 		if not player.scripted:
 			player.moving = false
@@ -348,6 +352,41 @@ func _process(delta: float) -> void:
 		run(Game.main.field_menu)
 
 
+var _stuck_t := 0.0
+
+
+func _safety_net(delta: float) -> void:
+	## Walking mode can never be lost: if the field has been locked for a
+	## moment with nothing going on (no interaction running, no story beat
+	## for several seconds, no dialog, fade, menu or cutscene picture up),
+	## hand control back.
+	var m: Node = Game.main
+	# quiet for 4 s with no interaction running, or for 10 s even with one
+	# (an interaction that has hung will never finish on its own)
+	var quiet := Time.get_ticks_msec() - int(handler.get("last_activity")) if handler != null else 0
+	var idle: bool = busy and not paused and is_visible_in_tree() and player.visible and not m.dialog.visible \
+		and m.fade_rect.color.a < 0.05 and handler != null \
+		and ((int(handler.get("active")) == 0 and quiet > 4000) or quiet > 10000)
+	if idle:
+		# someone still walking a scripted path is a cutscene in progress
+		if player.scripted and player.moving:
+			idle = false
+		for n: Actor in npcs:
+			if n.scripted and n.moving:
+				idle = false
+		for c in m.cine_layer.get_children():
+			if c is CanvasItem and c.visible:
+				idle = false
+		for c in m.ui.get_children():
+			if c is Control and c.visible and c != m.dialog and not (c is ColorRect) and c.get_script() != null and not c.has_meta("toast"):
+				idle = false
+	_stuck_t = _stuck_t + delta if idle else 0.0
+	if _stuck_t > 1.0:
+		_stuck_t = 0.0
+		busy = false
+		push_warning("field was locked with nothing running on %s; control restored" % def.get("id", "?"))
+
+
 func _try_move(d: Vector2) -> void:
 	var p := player.position + d
 	if not blocked(p, player):
@@ -365,6 +404,46 @@ func _try_move(d: Vector2) -> void:
 				if not blocked(player.position + nudge, player):
 					player.position += nudge
 				return
+
+
+func blocked_by_map(p: Vector2) -> bool:
+	## The walls and props alone (no people).
+	for c in [Vector2(-5, -5), Vector2(5, -5), Vector2(-5, -1), Vector2(5, -1)]:
+		var q: Vector2 = p + c
+		var t := Vector2i(floori(q.x / TILE), floori(q.y / TILE))
+		if t.x < 0 or t.y < 0 or t.x >= tw or t.y >= th or solid.has(t):
+			return true
+	return false
+
+
+func _unstick_player() -> void:
+	## If the player stands inside a wall or a prop (a bad arrival tile, a
+	## scripted walk that ended in furniture), move them to the nearest tile
+	## they can actually walk on.
+	if player == null or not blocked_by_map(player.position):
+		return
+	var here := Vector2i(floori(player.position.x / TILE), floori((player.position.y - 3) / TILE))
+	for r in range(1, maxi(tw, th)):
+		var best := Vector2i(-1, -1)
+		var bd := 1e9
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var t := here + Vector2i(dx, dy)
+				if t.x < 0 or t.y < 0 or t.x >= tw or t.y >= th:
+					continue
+				var c := tile_center(t)
+				if blocked_by_map(c) or ArtTiles.is_wall(char_at(t)) or char_at(t) == " ":
+					continue
+				var d := c.distance_to(player.position)
+				if d < bd:
+					bd = d
+					best = t
+		if best.x >= 0:
+			push_warning("player was inside something solid at %s on %s; moved to %s" % [here, def.get("id", "?"), best])
+			player.position = tile_center(best)
+			return
 
 
 func blocked(p: Vector2, who: Node2D) -> bool:
