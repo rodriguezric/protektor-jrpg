@@ -31,24 +31,24 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 10.8
+      "start_sec": 8.49
     },
     {
       "phase_id": "compression",
-      "start_sec": 30.24
+      "start_sec": 25.2
     },
     {
       "phase_id": "signature",
-      "start_sec": 52.34
+      "start_sec": 45.67
     },
     {
       "phase_id": "boss",
-      "start_sec": 64.84
+      "start_sec": 57.26
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 65.6
+    "timeline_sec": 58.1
   },
   "events": [
     {
@@ -65,7 +65,17 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "viscera_nova_level_03_002",
-      "time": 2.0
+      "time": 2.0,
+      "move_speed": 358.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 348,
+      "id": "viscera_nova_level_03_053",
+      "time": 2.49,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -73,7 +83,8 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "viscera_nova_level_03_003",
-      "time": 4.2
+      "time": 3.99,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -81,7 +92,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "viscera_nova_level_03_004",
-      "time": 6.4
+      "time": 5.49,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -89,7 +101,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "viscera_nova_level_03_005",
-      "time": 8.6
+      "time": 6.99,
+      "move_speed": 358.4
     },
     {
       "type": "fx_async_message",
@@ -97,7 +110,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "viscera_nova_level_03_006",
-      "time": 10.8
+      "time": 8.49
     },
     {
       "type": "spawn_enemy",
@@ -106,7 +119,8 @@
       "degrees": 180,
       "retaliate": true,
       "id": "viscera_nova_level_03_007",
-      "time": 10.8
+      "time": 8.49,
+      "move_speed": 93.0
     },
     {
       "type": "spawn_enemy",
@@ -115,7 +129,17 @@
       "degrees": 0,
       "retaliate": true,
       "id": "viscera_nova_level_03_008",
-      "time": 12.6
+      "time": 9.99,
+      "move_speed": 93.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 172,
+      "id": "viscera_nova_level_03_054",
+      "time": 10.77,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -124,7 +148,8 @@
       "degrees": 90,
       "retaliate": true,
       "id": "viscera_nova_level_03_009",
-      "time": 14.4
+      "time": 11.79,
+      "move_speed": 93.0
     },
     {
       "type": "spawn_enemy",
@@ -133,7 +158,17 @@
       "degrees": 270,
       "retaliate": true,
       "id": "viscera_nova_level_03_010",
-      "time": 16.2
+      "time": 13.29,
+      "move_speed": 93.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 126,
+      "id": "viscera_nova_level_03_055",
+      "time": 13.86,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -146,7 +181,8 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_011",
-      "time": 18.0
+      "time": 15.09,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -159,7 +195,8 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_012",
-      "time": 18.4
+      "time": 15.49,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -172,7 +209,8 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_013",
-      "time": 18.8
+      "time": 15.89,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -180,7 +218,8 @@
       "spawn_side": "degrees",
       "degrees": 133,
       "id": "viscera_nova_level_03_014",
-      "time": 21.0
+      "time": 17.39,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -188,7 +227,8 @@
       "spawn_side": "degrees",
       "degrees": 120,
       "id": "viscera_nova_level_03_015",
-      "time": 21.12
+      "time": 17.51,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -196,7 +236,17 @@
       "spawn_side": "degrees",
       "degrees": 107,
       "id": "viscera_nova_level_03_016",
-      "time": 21.24
+      "time": 17.63,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 289,
+      "id": "viscera_nova_level_03_056",
+      "time": 18.3,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -204,7 +254,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "viscera_nova_level_03_017",
-      "time": 23.44
+      "time": 19.8,
+      "move_speed": 114.1
     },
     {
       "type": "spawn_enemy",
@@ -212,7 +263,8 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "viscera_nova_level_03_018",
-      "time": 24.64
+      "time": 21.0,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -220,7 +272,17 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "viscera_nova_level_03_019",
-      "time": 26.84
+      "time": 22.5,
+      "move_speed": 114.1
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 323,
+      "id": "viscera_nova_level_03_057",
+      "time": 22.81,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -228,7 +290,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "viscera_nova_level_03_020",
-      "time": 28.04
+      "time": 23.7,
+      "move_speed": 358.4
     },
     {
       "type": "fx_async_message",
@@ -236,7 +299,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "viscera_nova_level_03_021",
-      "time": 30.24
+      "time": 25.2
     },
     {
       "type": "spawn_enemy",
@@ -244,7 +307,8 @@
       "spawn_side": "degrees",
       "degrees": 300,
       "id": "viscera_nova_level_03_022",
-      "time": 30.24
+      "time": 25.2,
+      "move_speed": 89.3
     },
     {
       "type": "spawn_enemy",
@@ -252,7 +316,17 @@
       "spawn_side": "degrees",
       "degrees": 120,
       "id": "viscera_nova_level_03_023",
-      "time": 30.24
+      "time": 25.2,
+      "move_speed": 89.3
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 317,
+      "id": "viscera_nova_level_03_058",
+      "time": 25.67,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -260,7 +334,8 @@
       "spawn_side": "degrees",
       "degrees": 330,
       "id": "viscera_nova_level_03_024",
-      "time": 32.44
+      "time": 27.17,
+      "move_speed": 89.3
     },
     {
       "type": "spawn_enemy",
@@ -268,7 +343,17 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "id": "viscera_nova_level_03_025",
-      "time": 32.44
+      "time": 27.17,
+      "move_speed": 89.3
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 168,
+      "id": "viscera_nova_level_03_059",
+      "time": 27.94,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -281,7 +366,8 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_026",
-      "time": 34.64
+      "time": 29.37,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -294,7 +380,8 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_027",
-      "time": 35.04
+      "time": 29.77,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -302,7 +389,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "viscera_nova_level_03_028",
-      "time": 36.94
+      "time": 31.27,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -310,7 +398,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "viscera_nova_level_03_029",
-      "time": 36.94
+      "time": 31.27,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -318,7 +407,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "viscera_nova_level_03_030",
-      "time": 38.54
+      "time": 32.77,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -326,7 +416,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "viscera_nova_level_03_031",
-      "time": 38.54
+      "time": 32.77,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -334,7 +425,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "viscera_nova_level_03_032",
-      "time": 40.14
+      "time": 34.27,
+      "move_speed": 179.8
     },
     {
       "type": "spawn_enemy",
@@ -342,7 +434,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "viscera_nova_level_03_033",
-      "time": 41.74
+      "time": 35.77,
+      "move_speed": 179.8
     },
     {
       "type": "spawn_enemy",
@@ -350,7 +443,8 @@
       "spawn_side": "degrees",
       "degrees": 205,
       "id": "viscera_nova_level_03_034",
-      "time": 43.94
+      "time": 37.27,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -358,7 +452,17 @@
       "spawn_side": "degrees",
       "degrees": 237,
       "id": "viscera_nova_level_03_035",
-      "time": 44.84
+      "time": 38.17,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 28,
+      "id": "viscera_nova_level_03_060",
+      "time": 38.96,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -366,7 +470,17 @@
       "spawn_side": "degrees",
       "degrees": 269,
       "id": "viscera_nova_level_03_036",
-      "time": 45.74
+      "time": 39.07,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 85,
+      "id": "viscera_nova_level_03_061",
+      "time": 39.81,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -374,7 +488,8 @@
       "spawn_side": "degrees",
       "degrees": 301,
       "id": "viscera_nova_level_03_037",
-      "time": 46.64
+      "time": 39.97,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -382,7 +497,8 @@
       "spawn_side": "degrees",
       "degrees": 333,
       "id": "viscera_nova_level_03_038",
-      "time": 47.54
+      "time": 40.87,
+      "move_speed": 336.0
     },
     {
       "type": "spawn_enemy",
@@ -390,7 +506,8 @@
       "spawn_side": "degrees",
       "degrees": 5,
       "id": "viscera_nova_level_03_039",
-      "time": 48.44
+      "time": 41.77,
+      "move_speed": 336.0
     },
     {
       "type": "fx_async_message",
@@ -398,7 +515,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "viscera_nova_level_03_040",
-      "time": 52.34
+      "time": 45.67
     },
     {
       "type": "spawn_enemy",
@@ -411,7 +528,8 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_041",
-      "time": 52.34
+      "time": 45.67,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -424,7 +542,8 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_042",
-      "time": 52.74
+      "time": 46.07,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -437,7 +556,8 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_043",
-      "time": 53.14
+      "time": 46.47,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -450,7 +570,8 @@
       "wake_on": "block",
       "lunge_mult": 2.2,
       "id": "viscera_nova_level_03_044",
-      "time": 53.54
+      "time": 46.87,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -458,7 +579,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "viscera_nova_level_03_045",
-      "time": 55.44
+      "time": 48.37,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -466,7 +588,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "viscera_nova_level_03_046",
-      "time": 57.24
+      "time": 49.87,
+      "move_speed": 358.4
     },
     {
       "type": "spawn_enemy",
@@ -475,7 +598,17 @@
       "degrees": 210,
       "retaliate": true,
       "id": "viscera_nova_level_03_047",
-      "time": 59.04
+      "time": 51.37,
+      "move_speed": 93.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 68,
+      "id": "viscera_nova_level_03_062",
+      "time": 51.86,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -484,7 +617,17 @@
       "degrees": 30,
       "retaliate": true,
       "id": "viscera_nova_level_03_048",
-      "time": 60.44
+      "time": 52.77,
+      "move_speed": 93.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 236,
+      "id": "viscera_nova_level_03_063",
+      "time": 53.63,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_enemy",
@@ -492,24 +635,34 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "viscera_nova_level_03_049",
-      "time": 62.64
+      "time": 55.13,
+      "move_speed": 336.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 184,
+      "id": "viscera_nova_level_03_064",
+      "time": 55.76,
+      "move_speed": 136.4
     },
     {
       "type": "spawn_boss",
       "boss_id": "gestalt_heart",
       "degrees": 0,
       "id": "viscera_nova_level_03_051",
-      "time": 64.84
+      "time": 57.26
     },
     {
       "type": "wait_until_clear",
       "id": "viscera_nova_level_03_052",
-      "time": 65.34
+      "time": 57.76
     },
     {
       "type": "wait_until_clear",
       "id": "viscera_nova_level_03_050",
-      "time": 65.64
+      "time": 58.13
     },
     {
       "id": "viscera_nova_level_03_completion_message",

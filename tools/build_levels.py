@@ -30,6 +30,14 @@ so a pattern that comes back never comes from the same places; the build
 is still the same every run. Rule of thumb when writing a level: no helper
 more than twice in one level, and mix the planet's signature with the
 shared vocabulary (pincer, fan_sweep, cluster, feint, stutter, orbiters).
+
+Difficulty: the scripts below are written at level-1 intensity; RAMP turns
+levels 2 and 3 up without rewriting them. Per level index it sets
+  speed   - every threat's move_speed is multiplied by it,
+  escort  - the chance each arrival brings a drone from the far side,
+  max_gap - the longest quiet allowed between arrivals.
+Level 1 is the baseline and is left exactly as written. A planet can keep
+escorts off (Umbra Vacua: its threats are few on purpose).
 """
 import json
 import os
@@ -37,6 +45,12 @@ import random
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENEMIES = json.load(open(os.path.join(ROOT, "data", "enemies.json")))
+
+## level index -> (speed, escort chance, max_gap). Level 1 is the baseline.
+RAMP = {1: (1.0, 0.0, 2.2), 2: (1.12, 0.2, 1.8), 3: (1.24, 0.34, 1.5)}
+## planets whose threats stay few on purpose: no escorts, longer quiets
+SPARSE = {"umbra_vacua": 3.2}
 
 
 class Level:
@@ -50,12 +64,15 @@ class Level:
         self.phases = []
         self._n = 0
         ## longest quiet between arrivals before build() closes it up
-        self.max_gap = 2.2
         self._breathers = []
         self.rng = random.Random("%s:%d" % (planet, index))
         self._rot = 0.0
         self._flip = 1.0
         self._depth = 0
+        speed, escort, gap = RAMP[index]
+        self.speed = speed
+        self.escort = 0.0 if planet in SPARSE else escort
+        self.max_gap = gap if planet not in SPARSE else SPARSE[planet] - (index - 1) * 0.4
 
     # -- clock ---------------------------------------------------------------
     def phase(self, phase_id: str, message: str = ""):
@@ -396,7 +413,36 @@ class Level:
         self.t += len(degs) * gap
         return self
 
+    def _escorts(self):
+        """Ramped levels: some arrivals bring a basic drone from the far
+        side, so there's always something to turn for. Frozen, watching and echo
+        threats keep their staging and get none."""
+        if self.escort <= 0.0:
+            return
+        kind = "drone_basic"
+        rng = random.Random("escort:%s:%d" % (self.planet, self.index))
+        for e in list(self.events):
+            if e["type"] != "spawn_enemy" or e.get("spawn_side") != "degrees":
+                continue
+            if any(k in e for k in ("hold_dist", "release_at", "wake_on", "fire_on_turn")):
+                continue
+            if rng.random() < self.escort:
+                self._ev({"type": "spawn_enemy", "enemy_type": kind, "spawn_side": "degrees",
+                          "degrees": int(e["degrees"] + 180 + rng.uniform(-40, 40)) % 360}, e["time"] + rng.uniform(0.3, 0.9))
+
+    def _speed_up(self):
+        if self.speed == 1.0:
+            return
+        for e in self.events:
+            if e["type"] == "spawn_enemy" and "move_speed" not in e and e["enemy_type"] in ENEMIES:
+                base = float(ENEMIES[e["enemy_type"]]["move_speed"])
+                # the already-fast (rocks, fast drones, chargers) get half the ramp
+                k = self.speed if base < 250.0 else 1.0 + (self.speed - 1.0) * 0.5
+                e["move_speed"] = round(base * k, 1)
+
     def build(self) -> dict:
+        self._escorts()
+        self._speed_up()
         remap = self._flow()
         for e in self.events:
             e["time"] = remap(e["time"])
@@ -846,7 +892,6 @@ def umbra_vacua():
     out = []
     # ---- L1: Stillness (~90 s), few threats and long gaps ----
     L = Level("umbra_vacua", 1)
-    L.max_gap = 3.2
     L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
     L.spawn("drone_basic", 0).void(6.0)
     L.spawn("asteroid", 180).void(5.0)
@@ -881,7 +926,6 @@ def umbra_vacua():
 
     # ---- L2: Commitment (~120 s), delayed commitments, mini-boss ----
     L = Level("umbra_vacua", 2)
-    L.max_gap = 3.2
     L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
     L.spawn("drone_basic", 45).spawn("drone_basic", 315, 2.5).void(6.0)
     L.turn_sentries([0, 330]).wait(3.0)
@@ -911,7 +955,6 @@ def umbra_vacua():
 
     # ---- L3: The Observer (~150 s), mirrored discipline, boss ----
     L = Level("umbra_vacua", 3)
-    L.max_gap = 3.2
     L.phase("intro_teach", "Signal density near zero. Do not waste motion.").wait(3.0)
     L.turn_sentries([0]).wait(2.0)
     L.spawn("asteroid", 180).spawn("asteroid", 160, 2.0).void(5.0)
