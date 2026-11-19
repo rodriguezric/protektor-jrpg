@@ -761,6 +761,58 @@ func _run(scenario: String) -> void:
 				await wait(1.6 if i < 4 else 3.0)
 				await shot("mission_%02d" % i)
 			get_tree().quit()
+		"bosscheck":
+			# one boss (PK_BOSS, default aegis_relay) alone in an arena with the
+			# bot fighting it: logs each second whether it can take damage, its
+			# HP and the player's, so armor and damage windows can be checked.
+			# PK_SECS caps the fight (default 60); PK_GOD=1 keeps you alive.
+			var bid := OS.get_environment("PK_BOSS") if OS.get_environment("PK_BOSS") != "" else "aegis_relay"
+			bot = true
+			auto_talk = false
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			Game.testing = true
+			_apply_loadout()
+			main.start_mission("terra_virex_level_01", false, false)
+			var m: Mission = null
+			while m == null or not m.running:
+				await get_tree().process_frame
+				var nm: int = main.mission_layer.get_child_count()
+				if nm > 0:
+					m = main.mission_layer.get_child(nm - 1)
+			for th in m.threats.duplicate():
+				th.queue_free()
+			m.threats.clear()
+			m.timeline = [{"type": "spawn_boss", "boss_id": bid, "degrees": 0, "intro": false, "time": m.level_t}, {"type": "wait_until_clear", "time": m.level_t + 0.1}]
+			m.t_index = 0
+			var secs := float(OS.get_environment("PK_SECS")) if OS.get_environment("PK_SECS") != "" else 60.0
+			var open_s := 0
+			var first_dmg := -1.0
+			var hp0 := -1.0
+			for i in int(secs * 4.0):
+				await wait(0.25)
+				var live: Array = m.bosses.filter(func(x): return is_instance_valid(x) and not x.dying)
+				if live.is_empty():
+					if hp0 > 0.0:
+						print("[bosscheck] %s down at %.1fs" % [bid, i / 4.0])
+						break
+					continue
+				var b: Boss = live[0]
+				if hp0 < 0.0:
+					hp0 = b.hp
+				if b.can_take_damage():
+					open_s += 1
+				if first_dmg < 0.0 and b.hp < hp0:
+					first_dmg = i / 4.0
+				if i % 4 == 0:
+					print("[bosscheck] t=%4.1f phase=%d open=%s dmg_ok=%s hp=%.1f/%.0f player_hp=%d" % [i / 4.0, b.phase, b.open, b.can_take_damage(), b.hp, b.max_hp, int(m.hp)])
+				if i % 8 == 0 and i < 40:
+					await shot("boss_%02d" % (i / 4))
+				if not m.alive:
+					print("[bosscheck] player down at %.1fs" % (i / 4.0))
+					break
+			print("[bosscheck] %s first damage at %.1fs, damageable %.0f%% of the time" % [bid, first_dmg, 100.0 * open_s / maxf(1.0, secs * 4.0)])
+			get_tree().quit()
 		"codec":
 			# pilot codec calls: the portrait panel blinks to the pilot's face
 			# for their messages and back to the protagonist afterwards
