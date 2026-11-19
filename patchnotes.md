@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-19 11:49 EST — `bugfix_pingpong_look_and_feel` (v0.59.2)
+
+Rec-room ping-pong redrawn and retimed so it looks and feels like the rest of the game.
+
+- New scene: a lit rec room (banded wall, wood wainscot, tiled floor, pennants) with a hanging lamp pooling light on a proper table (top face with lines, apron, legs, net with posts and tape) and both players at 2x with red and blue paddles that cock back and sweep through a swing.
+- The ball flies a real arc: over the net, one bounce on the receiver's half (with a tick), up to the paddle, with a shadow on the table or floor and a trail once the rally gets fast. On a miss it sails past and bounces on the floor.
+- Timing is readable and fair: a ring closes on the sweet spot as the ball comes in and turns lemon when it's time to swing. The window is in seconds (not pixels), generous at the start and tightening over 25 hits, so fast rallies stay playable. A whiff locks the swing briefly, so mashing doesn't work.
+- Juice: hit-stop and a little shake on PERFECT, sparks, a knock that climbs in pitch with the rally, a chime every 10, the rally count popping on a wall scoreboard, and your pilot smiles on a perfect and looks sad on a miss.
+- Code: `scripts/hub_game.gd` (_pingpong rewritten with a time-based window, _flight_h ball arc, _draw_pong / _draw_rec_room / _draw_table / _draw_paddle). Best score and the Table Tennis Ace achievement are unchanged.
+
 ## 2026-11-19 11:44 EST — `bugfix_console_protektor_shield_side` (v0.59.1)
 
 The Protektor cartridge's shield now guards your back instead of your front.
