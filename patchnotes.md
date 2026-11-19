@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-19 15:08 EST — `bugfix_comms_message_start_scrolls_away` (v0.61.4)
+
+Mission comms show every message in full: long transmissions page instead of scrolling their opening away.
+
+- A message longer than the comms box is shown a box-full at a time. Each page types out, holds long enough to read with a blinking ">" for more, then clears for the next. Before, the box scrolled like a terminal and the first line was gone before you could read it ("Something huge is watching us" read as "huge is watching us").
+- A queued message can still cut a hold short, but only after the last page has had a moment on screen (about half a second plus a beat per word), so closing lines aren't swallowed either.
+- Code: `scripts/mission.gd` (_comms_pump types page by page via new _comms_pages(); _comms_show takes the end mark; minimum read time on the final hold). `tools/autotest.gd`: the comms test shoots the whole transmission and the hand-off to the next one.
+
 ## 2026-11-19 15:03 EST — `bugfix_cards_rank_glyph_clipped` (v0.61.3)
 
 High-Low's card ranks sit fully on the card.

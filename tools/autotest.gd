@@ -2309,8 +2309,8 @@ func _run(scenario: String) -> void:
 			var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
 			m._comms_queue.clear()
 			m._comms("SYSTEM", "Multiple hostile signatures converging on the northern hemisphere. Shield harmonics unstable. Recalibrating the defensive lattice now, stand by for further instructions, pilot.", 30.0, 3.0)
-			for i in 6:
-				await wait(1.2)
+			for i in 20:
+				await wait(0.8)
 				await shot("comms_%d" % i)
 			get_tree().quit()
 		"blink":
