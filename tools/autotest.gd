@@ -1135,6 +1135,31 @@ func _run(scenario: String) -> void:
 				print("[tomato] %s: planter is %s" % [step, "v2 wilted" if tom.texture == Art.prop("planter", 2) else ("v0 green" if tom.texture == Art.prop("planter", 0) else "v1 tomatoes")])
 				await shot("tomato_" + step)
 			get_tree().quit()
+		"ascend":
+			# beat the very last story level and come back to the Commons: the
+			# ascension ending should play (PK_SKIP leaves one planet short)
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			Game.testing = true
+			for pl in Data.PLANETS:
+				Game.unlock_planet(pl)
+				Game.story.completed_levels[pl] = 3
+			var last := OS.get_environment("PK_SKIP") if OS.get_environment("PK_SKIP") != "" else "mechanon_ascens"
+			Game.story.completed_levels[last] = 2
+			Game.story.interval_count = 9
+			print("[ascend] before: all_levels_done=%s" % Game.all_levels_done())
+			if OS.get_environment("PK_SKIP") == "":
+				Game.mark_completed(last, 3)
+			print("[ascend] after last level: all_levels_done=%s automatic=%s" % [Game.all_levels_done(), Game.automatic_ending_type()])
+			main.fade_rect.color.a = 0.0
+			main.story.hub.enter({"result": "win", "credits": 0})
+			for i in 30:
+				await wait(1.0)
+				if i % 3 == 0:
+					await shot("ascend_%02d" % i)
+			print("[ascend] ending played: %s (endings so far %s)" % [main.story.endings.kind, Game.history.map(func(h): return h.ending)])
+			get_tree().quit()
 		"doorwalk":
 			# every door and exit, walked through like a player would (keys
 			# held, fast and back to back), checking walking mode comes back
