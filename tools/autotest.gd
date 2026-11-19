@@ -644,8 +644,14 @@ func _touch_screens() -> void:
 	var look_l: Label = ne.grid[ROWS_N][0]
 	await _touch_tap(sh.to_window(look_l.global_position + Vector2(Art.text_width(look_l.text) - 2, 3)), 0.2)
 	print("[screens] tap Look >: look %s -> %s" % [look0, Game.look])
+	var brows0 := Game.brows
+	var brow_l: Label = ne.grid[ROWS_N][1]
+	await _touch_tap(sh.to_window(brow_l.global_position + Vector2(Art.text_width(brow_l.text) - 2, 3)), 0.2)
+	print("[screens] tap Brows >: brows %s -> %s, label '%s', player spec brows=%s" % [brows0, Game.brows, brow_l.text, Game.player_spec().get("brows")])
 	await window_shot("touch_name")
-	var end_l: Label = ne.grid[ROWS_N][2]
+	await _touch_tap(sh.to_window(brow_l.global_position + Vector2(2, 3)), 0.2)
+	print("[screens] tap < Brows: brows -> %s" % Game.brows)
+	var end_l: Label = ne.grid[ROWS_N][3]
 	await _touch_tap(sh.to_window(end_l.global_position + Vector2(4, 3)), 0.3)
 	print("[screens] tap End: done=%s name='%s'" % [nres.done, Game.player_name])
 	get_tree().quit()

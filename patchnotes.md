@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-19 14:40 EST — `feature_character_brow_choice` (v0.61.0)
+
+Choose your eyebrows when you register your pilot: straight or arched.
+
+- Name entry has a new brows picker beside Look, labelled with the current choice ("< Straight >" / "< Arched >"). Left/Right or Z on it changes it with keys; tap either half to change it by touch. The portrait and walking preview update at once.
+- The choice is saved with your slot and shows on your field sprite, dialog portraits and the save-slot portrait in every mood. Old saves start with straight brows.
+- Everyone else's brows are unchanged: arched for feminine faces (a girl's or woman's voice, a skirt, or "fem"), straight otherwise.
+- Code: `scripts/art_people.gd` (BROW_TYPES, _brow_type() replaces _feminine(), with a spec's "brows" winning), `scripts/game.gd` (Game.brows, in player_spec, save, load and slot info), `scripts/name_entry.gd` (brows picker, _change_brows()), `scripts/slot_screen.gd`, `tools/autotest.gd` (touch_screens taps the brows picker both ways).
+
 ## 2026-11-19 14:32 EST — `feature_brows_flush` (v0.60.0)
 
 Eyebrows sit flush on the eyes and run a pixel longer, with an arched tail on feminine faces.
