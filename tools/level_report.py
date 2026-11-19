@@ -70,8 +70,15 @@ def report(path: str) -> dict:
     # a boss fight's length isn't on the timeline: use the boss's fight_sec
     # (data/bosses.json) plus its staged intro
     boss_defs = load_bosses()
-    fight = sum(float(boss_defs.get(e.get("boss_id", ""), {}).get("fight_sec", 30)) + (7.0 if e.get("type") == "spawn_boss" else 2.0)
-                for e in events if e.get("type") in BOSS_TYPES)
+    # (bosses arriving within 3 s of each other, like the Mirror Twins, are
+    # one fight)
+    fight = 0.0
+    last_at = -99.0
+    for e in sorted((e for e in events if e.get("type") in BOSS_TYPES), key=lambda e: float(e.get("time", 0.0))):
+        sec = float(boss_defs.get(e.get("boss_id", ""), {}).get("fight_sec", 30)) + (7.0 if e.get("type") == "spawn_boss" else 2.0)
+        if float(e.get("time", 0.0)) - last_at > 3.0:
+            fight += sec
+        last_at = float(e.get("time", 0.0))
     est = last + CLEAR_TAIL + fight
     target = TARGET.get(lv, 120.0)
     flag = "ok"

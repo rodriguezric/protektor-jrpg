@@ -31,20 +31,20 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 29.5
+      "start_sec": 28.06
     },
     {
       "phase_id": "signature",
-      "start_sec": 64.5
+      "start_sec": 57.92
     },
     {
       "phase_id": "final_clear",
-      "start_sec": 90.0
+      "start_sec": 80.22
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 92.9
+    "timeline_sec": 82.1
   },
   "events": [
     {
@@ -109,7 +109,7 @@
       "spawn_side": "degrees",
       "degrees": 192,
       "id": "tempestris_level_01_011",
-      "time": 6.9
+      "time": 6.86
     },
     {
       "type": "spawn_enemy",
@@ -117,7 +117,7 @@
       "spawn_side": "degrees",
       "degrees": 347,
       "id": "tempestris_level_01_010",
-      "time": 7.42
+      "time": 7.38
     },
     {
       "type": "spawn_enemy",
@@ -125,7 +125,7 @@
       "spawn_side": "degrees",
       "degrees": 20,
       "id": "tempestris_level_01_009",
-      "time": 7.43
+      "time": 7.39
     },
     {
       "type": "spawn_enemy",
@@ -133,7 +133,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "tempestris_level_01_008",
-      "time": 9.3
+      "time": 9.26
     },
     {
       "type": "fx_flash",
@@ -141,7 +141,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_012",
-      "time": 11.0
+      "time": 10.96
     },
     {
       "type": "spawn_enemy",
@@ -149,7 +149,7 @@
       "spawn_side": "degrees",
       "degrees": 166,
       "id": "tempestris_level_01_016",
-      "time": 11.4
+      "time": 11.36
     },
     {
       "type": "spawn_enemy",
@@ -157,7 +157,7 @@
       "spawn_side": "degrees",
       "degrees": 13,
       "id": "tempestris_level_01_013",
-      "time": 11.75
+      "time": 11.71
     },
     {
       "type": "spawn_enemy",
@@ -165,7 +165,7 @@
       "spawn_side": "degrees",
       "degrees": 10,
       "id": "tempestris_level_01_015",
-      "time": 13.75
+      "time": 13.71
     },
     {
       "type": "spawn_enemy",
@@ -173,7 +173,7 @@
       "spawn_side": "degrees",
       "degrees": 33,
       "id": "tempestris_level_01_014",
-      "time": 14.98
+      "time": 14.94
     },
     {
       "type": "fx_flash",
@@ -181,7 +181,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_017",
-      "time": 15.5
+      "time": 15.46
     },
     {
       "type": "spawn_enemy",
@@ -189,7 +189,7 @@
       "spawn_side": "degrees",
       "degrees": 178,
       "id": "tempestris_level_01_021",
-      "time": 15.9
+      "time": 15.86
     },
     {
       "type": "spawn_enemy",
@@ -197,7 +197,7 @@
       "spawn_side": "degrees",
       "degrees": 342,
       "id": "tempestris_level_01_020",
-      "time": 16.21
+      "time": 16.17
     },
     {
       "type": "spawn_enemy",
@@ -205,7 +205,7 @@
       "spawn_side": "degrees",
       "degrees": 330,
       "id": "tempestris_level_01_019",
-      "time": 16.77
+      "time": 16.73
     },
     {
       "type": "spawn_enemy",
@@ -213,7 +213,7 @@
       "spawn_side": "degrees",
       "degrees": 327,
       "id": "tempestris_level_01_018",
-      "time": 17.95
+      "time": 17.91
     },
     {
       "type": "spawn_enemy",
@@ -221,7 +221,7 @@
       "spawn_side": "degrees",
       "degrees": 217,
       "id": "tempestris_level_01_023",
-      "time": 21.55
+      "time": 20.11
     },
     {
       "type": "spawn_enemy",
@@ -229,7 +229,7 @@
       "spawn_side": "degrees",
       "degrees": 3,
       "id": "tempestris_level_01_026",
-      "time": 22.23
+      "time": 20.79
     },
     {
       "type": "spawn_enemy",
@@ -237,7 +237,7 @@
       "spawn_side": "degrees",
       "degrees": 312,
       "id": "tempestris_level_01_027",
-      "time": 23.2
+      "time": 21.76
     },
     {
       "type": "spawn_enemy",
@@ -245,7 +245,7 @@
       "spawn_side": "degrees",
       "degrees": 310,
       "id": "tempestris_level_01_022",
-      "time": 24.15
+      "time": 22.71
     },
     {
       "type": "spawn_enemy",
@@ -253,7 +253,7 @@
       "spawn_side": "degrees",
       "degrees": 318,
       "id": "tempestris_level_01_025",
-      "time": 24.51
+      "time": 23.07
     },
     {
       "type": "spawn_enemy",
@@ -261,23 +261,7 @@
       "spawn_side": "degrees",
       "degrees": 224,
       "id": "tempestris_level_01_024",
-      "time": 24.72
-    },
-    {
-      "type": "fx_async_message",
-      "text": "The storm is turning.",
-      "type_speed_cps": 24,
-      "hold_sec": 1.4,
-      "id": "tempestris_level_01_028",
-      "time": 29.5
-    },
-    {
-      "type": "fx_flash",
-      "color": "white",
-      "duration_sec": 0.15,
-      "alpha": 0.35,
-      "id": "tempestris_level_01_029",
-      "time": 29.5
+      "time": 23.28
     },
     {
       "type": "spawn_enemy",
@@ -285,7 +269,7 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "tempestris_level_01_033",
-      "time": 29.9
+      "time": 25.48
     },
     {
       "type": "spawn_enemy",
@@ -293,7 +277,23 @@
       "spawn_side": "degrees",
       "degrees": 68,
       "id": "tempestris_level_01_032",
-      "time": 30.91
+      "time": 26.49
+    },
+    {
+      "type": "fx_async_message",
+      "text": "The storm is turning.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_01_028",
+      "time": 28.06
+    },
+    {
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_01_029",
+      "time": 28.06
     },
     {
       "type": "spawn_enemy",
@@ -301,7 +301,7 @@
       "spawn_side": "degrees",
       "degrees": 73,
       "id": "tempestris_level_01_030",
-      "time": 32.5
+      "time": 28.08
     },
     {
       "type": "spawn_enemy",
@@ -309,7 +309,7 @@
       "spawn_side": "degrees",
       "degrees": 102,
       "id": "tempestris_level_01_031",
-      "time": 33.07
+      "time": 28.65
     },
     {
       "type": "fx_flash",
@@ -317,7 +317,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_034",
-      "time": 34.0
+      "time": 29.58
     },
     {
       "type": "spawn_enemy",
@@ -325,7 +325,7 @@
       "spawn_side": "degrees",
       "degrees": 357,
       "id": "tempestris_level_01_038",
-      "time": 34.4
+      "time": 29.98
     },
     {
       "type": "spawn_enemy",
@@ -333,7 +333,7 @@
       "spawn_side": "degrees",
       "degrees": 159,
       "id": "tempestris_level_01_037",
-      "time": 35.63
+      "time": 31.21
     },
     {
       "type": "spawn_enemy",
@@ -341,7 +341,7 @@
       "spawn_side": "degrees",
       "degrees": 154,
       "id": "tempestris_level_01_036",
-      "time": 36.46
+      "time": 32.04
     },
     {
       "type": "spawn_enemy",
@@ -349,7 +349,7 @@
       "spawn_side": "degrees",
       "degrees": 160,
       "id": "tempestris_level_01_035",
-      "time": 37.17
+      "time": 32.75
     },
     {
       "type": "fx_flash",
@@ -357,7 +357,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_039",
-      "time": 38.5
+      "time": 34.08
     },
     {
       "type": "spawn_enemy",
@@ -365,7 +365,7 @@
       "spawn_side": "degrees",
       "degrees": 102,
       "id": "tempestris_level_01_043",
-      "time": 38.9
+      "time": 34.48
     },
     {
       "type": "spawn_enemy",
@@ -373,7 +373,7 @@
       "spawn_side": "degrees",
       "degrees": 236,
       "id": "tempestris_level_01_041",
-      "time": 40.07
+      "time": 35.65
     },
     {
       "type": "spawn_enemy",
@@ -381,7 +381,7 @@
       "spawn_side": "degrees",
       "degrees": 293,
       "id": "tempestris_level_01_040",
-      "time": 41.23
+      "time": 36.81
     },
     {
       "type": "spawn_enemy",
@@ -389,7 +389,7 @@
       "spawn_side": "degrees",
       "degrees": 245,
       "id": "tempestris_level_01_042",
-      "time": 42.15
+      "time": 37.73
     },
     {
       "type": "fx_flash",
@@ -397,7 +397,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_044",
-      "time": 43.0
+      "time": 38.58
     },
     {
       "type": "spawn_enemy",
@@ -405,7 +405,7 @@
       "spawn_side": "degrees",
       "degrees": 193,
       "id": "tempestris_level_01_048",
-      "time": 43.4
+      "time": 38.98
     },
     {
       "type": "spawn_enemy",
@@ -413,7 +413,7 @@
       "spawn_side": "degrees",
       "degrees": 20,
       "id": "tempestris_level_01_047",
-      "time": 44.5
+      "time": 40.08
     },
     {
       "type": "spawn_enemy",
@@ -421,7 +421,7 @@
       "spawn_side": "degrees",
       "degrees": 21,
       "id": "tempestris_level_01_045",
-      "time": 46.49
+      "time": 42.07
     },
     {
       "type": "spawn_enemy",
@@ -429,7 +429,7 @@
       "spawn_side": "degrees",
       "degrees": 17,
       "id": "tempestris_level_01_046",
-      "time": 46.92
+      "time": 42.5
     },
     {
       "type": "fx_flash",
@@ -437,7 +437,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_049",
-      "time": 47.5
+      "time": 43.08
     },
     {
       "type": "spawn_enemy",
@@ -445,7 +445,7 @@
       "spawn_side": "degrees",
       "degrees": 262,
       "id": "tempestris_level_01_053",
-      "time": 47.9
+      "time": 43.48
     },
     {
       "type": "spawn_enemy",
@@ -453,7 +453,7 @@
       "spawn_side": "degrees",
       "degrees": 94,
       "id": "tempestris_level_01_051",
-      "time": 49.6
+      "time": 45.18
     },
     {
       "type": "spawn_enemy",
@@ -461,7 +461,7 @@
       "spawn_side": "degrees",
       "degrees": 80,
       "id": "tempestris_level_01_052",
-      "time": 49.6
+      "time": 45.18
     },
     {
       "type": "spawn_enemy",
@@ -469,7 +469,7 @@
       "spawn_side": "degrees",
       "degrees": 89,
       "id": "tempestris_level_01_050",
-      "time": 50.74
+      "time": 46.32
     },
     {
       "type": "spawn_enemy",
@@ -477,7 +477,7 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "tempestris_level_01_054",
-      "time": 53.5
+      "time": 48.52
     },
     {
       "type": "spawn_enemy",
@@ -485,7 +485,7 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "tempestris_level_01_055",
-      "time": 53.5
+      "time": 48.52
     },
     {
       "type": "spawn_enemy",
@@ -493,7 +493,7 @@
       "spawn_side": "degrees",
       "degrees": 30,
       "id": "tempestris_level_01_056",
-      "time": 56.5
+      "time": 50.72
     },
     {
       "type": "spawn_enemy",
@@ -501,7 +501,7 @@
       "spawn_side": "degrees",
       "degrees": 210,
       "id": "tempestris_level_01_057",
-      "time": 56.5
+      "time": 50.72
     },
     {
       "type": "spawn_enemy",
@@ -509,7 +509,7 @@
       "spawn_side": "degrees",
       "degrees": 60,
       "id": "tempestris_level_01_058",
-      "time": 59.5
+      "time": 52.92
     },
     {
       "type": "spawn_enemy",
@@ -517,23 +517,7 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "tempestris_level_01_059",
-      "time": 59.5
-    },
-    {
-      "type": "fx_async_message",
-      "text": "Find the calm. It moves.",
-      "type_speed_cps": 24,
-      "hold_sec": 1.4,
-      "id": "tempestris_level_01_060",
-      "time": 64.5
-    },
-    {
-      "type": "fx_flash",
-      "color": "white",
-      "duration_sec": 0.15,
-      "alpha": 0.35,
-      "id": "tempestris_level_01_061",
-      "time": 64.5
+      "time": 52.92
     },
     {
       "type": "spawn_enemy",
@@ -541,7 +525,7 @@
       "spawn_side": "degrees",
       "degrees": 172,
       "id": "tempestris_level_01_066",
-      "time": 64.9
+      "time": 55.12
     },
     {
       "type": "spawn_enemy",
@@ -549,7 +533,7 @@
       "spawn_side": "degrees",
       "degrees": 342,
       "id": "tempestris_level_01_064",
-      "time": 65.87
+      "time": 56.09
     },
     {
       "type": "spawn_enemy",
@@ -557,7 +541,7 @@
       "spawn_side": "degrees",
       "degrees": 18,
       "id": "tempestris_level_01_065",
-      "time": 67.08
+      "time": 57.3
     },
     {
       "type": "spawn_enemy",
@@ -565,7 +549,23 @@
       "spawn_side": "degrees",
       "degrees": 329,
       "id": "tempestris_level_01_062",
-      "time": 67.21
+      "time": 57.43
+    },
+    {
+      "type": "fx_async_message",
+      "text": "Find the calm. It moves.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_01_060",
+      "time": 57.92
+    },
+    {
+      "type": "fx_flash",
+      "color": "white",
+      "duration_sec": 0.15,
+      "alpha": 0.35,
+      "id": "tempestris_level_01_061",
+      "time": 57.92
     },
     {
       "type": "spawn_enemy",
@@ -573,7 +573,7 @@
       "spawn_side": "degrees",
       "degrees": 12,
       "id": "tempestris_level_01_063",
-      "time": 67.92
+      "time": 58.14
     },
     {
       "type": "fx_flash",
@@ -581,7 +581,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_067",
-      "time": 68.5
+      "time": 58.72
     },
     {
       "type": "spawn_enemy",
@@ -589,7 +589,7 @@
       "spawn_side": "degrees",
       "degrees": 282,
       "id": "tempestris_level_01_072",
-      "time": 68.9
+      "time": 59.12
     },
     {
       "type": "spawn_enemy",
@@ -597,7 +597,7 @@
       "spawn_side": "degrees",
       "degrees": 112,
       "id": "tempestris_level_01_069",
-      "time": 69.46
+      "time": 59.68
     },
     {
       "type": "spawn_enemy",
@@ -605,7 +605,7 @@
       "spawn_side": "degrees",
       "degrees": 78,
       "id": "tempestris_level_01_071",
-      "time": 69.88
+      "time": 60.1
     },
     {
       "type": "spawn_enemy",
@@ -613,7 +613,7 @@
       "spawn_side": "degrees",
       "degrees": 104,
       "id": "tempestris_level_01_068",
-      "time": 70.29
+      "time": 60.51
     },
     {
       "type": "spawn_enemy",
@@ -621,7 +621,7 @@
       "spawn_side": "degrees",
       "degrees": 67,
       "id": "tempestris_level_01_070",
-      "time": 71.8
+      "time": 62.02
     },
     {
       "type": "fx_flash",
@@ -629,7 +629,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_073",
-      "time": 72.5
+      "time": 62.72
     },
     {
       "type": "spawn_enemy",
@@ -637,7 +637,7 @@
       "spawn_side": "degrees",
       "degrees": 343,
       "id": "tempestris_level_01_078",
-      "time": 72.9
+      "time": 63.12
     },
     {
       "type": "spawn_enemy",
@@ -645,7 +645,7 @@
       "spawn_side": "degrees",
       "degrees": 190,
       "id": "tempestris_level_01_074",
-      "time": 73.55
+      "time": 63.77
     },
     {
       "type": "spawn_enemy",
@@ -653,7 +653,7 @@
       "spawn_side": "degrees",
       "degrees": 149,
       "id": "tempestris_level_01_077",
-      "time": 74.11
+      "time": 64.33
     },
     {
       "type": "spawn_enemy",
@@ -661,7 +661,7 @@
       "spawn_side": "degrees",
       "degrees": 153,
       "id": "tempestris_level_01_076",
-      "time": 75.06
+      "time": 65.28
     },
     {
       "type": "spawn_enemy",
@@ -669,7 +669,7 @@
       "spawn_side": "degrees",
       "degrees": 184,
       "id": "tempestris_level_01_075",
-      "time": 75.09
+      "time": 65.31
     },
     {
       "type": "fx_flash",
@@ -677,7 +677,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_079",
-      "time": 76.5
+      "time": 66.72
     },
     {
       "type": "spawn_enemy",
@@ -685,7 +685,7 @@
       "spawn_side": "degrees",
       "degrees": 74,
       "id": "tempestris_level_01_084",
-      "time": 76.9
+      "time": 67.12
     },
     {
       "type": "spawn_enemy",
@@ -693,7 +693,7 @@
       "spawn_side": "degrees",
       "degrees": 265,
       "id": "tempestris_level_01_082",
-      "time": 78.92
+      "time": 69.14
     },
     {
       "type": "spawn_enemy",
@@ -701,7 +701,7 @@
       "spawn_side": "degrees",
       "degrees": 299,
       "id": "tempestris_level_01_083",
-      "time": 79.16
+      "time": 69.38
     },
     {
       "type": "spawn_enemy",
@@ -709,7 +709,7 @@
       "spawn_side": "degrees",
       "degrees": 246,
       "id": "tempestris_level_01_080",
-      "time": 80.03
+      "time": 70.25
     },
     {
       "type": "spawn_enemy",
@@ -717,7 +717,7 @@
       "spawn_side": "degrees",
       "degrees": 262,
       "id": "tempestris_level_01_081",
-      "time": 80.07
+      "time": 70.29
     },
     {
       "type": "fx_flash",
@@ -725,7 +725,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_085",
-      "time": 80.5
+      "time": 70.72
     },
     {
       "type": "spawn_enemy",
@@ -733,7 +733,7 @@
       "spawn_side": "degrees",
       "degrees": 168,
       "id": "tempestris_level_01_090",
-      "time": 80.9
+      "time": 71.12
     },
     {
       "type": "spawn_enemy",
@@ -741,7 +741,7 @@
       "spawn_side": "degrees",
       "degrees": 334,
       "id": "tempestris_level_01_087",
-      "time": 81.38
+      "time": 71.6
     },
     {
       "type": "spawn_enemy",
@@ -749,7 +749,7 @@
       "spawn_side": "degrees",
       "degrees": 335,
       "id": "tempestris_level_01_089",
-      "time": 82.46
+      "time": 72.68
     },
     {
       "type": "spawn_enemy",
@@ -757,7 +757,7 @@
       "spawn_side": "degrees",
       "degrees": 29,
       "id": "tempestris_level_01_088",
-      "time": 82.64
+      "time": 72.86
     },
     {
       "type": "spawn_enemy",
@@ -765,7 +765,7 @@
       "spawn_side": "degrees",
       "degrees": 7,
       "id": "tempestris_level_01_086",
-      "time": 83.0
+      "time": 73.22
     },
     {
       "type": "fx_flash",
@@ -773,7 +773,7 @@
       "duration_sec": 0.15,
       "alpha": 0.35,
       "id": "tempestris_level_01_091",
-      "time": 84.5
+      "time": 74.72
     },
     {
       "type": "spawn_enemy",
@@ -781,7 +781,7 @@
       "spawn_side": "degrees",
       "degrees": 254,
       "id": "tempestris_level_01_096",
-      "time": 84.9
+      "time": 75.12
     },
     {
       "type": "spawn_enemy",
@@ -789,7 +789,7 @@
       "spawn_side": "degrees",
       "degrees": 57,
       "id": "tempestris_level_01_094",
-      "time": 85.94
+      "time": 76.16
     },
     {
       "type": "spawn_enemy",
@@ -797,7 +797,7 @@
       "spawn_side": "degrees",
       "degrees": 113,
       "id": "tempestris_level_01_092",
-      "time": 86.6
+      "time": 76.82
     },
     {
       "type": "spawn_enemy",
@@ -805,7 +805,7 @@
       "spawn_side": "degrees",
       "degrees": 52,
       "id": "tempestris_level_01_095",
-      "time": 87.32
+      "time": 77.54
     },
     {
       "type": "spawn_enemy",
@@ -813,15 +813,7 @@
       "spawn_side": "degrees",
       "degrees": 58,
       "id": "tempestris_level_01_093",
-      "time": 87.55
-    },
-    {
-      "type": "fx_async_message",
-      "text": "Final contact sweep.",
-      "type_speed_cps": 24,
-      "hold_sec": 1.4,
-      "id": "tempestris_level_01_097",
-      "time": 90.0
+      "time": 77.77
     },
     {
       "type": "spawn_enemy",
@@ -829,7 +821,7 @@
       "spawn_side": "degrees",
       "degrees": 143,
       "id": "tempestris_level_01_103",
-      "time": 90.83
+      "time": 79.97
     },
     {
       "type": "spawn_enemy",
@@ -837,7 +829,7 @@
       "spawn_side": "degrees",
       "degrees": 98,
       "id": "tempestris_level_01_099",
-      "time": 90.96
+      "time": 80.1
     },
     {
       "type": "spawn_enemy",
@@ -845,7 +837,15 @@
       "spawn_side": "degrees",
       "degrees": 220,
       "id": "tempestris_level_01_102",
-      "time": 91.05
+      "time": 80.19
+    },
+    {
+      "type": "fx_async_message",
+      "text": "Final contact sweep.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "tempestris_level_01_097",
+      "time": 80.22
     },
     {
       "type": "spawn_enemy",
@@ -853,7 +853,7 @@
       "spawn_side": "degrees",
       "degrees": 219,
       "id": "tempestris_level_01_101",
-      "time": 91.35
+      "time": 80.49
     },
     {
       "type": "spawn_enemy",
@@ -861,7 +861,7 @@
       "spawn_side": "degrees",
       "degrees": 7,
       "id": "tempestris_level_01_100",
-      "time": 92.73
+      "time": 81.87
     },
     {
       "type": "spawn_enemy",
@@ -869,7 +869,7 @@
       "spawn_side": "degrees",
       "degrees": 125,
       "id": "tempestris_level_01_098",
-      "time": 92.94
+      "time": 82.08
     },
     {
       "id": "tempestris_level_01_completion_message",
