@@ -324,6 +324,12 @@ func blocked(p: Vector2, who: Node2D) -> bool:
 		if n == who or not n.visible or n.info.get("ghost", false):
 			continue
 		if absf(n.position.x - p.x) < 11 and absf(n.position.y - p.y) < 7:
+			# already overlapping (a cutscene parked someone on top of you):
+			# any step that doesn't go deeper in is allowed, so you can't be pinned
+			var cur: Vector2 = who.position
+			if absf(n.position.x - cur.x) < 11 and absf(n.position.y - cur.y) < 7 \
+					and p.distance_to(n.position) >= cur.distance_to(n.position):
+				continue
 			return true
 	if who != player and absf(player.position.x - p.x) < 11 and absf(player.position.y - p.y) < 7:
 		return true

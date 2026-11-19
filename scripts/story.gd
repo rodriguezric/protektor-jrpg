@@ -66,23 +66,39 @@ func _owner() -> Object:
 
 
 func talk(n: Actor) -> void:
+	var start := w.get_instance_id() if w else 0
 	var o := _owner()
 	if o and o.has_method("talk"):
 		await o.talk(n)
 	else:
 		await say("", "...")
+	_release_if_moved(start)
 
 
 func examine(ev: Dictionary) -> void:
+	var start := w.get_instance_id() if w else 0
 	var o := _owner()
 	if o and o.has_method("examine"):
 		await o.examine(ev)
+	_release_if_moved(start)
 
 
 func trigger(id: String) -> void:
+	var start := w.get_instance_id() if w else 0
 	var o := _owner()
 	if o and o.has_method("trigger"):
 		await o.trigger(id)
+	_release_if_moved(start)
+
+
+func _release_if_moved(start: int) -> void:
+	## An interaction that loaded a new map ends here: the world it started on
+	## (which locked control) is gone and can't unlock, so hand control back
+	## on the map we ended up on. (Main.load_map keeps the new map locked
+	## while the interaction is still running.)
+	var now := w
+	if now != null and is_instance_valid(now) and now.get_instance_id() != start and now.is_inside_tree():
+		now.busy = false
 
 
 func hub_minigame(kind: String) -> void:
@@ -134,9 +150,11 @@ func hub_minigame(kind: String) -> void:
 
 
 func exit(e: Dictionary) -> void:
+	var start := w.get_instance_id() if w else 0
 	var o := _owner()
 	if o and o.has_method("exit"):
 		await o.exit(e)
+	_release_if_moved(start)
 
 
 # --------------------------------------------------------------- speakers ---

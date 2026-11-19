@@ -1135,6 +1135,52 @@ func _run(scenario: String) -> void:
 				print("[tomato] %s: planter is %s" % [step, "v2 wilted" if tom.texture == Art.prop("planter", 2) else ("v0 green" if tom.texture == Art.prop("planter", 0) else "v1 tomatoes")])
 				await shot("tomato_" + step)
 			get_tree().quit()
+		"stuckcheck":
+			# can the player always move after a field cutscene? and does a
+			# map-changing interaction keep control locked until it's done?
+			Game.new_game()
+			Game.player_name = "Ari"
+			var pr: StoryPrologue = main.story.prologue
+			pr.evening = true
+			main.fade_rect.color.a = 0.0
+			main.load_map(Maps.block7("evening"), Vector2i(8, 10), 1)
+			await wait(0.5)
+			var w = main.world
+			await main.story.talk(w.actor("tomas"))
+			await wait(0.3)
+			var moves := []
+			for d in ["left", "right", "up", "down"]:
+				var before: Vector2 = w.player.position
+				await hold(d, 0.35)
+				moves.append("%s %.0f" % [d, w.player.position.distance_to(before)])
+			print("[stuck] after the bracelet scene: busy=%s moves=%s" % [w.busy, moves])
+			await shot("stuck_bracelet")
+			# someone parked right on top of you
+			var pip = w.actor("pip")
+			pip.position = w.player.position + Vector2(3, 0)
+			var b2: Vector2 = w.player.position
+			await hold("left", 0.35)
+			print("[stuck] overlapped by Pip: stepped away %.0f px (want > 0)" % w.player.position.distance_to(b2))
+			# a map-changing interaction: entering a Pilot Wing room
+			Game.chapter = "hub"
+			main.load_map(Maps.wing(), Vector2i(2, 2), 1)
+			await wait(0.4)
+			var unlocked_mid := []
+			var watch := {"on": true}
+			var watcher := func() -> void:
+				while watch.on:
+					await get_tree().process_frame
+					var cw = main.world
+					if cw and is_instance_valid(cw) and cw.def.id == "room_rec" and not cw.busy:
+						unlocked_mid.append(Engine.get_process_frames())
+			watcher.call()
+			main.world.run(main.story.examine.bind({"id": "room:rec"}))
+			await wait(0.1)
+			while main.world.busy or main.world.def.id != "room_rec":
+				await wait(0.1)
+			watch.on = false
+			print("[stuck] room entry: frames unlocked during the scene=%d, unlocked at the end=%s on %s" % [maxi(0, unlocked_mid.size() - 2), not main.world.busy, main.world.def.id])
+			get_tree().quit()
 		"commonstalk":
 			# the Commons' named recruits and the bot, talked to in the field
 			auto_talk = false

@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-18 20:33 EST — `bugfix_field_cutscene_player_stuck` (v0.58.3)
+
+You can no longer get stuck after talking to someone who starts a field cutscene.
+
+- Pinned by people: walking is blocked near anyone standing close, and a cutscene could leave people right beside you (Tomas and Juno after the bracelet scene ended up close enough on both sides to block every direction). Now a person overlapping you can never pin you (any step that doesn't go further into them is allowed), and Tomas and Juno stop a step further away.
+- Scenes that change maps: when an interaction moved you to a new map partway through (entering Pilot Wing rooms, the street door, coming back to the Commons, Midas' memory), the new map started unlocked while the scene was still playing, so you could walk off, open the menu or start a second conversation on top of it. Now control stays locked until the interaction finishes and is then handed back on whichever map you ended up on.
+- Code: `scripts/world.gd` (blocked() lets you step out of an overlap), `scripts/main.gd` (load_map() keeps a busy world's lock on the new map), `scripts/story.gd` (talk/examine/trigger/exit release the new map when the interaction ends), `scripts/story_prologue.gd` (_friends_gift spacing), `tools/autotest.gd` (`PK_TEST=stuckcheck`).
+
 ## 2026-11-18 17:58 EST — `bugfix_rooftop_tomato_not_wilted_on_return` (v0.58.2)
 
 Midas' rooftop planter now stays wilted after he's gone until you water it, instead of springing back to ripe tomatoes on the next visit.

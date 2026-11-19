@@ -292,11 +292,16 @@ func arcade() -> void:
 # ------------------------------------------------------------- field flow --
 
 func load_map(map_def: Dictionary, tile: Vector2i, dir: int) -> World:
+    # an interaction that changes maps keeps control locked on the new map
+    # until it finishes (Story releases it then)
+    var was_busy := world != null and is_instance_valid(world) and world.busy
     if world:
         world.queue_free()
     world = World.new()
     world_root.add_child(world)
     world.setup(map_def, tile, dir, story)
+    if was_busy:
+        world.busy = true
     return world
 
 
