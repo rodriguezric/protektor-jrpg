@@ -2,8 +2,9 @@ class_name HubGame
 extends Control
 ## The Pilot Wing's little games, each under a minute, drawn full screen:
 ##   pingpong - rally against another recruit: press Z (tap) as the ball
-##              reaches your paddle. Early or late is a miss; the rally ends
-##              on your first miss. Score: the rally.
+##              reaches your paddle (the closing ring turns lemon). A swing
+##              outside the window whiffs; the rally ends on your first
+##              miss. Score: the rally.
 ##   cards    - high-low: Up if the next card is higher, Down if lower (ties
 ##              win). Score: the streak.
 ##   drill    - the gym's sync-reflex drill: ten arrows flash up; press that
@@ -139,17 +140,79 @@ static func record(k: String, score: int) -> Dictionary:
 
 
 # ------------------------------------------------------------- pingpong ---
+## Side view of the rec-room table, players at 2x. The ball is hit from one
+## end, bounces once on the far half and rises to the receiver's paddle. A
+## ring closes on the sweet spot as the ball comes in (lemon = swing now).
+## The timing window is in seconds, generous early and tightening with the
+## rally. Hits get hit-stop, sparks and a knock that climbs in pitch.
 
-const PADDLE_X := 64.0
-const FOE_X := 256.0
-const HIT_WINDOW := 9.0
+const PADDLE_X := 54.0
+const FOE_X := 266.0
+const FLOOR_Y := 152.0
+const TABLE_Y := 121.0 # middle of the table top, where the ball bounces
+const TABLE_L := 64.0
+const TABLE_R := 256.0
+const BOUNCE_K := 0.74 # the ball lands this far along its flight
+const CONTACT_H := 10.0 # ball height above the table at the paddle
+
+var ball_h := 0.0
+var ball_vh := 0.0
+var missed := false
+var stop_t := 0.0
+var shake_t := 0.0
+var pop_t := 0.0
+var bounced := false
+var trail: Array = []
+var sparks: Array = []
+var mood_t := 0.0
+var my_mood := ""
+
+
+func _window() -> float:
+	return lerpf(0.13, 0.075, minf(1.0, rally / 25.0))
+
+
+func _ttc() -> float:
+	## Seconds until the ball reaches your paddle (negative once past it).
+	return (ball_x - PADDLE_X) / ball_speed if ball_dir < 0 else 99.0
+
+
+func _flight_h(k: float) -> float:
+	## Ball height over the table along one shot, k = 0 at the hitter.
+	if k < BOUNCE_K:
+		var u := k / BOUNCE_K
+		return lerpf(CONTACT_H, 0.0, u) + sin(u * PI) * 20.0
+	var v := (k - BOUNCE_K) / (1.0 - BOUNCE_K)
+	return sin(v * PI * 0.5) * CONTACT_H * 1.15 - maxf(0.0, v - 1.0) * 6.0
+
+
+func _flight_k() -> float:
+	var span := FOE_X - PADDLE_X
+	return (FOE_X - ball_x) / span if ball_dir < 0 else (ball_x - PADDLE_X) / span
+
+
+func _ball_pos() -> Vector2:
+	return Vector2(ball_x, TABLE_Y - ball_h)
+
+
+func _spark(at: Vector2, n: int, cols: Array, dir: float) -> void:
+	for i in n:
+		var a := dir + randf_range(-1.1, 1.1)
+		sparks.append({"p": at, "v": Vector2.from_angle(a) * randf_range(30, 90), "life": randf_range(0.15, 0.35), "c": cols[i % cols.size()]})
 
 
 func _pingpong() -> int:
 	ball_x = FOE_X
 	ball_dir = -1
-	ball_speed = 110.0
+	ball_speed = 120.0
 	rally = 0
+	missed = false
+	bounced = false
+	trail.clear()
+	sparks.clear()
+	foe_swing = 0.22
+	Sfx.play("knock", 1.1, -8.0)
+	var lock := 0.0
 	while true:
 		await get_tree().process_frame
 		if not is_inside_tree():
@@ -160,36 +223,90 @@ func _pingpong() -> int:
 		swing_t -= d
 		foe_swing -= d
 		verdict_t -= d
+		shake_t -= d
+		pop_t -= d
+		mood_t -= d
+		lock -= d
+		if mood_t <= 0.0:
+			my_mood = ""
+		for sp in sparks.duplicate():
+			sp.p += sp.v * d
+			sp.v.y += 160.0 * d
+			sp.life -= d
+			if sp.life <= 0.0:
+				sparks.erase(sp)
+		board.position = Vector2(randi_range(-1, 1), randi_range(-1, 1)) if shake_t > 0.0 else Vector2.ZERO
+		if stop_t > 0.0:
+			stop_t -= d
+			continue
+		if missed:
+			# past you: off the end of the table and onto the floor
+			ball_x -= ball_speed * 0.6 * d
+			ball_vh -= 260.0 * d
+			ball_h += ball_vh * d
+			if TABLE_Y - ball_h >= FLOOR_Y - 2.0 and ball_vh < 0.0:
+				ball_h = TABLE_Y - FLOOR_Y + 2.0
+				ball_vh = -ball_vh * 0.45
+			continue
 		ball_x += ball_dir * ball_speed * d
+		var k := _flight_k()
+		ball_h = _flight_h(k)
+		if k >= BOUNCE_K and not bounced:
+			bounced = true
+			Sfx.play("knock", 2.0, -16.0)
+			_spark(Vector2(ball_x, TABLE_Y), 3, [Pal.WHITE], -PI / 2)
+		trail.push_front(_ball_pos())
+		if trail.size() > 5:
+			trail.pop_back()
+		var ttc := _ttc()
+		var win := _window()
 		var press := Input.is_action_just_pressed("accept")
 		if auto:
-			press = ball_dir < 0 and absf(ball_x - PADDLE_X) < 3.0
-		if press and swing_t <= 0.0:
-			swing_t = 0.18
-			if ball_dir < 0 and absf(ball_x - PADDLE_X) <= HIT_WINDOW:
-				var perfect := absf(ball_x - PADDLE_X) <= 3.0
+			press = ball_dir < 0 and ttc <= 0.012
+		if press and lock <= 0.0:
+			swing_t = 0.22
+			if ball_dir < 0 and absf(ttc) <= win:
+				var perfect := absf(ttc) <= win * 0.38
 				ball_dir = 1
+				ball_x = PADDLE_X
+				bounced = false
 				rally += 1
-				ball_speed = minf(320.0, ball_speed + (9.0 if perfect else 6.0))
+				pop_t = 0.25
+				ball_speed = minf(270.0, ball_speed + (8.0 if perfect else 5.0))
 				verdict = "PERFECT" if perfect else "GOOD"
 				verdict_t = 0.5
-				Sfx.play("knock", 1.5 if perfect else 1.3, -6.0)
+				stop_t = 0.07 if perfect else 0.035
+				shake_t = 0.1 if perfect else 0.0
+				_spark(_ball_pos(), 8 if perfect else 4, [Pal.LEMON, Pal.WHITE] if perfect else [Pal.WHITE], 0.0)
+				Sfx.play("knock", 1.25 + mini(rally, 20) * 0.02 + (0.1 if perfect else 0.0), -5.0)
 				if perfect:
+					my_mood = "smile"
+					mood_t = 0.4
 					Game.buzz(12)
+				if rally % 10 == 0:
+					Sfx.play("chime", 1.0 + mini(rally, 40) * 0.01, -8.0)
 			else:
-				verdict = "EARLY" if ball_dir < 0 and ball_x > PADDLE_X else "WHIFF"
+				verdict = "EARLY" if ttc > 0.0 and ball_dir < 0 else ("LATE" if ball_dir < 0 else "WAIT")
 				verdict_t = 0.5
+				lock = 0.35
 				Sfx.play("whoosh", 1.4, -12.0)
 		if ball_dir > 0 and ball_x >= FOE_X:
 			ball_x = FOE_X
 			ball_dir = -1
-			foe_swing = 0.18
-			Sfx.play("knock", 1.1, -8.0)
-		if ball_dir < 0 and ball_x < PADDLE_X - HIT_WINDOW - 6.0:
+			bounced = false
+			foe_swing = 0.22
+			Sfx.play("knock", 1.1 + mini(rally, 20) * 0.015, -8.0)
+		if ball_dir < 0 and ttc < -win - 0.02:
+			missed = true
+			ball_vh = 30.0
 			verdict = "MISS"
-			verdict_t = 1.0
+			verdict_t = 1.2
+			my_mood = "sad"
+			mood_t = 2.0
+			shake_t = 0.15
 			Sfx.play("cancel", 0.8, -4.0)
-			await _pause(0.8)
+			await _pause(1.1)
+			board.position = Vector2.ZERO
 			return rally
 	return rally
 
@@ -284,34 +401,130 @@ func _draw_board() -> void:
 
 func _draw_pong() -> void:
 	var b := board
-	var table := Pal.TEAL.lerp(Pal.NAVY, 0.35)
-	b.draw_rect(Rect2(40, 118, 240, 8), table)
-	b.draw_rect(Rect2(40, 118, 240, 1), Pal.hi(table))
-	b.draw_rect(Rect2(159, 104, 2, 14), Pal.WHITE)
-	b.draw_rect(Rect2(60, 126, 4, 30), Pal.STEEL)
-	b.draw_rect(Rect2(256, 126, 4, 30), Pal.STEEL)
-	# the players: you on the left, them on the right
-	var you := Art.person(Game.player_spec(), 2, 0, "smile" if verdict == "PERFECT" and verdict_t > 0.0 else "", "walk")
-	b.draw_texture(you, Vector2(PADDLE_X - 40, 92))
-	var opp := Art.person(opponent if not opponent.is_empty() else Data.EXTRAS[0], 2, 0, "", "walk")
-	b.draw_texture_rect(opp, Rect2(FOE_X + 8, 92, -32, 32), false)
-	var pa := -0.6 if swing_t > 0.0 else 0.3
-	b.draw_line(Vector2(PADDLE_X - 8, 108), Vector2(PADDLE_X - 8, 108) + Vector2.from_angle(pa) * 9.0, Pal.RED, 3.0)
-	var fa := PI + (0.6 if foe_swing > 0.0 else -0.3)
-	b.draw_line(Vector2(FOE_X + 8, 108), Vector2(FOE_X + 8, 108) + Vector2.from_angle(fa) * 9.0, Pal.BLUE, 3.0)
-	# the ball, arcing over the net
-	var span := FOE_X - PADDLE_X
-	var k := clampf((ball_x - PADDLE_X) / span, 0.0, 1.0)
-	var y := 112.0 - sin(k * PI) * 34.0
-	b.draw_circle(Vector2(ball_x, y), 2.5, Pal.WHITE)
-	b.draw_rect(Rect2(ball_x - 2, 117, 4, 1), Color(0, 0, 0, 0.3))
-	# the hit zone
-	b.draw_rect(Rect2(PADDLE_X - HIT_WINDOW, 128, HIT_WINDOW * 2, 2), Color(Pal.SYNC, 0.5))
-	var s := "RALLY %d" % rally
-	b.draw_string(Art.font, Vector2(160 - Art.text_width(s) / 2.0, 44), s, HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE, Pal.WHITE)
+	_draw_rec_room(b)
+	# the scoreboard on the wall
+	var pop := maxf(0.0, pop_t) / 0.25
+	var sb := Rect2(134, 22, 52, 30)
+	b.draw_rect(sb.grow(1), Pal.deep(Pal.WOOD))
+	b.draw_rect(sb, Pal.INK2)
+	b.draw_rect(Rect2(sb.position, Vector2(sb.size.x, 1)), Pal.hi(Pal.INK2))
+	b.draw_string(Art.font, Vector2(160 - Art.text_width("RALLY") / 2.0, 30), "RALLY", HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE, Pal.TEXT_DIM)
+	var rs := str(rally)
+	var rcol := Pal.LEMON.lerp(Pal.WHITE, 1.0 - pop) if pop > 0.0 else Pal.SYNC
+	b.draw_string(Art.font, Vector2(160 - Art.text_width(rs, 2) / 2.0, 47 - round(pop * 3.0)), rs, HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE * 2, rcol)
+	_draw_table(b)
+	# the players, 2x, at either end
+	var you := Art.person(Game.player_spec(), 2, 1 if swing_t > 0.0 else 0, my_mood, "walk")
+	var lean := 3.0 if swing_t > 0.0 else 0.0
+	b.draw_texture_rect(you, Rect2(PADDLE_X - 54 + lean, FLOOR_Y - 62, 64, 64), false)
+	var opp := Art.person(opponent if not opponent.is_empty() else Data.EXTRAS[0], 2, 1 if foe_swing > 0.0 else 0, "", "walk")
+	var flean := 3.0 if foe_swing > 0.0 else 0.0
+	b.draw_texture_rect(opp, Rect2(FOE_X - 10 - flean, FLOOR_Y - 62, -64, 64), false)
+	_draw_paddle(b, Vector2(PADDLE_X - 8 + lean, 116), 1.0, swing_t, Pal.RED)
+	_draw_paddle(b, Vector2(FOE_X + 8 - flean, 116), -1.0, foe_swing, Pal.BLUE)
+	# the timing ring: closes on the sweet spot, lemon when it's time
+	var spot := Vector2(PADDLE_X, TABLE_Y - CONTACT_H * 1.15)
+	var ttc := _ttc()
+	if not missed and ball_dir < 0 and ttc < 0.6:
+		var now := absf(ttc) <= _window()
+		var r := 3.0 + maxf(0.0, ttc) * 26.0
+		b.draw_arc(spot, r, 0, TAU, 20, Color(Pal.LEMON if now else Pal.SYNC, 0.9 if now else 0.55), 1.0)
+	b.draw_arc(spot, 3.0, 0, TAU, 12, Color(Pal.SYNC, 0.35), 1.0)
+	# the ball: shadow, trail, ball
+	var bp := _ball_pos()
+	var on_table := bp.x >= TABLE_L and bp.x <= TABLE_R
+	var sy := TABLE_Y if on_table and not missed else FLOOR_Y + 1.0
+	var sw := clampf(4.0 - ball_h * 0.08, 2.0, 4.0)
+	b.draw_rect(Rect2(floorf(bp.x - sw / 2.0), sy, sw, 1), Color(Pal.INK, 0.45))
+	if ball_speed > 160.0:
+		for i in trail.size():
+			b.draw_rect(Rect2((trail[i] as Vector2).floor() - Vector2(1, 1), Vector2(2, 2)), Color(Pal.WHITE, 0.25 - i * 0.05))
+	b.draw_circle(bp.floor() + Vector2(0.5, 0.5), 2.0, Pal.WHITE)
+	b.draw_rect(Rect2(bp.floor() + Vector2(-1, -1), Vector2(1, 1)), Pal.hi(Pal.WHITE))
+	for sp in sparks:
+		b.draw_rect(Rect2((sp.p as Vector2).floor(), Vector2(1, 1)), sp.c)
 	if verdict_t > 0.0:
-		var col := Pal.LEMON if verdict == "PERFECT" else (Pal.GLOW if verdict == "GOOD" else Pal.RED)
-		b.draw_string(Art.font, Vector2(PADDLE_X - Art.text_width(verdict) / 2.0, 82), verdict, HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE, col)
+		var col := Pal.LEMON if verdict == "PERFECT" else (Pal.GLOW if verdict == "GOOD" else Pal.ROSE)
+		var vy := 82.0 - minf(0.12, maxf(0.0, 0.5 - verdict_t)) * 40.0
+		b.draw_string(Art.font, Vector2(PADDLE_X + 6 - Art.text_width(verdict) / 2.0, vy), verdict, HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE, col)
+
+
+func _draw_rec_room(b: Node2D) -> void:
+	## The Pilot Wing rec room: a banded wall, wood wainscot, tiled floor
+	## and a hanging lamp lighting the table.
+	var wall := Pal.PLUM
+	b.draw_rect(Rect2(0, 0, 320, FLOOR_Y), Pal.deep(wall))
+	b.draw_rect(Rect2(0, 18, 320, 88), Pal.shade(wall))
+	b.draw_rect(Rect2(40, 30, 240, 70), wall)
+	b.draw_rect(Rect2(0, 104, 320, FLOOR_Y - 104), Pal.shade(Pal.WOOD))
+	b.draw_rect(Rect2(0, 104, 320, 2), Pal.hi(Pal.WOOD))
+	for x in range(8, 320, 24):
+		b.draw_rect(Rect2(x, 110, 1, FLOOR_Y - 114), Pal.deep(Pal.WOOD))
+	b.draw_rect(Rect2(0, FLOOR_Y - 3, 320, 3), Pal.deep(Pal.WOOD))
+	var floor_c := Pal.SLATE.lerp(Pal.INK, 0.45)
+	b.draw_rect(Rect2(0, FLOOR_Y, 320, 180 - FLOOR_Y), floor_c)
+	for x in range(-8, 330, 22):
+		b.draw_line(Vector2(x, FLOOR_Y), Vector2(x - 10, 180), Pal.shade(floor_c), 1.0)
+	b.draw_rect(Rect2(0, FLOOR_Y, 320, 1), Pal.hi(floor_c))
+	# pennants on the wall
+	for i in 2:
+		var px := 60.0 + i * 172.0
+		var pc := Pal.TEAL if i == 0 else Pal.ROSE
+		b.draw_colored_polygon(PackedVector2Array([Vector2(px, 40), Vector2(px + 28, 46), Vector2(px, 52)]), pc)
+		b.draw_rect(Rect2(px, 40, 1, 12), Pal.hi(pc))
+	# the lamp and its pool of light
+	b.draw_rect(Rect2(159, 0, 2, 58), Pal.INK2)
+	b.draw_colored_polygon(PackedVector2Array([Vector2(150, 64), Vector2(170, 64), Vector2(166, 58), Vector2(154, 58)]), Pal.STEEL)
+	b.draw_rect(Rect2(150, 64, 20, 1), Pal.LEMON)
+	b.draw_colored_polygon(PackedVector2Array([Vector2(151, 65), Vector2(169, 65), Vector2(TABLE_R + 8, FLOOR_Y), Vector2(TABLE_L - 8, FLOOR_Y)]), Color(Pal.LIGHT_TINT, 0.05))
+	b.draw_colored_polygon(PackedVector2Array([Vector2(154, 65), Vector2(166, 65), Vector2(TABLE_R - 30, TABLE_Y), Vector2(TABLE_L + 30, TABLE_Y)]), Color(Pal.LIGHT_TINT, 0.05))
+
+
+func _draw_table(b: Node2D) -> void:
+	var top := Pal.TEAL
+	# shadow on the floor
+	b.draw_rect(Rect2(TABLE_L + 6, FLOOR_Y, TABLE_R - TABLE_L - 12, 3), Color(Pal.INK, 0.35))
+	# legs
+	for lx in [TABLE_L + 10, TABLE_L + 22, TABLE_R - 26, TABLE_R - 14]:
+		b.draw_rect(Rect2(lx, 128, 4, FLOOR_Y - 128), Pal.shade(Pal.STEEL))
+		b.draw_rect(Rect2(lx, 128, 1, FLOOR_Y - 128), Pal.hi(Pal.STEEL))
+	b.draw_rect(Rect2(TABLE_L + 10, 138, 16, 2), Pal.deep(Pal.STEEL))
+	b.draw_rect(Rect2(TABLE_R - 26, 138, 16, 2), Pal.deep(Pal.STEEL))
+	# the top face, seen a little from above
+	b.draw_colored_polygon(PackedVector2Array([Vector2(TABLE_L + 4, 118), Vector2(TABLE_R - 4, 118), Vector2(TABLE_R, 124), Vector2(TABLE_L, 124)]), top)
+	b.draw_colored_polygon(PackedVector2Array([Vector2(TABLE_L + 4, 118), Vector2(160, 118), Vector2(160, 124), Vector2(TABLE_L, 124)]), Pal.hi(top).lerp(top, 0.5))
+	b.draw_line(Vector2(TABLE_L + 4, 118), Vector2(TABLE_R - 4, 118), Pal.WHITE, 1.0)
+	b.draw_line(Vector2(TABLE_L + 2, 121), Vector2(TABLE_R - 2, 121), Color(Pal.WHITE, 0.45), 1.0)
+	# the front edge and apron
+	b.draw_rect(Rect2(TABLE_L, 124, TABLE_R - TABLE_L, 1), Pal.WHITE)
+	b.draw_rect(Rect2(TABLE_L, 125, TABLE_R - TABLE_L, 3), Pal.shade(top))
+	b.draw_rect(Rect2(TABLE_L, 128, TABLE_R - TABLE_L, 1), Pal.deep(top))
+	# the net: posts, mesh and tape
+	b.draw_rect(Rect2(158, 108, 1, 16), Pal.STEEL)
+	b.draw_rect(Rect2(162, 108, 1, 16), Pal.shade(Pal.STEEL))
+	for y in range(110, 121, 2):
+		b.draw_rect(Rect2(159, y, 3, 1), Color(Pal.INK2, 0.8))
+	b.draw_rect(Rect2(159, 109, 3, 11), Color(Pal.WHITE, 0.15))
+	b.draw_rect(Rect2(158, 108, 5, 1), Pal.WHITE)
+
+
+func _draw_paddle(b: Node2D, hand: Vector2, side: float, swing: float, rubber: Color) -> void:
+	## A paddle held at the end of the table. It rests cocked back and,
+	## during a swing, sweeps up and forward with a little motion arc.
+	var a := -0.5
+	if swing > 0.0:
+		var u := 1.0 - swing / 0.22
+		a = lerpf(1.1, -1.4, minf(1.0, u * 2.0))
+		if u < 0.6:
+			var a0 := -1.4 if side > 0 else PI - 1.1
+			b.draw_arc(hand, 9.0, a0, a0 + 2.5, 8, Color(Pal.WHITE, 0.25), 1.0)
+	var dir := Vector2.from_angle(a)
+	dir.x *= side
+	var head := hand + dir * 8.0
+	b.draw_line(hand, hand + dir * 4.0, Pal.WOOD, 2.0)
+	b.draw_circle(head, 4.0, Pal.shade(rubber))
+	b.draw_circle(head + Vector2(-0.5 * side, -0.5), 3.0, rubber)
+	b.draw_rect(Rect2(head.floor() + Vector2(-1, -2), Vector2(1, 1)), Pal.hi(rubber))
 
 
 func _card_face(at: Vector2, rank: int, suit: int, w: float) -> void:
