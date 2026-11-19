@@ -12,10 +12,17 @@ extends Threat
 ##             attacks: [{type, every, first, ...}]}]
 ## move:  {type: hold | orbit (speed_deg) | hop (every, step_deg) |
 ##         mirror (delay, offset_deg) | lunge (every, depth, speed)}
-## open:  "always" | {type: cycle, open, closed} | {type: after_attack, sec}
-##        | {type: after_block, sec} | {type: when_clear} (open only when no
-##        other threats are in the arena)   (when shut, hits only spark off
-##        it; with punish_shut: true in the def it fires back)
+## open:  "always" | {type: cycle, open, closed} | {type: after_attack, sec,
+##        on} (on = an attack type: only that attack opens it, once it has
+##        played out) | {type: after_block, sec} | {type: when_clear} (open
+##        only when no other threats are in the arena)   (when shut, hits only
+##        spark off it; with punish_shut: true in the def it fires back)
+##
+## Damage windows: bosses are meant to be shut most of the time and open
+## in short, readable windows. Each window opens with a green ring and a
+## chime and takes at most window_cap of max HP (def; default 0.12 for a
+## boss, 0.3 for a mini) before it slams shut early, so a fight can't be
+## won by holding the trigger down.
 ## attacks:
 ##   volley      n shots from the boss at the planet (gap, speed)
 ##   arc_burst   count shots from the arena edge, centred on the boss's
@@ -67,6 +74,10 @@ var _shut_spark_t := 0.0
 ## wait_until_clear gate a boss fight sits behind.
 var _clock := 0.0
 var _intro_t := 0.0
+var _open_wait := 0.0
+var _win_dmg := 0.0
+var _capped_t := 0.0
+var _was_open := false
 const ENTER_SEC := 1.6
 
 
@@ -166,8 +177,10 @@ func tick(delta: float) -> void:
 	if _intro_t > 0.0:
 		_intro_t = maxf(0.0, _intro_t - sd)
 		open = false
-		if _intro_t <= 0.0:
-			_expose_cue()
+	if _capped_t > 0.0:
+		_capped_t = maxf(0.0, _capped_t - sd)
+		open = false
+	_window_edges()
 	_attacks(ph.get("attacks", []), sd)
 	_update_streams(sd)
 	_check_rotate(ph.get("attacks", []), sd)
@@ -230,6 +243,10 @@ func _update_open(o, sd: float) -> void:
 			var b := float(od.get("closed", 3.0))
 			open = fmod(_cycle_t, a + b) < a
 		"after_attack", "after_block":
+			if _open_wait > 0.0:
+				_open_wait = maxf(0.0, _open_wait - sd)
+				open = false
+				return
 			_open_t = maxf(0.0, _open_t - sd)
 			open = _open_t > 0.0
 		"when_clear":
@@ -326,7 +343,37 @@ func _fire_attack(a: Dictionary) -> void:
 				m._spawn(ev)
 	var o = (phases[phase] if phase >= 0 and phase < phases.size() else {}).get("open", "always")
 	if o is Dictionary and str(o.get("type", "")) == "after_attack":
-		_open_t = float(o.get("sec", 2.5))
+		var on := str(o.get("on", ""))
+		if on == "" or on == str(a.get("type", "")):
+			# the window opens once the attack has played out (its recovery)
+			_open_wait = _attack_len(a)
+			_open_t = float(o.get("sec", 2.5))
+
+
+func _attack_len(a: Dictionary) -> float:
+	match str(a.get("type", "")):
+		"spin_stream":
+			return float(a.get("duration", 3.0))
+		"volley":
+			return float(a.get("gap", 0.18)) * (int(a.get("n", 1)) - 1) + 0.6
+		"arc_burst":
+			return 0.7
+	return 0.3
+
+
+func _window_edges() -> void:
+	## A window opening rings green; one closing clanks shut.
+	if open and not _was_open:
+		_win_dmg = 0.0
+		if _clock > ENTER_SEC + 0.1:
+			_expose_cue()
+	elif _was_open and not open and _intro_t <= 0.0:
+		Sfx.play("latch", 0.9, -12.0)
+	_was_open = open
+
+
+func _window_cap() -> float:
+	return float(def.get("window_cap", 0.3 if is_mini else 0.12)) * max_hp
 
 
 func _update_streams(sd: float) -> void:
@@ -390,6 +437,8 @@ func _set_phase(i: int) -> void:
 		_timers.append(float(a.get("first", a.get("every", 3.0))))
 	_streams.clear()
 	_open_t = 0.0
+	_open_wait = 0.0
+	_capped_t = 0.0
 	_cycle_t = 0.0
 	_hop_t = 1.5
 	_lunge_t = 2.0
@@ -440,6 +489,12 @@ func apply_damage(amount: float) -> bool:
 			m.on_boss_deflect(self)
 		return false
 	hp -= amount
+	_win_dmg += amount
+	if _win_dmg >= _window_cap() and hp > 0.0:
+		# this window has given all it will: slam shut until the next one
+		_capped_t = 3.0
+		_open_t = 0.0
+		_flash_t = maxf(_flash_t, 0.2)
 	# a quick half-flash per hit: a stream of bolts mustn't keep it white
 	_flash_t = maxf(_flash_t, 0.05)
 	if hp <= 0.0:

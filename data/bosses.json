@@ -98,7 +98,10 @@
 					"type": "orbit",
 					"speed_deg": 30
 				},
-				"open": "always",
+				"open": {
+					"type": "after_block",
+					"sec": 2.5
+				},
 				"attacks": [
 					{
 						"type": "volley",
@@ -184,10 +187,10 @@
 	},
 	"aegis_relay": {
 		"name": "THE AEGIS RELAY",
-		"hp": 60,
+		"hp": 54,
 		"size": 100,
 		"dist": 165,
-		"fight_sec": 45,
+		"fight_sec": 52,
 		"color": [
 			0.45,
 			0.6,
@@ -208,8 +211,8 @@
 				},
 				"open": {
 					"type": "cycle",
-					"open": 3.5,
-					"closed": 2.5
+					"open": 2.2,
+					"closed": 3.8
 				},
 				"attacks": [
 					{
@@ -240,9 +243,9 @@
 					"speed_deg": -24
 				},
 				"open": {
-					"type": "cycle",
-					"open": 3.0,
-					"closed": 2.5
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.4
 				},
 				"attacks": [
 					{
@@ -274,7 +277,11 @@
 					"every": 4.0,
 					"step_deg": 90
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.2
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -315,7 +322,7 @@
 		"hp": 9,
 		"size": 66,
 		"dist": 160,
-		"fight_sec": 22,
+		"fight_sec": 24,
 		"color": [
 			0.62,
 			0.8,
@@ -394,10 +401,10 @@
 	},
 	"boreal_colossus": {
 		"name": "BOREAL COLOSSUS",
-		"hp": 85,
+		"hp": 66,
 		"size": 104,
 		"dist": 165,
-		"fight_sec": 50,
+		"fight_sec": 64,
 		"color": [
 			0.58,
 			0.74,
@@ -415,7 +422,11 @@
 				"move": {
 					"type": "hold"
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 3.0
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -437,9 +448,9 @@
 					"step_deg": 90
 				},
 				"open": {
-					"type": "cycle",
-					"open": 4.0,
-					"closed": 2.0
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.6
 				},
 				"attacks": [
 					{
@@ -474,7 +485,11 @@
 					"every": 6.0,
 					"step_deg": 90
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.2
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -517,7 +532,7 @@
 		"hp": 18,
 		"size": 64,
 		"dist": 160,
-		"fight_sec": 20,
+		"fight_sec": 22,
 		"color": [
 			0.92,
 			0.48,
@@ -536,7 +551,10 @@
 					"every": 2.8,
 					"step_deg": 90
 				},
-				"open": "always",
+				"open": {
+					"type": "after_block",
+					"sec": 2.6
+				},
 				"attacks": [
 					{
 						"type": "volley",
@@ -556,7 +574,10 @@
 					"every": 2.2,
 					"step_deg": 90
 				},
-				"open": "always",
+				"open": {
+					"type": "after_block",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "volley",
@@ -582,10 +603,10 @@
 	},
 	"solar_crucible": {
 		"name": "SOLAR CRUCIBLE",
-		"hp": 55,
+		"hp": 40,
 		"size": 104,
 		"dist": 160,
-		"fight_sec": 45,
+		"fight_sec": 70,
 		"color": [
 			0.95,
 			0.55,
@@ -604,7 +625,11 @@
 					"type": "orbit",
 					"speed_deg": 10
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "spin_stream",
+					"sec": 2.6
+				},
 				"attacks": [
 					{
 						"type": "spin_stream",
@@ -634,8 +659,8 @@
 				},
 				"open": {
 					"type": "cycle",
-					"open": 3.5,
-					"closed": 2.0
+					"open": 2.0,
+					"closed": 3.8
 				},
 				"attacks": [
 					{
@@ -676,7 +701,11 @@
 					"every": 5.0,
 					"step_deg": 90
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.2
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -717,7 +746,7 @@
 		"hp": 16,
 		"size": 66,
 		"dist": 160,
-		"fight_sec": 22,
+		"fight_sec": 36,
 		"color": [
 			0.55,
 			0.62,
@@ -734,7 +763,11 @@
 					"type": "orbit",
 					"speed_deg": 24
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "spin_stream",
+					"sec": 2.6
+				},
 				"attacks": [
 					{
 						"type": "spin_stream",
@@ -754,7 +787,11 @@
 					"type": "orbit",
 					"speed_deg": -30
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "spin_stream",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "spin_stream",
@@ -780,10 +817,10 @@
 	},
 	"cyclarch": {
 		"name": "THE CYCLARCH",
-		"hp": 60,
+		"hp": 50,
 		"size": 104,
 		"dist": 165,
-		"fight_sec": 48,
+		"fight_sec": 66,
 		"color": [
 			0.48,
 			0.55,
@@ -802,7 +839,11 @@
 					"type": "orbit",
 					"speed_deg": 12
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -834,8 +875,8 @@
 				},
 				"open": {
 					"type": "cycle",
-					"open": 3.5,
-					"closed": 2.0
+					"open": 2.0,
+					"closed": 3.8
 				},
 				"attacks": [
 					{
@@ -876,7 +917,11 @@
 					"type": "orbit",
 					"speed_deg": 32
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.2
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -916,7 +961,7 @@
 		"hp": 20,
 		"size": 66,
 		"dist": 160,
-		"fight_sec": 22,
+		"fight_sec": 30,
 		"punish_shut": true,
 		"color": [
 			0.85,
@@ -935,8 +980,8 @@
 				},
 				"open": {
 					"type": "cycle",
-					"open": 2.5,
-					"closed": 2.0
+					"open": 2.0,
+					"closed": 3.0
 				},
 				"attacks": [
 					{
@@ -957,8 +1002,8 @@
 				},
 				"open": {
 					"type": "cycle",
-					"open": 2.0,
-					"closed": 2.0
+					"open": 1.8,
+					"closed": 3.2
 				},
 				"attacks": [
 					{
@@ -985,10 +1030,10 @@
 	},
 	"gestalt_heart": {
 		"name": "THE GESTALT HEART",
-		"hp": 75,
+		"hp": 66,
 		"size": 104,
 		"dist": 160,
-		"fight_sec": 50,
+		"fight_sec": 62,
 		"color": [
 			0.82,
 			0.36,
@@ -1093,7 +1138,11 @@
 					"type": "orbit",
 					"speed_deg": -16
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.2
+				},
 				"attacks": [
 					{
 						"type": "on_rotate",
@@ -1131,7 +1180,7 @@
 		"hp": 30,
 		"size": 66,
 		"dist": 160,
-		"fight_sec": 28,
+		"fight_sec": 32,
 		"color": [
 			0.35,
 			0.32,
@@ -1150,7 +1199,10 @@
 					"speed_deg": 6,
 					"speed": 1.0
 				},
-				"open": "always",
+				"open": {
+					"type": "after_block",
+					"sec": 2.6
+				},
 				"attacks": [
 					{
 						"type": "on_rotate",
@@ -1175,7 +1227,10 @@
 					"step_deg": 90,
 					"speed": 1.2
 				},
-				"open": "always",
+				"open": {
+					"type": "after_block",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "on_rotate",
@@ -1196,10 +1251,10 @@
 	},
 	"observer": {
 		"name": "THE OBSERVER",
-		"hp": 80,
+		"hp": 54,
 		"size": 104,
 		"dist": 165,
-		"fight_sec": 50,
+		"fight_sec": 70,
 		"color": [
 			0.32,
 			0.3,
@@ -1217,7 +1272,11 @@
 				"move": {
 					"type": "hold"
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 3.0
+				},
 				"attacks": [
 					{
 						"type": "on_rotate",
@@ -1246,7 +1305,11 @@
 					"every": 8.0,
 					"step_deg": 90
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "adds",
+					"sec": 3.0
+				},
 				"attacks": [
 					{
 						"type": "on_rotate",
@@ -1279,7 +1342,11 @@
 					"every": 6.0,
 					"step_deg": 90
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "on_rotate",
@@ -1310,15 +1377,16 @@
 					}
 				]
 			}
-		]
+		],
+		"window_cap": 0.14
 	},
 	"mirror_twin_a": {
 		"name": "MIRROR TWINS",
 		"mini": true,
-		"hp": 12,
+		"hp": 9,
 		"size": 60,
 		"dist": 160,
-		"fight_sec": 24,
+		"fight_sec": 22,
 		"color": [
 			0.7,
 			0.72,
@@ -1336,7 +1404,10 @@
 					"delay": 1.0,
 					"offset_deg": 0
 				},
-				"open": "always",
+				"open": {
+					"type": "after_block",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "volley",
@@ -1353,10 +1424,10 @@
 	"mirror_twin_b": {
 		"name": "MIRROR TWINS",
 		"mini": true,
-		"hp": 12,
+		"hp": 9,
 		"size": 60,
 		"dist": 160,
-		"fight_sec": 0,
+		"fight_sec": 22,
 		"color": [
 			0.62,
 			0.66,
@@ -1374,7 +1445,10 @@
 					"delay": 1.0,
 					"offset_deg": 180
 				},
-				"open": "always",
+				"open": {
+					"type": "after_block",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "volley",
@@ -1390,10 +1464,10 @@
 	},
 	"paragon_protektor": {
 		"name": "PARAGON PROTEKTOR",
-		"hp": 70,
+		"hp": 48,
 		"size": 100,
 		"dist": 160,
-		"fight_sec": 50,
+		"fight_sec": 68,
 		"color": [
 			0.75,
 			0.78,
@@ -1413,7 +1487,11 @@
 					"delay": 1.1,
 					"offset_deg": 180
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.4
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -1442,7 +1520,11 @@
 					"delay": 0.8,
 					"offset_deg": 180
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.2
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",
@@ -1473,7 +1555,11 @@
 					"delay": 0.55,
 					"offset_deg": 180
 				},
-				"open": "always",
+				"open": {
+					"type": "after_attack",
+					"on": "arc_burst",
+					"sec": 2.0
+				},
 				"attacks": [
 					{
 						"type": "arc_burst",

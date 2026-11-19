@@ -595,6 +595,12 @@ func _bot() -> void:
 		m.facing = -to if best.rock else to
 		if not best.rock:
 			m._try_fire(true)
+		else:
+			# back to the rocks: still shoot whatever the front is facing
+			for th in m.threats:
+				if not th.is_asteroid and th.can_be_hit() and (th.lp - m.CENTER).normalized().dot(m.facing) > 0.97:
+					m._try_fire(true)
+					break
 
 
 # ---------------------------------------------------------- levelcheck ---

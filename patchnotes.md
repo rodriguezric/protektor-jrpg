@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-19 12:28 EST — `bugfix_boss_vulnerability_windows` (v0.59.4)
+
+Bosses are armored most of the time now and only take damage in short, signalled windows, so they can't be rolled over by holding fire.
+
+- No boss phase is open all the time any more. Each boss opens after its signature attack has played out (Aegis Relay, Boreal Colossus, Cyclarch, Paragon and the Observer after their arc bursts, Solar Crucible and Storm Eye after their spinning streams, the Observer's middle phase after it calls adds, the Gestalt Heart's last phase after its burst), after you block one of its shots (Flare Carrier, Void Sentinel, Mirror Twins), or on short cycles that are shut longer than open (Pulse Node, Aegis Relay phase 1, Crucible and Cyclarch middle phases).
+- Every window opens with a green ring, a flash and a chime, and closes with a clank. The HP bar is red only while shots land.
+- A window takes at most 12% of a boss's HP (30% for a mini-boss) before it slams shut early, so dumping damage can't skip the fight's rhythm.
+- Boss HP is lowered to match (Aegis 54, Colossus 66, Crucible 40, Cyclarch 50, Gestalt 66, Observer 54, Paragon 48, Mirror Twins 9 each). With a perfect-aim bot, bosses take 50-70 s and mini-bosses 15-35 s.
+- Code: `scripts/boss.gd` (after_attack `on` filter with recovery wait _attack_len(), _window_edges() cues, per-window damage cap _window_cap() / window_cap in the def), `data/bosses.json` (open rules, HP, fight_sec). The autotest bot now also fires at whatever is in front while its back blocks rocks (as a player would).
+
 ## 2026-11-19 11:52 EST — `bugfix_boss_early_damage` (v0.59.3)
 
 Bosses can no longer be shredded before their fight starts: they stay armored until their opening attacks have played.
