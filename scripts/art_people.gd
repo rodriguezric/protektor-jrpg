@@ -347,10 +347,12 @@ static func _hair_front(b: PixBuf, s: Dictionary, style: String, hair: Color, di
 
 static func _brow(b: PixBuf, s: Dictionary, ex: int, ey: int, left: bool, mood: String, skin: Color) -> void:
 	## One eyebrow over the eye at ex (2 px wide, eyes are 2 x 3 from ey).
-	## Its two pixels sit in the row under the hairline, tilted by the mood:
-	## level when calm, the inner end up when sad or scared, down when angry,
-	## both up in shock. Coloured from the hair, darkened so light hair still
-	## reads against skin.
+	## It sits flush on the eye (the row right above it) with a third pixel
+	## running out past the eye's outer edge, tilted by the mood: level when
+	## calm, the inner end up when sad or scared, down when angry, the whole
+	## brow lifted a row in shock. On feminine faces (_feminine) that outer
+	## tail sits a pixel lower, an arched brow. Coloured from the hair,
+	## darkened so light hair still reads against skin.
 	# glasses frames sit where the brows go and read as brows themselves;
 	# only a startled lift shows above them
 	if (s.get("glasses", false) or s.get("shades", false)) and mood != "shock":
@@ -361,23 +363,36 @@ static func _brow(b: PixBuf, s: Dictionary, ex: int, ey: int, left: bool, mood: 
 		col = Pal.shade(skin).lerp(col, 0.35)
 	var inner := ex + (1 if left else 0)
 	var outer := ex + (0 if left else 1)
-	var iy := ey - 2
-	var oy := ey - 2
+	var tail := outer + (-1 if left else 1)
+	var iy := ey - 1
+	var oy := ey - 1
+	var ty := ey - 1
 	match mood:
 		"sad", "cry", "terrified":
-			iy = ey - 3
-			oy = ey - 2
+			iy = ey - 2
+			oy = ey - 1
+			ty = ey   # drooping out past the eye
 		"angry":
 			iy = ey - 1
 			oy = ey - 2
+			ty = ey - 2
 		"shock":
-			iy = ey - 3
-			oy = ey - 3
+			iy = ey - 2
+			oy = ey - 2
+			ty = ey - 2
+	if _feminine(s):
+		ty += 1
 	b.pset(inner, iy, col)
 	b.pset(outer, oy, col)
-	# a third pixel trailing outward on the stronger feelings, so the tilt reads
-	if mood in ["sad", "cry", "terrified", "angry"]:
-		b.pset(outer + (-1 if left else 1), oy + (0 if mood == "angry" else 1), col)
+	b.pset(tail, ty, col)
+
+
+static func _feminine(s: Dictionary) -> bool:
+	## Feminine brows: an explicit "fem" in the spec, else a girl's or
+	## woman's voice, or a skirt.
+	if s.has("fem"):
+		return bool(s.fem)
+	return str(s.get("voice", "")) in ["girl", "woman"] or bool(s.get("skirt", false))
 
 
 static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, hy: float, skin: Color, head: Array) -> void:

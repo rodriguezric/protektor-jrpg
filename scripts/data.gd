@@ -59,13 +59,13 @@ static var LOOKS := [
 ## Background recruits and staff for the halls.
 static var EXTRAS := [
 	{"skin": Pal.SKIN, "hair": Pal.BARK, "style": "short", "top": Pal.SLATE, "jacket": JACKET, "badge": true},
-	{"skin": Pal.SKIN2, "hair": Pal.INK2, "style": "twin", "top": Pal.ROSE, "jacket": JACKET, "badge": true},
+	{"skin": Pal.SKIN2, "hair": Pal.INK2, "style": "twin", "top": Pal.ROSE, "jacket": JACKET, "badge": true, "fem": true},
 	{"skin": Pal.SKIN3, "hair": Pal.INK2, "style": "spiky", "top": Pal.SAGE, "jacket": JACKET, "badge": true},
 	{"skin": Pal.SKIN, "hair": Pal.HONEY, "style": "bun", "top": Pal.LILAC, "jacket": JACKET, "badge": true},
 	{"skin": Pal.SKIN2, "hair": Pal.WOOD, "style": "long", "top": Pal.BLUE, "jacket": JACKET, "badge": true},
 	{"skin": Pal.SKIN3, "hair": Pal.BARK, "style": "messy", "top": Pal.ORANGE, "jacket": JACKET, "badge": true},
 	{"skin": Pal.SKIN, "hair": Pal.INK2, "style": "short", "top": Pal.PURPLE, "jacket": JACKET, "badge": true},
-	{"skin": Pal.SKIN2, "hair": Pal.ROSE.lerp(Pal.INK2, 0.4), "style": "ponytail", "top": Pal.MINT, "jacket": JACKET, "badge": true},
+	{"skin": Pal.SKIN2, "hair": Pal.ROSE.lerp(Pal.INK2, 0.4), "style": "ponytail", "top": Pal.MINT, "jacket": JACKET, "badge": true, "fem": true},
 ]
 
 static var CROWD := [

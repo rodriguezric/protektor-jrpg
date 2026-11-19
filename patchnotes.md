@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-19 14:32 EST — `feature_brows_flush` (v0.60.0)
+
+Eyebrows sit flush on the eyes and run a pixel longer, with an arched tail on feminine faces.
+
+- Brows now sit in the row directly above the eyes (no gap) and have a third pixel running out past each eye's outer edge, so they read as a longer brow. Moods keep their shapes: inner ends up when sad or scared (the tail droops), inner ends down when angry, and the whole brow lifts a row in shock.
+- Feminine faces drop that outer tail a pixel, an arched brow. That's anyone with a girl's or woman's voice, a skirt, or "fem": true in their look (now set on Nell and Sefa among the recruits).
+- Code: `scripts/art_people.gd` (_brow() rewritten, new _feminine()), `scripts/data.gd` (fem on two EXTRAS).
+
 ## 2026-11-19 14:22 EST — `bugfix_mobile_standards` (v0.59.10)
 
 Touch controls now meet the house mobile standard (jrpg_mobile_controls docs v1.0.1): minigame layouts, swipes, drag-scrolling lists and a setting for arrow games.
