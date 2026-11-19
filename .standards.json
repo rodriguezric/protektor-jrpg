@@ -1,18 +1,19 @@
 {
   "_about": "House standards this project was built to. Update with the standards-update skill.",
-  "stamped": "2026-11-19 14:22",
+  "stamped": "2026-11-19 15:08",
   "skills": {
-    "version": "1.1.0",
-    "commit": "b8e0238",
+    "version": "1.2.0",
+    "commit": "386c495",
     "used": [
       "godot-jrpg-style"
     ]
   },
   "docs": {
-    "version": "1.0.1",
-    "commit": "09816bd",
+    "version": "1.1.1",
+    "commit": "ba80e7e",
     "used": [
-      "jrpg_mobile_controls"
+      "jrpg_mobile_controls",
+      "jrpg_art_style"
     ]
   }
 }
