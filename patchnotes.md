@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-19 15:02 EST — `bugfix_cards_banner_covers_card` (v0.61.2)
+
+High-Low's banners no longer cover the card.
+
+- READY?, WRONG and the result banner now sit in the felt strip under the card instead of across its face, so you can always see the card that just turned over. Ping-pong and the drill keep their banners where they were.
+- Code: `scripts/hub_game.gd` (_big() picks the banner row per game).
+
 ## 2026-11-19 15:02 EST — `bugfix_brow_moods_per_type` (v0.61.1)
 
 Every eyebrow is now one connected stroke in every mood, for both straight and arched brows.
