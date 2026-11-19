@@ -35,16 +35,16 @@
     },
     {
       "phase_id": "signature",
-      "start_sec": 37.0
+      "start_sec": 36.9
     },
     {
       "phase_id": "final_clear",
-      "start_sec": 71.4
+      "start_sec": 71.2
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 82.3
+    "timeline_sec": 82.1
   },
   "events": [
     {
@@ -61,7 +61,8 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "ignara_prime_level_01_002",
-      "time": 2.0
+      "time": 2.0,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -69,7 +70,8 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "ignara_prime_level_01_003",
-      "time": 2.7
+      "time": 2.7,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -77,7 +79,8 @@
       "spawn_side": "degrees",
       "degrees": 210,
       "id": "ignara_prime_level_01_004",
-      "time": 3.4
+      "time": 3.4,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -85,7 +88,8 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "ignara_prime_level_01_005",
-      "time": 4.1
+      "time": 4.1,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -93,7 +97,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "ignara_prime_level_01_006",
-      "time": 4.8
+      "time": 4.8,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -101,7 +106,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_007",
-      "time": 6.4
+      "time": 6.4,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -109,7 +115,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "ignara_prime_level_01_008",
-      "time": 8.0
+      "time": 8.0,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -117,7 +124,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_009",
-      "time": 9.6
+      "time": 9.6,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -125,7 +133,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "ignara_prime_level_01_010",
-      "time": 11.2
+      "time": 11.2,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -133,7 +142,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_011",
-      "time": 12.8
+      "time": 12.8,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -141,7 +151,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "ignara_prime_level_01_012",
-      "time": 14.4
+      "time": 14.4,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -149,7 +160,8 @@
       "spawn_side": "degrees",
       "degrees": 30,
       "id": "ignara_prime_level_01_013",
-      "time": 14.52
+      "time": 14.52,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -157,7 +169,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "ignara_prime_level_01_014",
-      "time": 14.64
+      "time": 14.64,
+      "move_speed": 303.8
     },
     {
       "type": "fx_async_message",
@@ -173,7 +186,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "ignara_prime_level_01_016",
-      "time": 16.0
+      "time": 16.0,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -181,7 +195,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "ignara_prime_level_01_017",
-      "time": 16.8
+      "time": 16.8,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -189,7 +204,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "ignara_prime_level_01_018",
-      "time": 17.6
+      "time": 17.6,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -197,7 +213,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "ignara_prime_level_01_019",
-      "time": 18.4
+      "time": 18.4,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -205,7 +222,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "ignara_prime_level_01_020",
-      "time": 19.2
+      "time": 19.2,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -213,7 +231,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "ignara_prime_level_01_021",
-      "time": 20.0
+      "time": 20.0,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -221,7 +240,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "ignara_prime_level_01_022",
-      "time": 20.8
+      "time": 20.8,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -229,7 +249,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "ignara_prime_level_01_023",
-      "time": 21.6
+      "time": 21.6,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -237,7 +258,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "ignara_prime_level_01_024",
-      "time": 22.4
+      "time": 22.4,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -245,7 +267,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "ignara_prime_level_01_025",
-      "time": 23.2
+      "time": 23.2,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -253,7 +276,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "ignara_prime_level_01_026",
-      "time": 24.0
+      "time": 24.0,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -261,7 +285,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "ignara_prime_level_01_027",
-      "time": 25.2
+      "time": 25.2,
+      "move_speed": 112.7
     },
     {
       "type": "spawn_enemy",
@@ -269,7 +294,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "ignara_prime_level_01_028",
-      "time": 27.4
+      "time": 27.35,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -277,7 +303,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "ignara_prime_level_01_029",
-      "time": 28.6
+      "time": 28.55,
+      "move_speed": 112.7
     },
     {
       "type": "spawn_enemy",
@@ -285,7 +312,8 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "ignara_prime_level_01_030",
-      "time": 30.8
+      "time": 30.7,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -293,7 +321,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "ignara_prime_level_01_031",
-      "time": 32.0
+      "time": 31.9,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -301,7 +330,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_032",
-      "time": 33.0
+      "time": 32.9,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -309,7 +339,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "ignara_prime_level_01_033",
-      "time": 34.0
+      "time": 33.9,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -317,7 +348,8 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "ignara_prime_level_01_034",
-      "time": 35.0
+      "time": 34.9,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -325,7 +357,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "ignara_prime_level_01_035",
-      "time": 36.0
+      "time": 35.9,
+      "move_speed": 303.8
     },
     {
       "type": "fx_async_message",
@@ -333,14 +366,14 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "ignara_prime_level_01_036",
-      "time": 37.0
+      "time": 36.9
     },
     {
       "type": "fx_lane",
       "degrees": 75,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_037",
-      "time": 37.0
+      "time": 36.9
     },
     {
       "type": "spawn_enemy",
@@ -348,14 +381,15 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "ignara_prime_level_01_038",
-      "time": 37.6
+      "time": 37.5,
+      "move_speed": 253.1
     },
     {
       "type": "fx_lane",
       "degrees": 345,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_039",
-      "time": 38.6
+      "time": 38.5
     },
     {
       "type": "spawn_enemy",
@@ -363,14 +397,15 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "ignara_prime_level_01_040",
-      "time": 39.2
+      "time": 39.1,
+      "move_speed": 303.8
     },
     {
       "type": "fx_lane",
       "degrees": 255,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_041",
-      "time": 40.2
+      "time": 40.1
     },
     {
       "type": "spawn_enemy",
@@ -378,14 +413,24 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_042",
-      "time": 40.8
+      "time": 40.7,
+      "move_speed": 253.1
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 56,
+      "id": "ignara_prime_level_01_089",
+      "time": 41.18,
+      "move_speed": 112.7
     },
     {
       "type": "fx_lane",
       "degrees": 165,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_043",
-      "time": 41.8
+      "time": 41.7
     },
     {
       "type": "spawn_enemy",
@@ -393,14 +438,15 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "ignara_prime_level_01_044",
-      "time": 42.4
+      "time": 42.3,
+      "move_speed": 303.8
     },
     {
       "type": "fx_lane",
       "degrees": 75,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_045",
-      "time": 43.4
+      "time": 43.3
     },
     {
       "type": "spawn_enemy",
@@ -408,14 +454,15 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "ignara_prime_level_01_046",
-      "time": 44.0
+      "time": 43.9,
+      "move_speed": 253.1
     },
     {
       "type": "fx_lane",
       "degrees": 345,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_047",
-      "time": 45.0
+      "time": 44.9
     },
     {
       "type": "spawn_enemy",
@@ -423,14 +470,15 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "ignara_prime_level_01_048",
-      "time": 45.6
+      "time": 45.5,
+      "move_speed": 303.8
     },
     {
       "type": "fx_lane",
       "degrees": 255,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_049",
-      "time": 46.6
+      "time": 46.5
     },
     {
       "type": "spawn_enemy",
@@ -438,14 +486,15 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_050",
-      "time": 47.2
+      "time": 47.1,
+      "move_speed": 253.1
     },
     {
       "type": "fx_lane",
       "degrees": 165,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_051",
-      "time": 48.2
+      "time": 48.1
     },
     {
       "type": "spawn_enemy",
@@ -453,7 +502,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "ignara_prime_level_01_052",
-      "time": 48.8
+      "time": 48.7,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -461,7 +511,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_053",
-      "time": 50.4
+      "time": 50.3,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -469,7 +520,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "ignara_prime_level_01_054",
-      "time": 50.4
+      "time": 50.3,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -477,7 +529,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "ignara_prime_level_01_055",
-      "time": 52.6
+      "time": 52.45,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -485,7 +538,8 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "ignara_prime_level_01_056",
-      "time": 52.6
+      "time": 52.45,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -493,21 +547,22 @@
       "spawn_side": "degrees",
       "degrees": 30,
       "id": "ignara_prime_level_01_058",
-      "time": 54.8
+      "time": 54.6,
+      "move_speed": 253.1
     },
     {
       "type": "fx_lane",
       "degrees": 30,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_057",
-      "time": 55.2
+      "time": 55.05
     },
     {
       "type": "fx_lane",
       "degrees": 345,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_059",
-      "time": 55.6
+      "time": 55.4
     },
     {
       "type": "spawn_enemy",
@@ -515,14 +570,15 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "ignara_prime_level_01_060",
-      "time": 56.2
+      "time": 56.0,
+      "move_speed": 303.8
     },
     {
       "type": "fx_lane",
       "degrees": 300,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_061",
-      "time": 57.0
+      "time": 56.8
     },
     {
       "type": "spawn_enemy",
@@ -530,14 +586,15 @@
       "spawn_side": "degrees",
       "degrees": 300,
       "id": "ignara_prime_level_01_062",
-      "time": 57.6
+      "time": 57.4,
+      "move_speed": 253.1
     },
     {
       "type": "fx_lane",
       "degrees": 255,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_063",
-      "time": 58.4
+      "time": 58.2
     },
     {
       "type": "spawn_enemy",
@@ -545,14 +602,15 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_064",
-      "time": 59.0
+      "time": 58.8,
+      "move_speed": 303.8
     },
     {
       "type": "fx_lane",
       "degrees": 210,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_065",
-      "time": 59.8
+      "time": 59.6
     },
     {
       "type": "spawn_enemy",
@@ -560,14 +618,15 @@
       "spawn_side": "degrees",
       "degrees": 210,
       "id": "ignara_prime_level_01_066",
-      "time": 60.4
+      "time": 60.2,
+      "move_speed": 253.1
     },
     {
       "type": "fx_lane",
       "degrees": 165,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_067",
-      "time": 61.2
+      "time": 61.0
     },
     {
       "type": "spawn_enemy",
@@ -575,14 +634,15 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "ignara_prime_level_01_068",
-      "time": 61.8
+      "time": 61.6,
+      "move_speed": 303.8
     },
     {
       "type": "fx_lane",
       "degrees": 120,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_069",
-      "time": 62.6
+      "time": 62.4
     },
     {
       "type": "spawn_enemy",
@@ -590,14 +650,15 @@
       "spawn_side": "degrees",
       "degrees": 120,
       "id": "ignara_prime_level_01_070",
-      "time": 63.2
+      "time": 63.0,
+      "move_speed": 253.1
     },
     {
       "type": "fx_lane",
       "degrees": 75,
       "duration_sec": 0.6,
       "id": "ignara_prime_level_01_071",
-      "time": 64.0
+      "time": 63.8
     },
     {
       "type": "spawn_enemy",
@@ -605,7 +666,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "ignara_prime_level_01_072",
-      "time": 64.6
+      "time": 64.4,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -613,7 +675,8 @@
       "spawn_side": "degrees",
       "degrees": 30,
       "id": "ignara_prime_level_01_073",
-      "time": 66.0
+      "time": 65.8,
+      "move_speed": 112.7
     },
     {
       "type": "spawn_enemy",
@@ -621,7 +684,8 @@
       "spawn_side": "degrees",
       "degrees": 210,
       "id": "ignara_prime_level_01_074",
-      "time": 67.8
+      "time": 67.6,
+      "move_speed": 112.7
     },
     {
       "type": "spawn_enemy",
@@ -629,7 +693,8 @@
       "spawn_side": "degrees",
       "degrees": 120,
       "id": "ignara_prime_level_01_075",
-      "time": 69.6
+      "time": 69.4,
+      "move_speed": 112.7
     },
     {
       "type": "fx_async_message",
@@ -637,7 +702,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "ignara_prime_level_01_076",
-      "time": 71.4
+      "time": 71.2
     },
     {
       "type": "spawn_enemy",
@@ -645,7 +710,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "ignara_prime_level_01_077",
-      "time": 71.4
+      "time": 71.2,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -653,7 +719,8 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "ignara_prime_level_01_078",
-      "time": 72.5
+      "time": 72.3,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -661,7 +728,8 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "ignara_prime_level_01_079",
-      "time": 73.6
+      "time": 73.4,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -669,7 +737,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "ignara_prime_level_01_080",
-      "time": 74.7
+      "time": 74.5,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -677,7 +746,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "ignara_prime_level_01_081",
-      "time": 75.8
+      "time": 75.6,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -685,7 +755,8 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "ignara_prime_level_01_082",
-      "time": 76.9
+      "time": 76.7,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -693,7 +764,8 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "ignara_prime_level_01_083",
-      "time": 78.0
+      "time": 77.8,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -701,7 +773,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "ignara_prime_level_01_084",
-      "time": 79.1
+      "time": 78.9,
+      "move_speed": 253.1
     },
     {
       "type": "spawn_enemy",
@@ -709,7 +782,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_085",
-      "time": 80.2
+      "time": 80.0,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -717,7 +791,8 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "ignara_prime_level_01_086",
-      "time": 80.9
+      "time": 80.7,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -725,7 +800,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "ignara_prime_level_01_087",
-      "time": 81.6
+      "time": 81.4,
+      "move_speed": 303.8
     },
     {
       "type": "spawn_enemy",
@@ -733,7 +809,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "ignara_prime_level_01_088",
-      "time": 82.3
+      "time": 82.1,
+      "move_speed": 303.8
     },
     {
       "id": "ignara_prime_level_01_completion_message",

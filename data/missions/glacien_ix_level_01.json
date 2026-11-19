@@ -31,20 +31,20 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 21.8
+      "start_sec": 22.23
     },
     {
       "phase_id": "signature",
-      "start_sec": 46.0
+      "start_sec": 45.93
     },
     {
       "phase_id": "final_clear",
-      "start_sec": 77.17
+      "start_sec": 76.45
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 84.8
+    "timeline_sec": 84.0
   },
   "events": [
     {
@@ -61,7 +61,8 @@
       "spawn_side": "degrees",
       "degrees": 60,
       "id": "glacien_ix_level_01_002",
-      "time": 2.0
+      "time": 2.0,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -69,7 +70,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "glacien_ix_level_01_003",
-      "time": 4.2
+      "time": 4.15,
+      "move_speed": 101.3
     },
     {
       "type": "spawn_enemy",
@@ -77,7 +79,8 @@
       "spawn_side": "degrees",
       "degrees": 330,
       "id": "glacien_ix_level_01_004",
-      "time": 6.4
+      "time": 6.3,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -85,7 +88,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "glacien_ix_level_01_005",
-      "time": 8.6
+      "time": 8.45,
+      "move_speed": 101.3
     },
     {
       "type": "spawn_enemy",
@@ -93,7 +97,17 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "glacien_ix_level_01_006",
-      "time": 10.8
+      "time": 10.6,
+      "move_speed": 116.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 53,
+      "id": "glacien_ix_level_01_053",
+      "time": 10.91,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -101,7 +115,17 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "glacien_ix_level_01_007",
-      "time": 13.0
+      "time": 13.06,
+      "move_speed": 101.3
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 6,
+      "id": "glacien_ix_level_01_054",
+      "time": 13.38,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -109,7 +133,17 @@
       "spawn_side": "degrees",
       "degrees": 335,
       "id": "glacien_ix_level_01_008",
-      "time": 15.2
+      "time": 15.53,
+      "move_speed": 200.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 139,
+      "id": "glacien_ix_level_01_055",
+      "time": 16.03,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -117,7 +151,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "glacien_ix_level_01_009",
-      "time": 17.4
+      "time": 17.93,
+      "move_speed": 200.4
     },
     {
       "type": "spawn_enemy",
@@ -125,7 +160,8 @@
       "spawn_side": "degrees",
       "degrees": 55,
       "id": "glacien_ix_level_01_010",
-      "time": 19.6
+      "time": 20.08,
+      "move_speed": 200.4
     },
     {
       "type": "fx_async_message",
@@ -133,7 +169,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "glacien_ix_level_01_011",
-      "time": 21.8
+      "time": 22.23
     },
     {
       "type": "spawn_enemy",
@@ -143,7 +179,8 @@
       "hold_dist": 150,
       "hold_sec": 1.6,
       "id": "glacien_ix_level_01_012",
-      "time": 21.8
+      "time": 22.23,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -153,7 +190,8 @@
       "hold_dist": 150,
       "hold_sec": 1.6,
       "id": "glacien_ix_level_01_013",
-      "time": 24.0
+      "time": 24.38,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -163,7 +201,8 @@
       "hold_dist": 150,
       "hold_sec": 1.6,
       "id": "glacien_ix_level_01_014",
-      "time": 26.2
+      "time": 26.53,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -173,7 +212,8 @@
       "hold_dist": 150,
       "hold_sec": 1.6,
       "id": "glacien_ix_level_01_015",
-      "time": 28.4
+      "time": 28.68,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -181,7 +221,17 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "glacien_ix_level_01_016",
-      "time": 30.6
+      "time": 30.83,
+      "move_speed": 101.3
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 82,
+      "id": "glacien_ix_level_01_056",
+      "time": 31.72,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -189,7 +239,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "glacien_ix_level_01_017",
-      "time": 32.8
+      "time": 33.03,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -197,7 +248,8 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "glacien_ix_level_01_018",
-      "time": 35.0
+      "time": 35.18,
+      "move_speed": 101.3
     },
     {
       "type": "spawn_enemy",
@@ -207,7 +259,8 @@
       "hold_dist": 150,
       "hold_sec": 2.0,
       "id": "glacien_ix_level_01_019",
-      "time": 37.2
+      "time": 37.33,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -217,7 +270,8 @@
       "hold_dist": 150,
       "hold_sec": 2.0,
       "id": "glacien_ix_level_01_020",
-      "time": 39.4
+      "time": 39.48,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -227,7 +281,8 @@
       "hold_dist": 150,
       "hold_sec": 2.0,
       "id": "glacien_ix_level_01_021",
-      "time": 41.6
+      "time": 41.63,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -237,7 +292,8 @@
       "hold_dist": 150,
       "hold_sec": 2.0,
       "id": "glacien_ix_level_01_022",
-      "time": 43.8
+      "time": 43.78,
+      "move_speed": 308.2
     },
     {
       "type": "fx_async_message",
@@ -245,7 +301,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "glacien_ix_level_01_023",
-      "time": 46.0
+      "time": 45.93
     },
     {
       "type": "spawn_enemy",
@@ -253,9 +309,10 @@
       "spawn_side": "degrees",
       "degrees": 132,
       "hold_dist": 150,
-      "release_at": 51.0,
+      "release_at": 50.93,
       "id": "glacien_ix_level_01_024",
-      "time": 46.0
+      "time": 45.93,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -263,9 +320,10 @@
       "spawn_side": "degrees",
       "degrees": 168,
       "hold_dist": 150,
-      "release_at": 51.0,
+      "release_at": 50.93,
       "id": "glacien_ix_level_01_025",
-      "time": 46.35
+      "time": 46.28,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -273,9 +331,10 @@
       "spawn_side": "degrees",
       "degrees": 290,
       "hold_dist": 170,
-      "release_at": 49.45,
+      "release_at": 49.33,
       "id": "glacien_ix_level_01_026",
-      "time": 46.7
+      "time": 46.63,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -283,9 +342,10 @@
       "spawn_side": "degrees",
       "degrees": 10,
       "hold_dist": 170,
-      "release_at": 49.45,
+      "release_at": 49.33,
       "id": "glacien_ix_level_01_027",
-      "time": 47.05
+      "time": 46.98,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -293,7 +353,8 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "glacien_ix_level_01_028",
-      "time": 49.25
+      "time": 49.13,
+      "move_speed": 79.1
     },
     {
       "type": "spawn_enemy",
@@ -301,9 +362,10 @@
       "spawn_side": "degrees",
       "degrees": 174,
       "hold_dist": 150,
-      "release_at": 56.45,
+      "release_at": 56.28,
       "id": "glacien_ix_level_01_029",
-      "time": 51.45
+      "time": 51.28,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -311,9 +373,10 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "hold_dist": 150,
-      "release_at": 56.45,
+      "release_at": 56.28,
       "id": "glacien_ix_level_01_030",
-      "time": 51.8
+      "time": 51.63,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -321,9 +384,10 @@
       "spawn_side": "degrees",
       "degrees": 126,
       "hold_dist": 150,
-      "release_at": 56.45,
+      "release_at": 56.28,
       "id": "glacien_ix_level_01_031",
-      "time": 52.15
+      "time": 51.98,
+      "move_speed": 308.2
     },
     {
       "type": "spawn_enemy",
@@ -331,9 +395,10 @@
       "spawn_side": "degrees",
       "degrees": 10,
       "hold_dist": 170,
-      "release_at": 55.25,
+      "release_at": 55.03,
       "id": "glacien_ix_level_01_032",
-      "time": 52.5
+      "time": 52.33,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -341,9 +406,10 @@
       "spawn_side": "degrees",
       "degrees": 290,
       "hold_dist": 170,
-      "release_at": 55.25,
+      "release_at": 55.03,
       "id": "glacien_ix_level_01_033",
-      "time": 52.85
+      "time": 52.68,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -351,7 +417,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "glacien_ix_level_01_034",
-      "time": 55.05
+      "time": 54.83,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -359,7 +426,8 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "glacien_ix_level_01_035",
-      "time": 55.05
+      "time": 54.83,
+      "move_speed": 200.4
     },
     {
       "type": "spawn_enemy",
@@ -367,7 +435,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "glacien_ix_level_01_036",
-      "time": 57.25
+      "time": 56.98,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -375,7 +444,8 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "glacien_ix_level_01_037",
-      "time": 57.25
+      "time": 56.98,
+      "move_speed": 200.4
     },
     {
       "type": "spawn_enemy",
@@ -383,7 +453,8 @@
       "spawn_side": "degrees",
       "degrees": 99,
       "id": "glacien_ix_level_01_038",
-      "time": 59.45
+      "time": 59.13,
+      "move_speed": 200.4
     },
     {
       "type": "spawn_enemy",
@@ -391,7 +462,8 @@
       "spawn_side": "degrees",
       "degrees": 81,
       "id": "glacien_ix_level_01_039",
-      "time": 59.57
+      "time": 59.25,
+      "move_speed": 200.4
     },
     {
       "type": "spawn_enemy",
@@ -399,7 +471,8 @@
       "spawn_side": "degrees",
       "degrees": 30,
       "id": "glacien_ix_level_01_040",
-      "time": 61.77
+      "time": 61.4,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -407,7 +480,8 @@
       "spawn_side": "degrees",
       "degrees": 210,
       "id": "glacien_ix_level_01_041",
-      "time": 63.97
+      "time": 63.55,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -415,7 +489,8 @@
       "spawn_side": "degrees",
       "degrees": 300,
       "id": "glacien_ix_level_01_042",
-      "time": 66.17
+      "time": 65.7,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -423,7 +498,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "glacien_ix_level_01_043",
-      "time": 68.37
+      "time": 67.85,
+      "move_speed": 200.4
     },
     {
       "type": "spawn_enemy",
@@ -431,7 +507,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "glacien_ix_level_01_044",
-      "time": 70.57
+      "time": 70.0,
+      "move_speed": 116.0
     },
     {
       "type": "spawn_enemy",
@@ -439,7 +516,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "glacien_ix_level_01_045",
-      "time": 72.77
+      "time": 72.15,
+      "move_speed": 200.4
     },
     {
       "type": "spawn_enemy",
@@ -447,7 +525,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "glacien_ix_level_01_046",
-      "time": 74.97
+      "time": 74.3,
+      "move_speed": 116.0
     },
     {
       "type": "fx_async_message",
@@ -455,7 +534,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "glacien_ix_level_01_047",
-      "time": 77.17
+      "time": 76.45
     },
     {
       "type": "spawn_enemy",
@@ -463,7 +542,8 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "glacien_ix_level_01_048",
-      "time": 77.17
+      "time": 76.45,
+      "move_speed": 79.1
     },
     {
       "type": "spawn_enemy",
@@ -471,7 +551,8 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "glacien_ix_level_01_049",
-      "time": 79.37
+      "time": 78.6,
+      "move_speed": 101.3
     },
     {
       "type": "spawn_enemy",
@@ -479,7 +560,8 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "glacien_ix_level_01_050",
-      "time": 81.17
+      "time": 80.4,
+      "move_speed": 101.3
     },
     {
       "type": "spawn_enemy",
@@ -487,7 +569,8 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "glacien_ix_level_01_051",
-      "time": 82.97
+      "time": 82.2,
+      "move_speed": 101.3
     },
     {
       "type": "spawn_enemy",
@@ -495,7 +578,8 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "glacien_ix_level_01_052",
-      "time": 84.77
+      "time": 84.0,
+      "move_speed": 101.3
     },
     {
       "id": "glacien_ix_level_01_completion_message",

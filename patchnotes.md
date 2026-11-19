@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-19 14:10 EST — `bugfix_planet_difficulty_order` (v0.59.9)
+
+Planets now sit in difficulty tiers: Terra Virex is the easiest, Ignara Prime and Glacien IX are harder, and Umbra Vacua, Viscera Nova, Mechanon Ascens and Tempestris are the hardest.
+
+- Tier 2 (Ignara, Glacien): threats 5% faster than the level's ramp, 8% more far-side escorts, and quiets 0.1 s shorter. Tier 3 (Umbra, Viscera, Mechanon, Tempestris): 10% faster, 14% more escorts, and quiets 0.2 s shorter (Umbra keeps no escorts and gets faster, tighter silences instead). Level 1s get half of their tier, so they keep their designs but still rank in order.
+- Glacien gets an extra nudge on every level (its slow freeze-and-thaw reads easier than its numbers), so it now sits clearly above Terra. Ignara 3 is eased a touch so it stays quite challenging without passing the top tier (in bot runs most of its damage comes in the Solar Crucible fight).
+- Speed-weighted threat pressure per minute (L1 / L2 / L3): Terra 38 / 61 / 83, Glacien 38 / 66 / 90, Ignara 63 / 97 / 109, Viscera 43 / 72 / 91, Mechanon 48 / 69 / 95, Tempestris 76 / 109 / 159, Umbra 26 / 40 / 49 (few threats, but each punishes turning). Bot playthroughs at 2x: every level cleared except Umbra 02 (its turn sentries punish the bot's habit of always turning) and, in one of two runs, Ignara 03 (lost in the boss fight, then won with 4 hits).
+- Code: `tools/build_levels.py` (TIERS, PLANET_TIER and NUDGE tables applied in Level.__init__ on top of RAMP), rebuilt `data/missions/*.json`.
+
 ## 2026-11-19 13:45 EST — `bugfix_level_difficulty_scaling` (v0.59.8)
 
 Difficulty now ramps within each planet: level 1 is unchanged, level 2 is reasonably hard and level 3 is very hard.
