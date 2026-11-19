@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-19 11:44 EST — `bugfix_console_protektor_shield_side` (v0.59.1)
+
+The Protektor cartridge's shield now guards your back instead of your front.
+
+- On the Starbox's PROTEKTOR game the shield arc sits opposite where the robot faces: you shoot drones forward and turn your back to rocks and bolts to block them. The drawn arc and the block check use the same angle, so what you see is what blocks.
+- Code: `scripts/cg_protektor.gd` (new _shield_dir(), used by _in_shield() and the arc in _draw(); the test bot now turns its back to incoming rocks).
+
 ## 2026-11-18 23:31 EST — `feature_character_eyebrows` (v0.59.0)
 
 Everyone has eyebrows now, and they move with the mood.

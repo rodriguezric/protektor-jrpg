@@ -1,7 +1,8 @@
 extends ConsoleGame
 ## PROTEKTOR (Starbox cartridge): the toy version of the real thing. A cartoon
-## robot guards a little planet: turn with the arrows / stick, the shield arc
-## in front blocks rocks and bolts, Z fires along the same line at drones,
+## robot guards a little planet: turn with the arrows / stick, Z fires where
+## you face at drones, and the shield arc on your back (opposite the gun)
+## blocks rocks and bolts,
 ## X sets off an Overdrive that clears the screen (three charges, one more
 ## every 2000 points). Three hearts; endless waves that speed up.
 ##
@@ -157,8 +158,13 @@ func _tick_threats(delta: float) -> void:
 			_hurt()
 
 
+## The shield covers your back: centred opposite the facing / gun line.
+func _shield_dir() -> float:
+	return wrapf(facing + PI, -PI, PI)
+
+
 func _in_shield(p: Vector2) -> bool:
-	return absf(wrapf((p - C).angle() - facing, -PI, PI)) <= SHIELD_HALF
+	return absf(wrapf((p - C).angle() - _shield_dir(), -PI, PI)) <= SHIELD_HALF
 
 
 func _block(th: Dictionary) -> void:
@@ -246,7 +252,7 @@ func _nearest(kinds: Array) -> Dictionary:
 func _auto_aim() -> Vector2:
 	var r := _nearest(["rock", "bolt"])
 	if not r.is_empty() and (r.p as Vector2).distance_to(C) < 30.0:
-		return (r.p as Vector2) - C
+		return C - (r.p as Vector2) # turn your back (the shield) to it
 	var d := _nearest(["drone"])
 	if not d.is_empty():
 		return (d.p as Vector2) - C
@@ -280,7 +286,7 @@ func _draw() -> void:
 		_draw_robot(C + shake + Vector2(0, -PLANET_R - 4), 1)
 		# shield arc and gun line
 		var col := Color("9fe8ff") if hurt_t <= 0.0 or fmod(hurt_t, 0.12) < 0.06 else Color(1, 1, 1, 0.3)
-		draw_arc(C, SHIELD_R, facing - SHIELD_HALF, facing + SHIELD_HALF, 10, col, 2.0, false)
+		draw_arc(C, SHIELD_R, _shield_dir() - SHIELD_HALF, _shield_dir() + SHIELD_HALF, 10, col, 2.0, false)
 		var tip := C + Vector2.from_angle(facing) * (PLANET_R + 4)
 		draw_line(C + Vector2.from_angle(facing) * PLANET_R, tip, Color("ffd36b"), 1.0)
 	for th in threats:
