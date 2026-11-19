@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-19 13:23 EST — `bugfix_wave_pattern_variety` (v0.59.7)
+
+Waves vary much more within a level: patterns come from fresh angles, in new shapes, and rarely repeat.
+
+- Every pattern in a level is now turned to a new angle (and half the time mirrored), so a pattern that returns never comes from the same places. It's seeded per level, so each level still plays the same every run.
+- New shared shapes that every planet mixes into its own vocabulary: pincers (two at once from split sides), fan sweeps (rocks walking across an arc), tight clusters (one block takes the knot), feints (a lane lights up but the threat comes from elsewhere), stutter rhythms (uneven beats you can't tap along to) and orbiters (circle-shooter drones that hold off and fire). Enemy types that were never used now appear: slow asteroids, random spirals and circle shooters.
+- All 21 levels were rewritten so no pattern is used more than twice in a level, apart from each planet's signature (up to three times, each turned and tuned differently). Ignara's levels 1 and 2 no longer share the same mix. Level 1 intensity is unchanged, and every level stays within its target length.
+- Mirror Twins: the front twin opens just after it fires and the back twin opens when you block its shot (then turn on it). Before, the back twin could stay behind you indefinitely.
+- Code: `tools/build_levels.py` (pattern variation wrapper with a per-level seeded rng, new helpers pincer / fan_sweep / cluster / feint / stutter / orbiters, all planet scripts), rebuilt `data/missions/*.json`, `data/bosses.json` (mirror twin windows).
+
 ## 2026-11-19 12:58 EST — `bugfix_wave_dead_time` (v0.59.6)
 
 Missions keep up the action: the long empty stretches between waves are gone, and the remaining pauses are deliberate.

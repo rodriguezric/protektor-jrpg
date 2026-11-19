@@ -31,15 +31,15 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 15.2
+      "start_sec": 25.2
     },
     {
       "phase_id": "signature",
-      "start_sec": 28.8
+      "start_sec": 38.8
     },
     {
       "phase_id": "final_clear",
-      "start_sec": 71.9
+      "start_sec": 70.92
     }
   ],
   "authoring": {
@@ -59,7 +59,7 @@
       "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 345,
       "id": "viscera_nova_level_01_002",
       "time": 2.0
     },
@@ -67,7 +67,7 @@
       "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 165,
       "id": "viscera_nova_level_01_003",
       "time": 4.2
     },
@@ -75,7 +75,7 @@
       "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 75,
       "id": "viscera_nova_level_01_004",
       "time": 6.4
     },
@@ -91,7 +91,7 @@
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 0,
       "retaliate": true,
       "id": "viscera_nova_level_01_006",
       "time": 8.6
@@ -100,7 +100,7 @@
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 180,
       "retaliate": true,
       "id": "viscera_nova_level_01_007",
       "time": 10.8
@@ -109,380 +109,372 @@
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 270,
       "retaliate": true,
       "id": "viscera_nova_level_01_008",
       "time": 13.0
-    },
-    {
-      "type": "fx_async_message",
-      "text": "They are learning you.",
-      "type_speed_cps": 24,
-      "hold_sec": 1.4,
-      "id": "viscera_nova_level_01_009",
-      "time": 15.2
-    },
-    {
-      "type": "fx_async_message",
-      "text": "Watchers wake when you block.",
-      "type_speed_cps": 24,
-      "hold_sec": 1.4,
-      "id": "viscera_nova_level_01_010",
-      "time": 15.2
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 0,
-      "hold_dist": 170,
-      "hold_sec": 8.0,
-      "hold_style": "watch",
-      "wake_on": "block",
-      "lunge_mult": 2.2,
-      "id": "viscera_nova_level_01_011",
-      "time": 15.2
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 60,
-      "hold_dist": 170,
-      "hold_sec": 8.0,
-      "hold_style": "watch",
-      "wake_on": "block",
-      "lunge_mult": 2.2,
-      "id": "viscera_nova_level_01_012",
-      "time": 15.6
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180,
-      "id": "viscera_nova_level_01_013",
-      "time": 17.8
-    },
-    {
-      "type": "fx_async_message",
-      "text": "These wake when you turn.",
-      "type_speed_cps": 24,
-      "hold_sec": 1.4,
-      "id": "viscera_nova_level_01_014",
-      "time": 20.0
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 90,
-      "hold_dist": 170,
-      "hold_sec": 8.0,
-      "hold_style": "watch",
-      "wake_on": "turn",
-      "lunge_mult": 2.2,
-      "id": "viscera_nova_level_01_015",
-      "time": 20.0
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 270,
-      "id": "viscera_nova_level_01_016",
-      "time": 22.2
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_tank",
-      "spawn_side": "degrees",
-      "degrees": 45,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_017",
-      "time": 24.4
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_tank",
-      "spawn_side": "degrees",
-      "degrees": 225,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_018",
-      "time": 26.6
-    },
-    {
-      "type": "fx_async_message",
-      "text": "Mixed intent detected.",
-      "type_speed_cps": 24,
-      "hold_sec": 1.4,
-      "id": "viscera_nova_level_01_019",
-      "time": 28.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "charger_drone",
-      "spawn_side": "degrees",
-      "degrees": 0,
-      "id": "viscera_nova_level_01_020",
-      "time": 28.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 120,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_021",
-      "time": 29.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 240,
-      "hold_dist": 170,
-      "hold_sec": 8.0,
-      "hold_style": "watch",
-      "wake_on": "block",
-      "lunge_mult": 2.2,
-      "id": "viscera_nova_level_01_022",
-      "time": 30.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 60,
-      "id": "viscera_nova_level_01_023",
-      "time": 33.0
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "charger_drone",
-      "spawn_side": "degrees",
-      "degrees": 270,
-      "id": "viscera_nova_level_01_024",
-      "time": 35.2
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 30,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_025",
-      "time": 36.2
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 150,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_026",
-      "time": 37.7
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "charger_drone",
-      "spawn_side": "degrees",
-      "degrees": 90,
-      "id": "viscera_nova_level_01_027",
-      "time": 39.9
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "charger_drone",
-      "spawn_side": "degrees",
-      "degrees": 270,
-      "id": "viscera_nova_level_01_028",
-      "time": 42.1
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "charger_drone",
-      "spawn_side": "degrees",
-      "degrees": 45,
-      "id": "viscera_nova_level_01_029",
-      "time": 44.3
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "charger_drone",
-      "spawn_side": "degrees",
-      "degrees": 225,
-      "id": "viscera_nova_level_01_030",
-      "time": 46.5
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 135,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_031",
-      "time": 48.7
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 315,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_032",
-      "time": 50.9
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 180,
-      "hold_dist": 170,
-      "hold_sec": 8.0,
-      "hold_style": "watch",
-      "wake_on": "block",
-      "lunge_mult": 2.2,
-      "id": "viscera_nova_level_01_033",
-      "time": 53.1
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0,
-      "id": "viscera_nova_level_01_034",
-      "time": 55.3
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
       "degrees": 36,
-      "id": "viscera_nova_level_01_035",
-      "time": 55.3
+      "id": "viscera_nova_level_01_009",
+      "time": 15.2
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_sine",
       "spawn_side": "degrees",
       "degrees": 108,
-      "id": "viscera_nova_level_01_036",
-      "time": 57.3
+      "id": "viscera_nova_level_01_010",
+      "time": 17.2
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
       "degrees": 180,
-      "id": "viscera_nova_level_01_037",
-      "time": 59.3
+      "id": "viscera_nova_level_01_011",
+      "time": 19.2
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_sine",
       "spawn_side": "degrees",
       "degrees": 252,
-      "id": "viscera_nova_level_01_038",
-      "time": 61.3
+      "id": "viscera_nova_level_01_012",
+      "time": 21.2
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
       "degrees": 324,
-      "id": "viscera_nova_level_01_039",
-      "time": 63.3
+      "id": "viscera_nova_level_01_013",
+      "time": 23.2
+    },
+    {
+      "type": "fx_async_message",
+      "text": "They are learning you.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "viscera_nova_level_01_014",
+      "time": 25.2
+    },
+    {
+      "type": "fx_async_message",
+      "text": "Watchers wake when you block.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "viscera_nova_level_01_015",
+      "time": 25.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "hold_dist": 170,
+      "hold_sec": 8.0,
+      "hold_style": "watch",
+      "wake_on": "block",
+      "lunge_mult": 2.2,
+      "id": "viscera_nova_level_01_016",
+      "time": 25.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 15,
+      "hold_dist": 170,
+      "hold_sec": 8.0,
+      "hold_style": "watch",
+      "wake_on": "block",
+      "lunge_mult": 2.2,
+      "id": "viscera_nova_level_01_017",
+      "time": 25.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 180,
+      "id": "viscera_nova_level_01_018",
+      "time": 27.8
+    },
+    {
+      "type": "fx_async_message",
+      "text": "These wake when you turn.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "viscera_nova_level_01_019",
+      "time": 30.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 195,
+      "hold_dist": 170,
+      "hold_sec": 8.0,
+      "hold_style": "watch",
+      "wake_on": "turn",
+      "lunge_mult": 2.2,
+      "id": "viscera_nova_level_01_020",
+      "time": 30.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "id": "viscera_nova_level_01_021",
+      "time": 32.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_tank",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "id": "viscera_nova_level_01_022",
+      "time": 34.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "id": "viscera_nova_level_01_023",
+      "time": 34.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_tank",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "id": "viscera_nova_level_01_024",
+      "time": 36.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 45,
+      "id": "viscera_nova_level_01_025",
+      "time": 36.6
+    },
+    {
+      "type": "fx_async_message",
+      "text": "Mixed intent detected.",
+      "type_speed_cps": 24,
+      "hold_sec": 1.4,
+      "id": "viscera_nova_level_01_026",
+      "time": 38.8
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
-      "degrees": 0,
-      "id": "viscera_nova_level_01_040",
-      "time": 65.3
+      "degrees": 150,
+      "id": "viscera_nova_level_01_027",
+      "time": 38.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 225,
+      "retaliate": true,
+      "id": "viscera_nova_level_01_028",
+      "time": 39.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 60,
+      "id": "viscera_nova_level_01_029",
+      "time": 41.8
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
       "degrees": 120,
-      "id": "viscera_nova_level_01_041",
-      "time": 67.5
+      "id": "viscera_nova_level_01_030",
+      "time": 44.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 0,
+      "id": "viscera_nova_level_01_031",
+      "time": 46.0
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
       "degrees": 240,
+      "id": "viscera_nova_level_01_032",
+      "time": 48.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_tank",
+      "spawn_side": "degrees",
+      "degrees": 15,
+      "retaliate": true,
+      "id": "viscera_nova_level_01_033",
+      "time": 50.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_tank",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "retaliate": true,
+      "id": "viscera_nova_level_01_034",
+      "time": 51.7
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 255,
+      "id": "viscera_nova_level_01_035",
+      "time": 53.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "id": "viscera_nova_level_01_036",
+      "time": 55.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 15,
+      "id": "viscera_nova_level_01_037",
+      "time": 57.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 66,
+      "id": "viscera_nova_level_01_038",
+      "time": 59.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 84,
+      "id": "viscera_nova_level_01_039",
+      "time": 59.92
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "id": "viscera_nova_level_01_040",
+      "time": 62.12
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "id": "viscera_nova_level_01_041",
+      "time": 64.32
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 135,
       "id": "viscera_nova_level_01_042",
-      "time": 69.7
+      "time": 66.52
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "id": "viscera_nova_level_01_043",
+      "time": 68.72
     },
     {
       "type": "fx_async_message",
       "text": "Final contact sweep.",
       "type_speed_cps": 24,
       "hold_sec": 1.4,
-      "id": "viscera_nova_level_01_043",
-      "time": 71.9
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_sine",
-      "spawn_side": "degrees",
-      "degrees": 0,
       "id": "viscera_nova_level_01_044",
-      "time": 71.9
+      "time": 70.92
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 72,
+      "degrees": 200,
       "id": "viscera_nova_level_01_045",
-      "time": 73.7
+      "time": 70.92
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_sine",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 144,
+      "degrees": 167,
       "id": "viscera_nova_level_01_046",
-      "time": 75.5
+      "time": 72.92
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 216,
+      "degrees": 133,
       "id": "viscera_nova_level_01_047",
-      "time": 77.3
+      "time": 74.92
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_sine",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 288,
+      "degrees": 100,
       "id": "viscera_nova_level_01_048",
-      "time": 79.1
+      "time": 76.92
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "charger_drone",
+      "spawn_side": "degrees",
+      "degrees": 120,
+      "id": "viscera_nova_level_01_049",
+      "time": 78.92
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "charger_drone",
+      "spawn_side": "degrees",
+      "degrees": 240,
+      "id": "viscera_nova_level_01_050",
+      "time": 81.12
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "charger_drone",
       "spawn_side": "degrees",
       "degrees": 0,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_049",
-      "time": 81.3
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 180,
-      "retaliate": true,
-      "id": "viscera_nova_level_01_050",
-      "time": 83.3
+      "id": "viscera_nova_level_01_051",
+      "time": 83.32
     },
     {
       "id": "viscera_nova_level_01_completion_message",
