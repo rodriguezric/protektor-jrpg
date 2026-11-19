@@ -31,20 +31,20 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 12.6
+      "start_sec": 12.3
     },
     {
       "phase_id": "signature",
-      "start_sec": 26.02
+      "start_sec": 25.32
     },
     {
       "phase_id": "final_clear",
-      "start_sec": 77.92
+      "start_sec": 76.42
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 84.3
+    "timeline_sec": 82.6
   },
   "events": [
     {
@@ -61,7 +61,8 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "umbra_vacua_level_01_002",
-      "time": 3.0
+      "time": 3.0,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -69,7 +70,8 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "umbra_vacua_level_01_003",
-      "time": 6.2
+      "time": 6.1,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -77,7 +79,8 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "umbra_vacua_level_01_004",
-      "time": 9.4
+      "time": 9.2,
+      "move_speed": 100.8
     },
     {
       "type": "fx_async_message",
@@ -85,7 +88,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "umbra_vacua_level_01_005",
-      "time": 12.6
+      "time": 12.3
     },
     {
       "type": "fx_async_message",
@@ -93,7 +96,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "umbra_vacua_level_01_006",
-      "time": 12.6
+      "time": 12.3
     },
     {
       "type": "spawn_enemy",
@@ -105,7 +108,8 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_01_007",
-      "time": 12.6
+      "time": 12.3,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -113,7 +117,8 @@
       "spawn_side": "degrees",
       "degrees": 173,
       "id": "umbra_vacua_level_01_008",
-      "time": 15.8
+      "time": 15.4,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -121,7 +126,8 @@
       "spawn_side": "degrees",
       "degrees": 157,
       "id": "umbra_vacua_level_01_009",
-      "time": 15.92
+      "time": 15.52,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -133,7 +139,8 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_01_010",
-      "time": 19.12
+      "time": 18.62,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -145,7 +152,8 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_01_011",
-      "time": 19.62
+      "time": 19.12,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -153,7 +161,8 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "umbra_vacua_level_01_012",
-      "time": 22.82
+      "time": 22.22,
+      "move_speed": 199.5
     },
     {
       "type": "fx_async_message",
@@ -161,7 +170,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "umbra_vacua_level_01_013",
-      "time": 26.02
+      "time": 25.32
     },
     {
       "type": "spawn_enemy",
@@ -174,7 +183,8 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "umbra_vacua_level_01_014",
-      "time": 26.02
+      "time": 25.32,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -182,7 +192,8 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "umbra_vacua_level_01_015",
-      "time": 28.42
+      "time": 27.72,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -190,7 +201,8 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "umbra_vacua_level_01_016",
-      "time": 31.62
+      "time": 30.82,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -198,7 +210,8 @@
       "spawn_side": "degrees",
       "degrees": 15,
       "id": "umbra_vacua_level_01_017",
-      "time": 34.82
+      "time": 33.92,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -206,7 +219,8 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "umbra_vacua_level_01_018",
-      "time": 37.32
+      "time": 36.42,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -214,7 +228,8 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "umbra_vacua_level_01_019",
-      "time": 40.32
+      "time": 39.42,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -227,7 +242,8 @@
       "wake_on": "turn",
       "lunge_mult": 2.2,
       "id": "umbra_vacua_level_01_020",
-      "time": 43.32
+      "time": 42.42,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -235,7 +251,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "umbra_vacua_level_01_021",
-      "time": 44.72
+      "time": 43.82,
+      "move_speed": 100.8
     },
     {
       "type": "spawn_enemy",
@@ -243,7 +260,8 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "umbra_vacua_level_01_022",
-      "time": 47.92
+      "time": 46.92,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -251,7 +269,8 @@
       "spawn_side": "degrees",
       "degrees": 200,
       "id": "umbra_vacua_level_01_023",
-      "time": 49.92
+      "time": 48.92,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -259,7 +278,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "umbra_vacua_level_01_024",
-      "time": 53.12
+      "time": 52.02,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -267,7 +287,8 @@
       "spawn_side": "degrees",
       "degrees": 335,
       "id": "umbra_vacua_level_01_025",
-      "time": 56.12
+      "time": 55.02,
+      "move_speed": 152.2
     },
     {
       "type": "spawn_enemy",
@@ -275,7 +296,8 @@
       "spawn_side": "degrees",
       "degrees": 300,
       "id": "umbra_vacua_level_01_026",
-      "time": 59.32
+      "time": 58.12,
+      "move_speed": 199.5
     },
     {
       "type": "spawn_enemy",
@@ -283,7 +305,8 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "umbra_vacua_level_01_027",
-      "time": 62.52
+      "time": 61.22,
+      "move_speed": 100.8
     },
     {
       "type": "spawn_enemy",
@@ -295,7 +318,8 @@
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_01_028",
-      "time": 65.72
+      "time": 64.32,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -303,7 +327,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "umbra_vacua_level_01_029",
-      "time": 68.92
+      "time": 67.42,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -311,7 +336,8 @@
       "spawn_side": "degrees",
       "degrees": 200,
       "id": "umbra_vacua_level_01_030",
-      "time": 71.92
+      "time": 70.42,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -319,7 +345,8 @@
       "spawn_side": "degrees",
       "degrees": 120,
       "id": "umbra_vacua_level_01_031",
-      "time": 74.92
+      "time": 73.42,
+      "move_speed": 199.5
     },
     {
       "type": "fx_async_message",
@@ -327,7 +354,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "umbra_vacua_level_01_032",
-      "time": 77.92
+      "time": 76.42
     },
     {
       "type": "spawn_enemy",
@@ -335,7 +362,8 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "umbra_vacua_level_01_033",
-      "time": 77.92
+      "time": 76.42,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -343,7 +371,8 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "umbra_vacua_level_01_034",
-      "time": 81.12
+      "time": 79.52,
+      "move_speed": 328.0
     },
     {
       "type": "spawn_enemy",
@@ -351,7 +380,8 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "umbra_vacua_level_01_035",
-      "time": 84.32
+      "time": 82.62,
+      "move_speed": 96.6
     },
     {
       "id": "umbra_vacua_level_01_completion_message",

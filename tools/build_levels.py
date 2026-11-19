@@ -52,6 +52,21 @@ RAMP = {1: (1.0, 0.0, 2.2), 2: (1.12, 0.2, 1.8), 3: (1.24, 0.34, 1.5)}
 ## planets whose threats stay few on purpose: no escorts, longer quiets
 SPARSE = {"umbra_vacua": 3.2}
 
+## Planet tiers, on top of RAMP: Terra Virex is the easiest; Ignara Prime and
+## Glacien IX are harder; Umbra Vacua, Viscera Nova, Mechanon Ascens and
+## Tempestris are the hardest. tier -> (extra speed, extra escort chance,
+## seconds off max_gap). Level 1s get half of it, so their designs stay as
+## written but still sit in tier order.
+TIERS = {1: (0.0, 0.0, 0.0), 2: (0.05, 0.08, 0.1), 3: (0.10, 0.14, 0.2)}
+## Per-level nudges where a planet's own vocabulary sits off its tier:
+## Glacien's slow freeze-and-thaw reads easier than its density, and
+## Ignara's fast lanes read harder (its L3 should be quite challenging, not
+## top-tier). (planet, level) -> (speed, escort)
+NUDGE = {("glacien_ix", 1): (0.03, 0.06), ("glacien_ix", 2): (0.04, 0.08), ("glacien_ix", 3): (0.05, 0.10),
+         ("ignara_prime", 3): (-0.04, -0.06)}
+PLANET_TIER = {"terra_virex": 1, "ignara_prime": 2, "glacien_ix": 2,
+               "umbra_vacua": 3, "viscera_nova": 3, "mechanon_ascens": 3, "tempestris": 3}
+
 
 class Level:
     """A clock plus the events laid on it."""
@@ -70,9 +85,16 @@ class Level:
         self._flip = 1.0
         self._depth = 0
         speed, escort, gap = RAMP[index]
-        self.speed = speed
-        self.escort = 0.0 if planet in SPARSE else escort
-        self.max_gap = gap if planet not in SPARSE else SPARSE[planet] - (index - 1) * 0.4
+        if planet in SPARSE:
+            escort, gap = 0.0, SPARSE[planet] - (index - 1) * 0.4
+        t_speed, t_escort, t_gap = TIERS[PLANET_TIER.get(planet, 1)]
+        share = 0.5 if index == 1 else 1.0
+        self.speed = round(speed + t_speed * share, 3)
+        self.escort = 0.0 if planet in SPARSE else escort + t_escort * share
+        self.max_gap = gap - t_gap * share
+        n_speed, n_escort = NUDGE.get((planet, index), (0.0, 0.0))
+        self.speed = round(self.speed + n_speed, 3)
+        self.escort = max(0.0, self.escort + n_escort) if planet not in SPARSE else 0.0
 
     # -- clock ---------------------------------------------------------------
     def phase(self, phase_id: str, message: str = ""):

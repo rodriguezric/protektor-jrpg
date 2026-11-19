@@ -31,20 +31,20 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 22.4
+      "start_sec": 22.78
     },
     {
       "phase_id": "signature",
-      "start_sec": 47.1
+      "start_sec": 46.68
     },
     {
       "phase_id": "final_clear",
-      "start_sec": 78.4
+      "start_sec": 77.68
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 86.8
+    "timeline_sec": 86.1
   },
   "events": [
     {
@@ -61,7 +61,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "mechanon_ascens_level_01_002",
-      "time": 2.0
+      "time": 2.0,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -69,7 +70,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "mechanon_ascens_level_01_003",
-      "time": 2.5
+      "time": 2.5,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -77,7 +79,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "mechanon_ascens_level_01_004",
-      "time": 4.7
+      "time": 4.6,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -85,7 +88,8 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "mechanon_ascens_level_01_005",
-      "time": 5.2
+      "time": 5.1,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -93,7 +97,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "mechanon_ascens_level_01_006",
-      "time": 7.4
+      "time": 7.2,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -101,7 +106,17 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "mechanon_ascens_level_01_007",
-      "time": 7.9
+      "time": 7.7,
+      "move_speed": 115.5
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 86,
+      "id": "mechanon_ascens_level_01_061",
+      "time": 8.48,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -109,7 +124,8 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "mechanon_ascens_level_01_008",
-      "time": 10.1
+      "time": 10.58,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -117,7 +133,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "mechanon_ascens_level_01_009",
-      "time": 10.6
+      "time": 11.08,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -125,7 +142,8 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "id": "mechanon_ascens_level_01_010",
-      "time": 12.8
+      "time": 13.18,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -133,7 +151,8 @@
       "spawn_side": "degrees",
       "degrees": 330,
       "id": "mechanon_ascens_level_01_011",
-      "time": 14.4
+      "time": 14.78,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -141,7 +160,8 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "id": "mechanon_ascens_level_01_012",
-      "time": 16.0
+      "time": 16.38,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -149,7 +169,8 @@
       "spawn_side": "degrees",
       "degrees": 330,
       "id": "mechanon_ascens_level_01_013",
-      "time": 17.6
+      "time": 17.98,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -157,7 +178,8 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "id": "mechanon_ascens_level_01_014",
-      "time": 19.2
+      "time": 19.58,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -165,7 +187,8 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "mechanon_ascens_level_01_015",
-      "time": 20.8
+      "time": 21.18,
+      "move_speed": 307.5
     },
     {
       "type": "fx_async_message",
@@ -173,7 +196,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "mechanon_ascens_level_01_016",
-      "time": 22.4
+      "time": 22.78
     },
     {
       "type": "spawn_enemy",
@@ -182,7 +205,8 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_01_017",
-      "time": 22.4
+      "time": 22.78,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -191,7 +215,8 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_01_018",
-      "time": 24.6
+      "time": 24.88,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -200,7 +225,8 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_01_019",
-      "time": 26.8
+      "time": 26.98,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -209,7 +235,8 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_01_020",
-      "time": 29.0
+      "time": 29.08,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -218,7 +245,8 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_01_021",
-      "time": 31.2
+      "time": 31.18,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -227,7 +255,8 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_01_022",
-      "time": 33.4
+      "time": 33.28,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -235,7 +264,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "mechanon_ascens_level_01_023",
-      "time": 35.6
+      "time": 35.38,
+      "move_speed": 96.6
     },
     {
       "type": "spawn_enemy",
@@ -243,7 +273,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "mechanon_ascens_level_01_024",
-      "time": 37.1
+      "time": 36.88,
+      "move_speed": 96.6
     },
     {
       "type": "spawn_enemy",
@@ -251,7 +282,8 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "id": "mechanon_ascens_level_01_025",
-      "time": 39.3
+      "time": 38.98,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -259,7 +291,8 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "mechanon_ascens_level_01_026",
-      "time": 40.7
+      "time": 40.38,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -267,7 +300,8 @@
       "spawn_side": "degrees",
       "degrees": 330,
       "id": "mechanon_ascens_level_01_027",
-      "time": 42.1
+      "time": 41.78,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -275,7 +309,8 @@
       "spawn_side": "degrees",
       "degrees": 60,
       "id": "mechanon_ascens_level_01_028",
-      "time": 44.3
+      "time": 43.88,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -283,7 +318,8 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "id": "mechanon_ascens_level_01_029",
-      "time": 45.7
+      "time": 45.28,
+      "move_speed": 115.5
     },
     {
       "type": "fx_async_message",
@@ -291,7 +327,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "mechanon_ascens_level_01_030",
-      "time": 47.1
+      "time": 46.68
     },
     {
       "type": "spawn_enemy",
@@ -299,7 +335,8 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "mechanon_ascens_level_01_031",
-      "time": 47.1
+      "time": 46.68,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -307,7 +344,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "mechanon_ascens_level_01_032",
-      "time": 47.6
+      "time": 47.18,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -315,7 +353,8 @@
       "spawn_side": "degrees",
       "degrees": 255,
       "id": "mechanon_ascens_level_01_033",
-      "time": 49.8
+      "time": 49.28,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -323,7 +362,17 @@
       "spawn_side": "degrees",
       "degrees": 75,
       "id": "mechanon_ascens_level_01_034",
-      "time": 50.3
+      "time": 49.78,
+      "move_speed": 115.5
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 270,
+      "id": "mechanon_ascens_level_01_062",
+      "time": 50.18,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -331,7 +380,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "mechanon_ascens_level_01_035",
-      "time": 52.5
+      "time": 52.08,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -339,7 +389,8 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "mechanon_ascens_level_01_036",
-      "time": 53.0
+      "time": 52.58,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -347,7 +398,8 @@
       "spawn_side": "degrees",
       "degrees": 345,
       "id": "mechanon_ascens_level_01_037",
-      "time": 55.2
+      "time": 54.68,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -355,7 +407,8 @@
       "spawn_side": "degrees",
       "degrees": 165,
       "id": "mechanon_ascens_level_01_038",
-      "time": 55.7
+      "time": 55.18,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -363,7 +416,8 @@
       "spawn_side": "degrees",
       "degrees": 30,
       "id": "mechanon_ascens_level_01_039",
-      "time": 57.9
+      "time": 57.28,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -371,7 +425,8 @@
       "spawn_side": "degrees",
       "degrees": 210,
       "id": "mechanon_ascens_level_01_040",
-      "time": 58.4
+      "time": 57.78,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -379,7 +434,8 @@
       "spawn_side": "degrees",
       "degrees": 285,
       "id": "mechanon_ascens_level_01_041",
-      "time": 60.6
+      "time": 59.88,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -387,7 +443,8 @@
       "spawn_side": "degrees",
       "degrees": 240,
       "id": "mechanon_ascens_level_01_042",
-      "time": 62.0
+      "time": 61.28,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -395,7 +452,8 @@
       "spawn_side": "degrees",
       "degrees": 195,
       "id": "mechanon_ascens_level_01_043",
-      "time": 63.4
+      "time": 62.68,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -403,7 +461,17 @@
       "spawn_side": "degrees",
       "degrees": 150,
       "id": "mechanon_ascens_level_01_044",
-      "time": 64.8
+      "time": 64.08,
+      "move_speed": 307.5
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 331,
+      "id": "mechanon_ascens_level_01_063",
+      "time": 64.71,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -411,7 +479,8 @@
       "spawn_side": "degrees",
       "degrees": 105,
       "id": "mechanon_ascens_level_01_045",
-      "time": 66.2
+      "time": 65.48,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -420,7 +489,8 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_01_046",
-      "time": 67.6
+      "time": 66.88,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -429,7 +499,8 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_01_047",
-      "time": 69.4
+      "time": 68.68,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -438,7 +509,8 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_01_048",
-      "time": 71.2
+      "time": 70.48,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -447,7 +519,8 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_01_049",
-      "time": 73.0
+      "time": 72.28,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -456,7 +529,8 @@
       "delay": 0.8,
       "offset": 180,
       "id": "mechanon_ascens_level_01_050",
-      "time": 74.8
+      "time": 74.08,
+      "move_speed": 307.5
     },
     {
       "type": "spawn_enemy",
@@ -465,7 +539,8 @@
       "delay": 0.8,
       "offset": 0,
       "id": "mechanon_ascens_level_01_051",
-      "time": 76.6
+      "time": 75.88,
+      "move_speed": 115.5
     },
     {
       "type": "fx_async_message",
@@ -473,7 +548,7 @@
       "type_speed_cps": 24,
       "hold_sec": 1.4,
       "id": "mechanon_ascens_level_01_052",
-      "time": 78.4
+      "time": 77.68
     },
     {
       "type": "spawn_enemy",
@@ -481,7 +556,8 @@
       "spawn_side": "degrees",
       "degrees": 0,
       "id": "mechanon_ascens_level_01_053",
-      "time": 78.4
+      "time": 77.68,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -489,7 +565,8 @@
       "spawn_side": "degrees",
       "degrees": 315,
       "id": "mechanon_ascens_level_01_054",
-      "time": 79.6
+      "time": 78.88,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -497,7 +574,8 @@
       "spawn_side": "degrees",
       "degrees": 270,
       "id": "mechanon_ascens_level_01_055",
-      "time": 80.8
+      "time": 80.08,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -505,7 +583,8 @@
       "spawn_side": "degrees",
       "degrees": 225,
       "id": "mechanon_ascens_level_01_056",
-      "time": 82.0
+      "time": 81.28,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -513,7 +592,17 @@
       "spawn_side": "degrees",
       "degrees": 180,
       "id": "mechanon_ascens_level_01_057",
-      "time": 83.2
+      "time": 82.48,
+      "move_speed": 256.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 327,
+      "id": "mechanon_ascens_level_01_064",
+      "time": 83.34,
+      "move_speed": 115.5
     },
     {
       "type": "spawn_enemy",
@@ -521,7 +610,8 @@
       "spawn_side": "degrees",
       "degrees": 135,
       "id": "mechanon_ascens_level_01_058",
-      "time": 84.4
+      "time": 83.68,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -529,7 +619,8 @@
       "spawn_side": "degrees",
       "degrees": 90,
       "id": "mechanon_ascens_level_01_059",
-      "time": 85.6
+      "time": 84.88,
+      "move_speed": 256.2
     },
     {
       "type": "spawn_enemy",
@@ -537,7 +628,8 @@
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "mechanon_ascens_level_01_060",
-      "time": 86.8
+      "time": 86.08,
+      "move_speed": 256.2
     },
     {
       "id": "mechanon_ascens_level_01_completion_message",
