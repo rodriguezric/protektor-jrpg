@@ -228,6 +228,59 @@ func remove_npc(id: String) -> void:
 		a.queue_free()
 
 
+func view_rect() -> Rect2:
+	## What the camera shows right now (pans included), in world space.
+	var size := get_viewport_rect().size / (cam.zoom if cam else Vector2.ONE)
+	var c := cam.get_screen_center_position() if cam else Vector2.ZERO
+	return Rect2(c - size / 2.0, size)
+
+
+func char_at(t: Vector2i) -> String:
+	if t.y < 0 or t.y >= rows.size() or t.x < 0 or t.x >= (rows[t.y] as String).length():
+		return " "
+	return (rows[t.y] as String)[t.x]
+
+
+func door_sill(t: Vector2i) -> Variant:
+	## For a door in a wall face (a D with floor below it), the point at the
+	## centre of its opening on the sill, where someone stepping out stands;
+	## null for anything else.
+	if char_at(t) != "D":
+		return null
+	var below := t
+	while char_at(below) == "D":
+		below.y += 1
+	if ArtTiles.is_wall(char_at(below)) or char_at(below) == " ":
+		return null
+	var x0 := t.x
+	while char_at(Vector2i(x0 - 1, t.y)) == "D":
+		x0 -= 1
+	var x1 := t.x
+	while char_at(Vector2i(x1 + 1, t.y)) == "D":
+		x1 += 1
+	return Vector2((x0 + x1 + 1) * TILE / 2.0, below.y * TILE - 1)
+
+
+func offstage(t: Vector2i) -> Vector2:
+	## A point beyond the view edge nearest tile t, far enough out that a
+	## standing sprite there is entirely out of sight.
+	var v := view_rect()
+	var p := tile_center(t)
+	var d := {"left": p.x - v.position.x, "right": v.end.x - p.x, "top": p.y - v.position.y, "bottom": v.end.y - p.y}
+	var best := "left"
+	for k in d:
+		if d[k] < d[best]:
+			best = k
+	match best:
+		"left":
+			return Vector2(v.position.x - 16, clampf(p.y, v.position.y + 40, v.end.y))
+		"right":
+			return Vector2(v.end.x + 16, clampf(p.y, v.position.y + 40, v.end.y))
+		"top":
+			return Vector2(clampf(p.x, v.position.x, v.end.x), v.position.y - 4)
+	return Vector2(clampf(p.x, v.position.x, v.end.x), v.end.y + 36)
+
+
 func show_area_name(text: String = "") -> void:
 	if text == "":
 		text = def.get("name", "")

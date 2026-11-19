@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 21:41 EST — `bugfix_characters_pop_in_and_out` (v0.58.4)
+
+Nobody pops into or out of view any more: people in field scenes walk in and out through doors or from off-screen, per the house JRPG rule.
+
+- New staging helpers, ported from the house standard: enter() brings someone through a door (they fade in inside the dark opening and step down onto the floor) or walks them in from beyond the camera's view; leave() walks them back out the same way (fading out in a doorway) and only removes them once they're out of sight.
+- Fixed scenes: the Instructor who comes for Kit, the medic who asks Sefa her name, and the parade guard now walk in and out instead of appearing and vanishing; Nell, Dov, Kit and the maintenance unit walk to their places instead of teleporting; Midas in the mess hall, Hiro and Pala on the rooftop, Pala at the memorial and Midas with his tomatoes are in the room as it fades in, and leave through the door; Pala arrives at the observation deck through the door behind you and leaves the same way.
+- Older scenes: the badge-hall officer walks back out instead of vanishing; recruits file out of the orientation hall and step into the lift doors and fade instead of blinking out; the staging-room Instructor comes in through the door; the recovery-ward Instructor walks in, and you walk over rather than being moved; the recruits boarding the parade shuttle fade into its door.
+- Code: `scripts/story.gd` (enter(), leave()), `scripts/world.gd` (view_rect(), door_sill(), offstage(), char_at()), `scripts/story_scenes.gd` (room_cast()/room_key(), all scenes), `scripts/story_wing.gd` (room casts before the fade, Pala, Midas), `scripts/story_academy.gd`, `scripts/story_prologue.gd`, `tools/autotest.gd`.
+
 ## 2026-11-18 20:33 EST — `bugfix_field_cutscene_player_stuck` (v0.58.3)
 
 You can no longer get stuck after talking to someone who starts a field cutscene.

@@ -653,7 +653,13 @@ func trigger(id: String) -> void:
 			continue
 		var go := func() -> void:
 			if await act.walk_to([Vector2(act.position.x, s.w.tile_center(Vector2i(0, 9)).y), door], 60.0):
-				act.visible = false
+				# up the ramp and into the dark of the shuttle door
+				var tw := act.create_tween()
+				tw.tween_property(act, "modulate:a", 0.0, 0.3)
+				await tw.finished
+				if is_instance_valid(act):
+					act.visible = false
+					act.modulate.a = 1.0
 			Sfx.play("step", 1.3, -16.0)
 		go.call()
 		await s.wait(0.25)

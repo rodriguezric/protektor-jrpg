@@ -66,7 +66,13 @@ func _enter_room(id: String) -> void:
 		await s.say("", ["%s. The door is sealed." % Maps.WING_NAMES[id].to_upper(), unlock_hint(id)])
 		return
 	Sfx.play("door", 1.0, -8.0)
-	await s.m.change_map(Maps.wing_room(id), Vector2i(7, 7), 1)
+	var mp := Maps.wing_room(id)
+	# whoever a scene needs is already in the room when it fades in
+	mp.npcs = mp.npcs.duplicate()
+	mp.npcs.append_array(s.scenes.room_cast(id))
+	if id == "rooftop" and not bool(Game.story.get("room_rooftop_seen", false)) and not Game.midas_dead():
+		mp.npcs.append({"id": "midas", "who": "midas", "tile": Vector2i(5, 6), "dir": 3, "pose": "sit"})
+	await s.m.change_map(mp, Vector2i(7, 7), 1)
 	var rid := "room_" + id
 	if not bool(Game.story.get(rid + "_seen", false)):
 		Game.story[rid + "_seen"] = true
@@ -115,10 +121,9 @@ func _stargazing() -> void:
 		await s.say("", "You stand at the glass for a while, alone. It is the quietest place in the Academy.")
 		s.w.busy = false
 		return
-	var pala := s.w.add_npc({"id": "pala", "who": "pala", "tile": Vector2i(7, 8), "dir": 1})
-	pala.visible = true
+	# Pala comes in through the door behind you
 	s.w.player.face(0)
-	await s.walk("pala", [Vector2i(7, 4), Vector2i(8, 3)], 40.0)
+	await s.enter({"id": "pala", "who": "pala", "dir": 1}, Vector2i(7, 8), [Vector2i(7, 4), Vector2i(8, 3)], 40.0)
 	s.face("pala", 1)
 	await s.say("pala", "You found it. I come here when the dorm gets too loud. Or too quiet.", "smile")
 	await s.say("pala", "When I first got here I made up my own constellations. Want to see?", "")
@@ -159,17 +164,15 @@ func _stargazing() -> void:
 	await s.say("you", "They're good.", "smile")
 	await s.say("pala", "They're terrible. That's why I like them. Nobody here can tell me they're wrong.", "smile")
 	Game.story.stargazed = true
-	await s.walk("pala", [Vector2i(7, 6), Vector2i(7, 8)], 40.0)
-	pala.visible = false
+	await s.leave("pala", [Vector2i(7, 6), Vector2i(7, 8)], 40.0)
 	s.w.busy = false
 
 
 func _rooftop_scene() -> void:
 	s.w.busy = true
 	await s.say("", "The rooftop garden. Real dirt in steel boxes, and over it a sky with nothing between you and it.")
-	if not Game.midas_dead():
-		var mid := s.w.add_npc({"id": "midas", "who": "midas", "tile": Vector2i(5, 6), "dir": 3})
-		mid.set_pose("sit")
+	if not Game.midas_dead() and s.a("midas") != null:
+		# Midas was already up here, kneeling by his planter
 		await s.pan(Vector2i(4, 6), 0.6)
 		s.emote("midas", "!", 0.8)
 		await s.say("midas", "Oh. Hi. I didn't think anyone else came up here.", "smile")
