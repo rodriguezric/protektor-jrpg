@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-19 15:03 EST — `bugfix_cards_rank_glyph_clipped` (v0.61.3)
+
+High-Low's card ranks sit fully on the card.
+
+- The big rank letter in the card's corner used to poke two pixels above the card's top edge, which also cut the top off the A so an Ace looked like an H. It now sits three pixels inside the cream face.
+- Code: `scripts/hub_game.gd` (_card_face places the rank from the font's ascent).
+
 ## 2026-11-19 15:02 EST — `bugfix_cards_banner_covers_card` (v0.61.2)
 
 High-Low's banners no longer cover the card.

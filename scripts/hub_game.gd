@@ -576,7 +576,9 @@ func _card_face(at: Vector2, rank: int, suit: int, w: float) -> void:
 	var red := suit == 1 or suit == 2
 	var col := Pal.RED if red else Pal.INK2
 	var txt: String = RANKS[rank]
-	b.draw_string(Art.font, at + Vector2(5, 12), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE * 2, col)
+	# the doubled glyph is ASCENT * 2 tall above its baseline: keep its top
+	# 3 px inside the card's cream face
+	b.draw_string(Art.font, at + Vector2(5, 3 + PixFont.ASCENT * 2), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, PixFont.SIZE * 2, col)
 	var c := at + Vector2(w / 2.0, 42)
 	match suit:
 		0:
