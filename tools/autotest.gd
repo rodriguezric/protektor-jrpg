@@ -1797,6 +1797,18 @@ func _run(scenario: String) -> void:
 			Game.player_name = "Ari"
 			var specs := [Game.player_spec("academy"), Game.cast("hiro"), Game.cast("pala"), Game.cast("midas"),
 				Game.cast("mother"), Game.cast("father"), Game.cast("instructor"), Game.cast("okafor")]
+			if OS.get_environment("PK_BROWS") == "types":
+				# both brow types on the same faces (the player's looks), plus a
+				# light-haired face and one in glasses
+				specs = []
+				for bt in ArtPeople.BROW_TYPES:
+					for lk in [0, 3]:
+						var sp: Dictionary = Data.LOOKS[lk].duplicate()
+						sp.merge({"id": "bt%d%s" % [lk, bt], "brows": bt, "top": Pal.ROSE, "jacket": Data.JACKET})
+						specs.append(sp)
+					var gl: Dictionary = Data.LOOKS[1].duplicate()
+					gl.merge({"id": "btg%s" % bt, "brows": bt, "glasses": true, "top": Pal.SAGE})
+					specs.append(gl)
 			var moods := ["", "smile", "sad", "cry", "angry", "shock", "terrified", "hollow", "closed"]
 			var cw := 72
 			var ch := 72 + 40
