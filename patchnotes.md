@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-19 14:22 EST — `bugfix_mobile_standards` (v0.59.10)
+
+Touch controls now meet the house mobile standard (jrpg_mobile_controls docs v1.0.1): minigame layouts, swipes, drag-scrolling lists and a setting for arrow games.
+
+- Pilot Wing games each have their own touch layout. Ping-pong is played by tapping anywhere, side bars included. High-Low has big UP / DOWN buttons. The Sync-Reflex Drill follows the new "Arrow games" option: swipe anywhere, four arrow buttons, or both. The stick stays away, B quits, stray taps on the picture do nothing during play, and the help line switches to touch wording, centred clear of the corner buttons. On wide phones the buttons take over the whole side bars as big thumb zones that light while held.
+- The Options screen has a new "Arrow games" row (Swipe / Buttons / Both, on touch devices), and tapping along a volume bar sets it directly.
+- The Achievements wall is tapped directly: tap a tab to switch, tap a card to select it and again to look at it, and drag the grid to scroll. A flick keeps it gliding, and dragging never selects anything.
+- The drill can be quit between arrows as well as during them (keys and touch).
+- The house standard stamp is recorded in `.standards.json` (skills v1.1.0, docs v1.0.1).
+- Code: `scripts/touch_controls.gd` (MINIGAME_LAYOUTS, swipe / zone / ud / arrows layouts, side-bar hit zones, drag-scroll + fling, _game_tap_allowed), `scripts/art_ui.gd` (arrow button art), `scripts/game.gd` (touch_arrows setting), `scripts/options_screen.gd`, `scripts/hub_game.gd` (TOUCH / TOUCH_KEYS, touch_layout / touch_running), `scripts/achievements_screen.gd` (tap(), scroll_by()). New autotest `PK_TEST=touch_mg` (every hub game by touch, achievements drag and flick, volume bar tap), passing at 1280x720 and 1560x720 along with the existing touch, touch_screens and console touch tests.
+
 ## 2026-11-19 14:10 EST — `bugfix_planet_difficulty_order` (v0.59.9)
 
 Planets now sit in difficulty tiers: Terra Virex is the easiest, Ignara Prime and Glacien IX are harder, and Umbra Vacua, Viscera Nova, Mechanon Ascens and Tempestris are the hardest.

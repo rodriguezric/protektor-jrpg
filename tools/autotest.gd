@@ -409,6 +409,121 @@ func _touch_test() -> void:
 const ROWS_N := 4
 
 
+func _touch_mg() -> void:
+	## The Pilot Wing games by touch (ping-pong: tap anywhere, bars too;
+	## high-low: the big UP/DOWN buttons; drill: swipes, then buttons), the
+	## achievements wall drag-scrolled and flung, and a volume bar tapped.
+	Game.testing = true
+	auto_talk = false
+	Game.player_name = "Ari"
+	var sh: Shell = Game.shell
+	var tc: TouchControls = sh.touch
+	var win := tc.get_viewport_rect().size   # the window, not the 320x180 game
+	main.fade_rect.color.a = 0.0
+	await _touch_tap(sh.to_window(Vector2(250, 20)), 0.2)   # wake the controls
+	for kind in ["pingpong", "cards", "drill", "drill_buttons"]:
+		var k: String = kind.split("_")[0]
+		Game.settings.touch_arrows = 1 if kind == "drill_buttons" else 0
+		var g := HubGame.new()
+		main.ui.add_child(g)
+		var res := {"r": {}}
+		var go := func() -> void:
+			res.r = await g.run(k, Data.EXTRAS[2])
+		go.call()
+		await wait(1.4)
+		await window_shot("mg_%s" % kind)
+		print("[touch_mg] %s: layout=%s running=%s slot=%s controls=%s stick_blocked=%s help='%s'" % [kind, tc.layout, Game.touch_running, tc.slot_mode,
+			tc.controls.filter(func(c): return tc._shown(c)).map(func(c): return c.id), tc.joy_blocked, g.info_l.text])
+		match k:
+			"pingpong":
+				# a tap on the empty side bar is a swing (the whole glass is the button)
+				var sw0 := g.swing_t
+				_finger(1, Vector2(win.x - 4, win.y * 0.5), true)
+				await get_tree().process_frame
+				await get_tree().process_frame
+				print("[touch_mg] pingpong: tap on the bar swung=%s held=%s" % [g.swing_t > sw0, tc.held.has("accept")])
+				_finger(1, Vector2(win.x - 4, win.y * 0.5), false)
+			"cards":
+				var c0 := g.card
+				var s0 := g.streak
+				_finger(1, _control("up"), true)
+				await wait(0.1)
+				_finger(1, _control("up"), false)
+				await wait(0.8)
+				print("[touch_mg] cards: UP button guessed (card %d -> %d, streak %d -> %d, flip=%s)" % [c0, g.card, s0, g.streak, g.flip_t != 0.0 or g.card != c0 or g.streak != s0])
+			"drill":
+				var hits := 0
+				for i in 3:
+					while g.prompt == "" and g.is_inside_tree():
+						await get_tree().process_frame
+					var want := g.prompt
+					var n0 := g.times.size()
+					if kind == "drill":
+						var p0 := sh.to_window(Vector2(160, 90))
+						var v: Vector2 = {"up": Vector2(0, -1), "down": Vector2(0, 1), "left": Vector2(-1, 0), "right": Vector2(1, 0)}[want]
+						_finger(2, p0, true)
+						await get_tree().process_frame
+						_drag_to(2, p0 + v * win.y * 0.12)
+						await get_tree().process_frame
+						_finger(2, p0 + v * win.y * 0.12, false)
+					else:
+						_finger(2, _control(want), true)
+						await wait(0.06)
+						_finger(2, _control(want), false)
+					await wait(0.2)
+					if g.times.size() > n0:
+						hits += 1
+				print("[touch_mg] %s: 3 prompts answered by %s -> %d right, penalty %d" % [kind, "swipe" if kind == "drill" else "buttons", hits, g.penalty])
+		# B quits the round
+		_finger(3, _control("b"), true)
+		await wait(0.08)
+		_finger(3, _control("b"), false)
+		await wait(2.6)
+		print("[touch_mg] %s: B quit -> layout now '%s' running=%s" % [kind, Game.touch_layout, Game.touch_running])
+		g.queue_free()
+		await wait(0.3)
+	# achievements: drag the grid up, then flick it
+	var a := AchievementsScreen.new()
+	main.ui.add_child(a)
+	var done := {"v": false}
+	var go2 := func() -> void:
+		await a.run()
+		done.v = true
+	go2.call()
+	await wait(0.6)
+	var p := sh.to_window(Vector2(160, 120))
+	_finger(4, p, true)
+	for i in 8:
+		await wait(0.03)
+		_drag_to(4, p - Vector2(0, (i + 1) * 10))
+	_finger(4, p - Vector2(0, 80), false)
+	await wait(0.05)
+	var after_drag := a.scroll_to
+	await wait(0.8)
+	print("[touch_mg] achievements: drag scrolled to %.1f, after the flick glided to %.1f, selection unchanged=%s" % [after_drag, a.scroll_to, a.sel == 0])
+	await window_shot("mg_achievements")
+	await _touch_tap(sh.to_window(Vector2(8 + 58 + 4 + 20, 38 + 20 - a.scroll + 2 + (int(a.scroll / 54.0) + 1) * 54)), 0.3)
+	print("[touch_mg] achievements: tap on a card selected #%d" % a.sel)
+	_finger(3, _control("b"), true)
+	await wait(0.08)
+	_finger(3, _control("b"), false)
+	await wait(0.4)
+	print("[touch_mg] achievements: B closed=%s" % done.v)
+	a.queue_free()
+	# options: tap the music bar at 30%
+	var o := OptionsScreen.new()
+	main.ui.add_child(o)
+	var go3 := func() -> void:
+		await o.run()
+	go3.call()
+	await wait(0.4)
+	var bar0: Vector2 = o.menu.global_position + Vector2(76, 5)
+	await _touch_tap(sh.to_window(bar0 + Vector2(3 + 15, 3)), 0.3)
+	print("[touch_mg] options: tapping the music bar at 30%% set music=%d, rows=%s" % [int(Game.settings.music), o.rows])
+	await window_shot("mg_options")
+	get_tree().quit()
+
+
 func _touch_screens() -> void:
 	## The title shows no stick or buttons; the star map is played by tapping
 	## worlds (stick hidden, B kept for back).
@@ -741,6 +856,9 @@ func _run(scenario: String) -> void:
 		return
 	if scenario == "touch":
 		await _touch_test()
+		return
+	if scenario == "touch_mg":
+		await _touch_mg()
 		return
 	match scenario:
 		"levelcheck":

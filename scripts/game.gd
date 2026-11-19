@@ -613,11 +613,13 @@ func buzz(ms: int) -> void:
 
 # --------------------------------------------------------------- settings ---
 
-## Options: volumes 0-10, text speed index into TEXT_SPEEDS, vibration.
+## Options: volumes 0-10, text speed index into TEXT_SPEEDS, vibration, and
+## how arrow minigames are played by touch (0 swipe, 1 buttons, 2 both).
 ## Kept in their own file, shared by every slot.
 const SETTINGS_PATH := "user://protektor_settings.json"
 const TEXT_SPEEDS := [["Slow", 28.0], ["Normal", 48.0], ["Fast", 96.0], ["Instant", 0.0]]
-var settings := {"music": 8, "sfx": 8, "text": 1, "vibration": true}
+var settings := {"music": 8, "sfx": 8, "text": 1, "vibration": true, "touch_arrows": 0}
+const TOUCH_ARROWS := ["Swipe", "Buttons", "Both"]
 
 
 func load_settings() -> void:
@@ -630,6 +632,7 @@ func load_settings() -> void:
 	settings.sfx = clampi(int(settings.sfx), 0, 10)
 	settings.text = clampi(int(settings.text), 0, TEXT_SPEEDS.size() - 1)
 	settings.vibration = bool(settings.vibration)
+	settings.touch_arrows = clampi(int(settings.touch_arrows), 0, TOUCH_ARROWS.size() - 1)
 	Sfx.apply_volumes(settings.music, settings.sfx)
 
 

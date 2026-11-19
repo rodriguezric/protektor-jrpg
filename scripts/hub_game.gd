@@ -10,10 +10,18 @@ extends Control
 ##   drill    - the gym's sync-reflex drill: ten arrows flash up; press that
 ##              direction as fast as you can. Score: the average reaction in
 ##              ms (lower is better); a wrong press costs 250 ms.
-## Touch: an arrow screen (the stick steers, a tap is Z, B leaves).
+## Touch: each game declares its layout in TOUCH (TouchControls); B quits.
+## Ping-pong is a tap anywhere (side bars too), high-low has big UP / DOWN
+## buttons, and the drill follows the "Arrow games" setting (swipe, buttons
+## or both). Game.touch_running is set only while a round is live, so the
+## READY card and the result take an ordinary tap.
 
 const TITLES := {"pingpong": "PING-PONG", "cards": "HIGH - LOW", "drill": "SYNC-REFLEX DRILL"}
 const HELP := {"pingpong": "Z / tap when the ball reaches your paddle", "cards": "Up: higher   Down: lower", "drill": "Press the arrow that lights up"}
+## Touch layout per game, and the touch wording of its help line.
+const TOUCH := {"pingpong": "tap", "cards": "ud", "drill": "arrows"}
+const TOUCH_KEYS := {"pingpong": "Tap anywhere when the ring turns gold", "cards": "UP: higher   DOWN: lower",
+	"drill": ["Swipe the way the arrow points", "Tap the arrow that lights up", "Swipe or tap the arrow"]}
 const SUITS := ["S", "H", "D", "C"]
 const RANKS := ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
@@ -76,12 +84,14 @@ func run(p_kind: String, opp: Dictionary = {}) -> Dictionary:
 	kind = p_kind
 	opponent = opp
 	title_l.text = TITLES[kind]
-	info_l.text = HELP[kind] + ("   X quit" if not Game.touch_active else "")
+	Game.touch_layout = TOUCH[kind]
+	info_l.text = _help()
 	_big("READY?", Pal.LEMON)
 	Sfx.play("chime", 1.2, -8.0)
 	await _pause(1.0)
 	_big("")
 	var score := 0
+	Game.touch_running = true
 	match kind:
 		"pingpong":
 			score = await _pingpong()
@@ -89,6 +99,7 @@ func run(p_kind: String, opp: Dictionary = {}) -> Dictionary:
 			score = await _cards()
 		"drill":
 			score = await _drill()
+	Game.touch_running = false
 	var res := record(kind, score)
 	var shown := ("%d ms" % score) if kind == "drill" else str(score)
 	if score <= 0 and kind == "drill":
@@ -98,7 +109,23 @@ func run(p_kind: String, opp: Dictionary = {}) -> Dictionary:
 		Sfx.play("levelup", 1.1, -6.0)
 	info_l.text = "Best: %s" % (("%d ms" % res.best) if kind == "drill" else str(res.best))
 	await _pause(1.6)
+	Game.touch_layout = ""
 	return res
+
+
+func _help() -> String:
+	## The help line, in touch words while playing by touch.
+	if not Game.touch_active:
+		return HELP[kind] + "   X quit"
+	var k = TOUCH_KEYS[kind]
+	return k[int(Game.settings.get("touch_arrows", 0))] if k is Array else str(k)
+
+
+func _exit_tree() -> void:
+	# leaving early (B, or the screen freed) must hand the controls back
+	Game.touch_running = false
+	if Game.touch_layout == TOUCH.get(kind, ""):
+		Game.touch_layout = ""
 
 
 func _pause(sec: float) -> void:
@@ -117,6 +144,10 @@ func _quit_pressed() -> bool:
 func _process(delta: float) -> void:
 	t += delta
 	board.queue_redraw()
+	if big_l.text == "" and info_l.text != _help() and not info_l.text.begins_with("Best"):
+		info_l.text = _help()   # touch / keys switched mid-game
+	# by touch the line sits centred, clear of the corner buttons
+	info_l.position.x = floorf(160 - Art.text_width(info_l.text) / 2.0) if Game.touch_active else 12.0
 
 
 # -------------------------------------------------------------- scores ---
@@ -354,9 +385,13 @@ func _drill() -> int:
 	penalty = 0
 	for i in 10:
 		prompt = ""
-		await _pause(randf_range(0.5, 1.4))
-		if not is_inside_tree():
-			return 0
+		var wait_left := randf_range(0.5, 1.4)
+		while wait_left > 0.0:
+			# X / B quits between arrows too, not only while one is lit
+			await get_tree().process_frame
+			if not is_inside_tree() or _quit_pressed():
+				return 0
+			wait_left -= get_process_delta_time()
 		prompt = ["up", "down", "left", "right"][randi() % 4]
 		Sfx.play("beep", 1.4, -8.0)
 		var start := Time.get_ticks_msec()
