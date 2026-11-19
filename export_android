@@ -1,27 +1,56 @@
 #!/bin/bash
-# Builds the Android APK and uploads it.
-# Release-signed if a release keystore is given through the environment:
-#   GODOT_ANDROID_KEYSTORE_RELEASE_PATH / _USER / _PASSWORD
-# otherwise debug-signed with your debug keystore (installs fine on a phone).
-set -euo pipefail
+# Build the Android APK with the "Android" export preset, upload it to the
+# server and print its download URL.
+#   ./export_android                 debug APK, signed with the debug keystore
+#   ./export_android release         release APK, signed with your release keystore:
+#       GODOT_ANDROID_KEYSTORE_RELEASE_PATH=~/keys/protektor_rpg.keystore \
+#       GODOT_ANDROID_KEYSTORE_RELEASE_USER=<alias> \
+#       GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=<password> ./export_android release
+#   ./export_android [release] --install   also install it on the phone over adb
+# Every build is copied to the server and its download URL printed.
+# Needs the Android export templates and the SDK / JDK paths set in Godot's
+# Editor Settings (Export > Android); the debug keystore is ~/.android/debug.keystore.
 cd "$(dirname "$0")"
-
-APK=exports/android/protektor_rpg.apk
-mkdir -p "$(dirname "$APK")"
-rm -f "$APK"
-
-if [ -n "${GODOT_ANDROID_KEYSTORE_RELEASE_PATH:-}" ]; then
-    godot --headless --path . --export-release "Android" "$APK"
-else
-    echo "No release keystore set; building a debug-signed APK."
-    godot --headless --path . --export-debug "Android" "$APK"
+GAME="protektor_rpg"
+DEST="rohins@rohins.com:/home/rohins/web/sites/rodriguezric.com/apks/"
+URL="https://rodriguezric.com/apks"
+mode=debug
+install=0
+for a in "$@"; do
+	case "$a" in
+		release) mode=release ;;
+		debug) mode=debug ;;
+		--install) install=1 ;;
+		*) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+	esac
+done
+if [ ! -f export_presets.cfg ] || ! grep -q '^name="Android"' export_presets.cfg; then
+	echo "No \"Android\" preset in export_presets.cfg: add one in Project > Export." >&2
+	exit 1
 fi
-
-# Godot doesn't always exit non-zero on a failed export, so check the file
-if [ ! -s "$APK" ]; then
-    echo "Export failed: $APK was not created." >&2
-    exit 1
+if [ "$mode" = release ] && [ -z "$GODOT_ANDROID_KEYSTORE_RELEASE_PATH" ]; then
+	echo "Release builds need GODOT_ANDROID_KEYSTORE_RELEASE_PATH, _USER and _PASSWORD (see ./export_android help)." >&2
+	exit 1
 fi
-echo "Built $APK ($(du -h "$APK" | cut -f1))"
-
-scp exports/android/protektor_rpg.apk rohins@rohins.com:/home/rohins/web/sites/rodriguezric.com/apks
+version=$(sed -n 's/^config\/version="\(.*\)"/\1/p' project.godot)
+# keep the Android preset's version in step with the game's (code = major*10000+minor*100+patch)
+if [ -n "$version" ]; then
+	IFS=. read -r vmaj vmin vpat <<< "$version"
+	code=$(( ${vmaj:-0} * 10000 + ${vmin:-0} * 100 + ${vpat:-0} ))
+	sed -i -e "s/^version\/name=\".*\"/version\/name=\"$version\"/" -e "s/^version\/code=.*/version\/code=$code/" export_presets.cfg
+fi
+out="exports/android/$GAME-${version:-0}-$mode.apk"
+mkdir -p exports/android
+godot --headless --export-$mode "Android" "$out" || exit 1
+if [ ! -f "$out" ]; then
+	echo "Export failed: no APK written (check the templates and Editor Settings > Export > Android)." >&2
+	exit 1
+fi
+echo "Built $out"
+if [ $install = 1 ]; then
+	adb=$(command -v adb || echo "$ANDROID_HOME/platform-tools/adb")
+	"$adb" install -r "$out"
+fi
+# Upload this build and show where to download it.
+scp "$out" "$DEST" || exit 1
+echo "$URL/$(basename "$out")"
