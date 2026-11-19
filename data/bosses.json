@@ -351,9 +351,8 @@
 						"first": 2.0,
 						"enemy_type": "asteroid",
 						"degrees": [
-							150,
-							180,
-							210
+							165,
+							195
 						],
 						"hold_dist": 140,
 						"hold_sec": 2.6,
@@ -378,10 +377,9 @@
 						"first": 1.5,
 						"enemy_type": "asteroid",
 						"degrees": [
-							140,
-							165,
-							195,
-							220
+							150,
+							180,
+							210
 						],
 						"hold_dist": 140,
 						"hold_sec": 2.4,
@@ -432,8 +430,8 @@
 						"type": "arc_burst",
 						"every": 7.0,
 						"first": 4.0,
-						"count": 7,
-						"width_deg": 100,
+						"count": 5,
+						"width_deg": 67,
 						"offset_deg": 180,
 						"speed": 150,
 						"tell": 1.4
@@ -457,8 +455,8 @@
 						"type": "arc_burst",
 						"every": 5.5,
 						"first": 2.5,
-						"count": 7,
-						"width_deg": 110,
+						"count": 5,
+						"width_deg": 73,
 						"offset_deg": 180,
 						"speed": 160,
 						"tell": 1.1
@@ -495,8 +493,8 @@
 						"type": "arc_burst",
 						"every": 4.4,
 						"first": 2.0,
-						"count": 9,
-						"width_deg": 120,
+						"count": 6,
+						"width_deg": 75,
 						"offset_deg": 180,
 						"speed": 165,
 						"tell": 0.9

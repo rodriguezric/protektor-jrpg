@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-19 12:32 EST — `bugfix_glacien_frozen_cluster_size` (v0.59.5)
+
+Glacien IX's frozen meteor clusters are about 30% smaller, so they can be blocked fairly.
+
+- Every ice wall in the three Glacien levels has fewer rocks (3 to 2, 4 to 3, 5 to 4, 6 to 4) at the same spacing, so the wall is narrower rather than gappier. The drones behind each wall and all the timings are unchanged.
+- The Frost Sentinel calls 2 frozen rocks instead of 3 (4 instead of 3 when hurt), and the Boreal Colossus's ice bursts fire 5-6 shards instead of 7-9, over a proportionally narrower arc.
+- Bot playthroughs: Thin Ice, Crowding and Deep Freeze all cleared with 0-1 hits.
+- Code: `tools/build_levels.py` (glacien_ix accumulation_wall calls), rebuilt `data/missions/glacien_ix_level_0*.json`, `data/bosses.json` (frost_sentinel adds, boreal_colossus arc_burst).
+
 ## 2026-11-19 12:28 EST — `bugfix_boss_vulnerability_windows` (v0.59.4)
 
 Bosses are armored most of the time now and only take damage in short, signalled windows, so they can't be rolled over by holding fire.
