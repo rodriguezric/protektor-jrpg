@@ -75,7 +75,7 @@ func _card(n: int, info: Dictionary) -> Control:
 		c.add_child(e)
 		return c
 	var spec: Dictionary = Data.LOOKS[clampi(int(info.look), 0, Data.LOOKS.size() - 1)].duplicate()
-	spec.merge({"id": "slot%d" % n, "top": Pal.ROSE.lerp(Pal.SLATE, 0.35), "hood": true, "hoodc": Pal.ROSE.lerp(Pal.SLATE, 0.2),
+	spec.merge({"id": "slot%d%s" % [n, info.get("brows", "straight")], "brows": info.get("brows", "straight"), "top": Pal.ROSE.lerp(Pal.SLATE, 0.35), "hood": true, "hoodc": Pal.ROSE.lerp(Pal.SLATE, 0.2),
 		"jacket": Data.JACKET, "bottom": Pal.INK2, "badge": info.chapter != "prologue", "variant": "slot"})
 	var pic := TextureRect.new()
 	pic.texture = Art.portrait(spec, "", false, false, 2)

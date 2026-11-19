@@ -350,7 +350,7 @@ static func _brow(b: PixBuf, s: Dictionary, ex: int, ey: int, left: bool, mood: 
 	## It sits flush on the eye (the row right above it) with a third pixel
 	## running out past the eye's outer edge, tilted by the mood: level when
 	## calm, the inner end up when sad or scared, down when angry, the whole
-	## brow lifted a row in shock. On feminine faces (_feminine) that outer
+	## brow lifted a row in shock. On arched brows (_brow_type) that outer
 	## tail sits a pixel lower, an arched brow. Coloured from the hair,
 	## darkened so light hair still reads against skin.
 	# glasses frames sit where the brows go and read as brows themselves;
@@ -380,19 +380,25 @@ static func _brow(b: PixBuf, s: Dictionary, ex: int, ey: int, left: bool, mood: 
 			iy = ey - 2
 			oy = ey - 2
 			ty = ey - 2
-	if _feminine(s):
+	if _brow_type(s) == "arched":
 		ty += 1
 	b.pset(inner, iy, col)
 	b.pset(outer, oy, col)
 	b.pset(tail, ty, col)
 
 
-static func _feminine(s: Dictionary) -> bool:
-	## Feminine brows: an explicit "fem" in the spec, else a girl's or
-	## woman's voice, or a skirt.
-	if s.has("fem"):
-		return bool(s.fem)
-	return str(s.get("voice", "")) in ["girl", "woman"] or bool(s.get("skirt", false))
+## Eyebrow types: straight, or arched (the outer tail a pixel lower).
+const BROW_TYPES := ["straight", "arched"]
+
+
+static func _brow_type(s: Dictionary) -> String:
+	## A spec's brows: its "brows" (the player picks theirs at name entry),
+	## else arched on feminine faces (an explicit "fem", a girl's or woman's
+	## voice, or a skirt) and straight on everyone else.
+	if BROW_TYPES.has(str(s.get("brows", ""))):
+		return str(s.brows)
+	var fem: bool = bool(s.fem) if s.has("fem") else (str(s.get("voice", "")) in ["girl", "woman"] or bool(s.get("skirt", false)))
+	return "arched" if fem else "straight"
 
 
 static func _face(b: PixBuf, s: Dictionary, dir: int, mood: String, hx: float, hy: float, skin: Color, head: Array) -> void:

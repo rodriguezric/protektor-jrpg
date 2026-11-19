@@ -1,7 +1,7 @@
 class_name NameEntry
 extends Control
-## Chapter 0: naming the protagonist. A letter grid, a look picker, and a live
-## preview of your chibi walking in place.
+## Chapter 0: naming the protagonist. A letter grid, look and eyebrow
+## pickers, and a live preview of your chibi walking in place.
 
 const ROWS := ["ABCDEFGHIJKLM", "NOPQRSTUVWXYZ", "abcdefghijklm", "nopqrstuvwxyz"]
 const MAXLEN := 8
@@ -64,13 +64,16 @@ func _init() -> void:
 			gb.add_child(l)
 			row.append(l)
 		grid.append(row)
-	var extras := ["< Look >", "Del", "End"]
+	# the bottom row: look, brows (labelled with the current type), Del, End
+	var extras := ["< Look >", _brow_text(), "Del", "End"]
 	var row := []
+	var x := 14.0
 	for i in extras.size():
 		var l := Art.label(extras[i], Pal.SYNC)
-		l.position = Vector2(14 + i * 60, 90)
+		l.position = Vector2(x, 90)
 		gb.add_child(l)
 		row.append(l)
+		x += (Art.text_width("< Straight >") if i == 1 else Art.text_width(extras[i])) + 14.0
 	grid.append(row)
 	cursor = TextureRect.new()
 	cursor.texture = Art.ui("cursor")
@@ -86,11 +89,12 @@ func _init() -> void:
 
 func _process(delta: float) -> void:
 	t += delta
-	help.text = "Tap letters to type   B erase" if Game.touch_active else "Z type   X erase   Left/Right on Look to change"
+	help.text = "Tap letters to type   B erase" if Game.touch_active else "Z type   X erase   Left/Right on Look/Brows to change"
 	var spec := Game.player_spec("home")
 	pic.texture = Art.portrait(spec, "", false, false, 2)
 	sprite.texture = Art.person(spec, 0, [0, 1, 0, 3][int(t * 6.0) % 4])
 	look_l.text = "Look %d/%d" % [Game.look + 1, Data.LOOKS.size()]
+	(grid[ROWS.size()][1] as Label).text = _brow_text()
 	name_l.text = name_text + ("_" if fmod(t, 0.8) < 0.4 and name_text.length() < MAXLEN else "")
 	var l: Label = grid[cy][cx]
 	cursor.position = l.position + Vector2(-8 - (1 if fmod(t, 0.5) < 0.25 else 0), 1)
@@ -98,22 +102,24 @@ func _process(delta: float) -> void:
 
 func tap(p: Vector2) -> bool:
 	## Touch: works like a keyboard, so one tap types a letter (or presses
-	## Del / End). Tap either half of "< Look >", or the portrait, to change
-	## your look. Taps elsewhere are still taken, so they never confirm.
+	## Del / End). Tap either half of "< Look >" or of the brows, or the
+	## portrait, to change them. Taps elsewhere are still taken, so they
+	## never confirm.
 	if (pic.get_parent() as Control).get_global_rect().has_point(p):
 		_change_look(1)
 		return true
 	for r in grid.size():
 		for c in (grid[r] as Array).size():
 			var l: Label = grid[r][c]
-			var w := 15.0 if r < ROWS.size() else 60.0
+			var w := 15.0 if r < ROWS.size() else Art.text_width(l.text) + 10.0
 			var cell := Rect2(l.global_position + Vector2(-5, -4), Vector2(w, 15))
 			if not cell.has_point(p):
 				continue
 			cx = c
 			cy = r
-			if r == ROWS.size() and c == 0:
-				_change_look(-1 if p.x < l.global_position.x + Art.text_width(l.text) / 2.0 else 1)
+			if r == ROWS.size() and c <= 1:
+				var d := -1 if p.x < l.global_position.x + Art.text_width(l.text) / 2.0 else 1
+				_change_look(d) if c == 0 else _change_brows(d)
 			else:
 				_activate()
 			return true
@@ -123,6 +129,16 @@ func tap(p: Vector2) -> bool:
 func _change_look(d: int) -> void:
 	Game.look = (Game.look + d + Data.LOOKS.size()) % Data.LOOKS.size()
 	Sfx.play("pop")
+
+
+func _change_brows(d: int) -> void:
+	var types: Array = ArtPeople.BROW_TYPES
+	Game.brows = types[(types.find(Game.brows) + d + types.size()) % types.size()]
+	Sfx.play("pop", 1.2)
+
+
+func _brow_text() -> String:
+	return "< %s >" % Game.brows.capitalize()
 
 
 func run() -> void:
@@ -138,14 +154,14 @@ func run() -> void:
 			cy = (cy - 1 + grid.size()) % grid.size()
 			moved = true
 		elif Input.is_action_just_pressed("right"):
-			if cy == grid.size() - 1 and cx == 0:
-				_change_look(1)
+			if cy == grid.size() - 1 and cx <= 1:
+				_change_look(1) if cx == 0 else _change_brows(1)
 			else:
 				cx += 1
 				moved = true
 		elif Input.is_action_just_pressed("left"):
-			if cy == grid.size() - 1 and cx == 0:
-				_change_look(-1)
+			if cy == grid.size() - 1 and cx <= 1:
+				_change_look(-1) if cx == 0 else _change_brows(-1)
 			else:
 				cx -= 1
 				moved = true
@@ -177,6 +193,8 @@ func _activate() -> void:
 	elif cx == 0:
 		_change_look(1)
 	elif cx == 1:
+		_change_brows(1)
+	elif cx == 2:
 		if name_text.length() > 0:
 			name_text = name_text.substr(0, name_text.length() - 1)
 			Sfx.play("cancel")

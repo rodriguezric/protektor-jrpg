@@ -14,6 +14,8 @@ const FAILURE_ENDING_COUNT := 3
 var main: Node
 var player_name := "Ari"
 var look := 0
+## The player's eyebrow type, chosen at name entry (ArtPeople.BROW_TYPES).
+var brows := "straight"
 var vars := {}
 var story := {}
 var unlocked: Array = ["terra_virex"]
@@ -99,7 +101,8 @@ func _default_profile() -> Dictionary:
 func player_spec(outfit: String = "") -> Dictionary:
 	var l: Dictionary = Data.LOOKS[look]
 	var s := l.duplicate()
-	s.id = "player%d" % look
+	s.id = "player%d%s" % [look, brows]
+	s.brows = brows
 	s.name = player_name
 	s.voice = "child"
 	if outfit == "":
@@ -463,7 +466,7 @@ func save() -> void:
 		save_profile()
 		return
 	profile.weapon = story.get("weapon", "basic")
-	var data := {"player_name": player_name, "look": look, "vars": vars, "story": story, "chapter": chapter,
+	var data := {"player_name": player_name, "look": look, "brows": brows, "vars": vars, "story": story, "chapter": chapter,
 		"saved_at": int(Time.get_unix_time_from_system())}
 	var f := FileAccess.open(slot_path(slot), FileAccess.WRITE)
 	if f:
@@ -511,7 +514,7 @@ func slot_info(n: int) -> Dictionary:
 	var done := 0
 	for v in st.get("completed_levels", {}).values():
 		done += int(v)
-	return {"name": str(d.get("player_name", "?")), "look": int(d.get("look", 0)), "chapter": str(d.get("chapter", "prologue")),
+	return {"name": str(d.get("player_name", "?")), "look": int(d.get("look", 0)), "brows": str(d.get("brows", "straight")), "chapter": str(d.get("chapter", "prologue")),
 		"missions": done, "credits": int(st.get("credits", 0)), "saved_at": int(d.get("saved_at", 0)), "stripped": bool(st.get("stripped", false))}
 
 
@@ -547,6 +550,9 @@ func load_slot(n: int) -> bool:
 	new_game()
 	player_name = str(d.get("player_name", "Ari"))
 	look = int(d.get("look", 0))
+	brows = str(d.get("brows", "straight"))
+	if not ArtPeople.BROW_TYPES.has(brows):
+		brows = "straight"
 	vars = d.get("vars", {})
 	var st: Dictionary = d.get("story", {})
 	for k in st:
