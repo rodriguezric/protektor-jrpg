@@ -1044,7 +1044,7 @@ func _run(scenario: String) -> void:
 				print("[wing] %s ok (map %s)" % [id, w.def.id])
 				await main.story.exit({"to": "wing"})
 				await wait(0.4)
-			await main.story.exit({"to": "commons", "tile": Vector2i(22, 3), "dir": 0})
+			await main.story.exit({"to": "commons", "tile": Vector2i(22, 2), "dir": 0})
 			snap.on = false
 			print("[wing] back in %s; flags stargazed=%s tomato=%s" % [main.world.def.id, Game.story.get("stargazed"), Game.story.get("midas_tomato")])
 			get_tree().quit()
@@ -1134,6 +1134,81 @@ func _run(scenario: String) -> void:
 				var tom: Sprite2D = main.world.prop_sprite("tomato")
 				print("[tomato] %s: planter is %s" % [step, "v2 wilted" if tom.texture == Art.prop("planter", 2) else ("v0 green" if tom.texture == Art.prop("planter", 0) else "v1 tomatoes")])
 				await shot("tomato_" + step)
+			get_tree().quit()
+		"doorwalk":
+			# every door and exit, walked through like a player would (keys
+			# held, fast and back to back), checking walking mode comes back
+			# each time; then a lock with nothing behind it must lift itself
+			auto_talk = true
+			Game.new_game()
+			Game.player_name = "Ari"
+			for pl in ["terra_virex", "glacien_ix"]:
+				Game.story.completed_levels[pl] = 3
+			var pr: StoryPrologue = main.story.prologue
+			pr.evening = true
+			Game.story.block7_seen = true
+			Game.story.wing_seen = true
+			main.fade_rect.color.a = 0.0
+			var fails := []
+			var checks := {"n": 0, "log": []}
+			var settle := func() -> bool:
+				for k in 250:
+					await wait(0.1)
+					var cw = main.world
+					if cw and is_instance_valid(cw) and not cw.busy and not main.dialog.visible and main.fade_rect.color.a < 0.05:
+						return true
+				return false
+			var can_move := func() -> bool:
+				# walking mode is on and at least one direction is open
+				var cw = main.world
+				if cw.busy or cw.paused or main.dialog.visible:
+					return false
+				for v in [Vector2(0, -3), Vector2(-3, 0), Vector2(3, 0), Vector2(0, 3)]:
+					if not cw.blocked(cw.player.position + v, cw.player):
+						return true
+				return false
+			var step := func(label: String, tile: Vector2i, dir: String, mode: String) -> void:
+				var cw = main.world
+				cw.player.position = cw.tile_center(tile)
+				await wait(0.1)
+				if mode == "walk":
+					await hold(dir, 0.6)
+				else:
+					cw.player.face({"up": 1, "down": 0, "left": 3, "right": 2}[dir])
+					await tap("accept", 0.2)
+				var ok: bool = await settle.call()
+				var mv: bool = ok and await can_move.call()
+				checks.n += 1
+				checks.log.append("%s -> %s" % [label, main.world.def.id])
+				print("[doorwalk] %s -> %s settled=%s moved=%s" % [label, main.world.def.id, ok, mv])
+				if not ok or not mv:
+					fails.append("%s (map %s, settled=%s moved=%s)" % [label, main.world.def.id, ok, mv])
+			for rep in int(OS.get_environment("PK_REPS")) if OS.get_environment("PK_REPS") != "" else 3:
+				main.load_map(pr._house("home"), Vector2i(20, 4), 1)
+				await wait(0.4)
+				await step.call("home stairs up", Vector2i(21, 3), "up", "walk")
+				await step.call("home_up stairs down", Vector2i(20, 10), "down", "walk")
+				await step.call("front door out", Vector2i(15, 3), "up", "walk")
+				await step.call("Block 7 door home", Vector2i(9, 3), "up", "walk")
+				Game.chapter = "hub"
+				main.load_map(main.story.hub._map(), Vector2i(22, 3), 1)
+				await wait(0.4)
+				await step.call("Commons door to the wing", Vector2i(22, 2), "up", "examine")
+				for id in Maps.WING_ROOMS:
+					if not StoryWing.unlocked(id):
+						continue
+					await step.call("wing door " + id, Vector2i(Maps.WING_DOOR_X[id], 2), "up", "examine")
+					await step.call("leave " + id, Vector2i(7, 7), "down", "walk")
+				await step.call("wing back to the Commons", Vector2i(14, 4), "down", "walk")
+				Game.chapter = "prologue"
+			print("[doorwalk] path: %s" % ", ".join(checks.log.slice(0, 14)))
+			print("[doorwalk] %d door checks, %d stuck: %s" % [checks.n, fails.size(), fails])
+			# a lock nobody will lift
+			main.world.busy = true
+			var t0 := Time.get_ticks_msec()
+			while main.world.busy and Time.get_ticks_msec() - t0 < 9000:
+				await wait(0.2)
+			print("[doorwalk] stale lock lifted=%s after %.1fs" % [not main.world.busy, (Time.get_ticks_msec() - t0) / 1000.0])
 			get_tree().quit()
 		"stuckcheck":
 			# can the player always move after a field cutscene? and does a

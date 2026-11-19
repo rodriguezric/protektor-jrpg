@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-18 22:09 EST — `bugfix_stuck_after_door` (v0.58.5)
+
+You can't get stuck after a door any more, and walking mode always comes back.
+
+- The likely culprit: coming back from the Pilot Wing put you down inside the archive console's footprint in the Commons, where every step counts as blocked, so you were frozen right after the door. You now arrive in front of the door.
+- Safety nets, so it can't happen anywhere else: if you're ever standing inside a wall or a piece of furniture while you have control, you're moved to the nearest open tile (cutscenes that seat people on benches are left alone). And if the field stays locked with nothing going on (no conversation or scene running, no dialog, fade, menu or cutscene picture, nobody walking a scripted path) for a few seconds, control is handed back; an interaction that hangs and goes quiet for 10 seconds is released too.
+- Tested by walking every door and exit (the home stairs, the front door, Block 7, the Commons, the Pilot Wing and all seven rooms) twice over, back to back with keys held, checking walking mode and an open direction after each: 40 of 40 clean, plus a deliberately stuck lock that released itself in about 5 seconds.
+- Code: `scripts/maps.gd` (the Commons arrival tile from the wing), `scripts/world.gd` (blocked_by_map(), _unstick_player(), _safety_net()), `scripts/story.gd` (active / last_activity / touch() so the field can tell a running scene from a dead lock), `tools/autotest.gd` (`PK_TEST=doorwalk`, `PK_REPS`).
+
 ## 2026-11-18 21:41 EST — `bugfix_characters_pop_in_and_out` (v0.58.4)
 
 Nobody pops into or out of view any more: people in field scenes walk in and out through doors or from off-screen, per the house JRPG rule.
