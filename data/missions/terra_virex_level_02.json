@@ -31,24 +31,24 @@
     },
     {
       "phase_id": "development",
-      "start_sec": 26.4
+      "start_sec": 22.0
     },
     {
       "phase_id": "compression",
-      "start_sec": 55.8
+      "start_sec": 52.0
     },
     {
       "phase_id": "signature",
-      "start_sec": 77.8
+      "start_sec": 73.0
     },
     {
       "phase_id": "mini_boss",
-      "start_sec": 94.1
+      "start_sec": 95.2
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 94.6
+    "timeline_sec": 95.7
   },
   "events": [
     {
@@ -63,7 +63,7 @@
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 150,
       "id": "terra_virex_level_02_002",
       "time": 2.0
     },
@@ -71,7 +71,7 @@
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 330,
       "id": "terra_virex_level_02_003",
       "time": 3.8
     },
@@ -79,7 +79,7 @@
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 150,
       "id": "terra_virex_level_02_004",
       "time": 5.6
     },
@@ -87,7 +87,7 @@
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 330,
       "id": "terra_virex_level_02_005",
       "time": 7.4
     },
@@ -95,7 +95,7 @@
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 150,
       "id": "terra_virex_level_02_006",
       "time": 9.2
     },
@@ -103,7 +103,7 @@
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 330,
       "id": "terra_virex_level_02_007",
       "time": 11.0
     },
@@ -111,442 +111,514 @@
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 105,
       "id": "terra_virex_level_02_008",
-      "time": 13.2
+      "time": 12.8
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 285,
       "id": "terra_virex_level_02_009",
-      "time": 15.4
+      "time": 14.4
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 15,
       "id": "terra_virex_level_02_010",
-      "time": 17.6
+      "time": 16.6
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 195,
       "id": "terra_virex_level_02_011",
-      "time": 19.8
+      "time": 18.2
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 60,
       "id": "terra_virex_level_02_012",
-      "time": 22.0
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 270,
-      "id": "terra_virex_level_02_013",
-      "time": 24.2
+      "time": 20.4
     },
     {
       "type": "fx_async_message",
       "text": "Threat complexity rising.",
       "type_speed_cps": 24,
       "hold_sec": 1.4,
+      "id": "terra_virex_level_02_013",
+      "time": 22.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 240,
       "id": "terra_virex_level_02_014",
-      "time": 26.4
+      "time": 22.0
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 60,
       "id": "terra_virex_level_02_015",
-      "time": 26.4
+      "time": 22.7
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 330,
       "id": "terra_virex_level_02_016",
-      "time": 27.1
+      "time": 24.9
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 150,
       "id": "terra_virex_level_02_017",
-      "time": 29.3
+      "time": 25.6
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 60,
       "id": "terra_virex_level_02_018",
-      "time": 30.0
+      "time": 27.8
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 240,
       "id": "terra_virex_level_02_019",
-      "time": 32.2
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 0,
-      "id": "terra_virex_level_02_020",
-      "time": 32.9
+      "time": 28.5
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270,
-      "id": "terra_virex_level_02_021",
-      "time": 35.1
+      "degrees": 150,
+      "id": "terra_virex_level_02_020",
+      "time": 30.7
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
-      "id": "terra_virex_level_02_022",
-      "time": 35.8
+      "degrees": 330,
+      "id": "terra_virex_level_02_021",
+      "time": 31.4
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_sine",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 15,
+      "id": "terra_virex_level_02_022",
+      "time": 33.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
       "degrees": 45,
       "id": "terra_virex_level_02_023",
-      "time": 38.0
+      "time": 35.2
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_sine",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225,
+      "degrees": 75,
       "id": "terra_virex_level_02_024",
-      "time": 40.2
+      "time": 36.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 105,
+      "id": "terra_virex_level_02_025",
+      "time": 38.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "id": "terra_virex_level_02_026",
+      "time": 40.0
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 135,
-      "id": "terra_virex_level_02_025",
-      "time": 42.4
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 315,
-      "id": "terra_virex_level_02_026",
-      "time": 44.6
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 135,
+      "degrees": 345,
       "id": "terra_virex_level_02_027",
-      "time": 45.2
+      "time": 41.6
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 135,
+      "degrees": 165,
       "id": "terra_virex_level_02_028",
-      "time": 47.4
+      "time": 41.6
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 315,
+      "degrees": 165,
       "id": "terra_virex_level_02_029",
-      "time": 48.0
+      "time": 43.8
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45,
+      "degrees": 345,
       "id": "terra_virex_level_02_030",
-      "time": 50.2
+      "time": 43.8
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 225,
+      "degrees": 75,
       "id": "terra_virex_level_02_031",
-      "time": 50.8
+      "time": 46.0
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225,
+      "degrees": 255,
       "id": "terra_virex_level_02_032",
-      "time": 53.0
+      "time": 46.0
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45,
+      "degrees": 227,
       "id": "terra_virex_level_02_033",
-      "time": 53.6
+      "time": 48.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 240,
+      "id": "terra_virex_level_02_034",
+      "time": 48.32
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 253,
+      "id": "terra_virex_level_02_035",
+      "time": 48.44
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "circle_shooter_drone",
+      "spawn_side": "degrees",
+      "degrees": 15,
+      "id": "terra_virex_level_02_036",
+      "time": 49.8
     },
     {
       "type": "fx_async_message",
       "text": "Pressure increasing.",
       "type_speed_cps": 24,
       "hold_sec": 1.4,
-      "id": "terra_virex_level_02_034",
-      "time": 55.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0,
-      "id": "terra_virex_level_02_035",
-      "time": 55.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 90,
-      "id": "terra_virex_level_02_036",
-      "time": 57.2
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 180,
       "id": "terra_virex_level_02_037",
-      "time": 58.6
+      "time": 52.0
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 210,
       "id": "terra_virex_level_02_038",
-      "time": 60.0
+      "time": 52.0
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 120,
       "id": "terra_virex_level_02_039",
-      "time": 61.4
+      "time": 53.4
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 30,
       "id": "terra_virex_level_02_040",
-      "time": 62.8
+      "time": 54.8
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 300,
       "id": "terra_virex_level_02_041",
-      "time": 64.2
+      "time": 56.2
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 210,
       "id": "terra_virex_level_02_042",
-      "time": 65.6
+      "time": 57.6
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 120,
       "id": "terra_virex_level_02_043",
-      "time": 67.0
+      "time": 59.0
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 30,
       "id": "terra_virex_level_02_044",
-      "time": 68.4
+      "time": 60.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 300,
+      "id": "terra_virex_level_02_045",
+      "time": 61.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 210,
+      "id": "terra_virex_level_02_046",
+      "time": 63.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 120,
+      "id": "terra_virex_level_02_047",
+      "time": 64.6
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "charger_drone",
       "spawn_side": "degrees",
       "degrees": 45,
-      "id": "terra_virex_level_02_045",
-      "time": 70.6
+      "id": "terra_virex_level_02_048",
+      "time": 66.0
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_sine",
+      "enemy_type": "charger_drone",
       "spawn_side": "degrees",
       "degrees": 225,
-      "id": "terra_virex_level_02_046",
-      "time": 72.8
+      "id": "terra_virex_level_02_049",
+      "time": 68.0
     },
     {
       "type": "fx_async_message",
       "text": "Opposing vectors detected.",
       "type_speed_cps": 24,
       "hold_sec": 1.4,
-      "id": "terra_virex_level_02_047",
-      "time": 77.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0,
-      "id": "terra_virex_level_02_048",
-      "time": 77.8
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 180,
-      "id": "terra_virex_level_02_049",
-      "time": 78.4
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 180,
       "id": "terra_virex_level_02_050",
-      "time": 80.5
+      "time": 73.0
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 150,
       "id": "terra_virex_level_02_051",
-      "time": 81.1
+      "time": 73.0
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "asteroid",
+      "enemy_type": "drone_sine",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 330,
       "id": "terra_virex_level_02_052",
-      "time": 83.2
+      "time": 73.6
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 330,
       "id": "terra_virex_level_02_053",
-      "time": 83.8
+      "time": 75.6
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 150,
+      "id": "terra_virex_level_02_054",
+      "time": 76.2
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 270,
-      "id": "terra_virex_level_02_054",
-      "time": 85.9
+      "degrees": 60,
+      "id": "terra_virex_level_02_055",
+      "time": 78.2
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 240,
+      "id": "terra_virex_level_02_056",
+      "time": 78.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 240,
+      "id": "terra_virex_level_02_057",
+      "time": 80.8
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 60,
+      "id": "terra_virex_level_02_058",
+      "time": 81.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 105,
+      "id": "terra_virex_level_02_059",
+      "time": 83.4
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 285,
+      "id": "terra_virex_level_02_060",
+      "time": 84.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 285,
+      "id": "terra_virex_level_02_061",
+      "time": 86.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_sine",
+      "spawn_side": "degrees",
+      "degrees": 105,
+      "id": "terra_virex_level_02_062",
+      "time": 86.6
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
-      "id": "terra_virex_level_02_055",
-      "time": 86.5
+      "degrees": 105,
+      "id": "terra_virex_level_02_063",
+      "time": 88.6
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 45,
-      "id": "terra_virex_level_02_056",
+      "degrees": 285,
+      "id": "terra_virex_level_02_064",
       "time": 88.6
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 225,
-      "id": "terra_virex_level_02_057",
-      "time": 89.2
+      "degrees": 345,
+      "id": "terra_virex_level_02_065",
+      "time": 90.8
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 225,
-      "id": "terra_virex_level_02_058",
-      "time": 91.3
+      "degrees": 165,
+      "id": "terra_virex_level_02_066",
+      "time": 90.8
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
+      "degrees": 225,
+      "id": "terra_virex_level_02_067",
+      "time": 93.0
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
       "degrees": 45,
-      "id": "terra_virex_level_02_059",
-      "time": 91.9
+      "id": "terra_virex_level_02_068",
+      "time": 93.0
     },
     {
       "type": "wait_until_clear",
-      "id": "terra_virex_level_02_060",
-      "time": 94.0
+      "id": "terra_virex_level_02_069",
+      "time": 95.2
     },
     {
       "type": "fx_async_message",
       "text": "Relay signal hardening. Block to expose its core.",
       "type_speed_cps": 24,
       "hold_sec": 1.4,
-      "id": "terra_virex_level_02_061",
-      "time": 94.1
+      "id": "terra_virex_level_02_070",
+      "time": 95.2
     },
     {
       "type": "spawn_miniboss",
       "boss_id": "relay_sentinel",
       "degrees": 0,
-      "id": "terra_virex_level_02_062",
-      "time": 94.1
+      "id": "terra_virex_level_02_071",
+      "time": 95.2
     },
     {
       "type": "wait_until_clear",
-      "id": "terra_virex_level_02_063",
-      "time": 94.6
+      "id": "terra_virex_level_02_072",
+      "time": 95.7
     },
     {
       "id": "terra_virex_level_02_completion_message",

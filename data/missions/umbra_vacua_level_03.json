@@ -35,20 +35,20 @@
     },
     {
       "phase_id": "compression",
-      "start_sec": 24.9
+      "start_sec": 24.5
     },
     {
       "phase_id": "signature",
-      "start_sec": 56.8
+      "start_sec": 51.9
     },
     {
       "phase_id": "boss",
-      "start_sec": 65.5
+      "start_sec": 59.9
     }
   ],
   "authoring": {
     "built_by": "tools/build_levels.py",
-    "timeline_sec": 66.0
+    "timeline_sec": 60.4
   },
   "events": [
     {
@@ -63,7 +63,7 @@
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 90,
       "hold_dist": 160,
       "hold_sec": 10.0,
       "hold_style": "watch",
@@ -99,7 +99,7 @@
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 90,
+      "degrees": 120,
       "hold_dist": 150,
       "hold_sec": 9.0,
       "hold_style": "watch",
@@ -112,7 +112,7 @@
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 270,
+      "degrees": 300,
       "hold_dist": 150,
       "hold_sec": 9.0,
       "hold_style": "watch",
@@ -133,49 +133,77 @@
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 185,
       "id": "umbra_vacua_level_03_009",
-      "time": 15.5
+      "time": 15.3
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "spiral_drone_clock",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 195,
       "id": "umbra_vacua_level_03_010",
-      "time": 18.7
+      "time": 15.42
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "spiral_drone_counter",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 205,
       "id": "umbra_vacua_level_03_011",
-      "time": 18.7
+      "time": 15.54
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "spiral_drone_clock",
       "spawn_side": "degrees",
-      "degrees": 30,
+      "degrees": 285,
       "id": "umbra_vacua_level_03_012",
-      "time": 21.7
+      "time": 18.3
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "spiral_drone_counter",
       "spawn_side": "degrees",
-      "degrees": 210,
+      "degrees": 105,
       "id": "umbra_vacua_level_03_013",
-      "time": 21.7
+      "time": 18.3
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_clock",
+      "spawn_side": "degrees",
+      "degrees": 315,
+      "id": "umbra_vacua_level_03_014",
+      "time": 21.3
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "spiral_drone_counter",
+      "spawn_side": "degrees",
+      "degrees": 135,
+      "id": "umbra_vacua_level_03_015",
+      "time": 21.3
     },
     {
       "type": "fx_async_message",
       "text": "The dark is crowding in.",
       "type_speed_cps": 24,
       "hold_sec": 1.4,
-      "id": "umbra_vacua_level_03_014",
-      "time": 24.9
+      "id": "umbra_vacua_level_03_016",
+      "time": 24.5
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 15,
+      "hold_dist": 160,
+      "hold_sec": 10.0,
+      "hold_style": "watch",
+      "fire_on_turn": true,
+      "id": "umbra_vacua_level_03_017",
+      "time": 24.5
     },
     {
       "type": "spawn_enemy",
@@ -186,231 +214,187 @@
       "hold_sec": 10.0,
       "hold_style": "watch",
       "fire_on_turn": true,
-      "id": "umbra_vacua_level_03_015",
-      "time": 24.9
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 75,
-      "hold_dist": 160,
-      "hold_sec": 10.0,
-      "hold_style": "watch",
-      "fire_on_turn": true,
-      "id": "umbra_vacua_level_03_016",
-      "time": 25.4
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 225,
-      "id": "umbra_vacua_level_03_017",
-      "time": 26.9
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 255,
       "id": "umbra_vacua_level_03_018",
-      "time": 28.5
+      "time": 25.0
     },
     {
       "type": "spawn_enemy",
-      "enemy_type": "drone_fast",
+      "enemy_type": "asteroid",
       "spawn_side": "degrees",
-      "degrees": 135,
-      "hold_dist": 150,
-      "hold_sec": 3.5,
+      "degrees": 195,
       "id": "umbra_vacua_level_03_019",
-      "time": 29.9
+      "time": 26.5
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_fast",
       "spawn_side": "degrees",
-      "degrees": 315,
+      "degrees": 165,
+      "id": "umbra_vacua_level_03_020",
+      "time": 28.1
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "asteroid",
+      "spawn_side": "degrees",
+      "degrees": 285,
+      "id": "umbra_vacua_level_03_021",
+      "time": 31.1
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_fast",
+      "spawn_side": "degrees",
+      "degrees": 150,
       "hold_dist": 150,
       "hold_sec": 3.5,
-      "id": "umbra_vacua_level_03_020",
-      "time": 32.9
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "charger_drone",
-      "spawn_side": "degrees",
-      "degrees": 180,
-      "id": "umbra_vacua_level_03_021",
-      "time": 36.1
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 0,
-      "hold_dist": 150,
-      "hold_sec": 8.0,
-      "hold_style": "watch",
-      "wake_on": "turn",
-      "lunge_mult": 2.2,
       "id": "umbra_vacua_level_03_022",
-      "time": 39.1
+      "time": 32.7
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_fast",
+      "spawn_side": "degrees",
+      "degrees": 330,
+      "hold_dist": 150,
+      "hold_sec": 3.5,
+      "id": "umbra_vacua_level_03_023",
+      "time": 35.7
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "circle_shooter_drone",
+      "spawn_side": "degrees",
+      "degrees": 210,
+      "id": "umbra_vacua_level_03_024",
+      "time": 38.9
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 180,
+      "degrees": 165,
       "hold_dist": 150,
       "hold_sec": 8.0,
       "hold_style": "watch",
       "wake_on": "turn",
       "lunge_mult": 2.2,
-      "id": "umbra_vacua_level_03_023",
-      "time": 39.5
+      "id": "umbra_vacua_level_03_025",
+      "time": 42.1
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 345,
+      "hold_dist": 150,
+      "hold_sec": 8.0,
+      "hold_style": "watch",
+      "wake_on": "turn",
+      "lunge_mult": 2.2,
+      "id": "umbra_vacua_level_03_026",
+      "time": 42.5
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_sine",
       "spawn_side": "degrees",
       "degrees": 90,
-      "id": "umbra_vacua_level_03_024",
-      "time": 40.9
+      "id": "umbra_vacua_level_03_027",
+      "time": 43.9
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_sine",
       "spawn_side": "degrees",
       "degrees": 270,
-      "id": "umbra_vacua_level_03_025",
-      "time": 43.4
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 180,
-      "hold_dist": 160,
-      "hold_sec": 10.0,
-      "hold_style": "watch",
-      "fire_on_turn": true,
-      "id": "umbra_vacua_level_03_026",
-      "time": 46.6
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 150,
-      "hold_dist": 160,
-      "hold_sec": 10.0,
-      "hold_style": "watch",
-      "fire_on_turn": true,
-      "id": "umbra_vacua_level_03_027",
-      "time": 47.1
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 0,
       "id": "umbra_vacua_level_03_028",
-      "time": 49.1
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "asteroid",
-      "spawn_side": "degrees",
-      "degrees": 20,
-      "id": "umbra_vacua_level_03_029",
-      "time": 50.6
+      "time": 46.4
     },
     {
       "type": "fx_async_message",
       "text": "Stillness is the answer.",
       "type_speed_cps": 24,
       "hold_sec": 1.4,
-      "id": "umbra_vacua_level_03_030",
-      "time": 56.8
+      "id": "umbra_vacua_level_03_029",
+      "time": 51.9
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 0,
+      "degrees": 165,
+      "hold_dist": 160,
+      "hold_sec": 10.0,
+      "hold_style": "watch",
+      "fire_on_turn": true,
+      "id": "umbra_vacua_level_03_030",
+      "time": 51.9
+    },
+    {
+      "type": "spawn_enemy",
+      "enemy_type": "drone_basic",
+      "spawn_side": "degrees",
+      "degrees": 135,
       "hold_dist": 160,
       "hold_sec": 10.0,
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_031",
-      "time": 56.8
+      "time": 52.4
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "drone_basic",
       "spawn_side": "degrees",
-      "degrees": 330,
+      "degrees": 195,
       "hold_dist": 160,
       "hold_sec": 10.0,
       "hold_style": "watch",
       "fire_on_turn": true,
       "id": "umbra_vacua_level_03_032",
-      "time": 57.3
-    },
-    {
-      "type": "spawn_enemy",
-      "enemy_type": "drone_basic",
-      "spawn_side": "degrees",
-      "degrees": 30,
-      "hold_dist": 160,
-      "hold_sec": 10.0,
-      "hold_style": "watch",
-      "fire_on_turn": true,
-      "id": "umbra_vacua_level_03_033",
-      "time": 57.8
+      "time": 52.9
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
       "degrees": 180,
-      "id": "umbra_vacua_level_03_034",
-      "time": 59.3
+      "id": "umbra_vacua_level_03_033",
+      "time": 54.4
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
       "degrees": 200,
-      "id": "umbra_vacua_level_03_035",
-      "time": 60.8
+      "id": "umbra_vacua_level_03_034",
+      "time": 55.9
     },
     {
       "type": "spawn_enemy",
       "enemy_type": "asteroid",
       "spawn_side": "degrees",
       "degrees": 160,
-      "id": "umbra_vacua_level_03_036",
-      "time": 62.3
+      "id": "umbra_vacua_level_03_035",
+      "time": 57.4
     },
     {
       "type": "wait_until_clear",
-      "id": "umbra_vacua_level_03_037",
-      "time": 65.3
+      "id": "umbra_vacua_level_03_036",
+      "time": 59.4
     },
     {
       "type": "spawn_boss",
       "boss_id": "observer",
       "degrees": 0,
-      "id": "umbra_vacua_level_03_038",
-      "time": 65.5
+      "id": "umbra_vacua_level_03_037",
+      "time": 59.9
     },
     {
       "type": "wait_until_clear",
-      "id": "umbra_vacua_level_03_039",
-      "time": 66.0
+      "id": "umbra_vacua_level_03_038",
+      "time": 60.4
     },
     {
       "id": "umbra_vacua_level_03_completion_message",
