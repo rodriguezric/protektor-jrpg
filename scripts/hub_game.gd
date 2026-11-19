@@ -73,7 +73,11 @@ func _init() -> void:
 	add_child(big_l)
 
 
-func _big(text: String, col: Color = Pal.WHITE, y: float = 70.0) -> void:
+func _big(text: String, col: Color = Pal.WHITE, y: float = -1.0) -> void:
+	## The big banner (READY?, WRONG, the result). In high-low it sits in the
+	## felt strip under the card so it never covers the card face.
+	if y < 0.0:
+		y = 132.0 if kind == "cards" else 70.0
 	big_l.text = text
 	big_l.add_theme_color_override("font_color", col)
 	big_l.position = Vector2(floorf(160 - Art.text_width(text, 2) / 2.0), y)
