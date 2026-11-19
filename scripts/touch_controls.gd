@@ -24,6 +24,15 @@ extends Control
 ## - Starbox games (Game.touch_layout "console"): while one is live
 ##   (Game.touch_running) the stick steers, A and B sit bottom right, MENU
 ##   pauses, and stray taps on the picture do nothing.
+## - Pilot Wing minigames pick a layout through Game.touch_layout (see
+##   HubGame.TOUCH): "tap"/"hold"/"mash" are played by touching anywhere
+##   (side bars included), "lr" by touching the left or right half, "ud" with
+##   big up/down buttons, and "arrows" by the "Arrow games" setting: swipe
+##   anywhere, four arrow buttons, or both (swipe on the picture, buttons
+##   beside it). B quits. Stray taps on the picture do nothing while one is
+##   live (Game.touch_running).
+## - Long lists (tap targets with scroll_by) drag-scroll with the finger and
+##   keep gliding after a flick; a drag never selects anything.
 ## - The top-right slot holds one button at a time, the same size either way:
 ##   MENU (pause), B wherever "back" exists, or nothing at all.
 
@@ -35,6 +44,16 @@ const JOY_DEAD := 0.2
 const JOY_RUN := 0.7
 ## A direction counts once the stick leans this far toward it (diagonals ok).
 const JOY_AXIS := 0.38
+## A swipe in an arrow minigame: how far (share of screen height) a finger
+## travels before it counts, once per touch.
+const SWIPE := 0.06
+## Scrolling lists: a finger must travel this far (game pixels) before a
+## touch counts as a drag instead of a tap; a flick keeps gliding, slowing
+## by this factor each second.
+const SCROLL_START := 5.0
+const FLING_DECAY := 0.03
+## Minigame layouts (Game.touch_layout) played without the stick.
+const MINIGAME_LAYOUTS := ["tap", "hold", "mash", "lr", "ud", "arrows"]
 ## Smallest each control may be, as a share of the screen height, whatever
 ## room the black side bars leave (they overhang the game if they must).
 const MIN_PAD := 0.24
@@ -90,6 +109,14 @@ var hidden_ids: Array = []
 var slot_mode := ""
 var slot_alpha := {"menu": 0.0, "b": 0.0}
 var web_unlocked := false
+## The "touch_arrows" setting the controls were laid out for: 0 swipe,
+## 1 buttons, 2 both.
+var arrow_mode := 0
+## Drag-scrolling: the list's speed (game px/s) while a finger moves it, and
+## the glide left over after a flick.
+var scroll_v := 0.0
+var scroll_t := 0.0
+var fling_v := 0.0
 
 
 func _init() -> void:
@@ -136,26 +163,64 @@ func relayout() -> void:
 		var b_c := Vector2(win.x - bar / 2.0, win.y * 0.82) if in_bars else a_c + Vector2(-bs * 1.3, bs * 0.6)
 		_add("pa", a_c, "a", "accept", "button")
 		_add("pb", b_c, "b", "cancel", "button")
+	var left_c := Vector2(bar / 2.0, win.y * 0.62) if in_bars else Vector2(m + PAD_ART * ck / 2.0, win.y - m - PAD_ART * ck / 2.0)
+	var right_c := Vector2(win.x - bar / 2.0, win.y * 0.62) if in_bars else Vector2(win.x - m - PAD_ART * ck / 2.0, win.y - m - PAD_ART * ck / 2.0)
+	match layout:
+		"ud":
+			_add("up", left_c, "arrow_up", "up", "button", 1.4)
+			_add("down", right_c, "arrow_down", "down", "button", 1.4)
+		"arrows":
+			if arrow_mode != 0:
+				var s := 25.0 * _scale_for("arrow_up")
+				# left/right stack diagonally so they fit a narrow side bar
+				var dx := s * (0.25 if in_bars else 0.55)
+				var dy := s * (0.55 if in_bars else 0.0)
+				_add("left", left_c + Vector2(-dx, -dy), "arrow_left", "left", "button")
+				_add("right", left_c + Vector2(dx, dy), "arrow_right", "right", "button")
+				_add("up", right_c + Vector2(0, -s * 0.55), "arrow_up", "up", "button")
+				_add("down", right_c + Vector2(0, s * 0.55), "arrow_down", "down", "button")
+	if in_bars and _bar_buttons():
+		_bar_hits(win, bar)
 	# the joystick isn't a fixed control: it appears where you touch
 	joy_radius = PAD_ART * ck / 2.0
 	queue_redraw()
 
 
-func _scale_for(art: String) -> float:
+func _bar_hits(win: Vector2, bar: float) -> void:
+	## In side-bar mode a minigame's buttons own their whole bar (or half of
+	## it, with two per side), however small they're drawn: big thumb targets.
+	var top := win.y * 0.22
+	for side in [0, 1]:
+		var x0 := 0.0 if side == 0 else win.x - bar
+		var mine := controls.filter(func(c: Dictionary) -> bool:
+			return c.kind == "button" and c.id not in ["b", "pa", "pb"] and ((c.rect as Rect2).get_center().x < win.x / 2.0) == (side == 0))
+		mine.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return (a.rect as Rect2).position.y < (b.rect as Rect2).position.y)
+		var h := (win.y - top) / maxf(1.0, mine.size())
+		for i in mine.size():
+			mine[i].hit = Rect2(x0, top + h * i, bar, h)
+			mine[i].guard = mine[i].hit
+
+
+func _bar_buttons() -> bool:
+	## Whether this layout's buttons take over the side bars.
+	return layout == "ud" or (layout == "arrows" and arrow_mode != 0)
+
+
+func _scale_for(art: String, k: float = 1.0) -> float:
 	## Whole-number scale for a control: its layout size, shrunk to fit a
 	## narrow side bar, but never below its minimum share of the screen.
 	var tex := Art.ui("t_" + art)
 	var win := get_viewport_rect().size
-	var sc := roundf(ck)
+	var sc := roundf(ck * k)
 	if in_bars:
 		var bar := shell().game_rect.position.x
 		sc = minf(sc, floorf((bar - 6.0) / tex.get_width()))
 	return maxf(maxf(1.0, sc), ceilf(win.y * MIN_BUTTON / tex.get_height()))
 
 
-func _add(id: String, center: Vector2, art: String, action: String, kind: String) -> void:
+func _add(id: String, center: Vector2, art: String, action: String, kind: String, k: float = 1.0) -> void:
 	var tex := Art.ui("t_" + art)
-	var sc := _scale_for(art)
+	var sc := _scale_for(art, k)
 	var sz := tex.get_size() * sc
 	var win := get_viewport_rect().size
 	var pos := (center - sz / 2.0).round()
@@ -169,15 +234,19 @@ func _add(id: String, center: Vector2, art: String, action: String, kind: String
 # ------------------------------------------------------------------ drawing --
 
 func _process(delta: float) -> void:
-	var want := "mission" if _mission() != null else ("console" if Game.touch_layout == "console" else "field")
-	if want == "console" and Game.touch_running != _laid_running:
+	var want := "field"
+	if _mission() != null:
+		want = "mission"
+	elif Game.touch_layout == "console" or MINIGAME_LAYOUTS.has(Game.touch_layout):
+		want = Game.touch_layout
+	var am := int(Game.settings.get("touch_arrows", 0))
+	if (want == "console" and Game.touch_running != _laid_running) or want != layout or am != arrow_mode:
 		_release_all()
 		layout = want
+		arrow_mode = am
 		relayout()
-	if want != layout:
-		_release_all()
-		layout = want
-		relayout()
+	if fling_v != 0.0:
+		_fling(delta)
 	var target := 1.0 if active else 0.0
 	if not is_equal_approx(alpha, target):
 		alpha = move_toward(alpha, target, delta * 4.0)
@@ -200,6 +269,8 @@ func _process(delta: float) -> void:
 			relayout()
 	if layout == "mission":
 		joy_blocked = want_hidden.has("pad") or not _mission_steerable()
+	elif MINIGAME_LAYOUTS.has(layout):
+		joy_blocked = true
 	else:
 		joy_blocked = want_hidden.has("pad")
 	if joy_blocked and joy_finger >= 0:
@@ -226,6 +297,22 @@ func _draw() -> void:
 	if alpha <= 0.0:
 		return
 	var a := alpha * (1.0 if in_bars else 0.6)
+	if layout == "lr" and Game.touch_running:
+		# the half of the screen being held lights faintly
+		var win := get_viewport_rect().size
+		for id in fingers.values():
+			if id == "zone:left" or id == "zone:right":
+				var x0 := 0.0 if id == "zone:left" else win.x / 2.0
+				draw_rect(Rect2(x0, 0, win.x / 2.0, win.y), Color(Pal.SYNC, 0.08 * alpha))
+	if in_bars and _bar_buttons():
+		# each bar zone that acts as a button shows faintly and lights while held
+		for c in controls:
+			if c.kind != "button" or c.id in ["b", "pa", "pb"]:
+				continue
+			var hr: Rect2 = (c.hit as Rect2).grow(-ck * 2)
+			var on: bool = fingers.values().has(c.id)
+			draw_rect(hr, Color(Pal.PANEL.lerp(Pal.SYNC, 0.25 if on else 0.0), (0.55 if on else 0.35) * a))
+			draw_rect(hr, Color(Pal.TEAL, 0.35 * a), false, maxf(1.0, ck * 0.5))
 	for c in controls:
 		var ca := a
 		if slot_alpha.has(c.id):
@@ -284,6 +371,7 @@ func _touch(e: InputEventScreenTouch) -> void:
 	if e.pressed:
 		_set_active(true)
 		_web_unlock()
+		fling_v = 0.0
 		var hit := _hit(e.position)
 		var win := get_viewport_rect().size
 		if hit.is_empty() and not joy_blocked and joy_finger < 0 and e.position.x < win.x * JOY_REGION:
@@ -308,6 +396,20 @@ func _touch(e: InputEventScreenTouch) -> void:
 			# a live Starbox game: only the stick and the buttons count
 			fingers[e.index] = "guard"
 			return
+		if hit.is_empty() and _swipe_zone():
+			# an arrow minigame: a swipe anywhere (bars too) is an arrow
+			fingers[e.index] = "swipe"
+			set_meta("start_%d" % e.index, e.position)
+			set_meta("swiped_%d" % e.index, false)
+			return
+		var zone := _zone_action(e.position)
+		if hit.is_empty() and zone != "":
+			# a minigame played by touching the screen (black bars included)
+			fingers[e.index] = "zone:" + zone
+			_press(zone)
+			Game.buzz(8)
+			queue_redraw()
+			return
 		if hit.is_empty() and _guarded(e.position):
 			# just beside a control (or on an empty bar): ignore it entirely
 			fingers[e.index] = "guard"
@@ -315,6 +417,17 @@ func _touch(e: InputEventScreenTouch) -> void:
 		if hit.is_empty():
 			# the game picture itself: OK (advance dialog, choose, start...)
 			fingers[e.index] = "game"
+			if not _game_tap_allowed():
+				# a live minigame: stray taps would count as inputs
+				return
+			set_meta("start_%d" % e.index, e.position)
+			if _scroll_target() != null:
+				# a scrolling list: wait for the release to tell a tap from a drag
+				set_meta("pending_%d" % e.index, true)
+				set_meta("scrolling_%d" % e.index, false)
+				set_meta("last_%d" % e.index, e.position)
+				scroll_v = 0.0
+				return
 			# menus take the tap first; if one is open and the tap misses it,
 			# nothing happens (no accidental confirm)
 			match _offer_tap(shell().to_game(e.position)):
@@ -348,12 +461,31 @@ func _touch(e: InputEventScreenTouch) -> void:
 			"fire":
 				_release("accept")
 			"game":
-				if get_meta("accept_%d" % e.index, false):
+				if get_meta("pending_%d" % e.index, false):
+					set_meta("pending_%d" % e.index, false)
+					if get_meta("scrolling_%d" % e.index, false):
+						# a flick keeps the list gliding; a drag that stopped doesn't
+						fling_v = scroll_v if Time.get_ticks_msec() / 1000.0 - scroll_t < 0.1 else 0.0
+					else:
+						# it never moved: a tap, offered where the finger went down
+						var start: Vector2 = get_meta("start_%d" % e.index, e.position)
+						match _offer_tap(shell().to_game(start)):
+							0:
+								_tap("accept")
+								Game.buzz(8)
+							1:
+								Game.buzz(8)
+				elif get_meta("accept_%d" % e.index, false):
 					set_meta("accept_%d" % e.index, false)
 					_release("accept")
 			"menu", "guard":
 				pass
+			"swipe":
+				# a flick too quick for any drag event still counts
+				_swipe(e.index, e.position)
 			_:
+				if id.begins_with("zone:"):
+					_release(id.substr(5))
 				for c in controls:
 					if c.id == id:
 						_release(c.action)
@@ -361,8 +493,96 @@ func _touch(e: InputEventScreenTouch) -> void:
 
 
 func _drag(e: InputEventScreenDrag) -> void:
-	if fingers.get(e.index, "") == "joy":
+	var id: String = fingers.get(e.index, "")
+	if id == "joy":
 		_joy_move(e.position)
+	elif id == "game" and get_meta("pending_%d" % e.index, false):
+		_scroll_drag(e)
+	elif id == "swipe":
+		_swipe(e.index, e.position)
+
+
+func _swipe(index: int, p: Vector2) -> void:
+	## Once a finger has travelled far enough, taps the arrow it moved
+	## toward (one arrow per touch).
+	if get_meta("swiped_%d" % index, true):
+		return
+	var v: Vector2 = p - get_meta("start_%d" % index, p)
+	if v.length() > get_viewport_rect().size.y * SWIPE:
+		set_meta("swiped_%d" % index, true)
+		var d := ("right" if v.x > 0 else "left") if absf(v.x) > absf(v.y) else ("down" if v.y > 0 else "up")
+		_tap(d)
+		Game.buzz(8)
+
+
+func _scroll_target() -> Node:
+	## The list a vertical drag should scroll (a tap target with scroll_by), if any.
+	for n in get_tree().get_nodes_in_group("tap_targets"):
+		if is_instance_valid(n) and n.is_inside_tree() and n.has_method("scroll_by") and (not n is CanvasItem or n.is_visible_in_tree()):
+			return n
+	return null
+
+
+func _scroll_drag(e: InputEventScreenDrag) -> void:
+	var k := maxf(0.001, shell().game_scale)
+	if not get_meta("scrolling_%d" % e.index, false):
+		var start: Vector2 = get_meta("start_%d" % e.index, e.position)
+		if absf(e.position.y - start.y) / k < SCROLL_START:
+			return
+		set_meta("scrolling_%d" % e.index, true)
+	var last: Vector2 = get_meta("last_%d" % e.index, e.position)
+	set_meta("last_%d" % e.index, e.position)
+	# content follows the finger: dragging up scrolls further down the list
+	var dy := -(e.position.y - last.y) / k
+	var tgt := _scroll_target()
+	if tgt == null:
+		return
+	tgt.scroll_by(dy)
+	var now := Time.get_ticks_msec() / 1000.0
+	var dt := now - scroll_t
+	scroll_t = now
+	if dt > 0.0 and dt < 0.1:
+		scroll_v = lerpf(scroll_v, dy / dt, 0.5)
+	else:
+		scroll_v = 0.0
+
+
+func _fling(delta: float) -> void:
+	var tgt := _scroll_target()
+	if tgt == null:
+		fling_v = 0.0
+		return
+	tgt.scroll_by(fling_v * delta)
+	fling_v *= pow(FLING_DECAY, delta)
+	if absf(fling_v) < 8.0:
+		fling_v = 0.0
+
+
+func _zone_action(p: Vector2) -> String:
+	## While a touch-the-screen minigame is being played, the action a touch
+	## at p holds down: OK anywhere, or left/right by half of the screen.
+	if not Game.touch_running or _menu_up() or _dialog_up():
+		return ""
+	match layout:
+		"hold", "mash", "tap":
+			return "accept"
+		"lr":
+			return "left" if p.x < get_viewport_rect().size.x / 2.0 else "right"
+	return ""
+
+
+func _swipe_zone() -> bool:
+	## While an arrow minigame is being played (and swiping is on), touches
+	## anywhere but on a button are swipes.
+	return layout == "arrows" and arrow_mode != 1 and Game.touch_running and not _menu_up() and not _dialog_up()
+
+
+func _game_tap_allowed() -> bool:
+	## Tapping the picture presses OK, except while a minigame is being played
+	## (stray taps would count as inputs), unless it's a tap-to-play one.
+	if not Game.touch_running or _menu_up() or _dialog_up():
+		return true
+	return layout == "tap"
 
 
 func _hit(p: Vector2) -> Dictionary:
@@ -474,6 +694,8 @@ func _slot_mode() -> String:
 		return "menu" if _mission_steerable() else ""
 	if layout == "console" and Game.touch_running:
 		return "menu"
+	if MINIGAME_LAYOUTS.has(layout):
+		return "b"   # a Pilot Wing game: B quits it
 	if _field_control():
 		return "menu"
 	if _arrow_screen():
@@ -637,5 +859,6 @@ func _release_all() -> void:
 	joy_dirs.clear()
 	joy_finger = -1
 	running = false
+	fling_v = 0.0
 	Game.touch_aim = Vector2.ZERO
 	queue_redraw()

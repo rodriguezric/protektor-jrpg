@@ -3,6 +3,8 @@ extends Control
 ## The trophy wall. Category tabs along the top, a grid of cards that scrolls
 ## smoothly, and a detail panel for whatever card is selected.
 ## Arrows move; Up from the top row reaches the tabs; X goes back.
+## Touch: tap a tab to switch, tap a card to select it and again to look at
+## it; drag the grid to scroll (a flick glides); B goes back.
 
 const COLS := 5
 const CARD := Vector2(58, 50)
@@ -167,12 +169,50 @@ func _process(delta: float) -> void:
 		l.position.y = 24 - (1 if cur and on_tabs and fmod(t, 0.6) < 0.3 else 0)
 
 
+func tap(p: Vector2) -> bool:
+	## Tabs switch; a card is selected by the first tap and opened by the
+	## second. Any tap on the screen is taken (it covers the whole view).
+	for k in tab_labels.size():
+		var l: Label = tab_labels[k]
+		if Rect2(l.position - Vector2(4, 2), Vector2(Art.text_width(l.text) + 8, 12)).has_point(p):
+			if k != tab:
+				tab = k
+				sel = 0
+				Sfx.play("blip", 1.2)
+				_fill()
+			on_tabs = false
+			return true
+	if Rect2(0, GRID_TOP, 320, GRID_H).has_point(p):
+		for i in cards.size():
+			if Rect2(Vector2(0, GRID_TOP) + _slot(i) - Vector2(0, scroll), CARD).has_point(p):
+				if i == sel and not on_tabs:
+					TouchControls.confirm()
+				else:
+					sel = i
+					on_tabs = false
+					Sfx.play("blip")
+					_describe()
+				break
+	return true
+
+
+func scroll_by(dy: float) -> void:
+	## Drag-scrolling the grid (TouchControls): the content follows the finger.
+	var rows := ceili(list.size() / float(COLS))
+	var most := maxf(0.0, rows * (CARD.y + GAP) - GRID_H + 4)
+	scroll_to = clampf(scroll_to + dy, 0.0, most)
+	scroll = scroll_to
+
+
 func run() -> void:
 	await get_tree().process_frame
+	set_meta("tap_priority", 10)
+	add_to_group("tap_targets")
 	while true:
 		await get_tree().process_frame
 		if Input.is_action_just_pressed("cancel"):
 			Sfx.play("cancel")
+			remove_from_group("tap_targets")
 			return
 		if on_tabs:
 			var old_tab := tab

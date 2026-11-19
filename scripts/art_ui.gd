@@ -124,6 +124,30 @@ static func touch(name: String) -> PixBuf:
 		b.rect(7, 7 + dy, 2, 7, Pal.WHITE if on else lit)
 		b.rect(12, 7 + dy, 2, 7, Pal.WHITE if on else lit)
 		return b
+	if name.begins_with("arrow_"):
+		# arrow-minigame buttons: a rounded square with a chevron pointing
+		# its way, same rim and face as A/B
+		var b := PixBuf.new(25, 25)
+		var dy := 1 if on else 0
+		b.rect(1, 2, 23, 22, Pal.INK)
+		b.rect(1, 1 + dy, 23, 22, rim)
+		b.rect(3, 3 + dy, 19, 18, face.lerp(lit, 0.3) if on else face)
+		b.rect(5, 4 + dy, 8, 1, face.lerp(Pal.WHITE, 0.25))
+		var col := Pal.WHITE if on else lit
+		var dir: String = name.substr(6)
+		for i in 6:
+			# a filled triangle, drawn as the up arrow then turned
+			for j in range(-i, i + 1):
+				var q := Vector2i(12 + j, 8 + i)
+				match dir:
+					"down":
+						q = Vector2i(12 + j, 16 - i)
+					"left":
+						q = Vector2i(8 + i, 12 + j)
+					"right":
+						q = Vector2i(16 - i, 12 + j)
+				b.pset(q.x, q.y + dy, col)
+		return b
 	return PixBuf.new(1, 1)
 
 

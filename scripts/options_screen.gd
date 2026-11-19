@@ -1,9 +1,11 @@
 class_name OptionsScreen
 extends Control
 ## Options: music and sound volume, text speed and (on touch devices)
-## vibration. Left/Right change the selected row, Z cycles it (a second tap
-## does the same by touch), X or Back leaves. Changes apply at once and are
-## saved to the settings file when the screen closes.
+## vibration and how arrow minigames are played (swipe, buttons or both).
+## Left/Right change the selected row, Z cycles it (a second tap does the
+## same by touch; tapping along a volume bar sets it), X or Back leaves.
+## Changes apply at once and are saved to the settings file when the screen
+## closes.
 
 var menu: Menu
 var rows: Array = []
@@ -28,6 +30,7 @@ func _init() -> void:
 	rows = ["music", "sfx", "text"]
 	if Game.touch_active or OS.has_feature("mobile"):
 		rows.append("vibration")
+		rows.append("touch_arrows")
 	rows.append("back")
 	menu = Menu.make(self, _entries(), Vector2(80, 50), Vector2(160, rows.size() * 10 + 7))
 	for i in rows.size():
@@ -42,6 +45,9 @@ func _init() -> void:
 			f.position = Vector2(77, 6 + i * 10)
 			menu.add_child(f)
 			bars[rows[i]] = f
+	# volume bars take taps along their length, ahead of the menu
+	set_meta("tap_priority", 11)
+	add_to_group("tap_targets")
 	help = Art.label("", Pal.TEXT_DIM)
 	help.position = Vector2(80, 50 + rows.size() * 10 + 12)
 	add_child(help)
@@ -49,7 +55,7 @@ func _init() -> void:
 
 
 func _label(id: String) -> String:
-	return {"music": "Music", "sfx": "Sound", "text": "Text speed", "vibration": "Vibration", "back": "Back"}[id]
+	return {"music": "Music", "sfx": "Sound", "text": "Text speed", "vibration": "Vibration", "touch_arrows": "Arrow games", "back": "Back"}[id]
 
 
 func _value(id: String) -> String:
@@ -60,6 +66,8 @@ func _value(id: String) -> String:
 			return str(Game.TEXT_SPEEDS[int(Game.settings.text)][0])
 		"vibration":
 			return "On" if bool(Game.settings.vibration) else "Off"
+		"touch_arrows":
+			return Game.TOUCH_ARROWS[int(Game.settings.touch_arrows)]
 	return ""
 
 
@@ -99,6 +107,13 @@ func _change(id: String, step: int, wrap: bool) -> void:
 			Game.settings.vibration = not bool(Game.settings.vibration)
 			if Game.settings.vibration and Game.touch_active:
 				Input.vibrate_handheld(30)
+		"touch_arrows":
+			var n: int = Game.TOUCH_ARROWS.size()
+			var v := int(Game.settings.touch_arrows) + step
+			v = (v + n) % n if wrap else clampi(v, 0, n - 1)
+			if v == int(Game.settings.touch_arrows):
+				return
+			Game.settings.touch_arrows = v
 		_:
 			return
 	dirty = true
@@ -118,6 +133,24 @@ func _process(_d: float) -> void:
 		_change(id, -1, false)
 
 
+func tap(p: Vector2) -> bool:
+	## A tap along a volume bar sets that volume (and selects the row);
+	## anything else goes on to the menu.
+	if not menu.active:
+		return false
+	for id in bars:
+		var i := rows.find(id)
+		var r := Rect2(menu.global_position + Vector2(76, 5 + i * 10), Vector2(52, 6)).grow(3)
+		if r.has_point(p):
+			menu.index = i
+			menu._place_cursor()
+			# the fill starts 1 px into the bar (r is grown by 3)
+			var v := clampi(roundi((p.x - r.position.x - 4.0) / 50.0 * 10.0), 0, 10)
+			_change(id, v - int(Game.settings[id]), false)
+			return true
+	return false
+
+
 func run() -> void:
 	await get_tree().process_frame
 	while true:
@@ -125,6 +158,7 @@ func run() -> void:
 		if r < 0 or rows[r] == "back":
 			break
 		_change(rows[r], 1, true)
+	remove_from_group("tap_targets")
 	if dirty:
 		Game.save_settings()
 	Sfx.play("cancel")
