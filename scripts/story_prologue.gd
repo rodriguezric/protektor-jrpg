@@ -372,8 +372,9 @@ func _friends_gift() -> void:
 	## Tomas and Juno come over from the bench with something behind Juno's back.
 	Game.story.bracelet = true
 	var p := s.w.player.position
-	s.walk_bg("juno", [p + Vector2(10, 0)], 40.0)
-	await s.walk("tomas", [p + Vector2(-10, 0)], 40.0)
+	# they come up beside you, a step apart (not close enough to box you in)
+	s.walk_bg("juno", [p + Vector2(16, 0)], 40.0)
+	await s.walk("tomas", [p + Vector2(-16, 0)], 40.0)
 	await s.wait(0.2)
 	s.face_to("juno", "player")
 	s.face_to("tomas", "player")
