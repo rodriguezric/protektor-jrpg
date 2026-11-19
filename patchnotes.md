@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-19 15:02 EST — `bugfix_brow_moods_per_type` (v0.61.1)
+
+Every eyebrow is now one connected stroke in every mood, for both straight and arched brows.
+
+- Arched brows no longer break apart when sad, crying or scared (the tail used to drop two rows below the raised inner end), and no longer kink into a V when angry.
+- Angry brows are a clean slant down to the middle, the inner end sitting flush on the narrowed eye. Shock lifts the whole brow a row; arched brows keep their curve. Over glasses, the lifted shock brow stays level and clear of the frame.
+- Code: `scripts/art_people.gd` (BROW_SHAPES table of [inner, outer, tail] rows per brow type and mood; _brow() reads it). `tools/autotest.gd`: `PK_TEST=brows PK_BROWS=types` renders both brow types side by side (two looks plus a face in glasses) in every mood, portrait and field, front and side.
+
 ## 2026-11-19 14:40 EST — `feature_character_brow_choice` (v0.61.0)
 
 Choose your eyebrows when you register your pilot: straight or arched.

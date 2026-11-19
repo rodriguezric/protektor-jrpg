@@ -345,46 +345,51 @@ static func _hair_front(b: PixBuf, s: Dictionary, style: String, hair: Color, di
 			b.tri(hx - 2.5 + o, hy - 4.6, hx + 2.0 + o, hy - 4.6, hx - 0.5 + o, hy - 2.4, hair)
 
 
+## Brow shapes: rows of the [inner, outer, tail] pixels above the eye's
+## top row (ey), per brow type and mood. Every shape is one connected stroke
+## (each pixel touches the next, side by side or corner to corner) and
+## never lands on the eye: the tail sits one column outside the eye.
+## straight keeps the tail in line; arched curves it down at the outer end.
+## Moods missing here use "".
+const BROW_SHAPES := {
+	"straight": {
+		"": [-1, -1, -1],
+		"sad": [-2, -1, 0],     # worried: inner end up, the tail droops
+		"angry": [0, -1, -2],   # one clean slant, inner end down on the eye
+		"shock": [-2, -2, -2],  # the whole brow lifted a row off the eye
+	},
+	"arched": {
+		"": [-1, -1, 0],
+		"sad": [-2, -1, 0],
+		"angry": [0, -1, -1],
+		"shock": [-2, -2, -1],
+	},
+}
+
+
 static func _brow(b: PixBuf, s: Dictionary, ex: int, ey: int, left: bool, mood: String, skin: Color) -> void:
 	## One eyebrow over the eye at ex (2 px wide, eyes are 2 x 3 from ey).
-	## It sits flush on the eye (the row right above it) with a third pixel
-	## running out past the eye's outer edge, tilted by the mood: level when
-	## calm, the inner end up when sad or scared, down when angry, the whole
-	## brow lifted a row in shock. On arched brows (_brow_type) that outer
-	## tail sits a pixel lower, an arched brow. Coloured from the hair,
-	## darkened so light hair still reads against skin.
+	## It sits flush on the eye with a tail pixel running out past the eye's
+	## outer edge, shaped by its type and the mood (BROW_SHAPES): level when
+	## calm, inner end up when sad or scared, a slant down to the middle when
+	## angry, lifted in shock. Coloured from the hair, darkened so light hair
+	## still reads against skin.
 	# glasses frames sit where the brows go and read as brows themselves;
 	# only a startled lift shows above them
-	if (s.get("glasses", false) or s.get("shades", false)) and mood != "shock":
+	var framed: bool = s.get("glasses", false) or s.get("shades", false)
+	if framed and mood != "shock":
 		return
 	var hair: Color = s.get("hair", Pal.BARK)
 	var col := hair.lerp(Pal.INK2, 0.35 if hair.get_luminance() < 0.5 else 0.55)
 	if mood == "hollow":
 		col = Pal.shade(skin).lerp(col, 0.35)
-	var inner := ex + (1 if left else 0)
-	var outer := ex + (0 if left else 1)
-	var tail := outer + (-1 if left else 1)
-	var iy := ey - 1
-	var oy := ey - 1
-	var ty := ey - 1
-	match mood:
-		"sad", "cry", "terrified":
-			iy = ey - 2
-			oy = ey - 1
-			ty = ey   # drooping out past the eye
-		"angry":
-			iy = ey - 1
-			oy = ey - 2
-			ty = ey - 2
-		"shock":
-			iy = ey - 2
-			oy = ey - 2
-			ty = ey - 2
-	if _brow_type(s) == "arched":
-		ty += 1
-	b.pset(inner, iy, col)
-	b.pset(outer, oy, col)
-	b.pset(tail, ty, col)
+	var key: String = {"cry": "sad", "terrified": "sad"}.get(mood, mood)
+	# a lifted brow over a glasses frame stays level, clear of the frame
+	var shapes: Dictionary = BROW_SHAPES["straight" if framed else _brow_type(s)]
+	var rows: Array = shapes.get(key, shapes[""])
+	var xs := [ex + (1 if left else 0), ex + (0 if left else 1), ex + (-1 if left else 2)]
+	for i in 3:
+		b.pset(xs[i], ey + int(rows[i]), col)
 
 
 ## Eyebrow types: straight, or arched (the outer tail a pixel lower).
