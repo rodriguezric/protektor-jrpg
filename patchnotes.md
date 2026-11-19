@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-19 11:52 EST — `bugfix_boss_early_damage` (v0.59.3)
+
+Bosses can no longer be shredded before their fight starts: they stay armored until their opening attacks have played.
+
+- After a boss or mini-boss glides in it is shut (HP bar steel, shots spark off) until every one of its first-phase attacks has gone off once, plus a beat. When the armor drops it flashes, a green ring pulses out and a chime plays, and from then on its normal open/shut rules apply. Aegis Relay now first takes damage around 8.5 s in, the Observer around 10 s.
+- Bosses can opt out with intro_armor: false in data/bosses.json, or set the length with intro_armor_sec.
+- Code: `scripts/boss.gd` (_intro_armor_sec(), _intro_t in tick(), _expose_cue()). New autotest `PK_TEST=bosscheck PK_BOSS=<id>` fights one boss with the bot and logs, every second, whether it can take damage, and when damage first landed.
+
 ## 2026-11-19 11:49 EST — `bugfix_pingpong_look_and_feel` (v0.59.2)
 
 Rec-room ping-pong redrawn and retimed so it looks and feels like the rest of the game.

@@ -29,6 +29,13 @@ extends Threat
 ##               or with lunge: true a lunge at the planet, or with
 ##               from: "behind" shots at the player's back as they now face
 ## Every attack can carry tell (seconds of warning flash before it fires).
+##
+## Intro armor: a boss can't be hurt until its opening pattern has played,
+## i.e. until every phase-1 attack has fired once (first + tell, plus a
+## beat), so a fight can't be front-loaded with damage before it starts.
+## intro_armor: false in the def turns it off; intro_armor_sec overrides
+## the length. The HP bar shows steel and shots spark off while it holds;
+## when it drops the boss flashes and rings green.
 
 signal phase_changed(index: int)
 
@@ -59,6 +66,7 @@ var _shut_spark_t := 0.0
 ## The boss's own clock: the level clock stands still behind the
 ## wait_until_clear gate a boss fight sits behind.
 var _clock := 0.0
+var _intro_t := 0.0
 const ENTER_SEC := 1.6
 
 
@@ -89,6 +97,28 @@ func setup_boss(id: String, deg: float) -> void:
 	angle = deg_to_rad(deg - 90.0)
 	lp = m.CENTER + Vector2.from_angle(angle) * dist
 	_enter_t = ENTER_SEC
+	_intro_t = _intro_armor_sec()
+
+
+func _intro_armor_sec() -> float:
+	## How long the boss stays armored after gliding in: until its opening
+	## attacks have all gone off once.
+	if not bool(def.get("intro_armor", true)):
+		return 0.0
+	if def.has("intro_armor_sec"):
+		return float(def.intro_armor_sec)
+	var ph0: Dictionary = phases[0] if not phases.is_empty() else {}
+	var longest := 0.0
+	for a in ph0.get("attacks", []):
+		if str(a.get("type", "")) == "on_rotate":
+			continue
+		var when := float(a.get("first", a.get("every", 3.0))) + float(a.get("tell", 0.0))
+		if str(a.get("type", "")) == "spin_stream":
+			when += float(a.get("duration", 3.0))
+		longest = maxf(longest, when)
+	if longest <= 0.0:
+		longest = 4.0
+	return clampf(longest + 0.8, 3.0, 12.0)
 
 
 func _ready() -> void:
@@ -133,6 +163,11 @@ func tick(delta: float) -> void:
 	var ph: Dictionary = phases[phase] if phase >= 0 and phase < phases.size() else {}
 	_move(ph.get("move", {}), sd)
 	_update_open(ph.get("open", "always"), sd)
+	if _intro_t > 0.0:
+		_intro_t = maxf(0.0, _intro_t - sd)
+		open = false
+		if _intro_t <= 0.0:
+			_expose_cue()
 	_attacks(ph.get("attacks", []), sd)
 	_update_streams(sd)
 	_check_rotate(ph.get("attacks", []), sd)
@@ -309,6 +344,14 @@ func _update_streams(sd: float) -> void:
 func _shoot_from(p: Vector2, spd: float, r: float, dmg: float) -> void:
 	var dirv: Vector2 = (m.CENTER - p).normalized()
 	m.spawn_enemy_shot(p, dirv, spd, dmg, r, "boss")
+
+
+func _expose_cue() -> void:
+	## The boss's guard drops: a flash and a green ring so the player
+	## knows shots will land now.
+	_flash_t = maxf(_flash_t, 0.3)
+	m.fx.ring(position, d * 0.35, d * 0.75, 0.35, Pal.GLOW, 2.0, 1.0)
+	Sfx.play("sync", 1.3, -8.0)
 
 
 func _tell(t: float) -> void:
