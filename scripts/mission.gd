@@ -2036,29 +2036,56 @@ func _comms_pump() -> void:
 		comms_name.text = msg.who
 		comms_name.add_theme_color_override("font_color", Pal.SYNC if msg.who == "SYSTEM" else PILOT_COLOR.get(pilot, Pal.LEMON))
 		var voice := "system" if msg.who == "SYSTEM" else str(Data.CAST.get(pilot, {}).get("voice", "boy"))
-		var lines := _comms_wrap(msg.text)
-		var total := 0
-		for ln: String in lines:
-			total += ln.length()
-		_comms_show(lines, 0, true)
+		# a message longer than the box is shown a page (box-full) at a time,
+		# so every page is read whole: type it, hold it with a ">" for "more",
+		# then clear and type the next. The last page holds as long as asked.
+		var pages := _comms_pages(_comms_wrap(msg.text))
+		var lines := PackedStringArray()
 		var n := 0
-		var t := 0.0
-		while n < total:
-			await get_tree().process_frame
-			if not is_inside_tree():
-				return
-			t += get_process_delta_time() * maxf(8.0, msg.cps) * 1.6
-			var nn := mini(int(t), total)
-			if nn != n:
-				n = nn
-				if n % 3 == 0:
-					Sfx.voice(voice, n)
-				if pilot != "" and pilot == _pilot_on:
-					_pilot_face(n < total and (n / 2) % 2 == 0)
-				_comms_show(lines, n, true)
+		for pi in pages.size():
+			lines = pages[pi]
+			var last: bool = pi == pages.size() - 1
+			var total := 0
+			for ln: String in lines:
+				total += ln.length()
+			comms_text.position.y = 0.0
+			_comms_show(lines, 0, true)
+			n = 0
+			var t := 0.0
+			while n < total:
+				await get_tree().process_frame
+				if not is_inside_tree():
+					return
+				t += get_process_delta_time() * maxf(8.0, msg.cps) * 1.6
+				var nn := mini(int(t), total)
+				if nn != n:
+					n = nn
+					if n % 3 == 0:
+						Sfx.voice(voice, n)
+					if pilot != "" and pilot == _pilot_on:
+						_pilot_face(n < total and (n / 2) % 2 == 0)
+					_comms_show(lines, n, true)
+			if last:
+				break
+			# time to read this page before the next one replaces it
+			var read := 0.6 + total / 28.0
+			var blink_more := 0.0
+			while read > 0.0:
+				await get_tree().process_frame
+				if not is_inside_tree():
+					return
+				read -= get_process_delta_time()
+				blink_more += get_process_delta_time()
+				_comms_show(lines, n, true, ">" if fmod(blink_more, 0.6) < 0.4 else " ")
 		var hold: float = msg.hold
 		var blink := 0.0
-		while hold > 0.0 and _comms_queue.is_empty():
+		# a queued message may cut the hold short, but never before the last
+		# page has had a moment to be read
+		var shown_chars := 0
+		for ln: String in lines:
+			shown_chars += ln.length()
+		var min_read := minf(hold, 0.6 + shown_chars / 28.0)
+		while hold > 0.0 and (_comms_queue.is_empty() or blink < min_read):
 			await get_tree().process_frame
 			if not is_inside_tree():
 				return
@@ -2100,10 +2127,25 @@ func _comms_wrap(text: String) -> PackedStringArray:
 	return out
 
 
-func _comms_show(lines: PackedStringArray, n: int, cursor: bool) -> void:
+func _comms_pages(lines: PackedStringArray) -> Array:
+	## Split wrapped lines into box-fulls (as many lines as the pane shows).
+	var lh: float = comms_text.get_line_height() + comms_text.get_theme_constant("line_spacing")
+	var fit := maxi(1, int(comms_clip.size.y / lh))
+	var pages := []
+	var i := 0
+	while i < lines.size():
+		pages.append(lines.slice(i, i + fit))
+		i += fit
+	if pages.is_empty():
+		pages.append(PackedStringArray())
+	return pages
+
+
+func _comms_show(lines: PackedStringArray, n: int, cursor: bool, mark: String = "_") -> void:
 	## Show the first n characters as a terminal would: finished lines above,
-	## the line being typed at the bottom with a cursor, scrolling up a line
-	## whenever the window is full.
+	## the line being typed at the bottom with a cursor (or `mark`), scrolling
+	## up a line if the window is ever full (the pump pages long messages, so
+	## a page always fits).
 	var shown := PackedStringArray()
 	var left := n
 	for ln: String in lines:
@@ -2111,7 +2153,7 @@ func _comms_show(lines: PackedStringArray, n: int, cursor: bool) -> void:
 			break
 		shown.append(ln.substr(0, left))
 		left -= ln.length()
-	comms_text.text = "\n".join(shown) + ("_" if cursor else " ")
+	comms_text.text = "\n".join(shown) + (mark if cursor else " ")
 	var lh: float = comms_text.get_line_height() + comms_text.get_theme_constant("line_spacing")
 	var fit := int(comms_clip.size.y / lh)
 	var target := -maxf(0.0, shown.size() - fit) * lh
