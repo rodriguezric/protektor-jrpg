@@ -1259,7 +1259,10 @@ func _run(scenario: String) -> void:
 						await wait(0.4)
 						await main.story.scenes.barrier()
 					_:
-						main.load_map(Maps.wing_room(spec[0]), Vector2i(7, 7), 1)
+						var rm := Maps.wing_room(spec[0])
+						rm.npcs = rm.npcs.duplicate()
+						rm.npcs.append_array(main.story.scenes.room_cast(spec[0]))
+						main.load_map(rm, Vector2i(7, 7), 1)
 						await wait(0.4)
 						await main.story.scenes.room_scene(spec[0])
 				print("[scenes] %s played=%s" % [id, StoryScenes.seen(id)])

@@ -276,6 +276,78 @@ func wait(t: float) -> void:
 	await m.get_tree().create_timer(t).timeout
 
 
+# ------------------------------------------------------ entrances & exits ---
+## Nobody pops into or out of view (house rule, jrpg_art_style entrances.md).
+## enter(): from a door in a wall face they fade in inside the dark opening
+## and step down; from any other tile they walk in from beyond the camera's
+## view. leave(): the reverse, then they're removed (or just hidden, keep).
+
+func enter(n: Dictionary, from: Vector2i, path: Array = [], speed: float = 48.0) -> Actor:
+	## n: an npc dict ({id, who|spec, dir, mood, ...}); path: tiles or points
+	## to walk to after arriving. Await it to wait until they're in place.
+	var d := n.duplicate()
+	d.tile = from
+	var act := w.add_npc(d)
+	act.scripted = true
+	var sill = w.door_sill(from)
+	var pts := []
+	if sill != null:
+		act.position = sill
+		act.face(0)
+		act.modulate.a = 0.0
+		Sfx.play("door", 1.0, -10.0)
+		var tw := act.create_tween()
+		tw.tween_property(act, "modulate:a", 1.0, 0.35)
+		await tw.finished
+		pts.append((sill as Vector2) + Vector2(0, 14))
+	else:
+		act.position = w.offstage(from)
+		pts.append(w.tile_center(from))
+	for t in path:
+		pts.append(w.tile_center(t) if t is Vector2i else t)
+	if is_instance_valid(act):
+		await act.walk_to(pts, speed)
+		if is_instance_valid(act) and n.has("dir"):
+			act.face(int(n.dir))
+	return act
+
+
+func leave(id: String, path: Array = [], speed: float = 48.0, keep: bool = false) -> void:
+	## Walks someone out: along path, then through the door at its last tile
+	## (fading out in the doorway) or on past the view edge; then removes
+	## them (keep: just hides them, for people who come back later).
+	var act := a(id)
+	if act == null:
+		return
+	act.set_meta("leaving", true)
+	var pts := []
+	for t in path:
+		pts.append(w.tile_center(t) if t is Vector2i else t)
+	var last: Variant = path[-1] if not path.is_empty() else null
+	var sill = w.door_sill(last) if last is Vector2i else null
+	if sill != null:
+		pts[-1] = (sill as Vector2) + Vector2(0, 14)
+		pts.append(sill)
+	else:
+		var from: Vector2i = last if last is Vector2i else Vector2i(floori(act.position.x / World.TILE), floori(act.position.y / World.TILE))
+		pts.append(w.offstage(from))
+	await act.walk_to(pts, speed)
+	if not is_instance_valid(act):
+		return
+	if sill != null:
+		Sfx.play("door", 0.9, -10.0)
+		var tw := act.create_tween()
+		tw.tween_property(act, "modulate:a", 0.0, 0.35)
+		await tw.finished
+		if not is_instance_valid(act):
+			return
+	if keep:
+		act.visible = false
+		act.modulate.a = 1.0
+	else:
+		w.remove_npc(str(act.info.get("id", act.info.get("who", id))))
+
+
 func hide(id: String) -> void:
 	var act := a(id)
 	if act:

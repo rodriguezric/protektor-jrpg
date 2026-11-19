@@ -62,8 +62,12 @@ func commons_scene() -> void:
 
 func _nell_birthday() -> void:
 	await s.pan(Vector2i(5, 7), 0.8)
-	s.place("rec0", Vector2i(5, 6), 0)
-	s.place("rec1", Vector2i(4, 7), 2)
+	# Nell and Dov come over to the couch
+	s.walk_bg("rec0", [Vector2i(5, 6)], 60.0)
+	await s.walk("rec1", [Vector2i(4, 7)], 60.0)
+	await s.walk("rec0", [Vector2i(5, 6)], 60.0)
+	s.face("rec0", 0)
+	s.face("rec1", 2)
 	var candle := Sprite2D.new()
 	candle.texture = Art.prop("candles", 0)
 	candle.scale = Vector2(0.5, 0.5)
@@ -94,11 +98,11 @@ func _nell_birthday() -> void:
 func _pala_files() -> void:
 	var pala := s.a("pala")
 	await s.pan(Vector2i(22, 4), 0.7)
-	s.place("pala", Vector2i(22, 4), 1)
+	s.face("pala", 1)
 	await s.say("", "Pala is at the archive console, her badge pressed to the reader, copying something line by line.")
 	var bot := s.a("bot")
 	if bot:
-		bot.position = s.w.tile_center(Vector2i(17, 5))
+		await bot.walk_to([s.w.tile_center(Vector2i(17, 5))], 50.0)
 	s.emote("pala", "!", 0.8)
 	await s.say("", "The maintenance unit turns, and starts polishing its way toward her.")
 	var c := await s.ask("What do you do?", ["Distract the unit", "Stay out of it"])
@@ -123,7 +127,7 @@ func _pala_files() -> void:
 func _hiro_alone() -> void:
 	await s.w.set_tint(Color(0.6, 0.66, 0.9), 0.6)
 	await s.pan(Vector2i(3, 4), 0.8)
-	s.place("hiro", Vector2i(3, 4), 1)
+	s.face("hiro", 1)
 	await s.say("", "Hiro stands at the sim pod with his eyes shut, one hand sweeping the air in arcs, blocking things that aren't there.")
 	for k in 4:
 		s.emote("hiro", "sync", 0.5)
@@ -143,10 +147,11 @@ func _hiro_alone() -> void:
 func _transfer() -> void:
 	await s.pan(Vector2i(11, 11), 0.7)
 	Sfx.play("heavy_door", 1.0, -6.0)
-	var ins := s.w.add_npc({"id": "scene_instructor", "who": "instructor", "tile": Vector2i(11, 13), "dir": 1})
-	await ins.walk_to([s.w.tile_center(Vector2i(11, 11))], 40.0)
 	var kit := s.a("rec3")
-	s.place("rec3", Vector2i(13, 10), 0)
+	s.walk_bg("rec3", [Vector2i(13, 10)], 50.0)
+	var ins := await s.enter({"id": "scene_instructor", "who": "instructor", "dir": 1}, Vector2i(11, 13), [Vector2i(11, 11)], 40.0)
+	await s.walk("rec3", [Vector2i(13, 10)], 50.0)
+	kit.face(3)
 	ins.face_toward(kit.position)
 	await s.say("instructor", "Recruit Kit. Your transfer has been approved.")
 	kit.emote("!", 0.8)
@@ -159,20 +164,18 @@ func _transfer() -> void:
 	await s.wait(0.5)
 	kit.face(0)
 	await s.say("", "At the door Kit looks back. Nobody is looking at Kit.")
-	ins.walk_to([s.w.tile_center(Vector2i(11, 13))], 40.0)
-	await kit.walk_to([s.w.tile_center(Vector2i(12, 13))], 34.0)
+	s.leave("scene_instructor", [Vector2i(11, 13)], 40.0)
+	await s.leave("rec3", [Vector2i(12, 13)], 34.0)
 	Sfx.play("heavy_door", 0.9, -6.0)
-	kit.visible = false
-	ins.visible = false
 	Game.story.kit_transferred = true
 	await s.say("", "Nobody watches the door close. Everybody hears it.")
 
 
 func _forgot_name() -> void:
 	await s.pan(Vector2i(19, 9), 0.7)
-	var med := s.w.add_npc({"id": "scene_medic", "who": "medic", "tile": Vector2i(20, 9), "dir": 3})
-	s.place("rec2", Vector2i(19, 9), 2)
-	await s.say("", "A medic is crouched beside Sefa with a clipboard.")
+	s.face("rec2", 2)
+	await s.enter({"id": "scene_medic", "who": "medic", "dir": 3}, Vector2i(11, 13), [Vector2i(12, 12), Vector2i(20, 12), Vector2i(20, 9)], 46.0)
+	await s.say("", "A medic crouches beside Sefa with a clipboard.")
 	await s.say("medic", "Can you tell me your name?")
 	await s.wait(0.8)
 	await s.say("sefa", "...Pilot.", "flat")
@@ -182,13 +185,26 @@ func _forgot_name() -> void:
 	await s.say("sefa", "Pilot Sefa. Sefa. It's Sefa. Sorry. It's Sefa.", "worried")
 	Sfx.play("paper", 1.2, -10.0)
 	await s.say("", "The medic writes something down and doesn't say what.")
-	await med.walk_to([s.w.tile_center(Vector2i(20, 12)), s.w.tile_center(Vector2i(12, 12)), s.w.tile_center(Vector2i(11, 13))], 40.0)
-	med.visible = false
+	await s.leave("scene_medic", [Vector2i(20, 12), Vector2i(12, 12), Vector2i(11, 13)], 46.0)
 
 
 # ------------------------------------------------------------------ rooms ---
 
-func room_scene(id: String) -> void:
+func room_cast(id: String) -> Array:
+	## People already in a room when a scene is about to play there; added to
+	## the map before it fades in (StoryWing), so nobody pops in.
+	match room_key(id):
+		"midas_bread":
+			return [{"id": "scene_midas", "who": "midas", "tile": Vector2i(10, 6), "dir": 1}]
+		"argument":
+			return [{"id": "scene_hiro", "who": "hiro", "tile": Vector2i(9, 4), "dir": 2},
+				{"id": "scene_pala", "who": "pala", "tile": Vector2i(11, 4), "dir": 3, "mood": "angry"}]
+		"pala_note":
+			return [{"id": "scene_pala", "who": "pala", "tile": Vector2i(6, 2), "dir": 1}]
+	return []
+
+
+func room_key(id: String) -> String:
 	var key := ""
 	match id:
 		"mess":
@@ -201,6 +217,13 @@ func room_scene(id: String) -> void:
 			if Game.midas_dead() and _pala_here():
 				key = "pala_note"
 	if key == "" or seen(key):
+		return ""
+	return key
+
+
+func room_scene(id: String) -> void:
+	var key := room_key(id)
+	if key == "" or s.a(room_cast(id)[0].id if not room_cast(id).is_empty() else "") == null:
 		return
 	mark(key)
 	s.w.busy = true
@@ -210,7 +233,7 @@ func room_scene(id: String) -> void:
 
 
 func _midas_bread() -> void:
-	var mid := s.w.add_npc({"id": "scene_midas", "who": "midas", "tile": Vector2i(10, 6), "dir": 1})
+	var mid := s.a("scene_midas")
 	await s.pan(Vector2i(10, 6), 0.6)
 	await s.say("", "Midas is at the far table, sliding a bread roll into his jacket, very slowly, as if slowness made it invisible.")
 	mid.face_toward(s.w.player.position)
@@ -219,13 +242,12 @@ func _midas_bread() -> void:
 	await s.say("midas", "...You can have half. Later.", "smile")
 	mid.emote("heart", 1.2)
 	await s.wait(0.6)
-	await mid.walk_to([s.w.tile_center(Vector2i(8, 7)), s.w.tile_center(Vector2i(8, 8))], 40.0)
-	mid.visible = false
+	await s.leave("scene_midas", [Vector2i(8, 7), Vector2i(8, 8)], 40.0)
 
 
 func _argument() -> void:
-	var hiro := s.w.add_npc({"id": "scene_hiro", "who": "hiro", "tile": Vector2i(9, 4), "dir": 2})
-	var pala := s.w.add_npc({"id": "scene_pala", "who": "pala", "tile": Vector2i(11, 4), "dir": 3})
+	var hiro := s.a("scene_hiro")
+	var pala := s.a("scene_pala")
 	await s.pan(Vector2i(10, 4), 0.6)
 	await s.say("", "Voices, before you're even through the door.")
 	pala.set_mood("angry")
@@ -234,17 +256,15 @@ func _argument() -> void:
 	await s.say("pala", "That's what scares me.", "sad")
 	hiro.face_toward(s.w.player.position)
 	await s.wait(0.4)
-	await hiro.walk_to([s.w.tile_center(Vector2i(8, 6)), s.w.tile_center(Vector2i(8, 8))], 50.0)
-	hiro.visible = false
+	s.leave("scene_hiro", [Vector2i(8, 6), Vector2i(8, 8)], 50.0)
 	await s.say("", "He walks past you without looking.")
 	pala.face_toward(s.w.player.position)
 	await s.say("pala", "...He used to laugh at everything. Do you remember? He used to laugh.", "sad")
-	await pala.walk_to([s.w.tile_center(Vector2i(8, 6)), s.w.tile_center(Vector2i(8, 8))], 40.0)
-	pala.visible = false
+	await s.leave("scene_pala", [Vector2i(8, 6), Vector2i(8, 8)], 40.0)
 
 
 func _pala_note() -> void:
-	var pala := s.w.add_npc({"id": "scene_pala", "who": "pala", "tile": Vector2i(6, 2), "dir": 1})
+	var pala := s.a("scene_pala")
 	await s.pan(Vector2i(7, 3), 0.6)
 	await s.say("", "Pala is at the wall of names, tucking a folded paper into the gap beside MIDAS.")
 	pala.face_toward(s.w.player.position)
@@ -252,8 +272,7 @@ func _pala_note() -> void:
 	await s.say("pala", "Somebody should have it written down. Somebody here.", "sad")
 	pala.emote("...", 1.2)
 	await s.wait(0.6)
-	await pala.walk_to([s.w.tile_center(Vector2i(8, 6)), s.w.tile_center(Vector2i(8, 8))], 40.0)
-	pala.visible = false
+	await s.leave("scene_pala", [Vector2i(8, 6), Vector2i(8, 8)], 40.0)
 
 
 # ----------------------------------------------------------------- parade ---
@@ -268,14 +287,12 @@ func barrier() -> void:
 	s.a("mother").hop(3.0)
 	s.emote("mother", "heart", 1.0)
 	await s.say("", "Your mother pushes through to the barrier and waves both arms, like you might miss her.")
-	var guard := s.w.add_npc({"id": "scene_guard", "who": "officer", "tile": Vector2i(8, 11), "dir": 3})
-	await guard.walk_to([s.w.tile_center(Vector2i(6, 11))], 50.0)
+	var guard := await s.enter({"id": "scene_guard", "who": "officer", "dir": 0}, Vector2i(0, 11), [Vector2i(6, 11)], 60.0)
 	guard.face(0)
 	await s.say("officer", "Ma'am. Behind the line, please.")
 	await s.walk("mother", [Vector2i(4, 13)], 40.0)
 	s.face("mother", 1)
 	s.face_to("father", "mother")
 	await s.say("", "She steps back. Your father takes her hand without looking at it.")
-	await guard.walk_to([s.w.tile_center(Vector2i(9, 11))], 50.0)
-	guard.visible = false
+	await s.leave("scene_guard", [Vector2i(0, 11)], 60.0)
 	await s.pan_back(0.6)
