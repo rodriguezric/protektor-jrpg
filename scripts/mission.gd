@@ -221,7 +221,7 @@ func setup(p_level: String, p_arcade: bool, p_intro: bool, p_data: Dictionary = 
 	training = p_training
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	lo = Game.loadout()
+	lo = Game.loadout(arcade)
 	wstat = WEAPON_STATS.get(lo.weapon, WEAPON_STATS.basic)
 	fire_cd_base = Data.FIRE_COOLDOWN[clampi(int(lo.cooldown), 0, 3)] * float(wstat.cd)
 	red_hp = float(lo.armor)

@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-19 21:08 EST — `bugfix_free_missions_no_powerups` (v0.61.5)
+
+Free Missions are flown with no power-ups.
+
+- Every Free Mission now deploys the bare Protektor: basic gun, no fire-rate or armor upgrades, no auto missile, no extended shield, whatever your profile has bought. Story missions still use your upgrades (or the bare kit on a stripped run).
+- The ./run_mission dev tool keeps its --weapon / --upgrades flags.
+- Code: `scripts/game.gd` (BASE_LOADOUT, loadout(free_mission), dev_loadout flag), `scripts/mission.gd` (setup() asks for the free-mission loadout in arcade mode), `scripts/main.gd` (run_mission sets dev_loadout). New autotest `PK_TEST=freeloadout`.
+
 ## 2026-11-19 15:08 EST — `bugfix_comms_message_start_scrolls_away` (v0.61.4)
 
 Mission comms show every message in full: long transmissions page instead of scrolling their opening away.
