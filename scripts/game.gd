@@ -365,10 +365,18 @@ func set_weapon(w: String) -> void:
 	save()
 
 
-func loadout() -> Dictionary:
-	## What the Protektor takes into a deployment.
-	if bool(story.get("stripped", false)):
-		return {"cooldown": 0, "armor": 0, "weapon": "basic", "missile": 0, "ext_shield": false}
+## The bare Protektor: what a stripped story run and every Free Mission use.
+const BASE_LOADOUT := {"cooldown": 0, "armor": 0, "weapon": "basic", "missile": 0, "ext_shield": false}
+## Set by the ./run_mission dev tool so its --weapon / --upgrades flags still
+## apply to the (arcade-mode) missions it starts.
+var dev_loadout := false
+
+
+func loadout(free_mission: bool = false) -> Dictionary:
+	## What the Protektor takes into a deployment. Free Missions are always
+	## flown with no power-ups.
+	if (free_mission and not dev_loadout) or bool(story.get("stripped", false)):
+		return BASE_LOADOUT.duplicate()
 	return {"cooldown": upgrade_level("cooldown"), "armor": upgrade_level("armor"), "weapon": equipped_weapon(),
 		"missile": missile_level(), "ext_shield": has_special("ext_shield")}
 

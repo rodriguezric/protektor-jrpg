@@ -88,6 +88,7 @@ func test_level(level_id: String) -> void:
     # loadout flags: --weapon=beam --cooldown=3 --armor=2 --missile[=1-3] --shield, or --upgrades=max
     var user_args := OS.get_cmdline_user_args()
     var maxed := _arg("--upgrades=") == "max"
+    Game.dev_loadout = true
     Game.story.weapons = ["basic", "wave", "beam", "auto"]
     Game.story.weapon = _arg("--weapon=") if _arg("--weapon=") != "" else ("basic")
     Game.story.upgrades.cooldown = 3 if maxed else int(_arg("--cooldown=")) if _arg("--cooldown=") != "" else 0

@@ -2301,6 +2301,26 @@ func _run(scenario: String) -> void:
 				await wait(1.5)
 				await shot("victory_%d" % i)
 			get_tree().quit()
+		"freeloadout":
+			# Free Missions fly with no power-ups; story missions keep them;
+			# run_mission's dev flags still apply
+			Game.testing = true
+			Game.story.upgrades.cooldown = 3
+			Game.story.upgrades.armor = 3
+			Game.story.upgrades.missile = 3
+			Game.story.specials = ["missile", "ext_shield"]
+			Game.story.weapons = ["basic", "wave", "beam", "auto"]
+			Game.story.weapon = "beam"
+			for mode in [["free", true, false], ["story", false, false], ["free+dev", true, true]]:
+				Game.dev_loadout = mode[2]
+				main.start_mission("terra_virex_level_01", mode[1], false)
+				await wait(1.0)
+				var m: Mission = main.mission_layer.get_child(main.mission_layer.get_child_count() - 1)
+				print("[freeloadout] %s: arcade=%s lo=%s red_hp=%s" % [mode[0], m.arcade, m.lo, m.red_hp])
+				await shot("freeloadout_%s" % mode[0])
+				m.queue_free()
+				await wait(0.5)
+			get_tree().quit()
 		"comms":
 			# A long transmission in the comms pane, shot as it types and scrolls.
 			Game.testing = true
