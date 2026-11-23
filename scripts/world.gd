@@ -156,7 +156,7 @@ func _build_props() -> void:
 		if p.has("id"):
 			props[p.id] = s
 		if p.get("door", false):
-			doors.append({"sprite": s, "kind": p.kind, "pos": pos, "open": false})
+			doors.append({"sprite": s, "kind": p.kind, "pos": pos, "open": false, "half": tex.get_width() / 2.0})
 		if p.has("anim"):
 			s.set_meta("kind", p.kind)
 			s.set_meta("frames", p.anim)
@@ -638,7 +638,7 @@ func _update_doors() -> void:
 			if not a.visible or a.info.get("ghost", false):
 				continue
 			var v: Vector2 = a.position - d.pos
-			if absf(v.x) < 12.0 and v.y > -44.0 and v.y < 6.0:
+			if absf(v.x) < float(d.half) + 4.0 and v.y > -44.0 and v.y < 6.0:
 				near = true
 				break
 		if near != d.open:
