@@ -52,14 +52,61 @@ func build(id: String) -> Dictionary:
 	if id == "commons":
 		return s.hub._map()
 	var mp := Building.map(id)
-	if id.begins_with("room_"):
-		var rid := id.trim_prefix("room_")
+	mp.npcs = mp.npcs.duplicate()
+	if id.begins_with("room_") or id.begins_with("dorm_"):
 		# whoever a scene needs is already in the room when it fades in
-		mp.npcs = mp.npcs.duplicate()
-		mp.npcs.append_array(s.scenes.room_cast(rid))
-		if rid == "rooftop" and not bool(Game.story.get("room_rooftop_seen", false)) and not Game.midas_dead():
+		mp.npcs.append_array(s.scenes.room_cast(scene_key(id)))
+		if id == "room_rooftop" and not bool(Game.story.get("room_rooftop_seen", false)) and not Game.midas_dead():
 			mp.npcs.append({"id": "midas", "who": "midas", "tile": Vector2i(5, 6), "dir": 3, "pose": "sit"})
+	# after the interval's conversation, the pilots are wherever they go
+	var here := {}
+	for n in mp.npcs:
+		here[n.get("id", n.get("who", ""))] = true
+	for who in ["hiro", "pala", "midas"]:
+		var sp := away_spot(who)
+		if sp.get("map", "") == id and not here.has("away_" + who):
+			var n := {"id": "away_" + who, "who": who, "tile": sp.tile, "dir": sp.dir}
+			for k in ["mood", "pose", "offset"]:
+				if sp.has(k):
+					n[k] = sp[k]
+			mp.npcs.append(n)
 	return mp
+
+
+static func scene_key(id: String) -> String:
+	## Room scenes are keyed by the bare room name, dorm scenes by map id.
+	return id.trim_prefix("room_") if id.begins_with("room_") else id
+
+
+func away_spot(who: String) -> Dictionary:
+	## Where a pilot goes once the interval's one conversation is spent:
+	## {map, tile, dir, mood?}, or {} if they're nowhere to be found. Before
+	## that they're all in the Commons.
+	if not s.hub.used:
+		return {}
+	match who:
+		"hiro":
+			if Game.relationship("hiro") >= 2:
+				# alone in his room, in front of his turn times
+				return {"map": "dorm_hiro", "tile": Vector2i(3, 2), "dir": 1, "mood": "flat"}
+			return {"map": "room_gym", "tile": Vector2i(12, 3), "dir": 2}
+		"pala":
+			if not s.scenes._pala_here():
+				return {}
+			var r := Game.relationship("pala")
+			if r == 0:
+				# on the rec room floor, watching channel four
+				return {"map": "room_rec", "tile": Vector2i(5, 5), "dir": 1}
+			if r == 1 and StoryScenes.seen("pala_map") and unlocked("archive"):
+				return {"map": "room_archive", "tile": Vector2i(6, 3), "dir": 1}
+			return {"map": "dorm_pala", "tile": Vector2i(5, 3), "dir": 1}
+		"midas":
+			if Game.midas_dead():
+				return {}
+			if Game.relationship("midas") >= 2:
+				return {"map": "dorm_midas", "tile": Vector2i(3, 4), "dir": 3, "mood": "sad"}
+			return {"map": "dorm_midas", "tile": Vector2i(5, 3), "dir": 1}
+	return {}
 
 
 func go(to: String) -> void:
@@ -84,8 +131,8 @@ func go(to: String) -> void:
 	if not bool(Game.story.get(seen, false)):
 		Game.story[seen] = true
 		await _first_visit(to)
-	if to.begins_with("room_"):
-		await s.scenes.room_scene(to.trim_prefix("room_"))
+	if to.begins_with("room_") or to.begins_with("dorm_"):
+		await s.scenes.room_scene(scene_key(to))
 	mark_route()
 
 
@@ -108,8 +155,24 @@ func exit(e: Dictionary) -> void:
 func _knock(who: String) -> bool:
 	## Someone else's room: knock first.
 	var nm := who.capitalize()
+	var home: bool = away_spot(who).get("map", "") == "dorm_" + who
+	if home:
+		Sfx.play("knock", 1.0, -6.0)
+		match who:
+			"hiro":
+				if s.scenes.room_key("dorm_hiro") != "":
+					await s.say("", "You knock. No answer. Through the door, very faintly, someone is counting.")
+					return await s.ask("Go in?", ["Go in", "Leave it"]) == 0
+				await s.say("", "\"It's open,\" Hiro says, with no interest at all in who it is.")
+			"pala":
+				await s.say("", "The door opens a crack. One eye. Then it opens all the way.")
+			"midas":
+				await s.say("", "\"It's open!\" Midas calls. \"Unless you're inspection. Then it's not.\"")
+		return true
 	if who == "midas" and Game.midas_dead():
 		await s.say("", ["The nameplate on this door has been unscrewed. Four little holes are left.", "The door isn't locked."])
+		if s.scenes.room_key("dorm_midas") != "":
+			await s.say("", "On the other side, someone is breathing very quietly.")
 	else:
 		Sfx.play("knock", 1.0, -6.0)
 		await s.say("", "You knock on %s's door. Nobody answers. %s" % [nm, "They're probably in the Commons." if who != "pala" or not bool(Game.story.pala_unavailable) else "Nobody has answered for a while."])
@@ -255,6 +318,29 @@ func talk(n: Actor) -> void:
 			]
 			var ln: Array = g[0 if id == "gossip0" else 1]
 			await s.say("", "\"%s\"" % ln[Game.completed_count() % ln.size()])
+		"away_hiro":
+			var hr := Game.relationship("hiro")
+			if hr < 3:
+				n.face_toward(s.w.player.position)
+			var hl := ["Ten more. Then ten more. You want in? No? Your loss.",
+				"When I'm not linked my hands don't know what to do with themselves. So: this.",
+				"Shh. I'm counting.", "Deployment window opens in forty-one minutes."]
+			await s.say("hiro", hl[clampi(hr, 0, 3)], ["still_smiling", "", "flat", "hollow"][clampi(hr, 0, 3)])
+		"away_pala":
+			n.face_toward(s.w.player.position)
+			var pl := "Channel four. Don't tell anyone I watch it. Don't tell anyone it's good."
+			match s.w.def.id:
+				"room_archive":
+					pl = "Sit. Act bored. The camera in the corner likes bored."
+				"dorm_pala":
+					pl = "Close the door behind you. ...Thanks." if Game.relationship("pala") < 3 else "Not tonight. Tonight I'm packing light."
+			await s.say("pala", pl, "")
+		"away_midas":
+			n.face_toward(s.w.player.position)
+			if Game.relationship("midas") >= 2:
+				await s.say("midas", "I'm okay. I'm just going to lie here a minute. Maybe two.", "sad")
+			else:
+				await s.say("midas", "I'm writing to Mom. I've crossed out 'I'm fine' four times. It keeps getting less true.", "smile")
 		"eater":
 			await s.say("", "\"Don't look at me. I'm eating slowly so it lasts longer.\"")
 		"deck_kid":
@@ -446,6 +532,8 @@ func _building_examine(id: String) -> bool:
 			else:
 				await s.say("", "Your bunk. The blanket is folded the regulation way. You don't remember learning the regulation way.")
 		"yourdesk":
+			if await _letter_at_desk():
+				return true
 			if Game.home_contacts() > 0:
 				await s.say("", ["Your notes from the calls home, in your own handwriting: 'kitchen light', 'they leave it on',", "'call again'. That one's underlined."])
 			else:
@@ -487,7 +575,13 @@ func _building_examine(id: String) -> bool:
 			else:
 				await s.say("", "Midas' bunk. A photo is tucked into the frame: a woman in a kitchen, laughing, out of focus.")
 		"midasdesk":
-			if dead:
+			if dead and str(Game.story.get("midas_letter", "")) == "kept":
+				await s.say("", ["The desk has been cleared, but not well. At the back of the drawer, under a bread roll in a napkin:", "a folded letter. MOM, on the front, in Midas' round handwriting. It was never posted."])
+				if await s.ask("Take the letter?", ["Take it", "Leave it"]) == 0:
+					Game.story.midas_letter = "held"
+					Sfx.play("paper", 1.2, -8.0)
+					await s.say("", "You put it in your jacket, next to your badge. The comm booth in Operations still has a post slot.")
+			elif dead:
 				await s.say("", "The desk has been cleared. Whoever cleared it missed a bread roll in a napkin at the back of the drawer. For later.")
 			else:
 				await s.say("", "A bread roll wrapped in a napkin, 'for later'. A tin rocket with the paint worn off its nose. A blue cup, not chipped yet.")
@@ -504,6 +598,60 @@ func _building_examine(id: String) -> bool:
 		_:
 			return false
 	return true
+
+
+# ---------------------------------------------------------- Midas' letter ---
+## Midas asks you to post a letter home (StoryScenes._midas_letter). Story
+## key midas_letter: "held" (in your jacket), "kept" (in his drawer),
+## "posted" (from the Operations booth while he was alive), "posted_late".
+
+const MIDAS_LETTER := ["Mom. They feed us well. Three ways, all sliced.",
+	"I'm saving bread for when I come home, so don't buy any. Don't throw out the blue cup even though it's chipped.",
+	"I'm okay. I'm being brave. I don't want to be brave anymore. Love, M."]
+
+
+func post_letter() -> bool:
+	## At the comm booth's post slot. True if there was a letter to post.
+	if str(Game.story.get("midas_letter", "")) != "held":
+		return false
+	Sfx.play("paper", 1.0, -6.0)
+	if Game.midas_dead():
+		Game.story.midas_letter = "posted_late"
+		await s.say("", ["You feed Midas' letter into the post slot.", "It's the right address. It's the wrong week. You post it anyway."])
+	else:
+		Game.story.midas_letter = "posted"
+		await s.say("", ["You feed Midas' letter into the post slot. MOM, in round letters, disappears into the wall.", "Your record is good. They won't read yours as hard."])
+	return true
+
+
+func _letter_at_desk() -> bool:
+	## After Midas is gone, his letter (or the answer to it) waits on your desk.
+	if not Game.midas_dead():
+		return false
+	match str(Game.story.get("midas_letter", "")):
+		"held":
+			await s.say("", "Midas' letter is on your desk where you left it. MOM, on the front. You never posted it.")
+			if await s.ask("Read it?", ["Read it", "Don't"]) == 0:
+				await s.say("", MIDAS_LETTER)
+			await s.say("", "The comm booth in Operations still has a post slot.")
+			return true
+		"posted":
+			if bool(Game.story.get("midas_reply_read", false)):
+				await s.say("", "His mother's letter, folded back into its envelope. You keep it face down, so the name doesn't look at you.")
+				return true
+			Game.story.midas_reply_read = true
+			Sfx.play("paper", 1.1, -6.0)
+			await s.say("", ["A letter on your desk, forwarded from Records. Addressed to MIDAS, from his mother.",
+				"The envelope has been opened and taped shut again. It came to you because yours was the only other name on his contact list."])
+			await s.say("", ["My darling. Your letter came. I laughed at the bread.",
+				"I put the blue cup on the windowsill, so it can see the sky where you are.",
+				"You don't have to be brave for me. Come home and be ordinary. Love, Mom."])
+			s.w.player.emote("...", 1.6)
+			return true
+		"posted_late":
+			await s.say("", "Nothing has come back from the letter you posted for Midas. You didn't expect it to. You check anyway.")
+			return true
+	return false
 
 
 # ---------------------------------------------------------------- reveals ---
