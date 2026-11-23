@@ -1281,6 +1281,36 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[stargaze] done; stargazed=%s pala=%s busy=%s" % [Game.story.get("stargazed"), main.world.actor("pala") != null, main.world.busy])
 			get_tree().quit()
+		"doorshots":
+			# every map with doors: one shot looking at each run of door tiles
+			# (and the home's bedroom doors, shut and swung open)
+			Game.new_game()
+			Game.player_name = "Ari"
+			main.fade_rect.color.a = 0.0
+			var defs := [Maps.home(), Maps.home_up(), Maps.midas_home(), Maps.hall(), Maps.corridor(), Maps.waiting(), Maps.recovery(),
+				Building.map("commons"), Building.map("concourse"), Building.map("dorms"), Building.map("upper_deck"), Building.map("rec_deck"),
+				Building.map("room_observation")]
+			var k := 0
+			for d in defs:
+				var rows: Array = d.rows
+				var seen := {}
+				for y in rows.size():
+					for x in (rows[y] as String).length():
+						var ch := (rows[y] as String)[x]
+						if (ch == "D" or ch == "d") and not seen.has(y) and not (x > 0 and (rows[y] as String)[x - 1] == ch):
+							var below := Vector2i(x, y + 2)
+							if below.y >= rows.size() or (rows[below.y] as String)[x] == "#":
+								below = Vector2i(x, y - 2)
+							main.load_map(d, below, 1)
+							await wait(0.3)
+							await shot("door_%02d_%s_%d_%d" % [k, d.id, x, y])
+							k += 1
+							seen[y] = true
+			# the bedroom doors upstairs at home, one swung open
+			main.load_map(Maps.home_up(), Vector2i(4, 8), 1)
+			await wait(0.4)
+			await shot("door_%02d_home_up_open" % k)
+			get_tree().quit()
 		"afterhours":
 			# after the interval's conversation: the pilots leave the Commons,
 			# turn up around the building, their dorm scenes, and Midas' letter

@@ -9,6 +9,14 @@ Stargazing with Pala is now a proper scene: you go up to the observation deck's 
 - Her stars are already there in the sky; each line she says joins the ones she's describing: the Kitchen Chair (back, seat, legs, and it rocks on its short leg), the Cup My Brother Broke (rim, sides, handle, and the broken-off chip blinks), and a dog (head, back, tail, legs, and the tail wags). Each one's name lights up over it.
 - Back on the deck, Pala tells you it's your turn to make one up next time, then leaves through the door.
 - Code: `StoryWing._stargazing` rewritten; new `STAR_SHAPES`, `_sky_view`, `_strokes`/`_stroke`/`_draw_stroke` (drawn a pixel at a time: 1 px Line2D loses slanted runs to pixel snapping), `_tilted`/`_set_tilt`, `_star_trick` in scripts/story_wing.gd. New autotest scenario `PK_TEST=stargaze` in tools/autotest.gd.
+## 2026-11-23 08:27 EST — `bugfix_single_wide_doors` (v0.63.5)
+
+Every door to a room is now one wide door a person fits through, not two narrow doors side by side.
+
+- Doors in walls (the hub's rooms and dorms, the academy corridor and waiting room, home's front door, Block 7, Midas' home) are drawn as one door across the whole doorway: steel ones are a single panel with a lit glass strip, a pull bar and a kick plate; wooden ones have two inset panels and one knob. The steel doors are no longer split down the middle.
+- Open doorways (the Orientation Hall, Recovery Bay and Commons exits, the room doorways) have one frame around the whole opening instead of a post in the middle.
+- The three bedroom doors in the upstairs hall at home are each one wide door that swings open as one.
+- Code: `ArtTiles._run_x` finds a pixel's place across a run of door tiles; `_door`, `_doorway` and `_threshold` draw across the run (scripts/art_tiles.gd). `ArtProps.door(v, w)` and the new "widedoor" prop (scripts/art_props.gd); home_up uses one widedoor per doorway (scripts/maps.gd); World door props open by their width (scripts/world.gd). New autotest `PK_TEST=doorshots`.
 
 ## 2026-11-23 07:14 EST — `bugfix_door_entrances_and_exits` (v0.63.4)
 
