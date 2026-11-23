@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-23 16:04 EST — `bugfix_stairs_split_into_two_sets` (v0.64.5)
+
+Wide staircases read as one flight all the way up.
+
+- The two-wide stairs up (Concourse to the upper deck, the lower deck to the Concourse) looked like one flight at the bottom and two side-by-side flights where they climbed into the wall: every stairwell tile drew its own banister. The stairwell is now drawn across the whole run, with a banister on each side only, matching the steps below. The home's single-wide stairs also gain their right-hand banister up the wall.
+- Code: `ArtTiles._stairwell` takes the run from `_run_x` (scripts/art_tiles.gd). New autotest scenario `PK_TEST=stairshots` photographs every staircase.
+
 ## 2026-11-23 16:03 EST — `bugfix_doors_slightly_narrower` (v0.64.4)
 
 Two-tile doors are a little narrower.

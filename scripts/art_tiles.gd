@@ -153,7 +153,7 @@ static func _wall_face(theme: String, ch: String, x: int, y: int, lx: int, fy: i
 		if r.x >= 0 and r.x < r.y:
 			c = _door(theme, r, fy, c) if ch == "D" else _doorway(theme, x, y, r, fy, c)
 	elif ch == "U":
-		c = _stairwell(theme, x, lx, fy)
+		c = _stairwell(theme, x, _run_x(at, tx, ty, lx), fy)
 	return c
 
 
@@ -201,11 +201,16 @@ static func _doorway(theme: String, x: int, y: int, r: Vector2i, fy: int, wall: 
 	return beyond.lerp(Pal.INK, 0.55 - fy / 31.0 * 0.3)
 
 
-static func _stairwell(theme: String, x: int, lx: int, fy: int) -> Color:
-	## The stairs climbing on into the dark of the floor above.
+static func _stairwell(theme: String, x: int, r: Vector2i, fy: int) -> Color:
+	## The stairs climbing on into the dark of the floor above, one flight
+	## across the whole run (r: x across it, its width) with a banister on
+	## each side, matching the steps below it.
+	var lx := r.x
 	if lx < 2:
 		return Pal.WOOD.lerp(Pal.BARK, 0.2) if lx == 1 else Pal.shade(Pal.WOOD)
-	var step := _step(theme, x, fy + 32, lx)
+	if lx > r.y - 3:
+		return Pal.WOOD.lerp(Pal.BARK, 0.2) if lx == r.y - 2 else Pal.shade(Pal.WOOD)
+	var step := _step(theme, x, fy + 32, lx % TILE)
 	return step.lerp(Pal.INK, 0.85 - fy / 31.0 * 0.5)
 
 
