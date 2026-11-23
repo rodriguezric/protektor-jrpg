@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-23 06:51 EST — `bugfix_emote_alignment` (v0.63.3)
+
+Emote bubbles sit right on top of whoever is emoting.
+
+- Bubbles used to pop at the same spot above everyone's feet, so they floated off to one side and sat at the wrong height on adults and on anyone sitting or lying down. Each bubble now points down at the middle of the character's head, two pixels above it, standing, sitting or lying and facing any way. It also stays attached through hops and when someone stands up or turns while it's showing.
+- Code: `scripts/actor.gd` (head_top() reads the head from the frame on screen and caches it on the texture; _place_bubble(); EMOTE_GAP / EMOTE_TAIL; re-placed from refresh() and _set_lift()). New autotest `PK_TEST=emotecheck` (child and adults, stand/sit/lie, every facing, a mid-hop sample; worst gap error 0.1 px). The house standard now has this rule (godot-jrpg-style skill v1.3.0, jrpg_art_style docs v1.2.0), and `.standards.json` is re-stamped.
+
 ## 2026-11-23 06:46 EST — `bugfix_bedroom_console_in_bed` (v0.63.2)
 
 Your bedroom at home is rearranged so nothing is squashed into anything else.

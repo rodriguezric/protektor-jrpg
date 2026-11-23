@@ -82,6 +82,7 @@ func refresh() -> void:
 	if bot:
 		sprite.texture = Art.prop("bot", frame % 2)
 		sprite.offset = Vector2(-8, -13 - lift)
+		_place_bubble()
 		return
 	var td: int = [0, 1, 2, 2][dir]
 	var m := mood + "+blink" if blinking else mood
@@ -94,6 +95,7 @@ func refresh() -> void:
 	else:
 		sprite.offset = Vector2(-16, -31 - lift)
 	sprite.flip_h = dir == 3
+	_place_bubble()
 
 
 func _process(delta: float) -> void:
@@ -204,6 +206,7 @@ func _set_lift(v: float) -> void:
 	sprite.offset.y = (-20.0 if pose == "lie" else -31.0) - lift
 	if bot:
 		sprite.offset.y = -13 - lift
+	_place_bubble()
 
 
 func emote(kind: String, hold: float = 1.2) -> void:
@@ -212,9 +215,9 @@ func emote(kind: String, hold: float = 1.2) -> void:
 		bubble.queue_free()
 	bubble = Sprite2D.new()
 	bubble.texture = Art.ui("emote_" + kind)
-	bubble.position = Vector2(5, -38)
 	bubble.z_index = 20
 	add_child(bubble)
+	_place_bubble()
 	bubble.scale = Vector2(0.2, 0.2)
 	var b := bubble
 	Sfx.play("pop", 1.0 + randf() * 0.2, -14.0)
@@ -224,6 +227,51 @@ func emote(kind: String, hold: float = 1.2) -> void:
 	tw.tween_interval(hold)
 	tw.tween_property(b, "modulate:a", 0.0, 0.2)
 	tw.tween_callback(b.queue_free)
+
+
+## Emote placement (house rule): the bubble's tail tip sits EMOTE_GAP px above
+## the top-centre of the head, read from the frame actually on screen, so it
+## follows height (child or adult), pose (stand, sit, lie), facing and hops.
+const EMOTE_GAP := 2.0
+## The 13x13 bubble's tail tip, relative to its centre (ArtUI._emote).
+const EMOTE_TAIL := Vector2(-1.5, 6.0)
+
+
+func head_top() -> Vector2:
+	## Top-centre of the head in local space (origin = feet).
+	var tex := sprite.texture
+	if tex == null:
+		return Vector2(0, -32)
+	var r: Rect2i
+	if tex.has_meta("head"):
+		r = tex.get_meta("head")
+	else:
+		var img := tex.get_image()
+		var used := img.get_used_rect()
+		var x0 := used.end.x
+		var x1 := used.position.x
+		# the head is the opaque span of the top few rows
+		for y in range(used.position.y, mini(used.position.y + 6, used.end.y)):
+			for x in range(used.position.x, used.end.x):
+				if img.get_pixel(x, y).a > 0.5:
+					x0 = mini(x0, x)
+					x1 = maxi(x1, x)
+		if x1 < x0:
+			x0 = used.position.x
+			x1 = used.end.x - 1
+		r = Rect2i(x0, used.position.y, x1 - x0 + 1, 1)
+		tex.set_meta("head", r)
+	var cx := r.position.x + r.size.x / 2.0
+	if sprite.flip_h:
+		cx = tex.get_width() - cx
+	return sprite.position + sprite.offset + Vector2(cx, r.position.y)
+
+
+func _place_bubble() -> void:
+	if bubble == null or not is_instance_valid(bubble) or bubble.texture == null:
+		return
+	var tip := head_top() - Vector2(0, EMOTE_GAP)
+	bubble.position = (tip - EMOTE_TAIL).round()
 
 
 func shake(t: float = 0.3, amp: float = 1.0) -> void:
