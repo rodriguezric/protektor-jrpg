@@ -1435,6 +1435,52 @@ func _run(scenario: String) -> void:
 			await wait(0.3)
 			await shot("home_up_room")
 			get_tree().quit()
+		"emotecheck":
+			# every emote placement case side by side: child and adult,
+			# standing, sitting and lying, facing each way, plus a hop
+			Game.new_game()
+			Game.player_name = "Ari"
+			main.fade_rect.color.a = 0.0
+			var mp := Maps.commons()
+			mp.npcs = []
+			mp.props = []
+			var w = main.load_map(mp, Vector2i(26, 13), 0)
+			w.player.visible = false
+			var specs := [Game.player_spec("academy"), Game.cast("mother"), Game.cast("hiro"), Game.cast("instructor")]
+			var poses := ["walk", "sit", "lie"]
+			var kinds := ["!", "heart", "?", "..."]
+			var acts := []
+			for si in specs.size():
+				for pi in poses.size():
+					for d in 4:
+						if (poses[pi] == "lie" and d > 0) or (poses[pi] == "sit" and d > 2):
+							continue
+						var col: int = [0, 4, 7][pi] + d
+						var a = w.add_npc({"id": "e%d_%d_%d" % [si, pi, d], "spec": specs[si], "tile": Vector2i(2 + col * 2, 3 + si * 3), "dir": d, "pose": poses[pi]})
+						acts.append(a)
+			await wait(0.3)
+			for k in acts.size():
+				acts[k].emote(kinds[k % kinds.size()], 30.0)
+			await wait(0.5)
+			w.cam_follow = false
+			w.cam.position = Vector2(170, 92)
+			await wait(0.3)
+			await shot("emotes_top")
+			w.cam.position = Vector2(170, 162)
+			await wait(0.3)
+			await shot("emotes_bottom")
+			# a hop carries the bubble with it
+			acts[0].hop(6.0, 0.6)
+			await wait(0.18)
+			var hb: Vector2 = acts[0].bubble.position
+			var ht: Vector2 = acts[0].head_top()
+			print("[emotecheck] mid-hop: bubble tail %.1f px above the head (want %.1f)" % [ht.y - (hb.y + Actor.EMOTE_TAIL.y), Actor.EMOTE_GAP])
+			var worst := 0.0
+			for a in acts:
+				var tip: Vector2 = a.bubble.position + Actor.EMOTE_TAIL
+				worst = maxf(worst, absf((a.head_top().y - tip.y) - Actor.EMOTE_GAP))
+			print("[emotecheck] %d actors, worst gap error %.1f px" % [acts.size(), worst])
+			get_tree().quit()
 		"buildcheck":
 			# static checks on every hub-building map: arrivals land on open
 			# floor, and every door, exit and interactable can be reached
