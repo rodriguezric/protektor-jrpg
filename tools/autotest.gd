@@ -1259,6 +1259,120 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[wing] back in %s; flags stargazed=%s tomato=%s" % [main.world.def.id, Game.story.get("stargazed"), Game.story.get("midas_tomato")])
 			get_tree().quit()
+		"afterhours":
+			# after the interval's conversation: the pilots leave the Commons,
+			# turn up around the building, their dorm scenes, and Midas' letter
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			Game.story.completed_levels["terra_virex"] = 3
+			Game.story.completed_levels["glacien_ix"] = 2
+			Game.story.relationships = {"hiro": 2, "pala": 1, "midas": 1}
+			Game.story.interval_count = 3
+			main.fade_rect.color.a = 0.0
+			var hub: StoryHub = main.story.hub
+			var wing: StoryWing = main.story.wing
+			var snap := {"on": true, "k": 0, "tag": "ah"}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(0.7)
+					await shot("%s_%03d" % [snap.tag, snap.k])
+					snap.k += 1
+			snapper.call()
+			var who_here := func() -> Array:
+				var out := []
+				for n in main.world.npcs:
+					var i: String = n.info.get("id", n.info.get("who", ""))
+					if ["hiro", "pala", "midas", "away_hiro", "away_pala", "away_midas"].has(i):
+						out.append(i)
+				return out
+			var talk_all := func() -> void:
+				for i in ["away_hiro", "away_pala", "away_midas"]:
+					var act = main.world.actor(i)
+					if act:
+						await main.story.talk(act)
+			# 1. the interval ends in the Commons: the pilots walk out
+			hub.used = false
+			main.load_map(hub._map(), Vector2i(12, 8), 1)
+			await wait(0.5)
+			print("[afterhours] commons before: %s" % [who_here.call()])
+			snap.tag = "close"
+			await hub._close("hiro")
+			await wait(0.5)
+			print("[afterhours] commons after close: %s used=%s" % [who_here.call(), hub.used])
+			main.load_map(hub._map(), Vector2i(12, 8), 1)
+			await wait(0.3)
+			print("[afterhours] commons reloaded: %s" % [who_here.call()])
+			for w2 in ["hiro", "pala", "midas"]:
+				print("[afterhours] %s is at %s" % [w2, wing.away_spot(w2)])
+			# (direct examines below face the player away from the thing, so
+			# the harness's accept presses can't start a second examine of it)
+			# 2. the dorm scenes
+			main.load_map(Building.dorms(), Vector2i(12, 4), 1)
+			for room in ["dorm_hiro", "dorm_pala", "dorm_midas"]:
+				snap.tag = room
+				await main.story.examine({"id": "go:" + room})
+				await wait(0.6)
+				print("[afterhours] %s: here=%s" % [room, who_here.call()])
+				await talk_all.call()
+				await main.story.exit({"to": "dorms"})
+				await wait(0.4)
+			print("[afterhours] seen hiro_asleep=%s pala_map=%s midas_letter=%s gloves=%s letter=%s" % [StoryScenes.seen("hiro_asleep"),
+				StoryScenes.seen("pala_map"), StoryScenes.seen("midas_letter"), Game.story.get("hiro_gloves"), Game.story.get("midas_letter")])
+			# second visit: no scene, just the pilot
+			await main.story.examine({"id": "go:dorm_hiro"})
+			await wait(0.5)
+			print("[afterhours] hiro's room again: here=%s" % [who_here.call()])
+			await main.story.exit({"to": "dorms"})
+			# Pala has moved on to the archive now that she's shown you the map
+			print("[afterhours] pala now at %s" % [wing.away_spot("pala")])
+			# 3. post the letter in Operations
+			snap.tag = "ops"
+			main.load_map(Building.ops(), Vector2i(15, 3), 0)
+			await wait(0.3)
+			await main.story.examine({"id": "comm"})
+			print("[afterhours] after the booth: letter=%s" % Game.story.get("midas_letter"))
+			# 4. Midas dies: Pala on his bunk, then the reply on your desk
+			Game.story.midas_dead = true
+			Game.story.midas_death_announced = true
+			snap.tag = "bunk"
+			main.load_map(Building.dorms(), Vector2i(18, 2), 0)
+			await main.story.examine({"id": "go:dorm_midas"})
+			await wait(0.5)
+			print("[afterhours] midas' room: here=%s pala_bunk=%s" % [who_here.call(), StoryScenes.seen("pala_bunk")])
+			await main.story.exit({"to": "dorms"})
+			await main.story.examine({"id": "go:dorm_midas"})
+			await wait(0.4)
+			print("[afterhours] midas' room again: here=%s" % [who_here.call()])
+			snap.tag = "reply"
+			main.load_map(main.story.wing.build("dorm_you"), Vector2i(7, 3), 0)
+			await wait(0.3)
+			await main.story.examine({"id": "yourdesk"})
+			print("[afterhours] reply read=%s" % Game.story.get("midas_reply_read"))
+			# 5. the kept-letter branch
+			Game.story.midas_letter = "kept"
+			main.load_map(main.story.wing.build("dorm_midas"), Vector2i(5, 3), 0)
+			await wait(0.3)
+			await main.story.examine({"id": "midasdesk"})
+			print("[afterhours] took the kept letter: %s" % Game.story.get("midas_letter"))
+			main.load_map(main.story.wing.build("dorm_you"), Vector2i(7, 3), 0)
+			await wait(0.3)
+			await main.story.examine({"id": "yourdesk"})
+			main.load_map(Building.ops(), Vector2i(15, 3), 0)
+			await wait(0.3)
+			await main.story.examine({"id": "comm"})
+			print("[afterhours] posted late: %s" % Game.story.get("midas_letter"))
+			# 6. early on: Hiro in the gym, Pala in the rec room
+			Game.story.midas_dead = false
+			Game.story.relationships = {"hiro": 0, "pala": 0, "midas": 0}
+			snap.tag = "early"
+			for rm in ["room_gym", "room_rec"]:
+				main.load_map(main.story.wing.build(rm), Building.room_door(rm.trim_prefix("room_")) + Vector2i(0, -1), 1)
+				await wait(0.5)
+				print("[afterhours] %s: here=%s" % [rm, who_here.call()])
+				await talk_all.call()
+			snap.on = false
+			get_tree().quit()
 		"buildcheck":
 			# static checks on every hub-building map: arrivals land on open
 			# floor, and every door, exit and interactable can be reached

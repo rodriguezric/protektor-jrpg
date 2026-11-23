@@ -1,5 +1,22 @@
 # Patch Notes
 
+## 2026-11-23 06:32 EST — `feature_pilots_after_hours` (v0.63.0)
+
+Once the interval's conversation is spent, the pilots leave the Commons and can be found around the building. Each pilot's room has a one-time scene.
+
+- When the interval ends, Hiro, Pala and Midas walk out of the Commons. They stay out of it until the next interval, including after you reload a save. Before that they're in the Commons as always, so the main conversations are unchanged.
+- Where to find them:
+  - **Hiro:** in the training gym; in his room in front of his turn times once his sync climbs.
+  - **Pala:** on the rec room floor watching channel four; later in her room or the archive.
+  - **Midas:** in his room, writing home; lying on his bunk after the memory.
+  - Talking to them there gives short, story-aware lines and never uses up the interval's conversation. You knock first, and they answer if they're in.
+- New one-time scenes in the pilots' rooms:
+  - **Hiro:** asleep sitting up in his flight gloves, still blocking in his sleep. You can take the gloves off for him.
+  - **Pala:** she pulls you in, shuts the door, and shows you the pencil map she's drawing of every door without a nameplate.
+  - **Midas:** he asks you to post a letter to his mother. If you post it at the Operations comm booth, a forwarded reply from his mother turns up on your desk after his death. If you let him keep it, you find it in his desk drawer afterwards and can still post it late.
+- After Midas dies his room stays stripped and empty, except once: Pala sitting on the bare bunk frame.
+- Code: `scripts/story_wing.gd` (away_spot(), scene_key(), build() places the pilots and dorm scene casts, _knock() for pilots who are in, their talk lines, post_letter(), _letter_at_desk(), midasdesk). `scripts/story_hub.gd` (_map() leaves the pilots out once the conversation is spent, _pilots_leave() in _close(), the comm booth posts a held letter first). `scripts/story_scenes.gd` (dorm room keys and casts; _hiro_asleep, _pala_map, _midas_letter, _pala_bunk; hiro_alone needs Hiro present). `tools/autotest.gd` (`PK_TEST=afterhours`: the walk-out, every pilot's spot, all four scenes, and every letter branch).
+
 ## 2026-11-23 05:26 EST — `feature_hub_building_layout` (v0.62.0)
 
 The between-mission hub is now laid out like a real building, and the dormitories are open.

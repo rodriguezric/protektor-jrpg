@@ -68,15 +68,20 @@ func _map() -> Dictionary:
 	var mp := Maps.commons()
 	var npcs := []
 	var hr := Game.relationship("hiro")
-	if hr >= 2:
-		# at the window, as if he could see the next deployment from here
-		npcs.append({"who": "hiro", "tile": Vector2i(5, 2), "dir": 1, "no_turn": hr >= 3, "turn_back": true})
-	else:
-		npcs.append({"who": "hiro", "tile": Vector2i(5, 3), "dir": 3, "mood": "smile" if hr == 0 else ""})
-	if not bool(Game.story.pala_unavailable) and not bool(Game.story.pala_escape_chosen):
+	# once the interval's conversation is spent the pilots have gone off
+	# around the building (StoryWing.away_spot)
+	var out := used
+	if not out:
+		if hr >= 2:
+			# at the window, as if he could see the next deployment from here
+			npcs.append({"who": "hiro", "tile": Vector2i(5, 2), "dir": 1, "no_turn": hr >= 3, "turn_back": true})
+		else:
+			npcs.append({"who": "hiro", "tile": Vector2i(5, 3), "dir": 3, "mood": "smile" if hr == 0 else ""})
+	if not out and not bool(Game.story.pala_unavailable) and not bool(Game.story.pala_escape_chosen):
 		npcs.append({"who": "pala", "tile": Vector2i(22, 4), "dir": 1})
 	if not Game.midas_dead():
-		npcs.append({"who": "midas", "tile": Vector2i(13, 2), "dir": 1, "mood": "sad"})
+		if not out:
+			npcs.append({"who": "midas", "tile": Vector2i(13, 2), "dir": 1, "mood": "sad"})
 	else:
 		mp.props.append(Maps.p("memorial", 13, 2, {"event": {"id": "memorial"}, "light": Pal.LEMON, "lr": 12, "light_off": Vector2(0, -6), "pulse": 7.0}))
 	var extra_n := clampi(5 - Game.completed_count() / 3, 1, 5)
@@ -152,10 +157,36 @@ func _close(choice: String) -> void:
 	Game.story.interval_used = true
 	Game.save()
 	await s.say("", ["The interval ends.", "Whatever you chose, it stays with you."])
+	await _pilots_leave()
 	Sfx.music("low_mechanical_ambient", 1.5)
 	Sfx.play("chime", 1.0, -6.0)
 	await s.say("system", "Report to the deployment terminal in Operations.")
 	s.wing.mark_route()
+
+
+func _pilots_leave() -> void:
+	## The others drift off through the Concourse door, to wherever they go
+	## when nobody needs them (StoryWing.away_spot).
+	if s.w == null or s.w.def.id != "commons":
+		return
+	var gone := []
+	for who in ["hiro", "pala", "midas"]:
+		if s.a(who) != null:
+			gone.append(who)
+	if gone.is_empty():
+		return
+	for i in gone.size():
+		var act := s.a(gone[i])
+		act.scripted = true
+		var from := Vector2i(floori(act.position.x / 16.0), floori(act.position.y / 16.0))
+		var path := [Vector2i(from.x, 3), Vector2i(21, 3), Vector2i(21, 1)]
+		var slow := 28.0 if gone[i] == "midas" else 44.0
+		if i == gone.size() - 1:
+			await s.leave(gone[i], path, slow)
+		else:
+			s.leave(gone[i], path, slow)
+			await s.wait(0.6)
+	await s.say("", "The others drift off to wherever they go when nobody needs them.")
 
 
 func _record(choice: String, response: String) -> void:
@@ -648,6 +679,9 @@ func examine(ev: Dictionary) -> void:
 		"terminal":
 			await _terminal()
 		"comm":
+			# a letter for the post slot goes first
+			if await s.wing.post_letter():
+				return
 			if used:
 				await s.say("", "The comm booth's screen reads: LINE CLOSED UNTIL NEXT INTERVAL.")
 			elif Game.relationship("midas") <= 0:
