@@ -214,60 +214,287 @@ func _first_visit(id: String) -> void:
 
 
 func _stargazing() -> void:
-	## The observation deck's first night: Pala, the stars, and the shapes she
-	## made up for them when she first got here.
+	## The observation deck's first night. You and Pala go up to the glass side
+	## by side; then the view turns to the sky, and the shapes she made up when
+	## she first got here are drawn star by star as she talks you through them.
 	s.w.busy = true
 	await s.say("", "The whole wall is window. The stars here are close enough to be rude.")
 	if bool(Game.story.pala_unavailable) or bool(Game.story.get("pala_escape_chosen", false)):
 		await s.say("", "You stand at the glass for a while, alone. It is the quietest place in the Academy.")
 		s.w.busy = false
 		return
-	# Pala comes in through the door behind you
-	s.w.player.face(0)
 	var door := Building.room_door("observation")
-	await s.enter({"id": "pala", "who": "pala", "dir": 1}, door, [Vector2i(door.x, 4), Vector2i(door.x + 1, 3)], 40.0)
-	s.face("pala", 1)
+	# you go up to the glass
+	await s.walk("player", [Vector2i(door.x, 5), Vector2i(door.x, 2)], 40.0)
+	s.w.player.face(1)
+	await s.wait(0.5)
+	# Pala comes in through the door behind you and stands right beside you
+	await s.enter({"id": "pala", "who": "pala", "dir": 1}, Vector2i(door.x + 1, door.y),
+		[Vector2i(door.x + 1, 5), Vector2i(door.x + 1, 2)], 40.0)
+	s.face("pala", 3)
+	s.w.player.face(2)
 	await s.say("pala", "You found it. I come here when the dorm gets too loud. Or too quiet.", "smile")
+	s.face("pala", 1)
+	s.w.player.face(1)
+	await s.wait(0.4)
 	await s.say("pala", "When I first got here I made up my own constellations. Want to see?", "")
-	# her shapes, drawn in light over the real stars
-	var shapes := [
-		["The Kitchen Chair.", [Vector2(40, 10), Vector2(52, 10), Vector2(52, 22), Vector2(40, 22), Vector2(40, 34), Vector2(52, 22)]],
-		["The Cup My Brother Broke.", [Vector2(112, 12), Vector2(126, 12), Vector2(124, 26), Vector2(114, 26), Vector2(112, 12)]],
-		["And that one's just a dog. Every sky needs a dog.", [Vector2(176, 18), Vector2(186, 14), Vector2(196, 18), Vector2(206, 16), Vector2(200, 26), Vector2(184, 26)]],
-	]
-	# drawn on a layer of their own that follows the camera, so the deck's
-	# night tint doesn't dim them
-	var sky := CanvasLayer.new()
-	sky.layer = 2
-	sky.follow_viewport_enabled = true
-	s.w.add_child(sky)
-	for sh in shapes:
-		var line := Line2D.new()
-		line.width = 1.0
-		line.default_color = Color(Pal.LEMON, 0.9)
-		line.antialiased = false
-		sky.add_child(line)
-		for pt in sh[1]:
-			var dot := ColorRect.new()
-			dot.color = Pal.WHITE
-			dot.size = Vector2(2, 2)
-			dot.position = pt - Vector2(1, 1)
-			line.add_child(dot)
-		for k in (sh[1] as Array).size():
-			line.add_point(sh[1][k])
-			Sfx.play("blip", 1.4 + k * 0.08, -16.0)
-			await s.wait(0.18)
-		await s.say("pala", sh[0], "smile")
-		var tw := line.create_tween()
-		tw.tween_property(line, "modulate:a", 0.0, 0.8)
-		tw.tween_callback(line.queue_free)
-	sky.queue_free()
-	s.emote("pala", "heart", 1.4)
+	await s.m.fade_out(0.6)
+	var c := _sky_view()
+	await s.m.fade_in(0.8)
+	await s.wait(0.6)
+	var sky: Node2D = c.get_meta("sky")
+	for i in STAR_SHAPES.size():
+		var shape: Dictionary = STAR_SHAPES[i]
+		if i > 0:
+			var pan := sky.create_tween()
+			pan.tween_property(sky, "position:x", -160.0 * i, 1.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			await pan.finished
+		var group: Node2D = sky.get_node(shape.id)
+		for step in shape.steps:
+			if step.has("draw"):
+				_strokes(group, step.draw)
+			if step.has("do"):
+				_star_trick(group, step.do)
+			await s.say("pala", step.say, step.get("mood", "smile"))
+		var name_l: Label = group.get_meta("label")
+		name_l.create_tween().tween_property(name_l, "modulate:a", 1.0, 0.5)
+		Sfx.play("blip", 1.9, -12.0)
+		await s.say("pala", shape.name, "smile")
 	await s.say("you", "They're good.", "smile")
 	await s.say("pala", "They're terrible. That's why I like them. Nobody here can tell me they're wrong.", "smile")
+	await s.m.fade_out(0.6)
+	c.queue_free()
+	await s.m.fade_in(0.6)
+	s.face("pala", 3)
+	s.w.player.face(2)
+	s.emote("pala", "heart", 1.4)
+	await s.say("pala", "Next time you have to make one up. Those are the rules.", "smile")
 	Game.story.stargazed = true
 	await s.leave("pala", Building.room_out("observation"), 40.0)
 	s.w.busy = false
+
+
+## Pala's constellations, centred 160 px apart across the sky. Points are
+## relative to each shape's centre; every step is one line of hers, drawing
+## the strokes she's describing while she says it.
+const STAR_SHAPES := [
+	{"id": "chair", "name": "The Kitchen Chair.", "label": "THE KITCHEN CHAIR", "pivot": Vector2(22, 38),
+		"stars": [Vector2(-22, -36), Vector2(-22, -10), Vector2(-22, 10), Vector2(22, 10), Vector2(22, 38), Vector2(-22, 38)],
+		"steps": [
+			{"say": "Start with the bright one at the top and go straight down. That's the back.",
+				"draw": [[Vector2(-22, -36), Vector2(-22, -10), Vector2(-22, 10)]]},
+			{"say": "Across, that's the seat. Then two legs.",
+				"draw": [[Vector2(-22, 10), Vector2(22, 10)], [Vector2(22, 10), Vector2(22, 38)], [Vector2(-22, 10), Vector2(-22, 38)]]},
+			{"say": "It's the chair in our kitchen. One leg's shorter, so it rocks when you sit on it.", "do": "rock"},
+		]},
+	{"id": "cup", "name": "The Cup My Brother Broke.", "label": "THE CUP MY BROTHER BROKE",
+		"stars": [Vector2(-20, -22), Vector2(20, -22), Vector2(13, 22), Vector2(-13, 22), Vector2(19, -14), Vector2(32, -4), Vector2(15, 10), Vector2(-36, 34)],
+		"steps": [
+			{"say": "This one's a cup. The rim goes across the top...", "draw": [[Vector2(-20, -22), Vector2(20, -22)]]},
+			{"say": "...down to the bottom, and there's the handle.",
+				"draw": [[Vector2(20, -22), Vector2(13, 22), Vector2(-13, 22), Vector2(-20, -22)], [Vector2(19, -14), Vector2(32, -4), Vector2(15, 10)]]},
+			{"say": "See the little one off on its own? That's the bit that broke off.", "do": "chip"},
+			{"say": "My brother broke it. He said the cup did it.", "mood": ""},
+		]},
+	{"id": "dog", "name": "And that one's just a dog. Every sky needs a dog.", "label": "JUST A DOG",
+		"stars": [Vector2(-42, -12), Vector2(-30, -18), Vector2(-34, -30), Vector2(-22, -6), Vector2(18, -6), Vector2(30, -22), Vector2(-20, 24), Vector2(16, 24)],
+		"steps": [
+			{"say": "Last one. Nose, head, and an ear sticking up.",
+				"draw": [[Vector2(-42, -12), Vector2(-30, -18), Vector2(-34, -30)]]},
+			{"say": "Then along the back to the tail.",
+				"draw": [[Vector2(-30, -18), Vector2(-22, -6), Vector2(18, -6), Vector2(30, -22)]]},
+			{"say": "And legs. It's wagging. You can't tell, but it is.",
+				"draw": [[Vector2(-22, -6), Vector2(-20, 24)], [Vector2(18, -6), Vector2(16, 24)]], "do": "wag"},
+		]},
+]
+const SKY_Y := 48.0
+
+
+func _sky_view() -> Cinema:
+	## Full screen: the night sky through the deck's window, with the two of
+	## you from behind, leaning on the sill. The sky is twice the screen wide
+	## and pans; the frame and the two of you stay put.
+	var c := Cinema.open(Color("0e1119"))
+	var sky := Node2D.new()
+	c.add_child(sky)
+	c.move_child(sky, c.bg.get_index() + 1)
+	c.set_meta("sky", sky)
+	var bgt := TextureRect.new()
+	bgt.texture = Art.space(640, 180, "stargazing")
+	sky.add_child(bgt)
+	# a scatter of real stars, some of them twinkling
+	for i in 46:
+		var st := Sprite2D.new()
+		st.centered = false
+		st.texture = Art.star(1 if Pal.hash2(i, 7) < 0.25 else 0)
+		st.position = Vector2(int(Pal.hash2(i, 5) * 636), int(Pal.hash2(i, 6) * 112)) - Vector2(2, 2)
+		st.modulate.a = 0.5 + Pal.hash2(i, 8) * 0.4
+		sky.add_child(st)
+		if i % 3 == 0:
+			var tw := st.create_tween().set_loops()
+			tw.tween_property(st, "modulate:a", 0.2, 0.8 + Pal.hash2(i, 9))
+			tw.tween_property(st, "modulate:a", st.modulate.a, 0.8 + Pal.hash2(i, 10))
+	# her stars are there from the start; she just joins them up
+	for i in STAR_SHAPES.size():
+		var shape: Dictionary = STAR_SHAPES[i]
+		# the shape lives in g's "art" child; "tilt" turns every point of it
+		# about "pivot" (the chair rocks on a foot), re-rounded to whole pixels
+		var g := Node2D.new()
+		g.name = shape.id
+		g.position = Vector2(160 + 160 * i, SKY_Y)
+		g.set_meta("pivot", shape.get("pivot", Vector2.ZERO))
+		g.set_meta("tilt", 0.0)
+		sky.add_child(g)
+		var art := Node2D.new()
+		art.name = "art"
+		g.add_child(art)
+		var lights := {}
+		for p in shape.stars:
+			var st := Sprite2D.new()
+			st.centered = false
+			st.texture = Art.star(1)
+			st.position = (p as Vector2) - Vector2(2, 2)
+			st.set_meta("p", p)
+			art.add_child(st)
+			lights[p] = st
+		g.set_meta("lights", lights)
+		var l := Art.label(shape.label, Pal.LEMON)
+		l.size = Vector2(160, 12)
+		l.position = Vector2(80 + 160 * i, 2)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.modulate.a = 0.0
+		sky.add_child(l)
+		g.set_meta("label", l)
+	# the window frame: side posts, two mullions and the sill
+	var frame := Node2D.new()
+	c.add_child(frame)
+	c.move_child(frame, sky.get_index() + 1)
+	for x in [0, 102, 215, 316]:
+		var post := ColorRect.new()
+		post.color = Pal.INK2
+		post.position = Vector2(x, 0)
+		post.size = Vector2(4, 180)
+		frame.add_child(post)
+		var edge := ColorRect.new()
+		edge.color = Pal.STEEL.darkened(0.3)
+		edge.position = Vector2(x + (3 if x < 160 else 0), 0)
+		edge.size = Vector2(1, 180)
+		frame.add_child(edge)
+	var sill := ColorRect.new()
+	sill.color = Pal.INK2
+	sill.position = Vector2(0, 112)
+	sill.size = Vector2(320, 68)
+	frame.add_child(sill)
+	var lip := ColorRect.new()
+	lip.color = Pal.STEEL.darkened(0.2)
+	lip.position = Vector2(0, 112)
+	lip.size = Vector2(320, 1)
+	frame.add_child(lip)
+	# the two of you, from behind, shoulder to shoulder
+	var shade := Color(0.34, 0.36, 0.52)
+	# standing just above where the dialog box sits, so they stay in view
+	c.person(Game.player_spec(), Vector2(152, 127), 1).modulate = shade
+	c.person(Data.CAST["pala"], Vector2(167, 127), 1).modulate = shade
+	return c
+
+
+func _strokes(group: Node2D, strokes: Array) -> void:
+	## Draws Pala's lines one after another, each growing from star to star,
+	## lighting the stars as it reaches them.
+	for pts in strokes:
+		if not is_instance_valid(group):
+			return
+		await _stroke(group, pts)
+
+
+func _stroke(group: Node2D, pts: Array) -> void:
+	## One of her lines, grown point to point. Drawn a pixel at a time: a 1 px
+	## Line2D loses its slanted runs to pixel snapping.
+	var lights: Dictionary = group.get_meta("lights")
+	var line := Node2D.new()
+	var drawn: Array = [pts[0]]
+	line.set_meta("pts", drawn)
+	line.set_meta("group", group)
+	line.draw.connect(func() -> void: _draw_stroke(line))
+	var art := group.get_node("art")
+	art.add_child(line)
+	art.move_child(line, 0)
+	_light(lights, pts[0])
+	for k in range(1, pts.size()):
+		var a: Vector2 = pts[k - 1]
+		var b: Vector2 = pts[k]
+		drawn.append(a)
+		var tw := line.create_tween()
+		tw.tween_method(func(v: float) -> void:
+			drawn[k] = a.lerp(b, v).round()
+			line.queue_redraw(), 0.0, 1.0, a.distance_to(b) / 70.0)
+		await tw.finished
+		if not is_instance_valid(line):
+			return
+		Sfx.play("blip", 1.4 + k * 0.08, -16.0)
+		_light(lights, b)
+
+
+func _draw_stroke(line: Node2D) -> void:
+	var pts: Array = line.get_meta("pts")
+	var g: Node2D = line.get_meta("group")
+	var col := Color(Pal.LEMON, 0.8)
+	for k in range(1, pts.size()):
+		var a := _tilted(g, pts[k - 1])
+		var b := _tilted(g, pts[k])
+		var n := int(maxf(absf(b.x - a.x), absf(b.y - a.y)))
+		for i in n + 1:
+			line.draw_rect(Rect2(a.lerp(b, float(i) / maxf(n, 1)).round(), Vector2.ONE), col)
+
+
+func _tilted(g: Node2D, p: Vector2) -> Vector2:
+	var pv: Vector2 = g.get_meta("pivot")
+	return ((p - pv).rotated(float(g.get_meta("tilt"))) + pv).round()
+
+
+func _set_tilt(g: Node2D, a: float) -> void:
+	g.set_meta("tilt", a)
+	for ch in g.get_node("art").get_children():
+		if ch.has_meta("pts"):
+			ch.queue_redraw()
+		elif ch.has_meta("p"):
+			ch.position = _tilted(g, ch.get_meta("p")) - Vector2(2, 2)
+
+
+func _light(lights: Dictionary, p: Vector2) -> void:
+	var st: Sprite2D = lights.get(p)
+	if st and is_instance_valid(st):
+		st.texture = Art.star(2)
+
+
+func _star_trick(group: Node2D, what: String) -> void:
+	## The little bits of business: the chair rocks on its short leg, the
+	## broken-off star blinks, the dog's tail wags.
+	match what:
+		"rock":
+			var tw := group.create_tween().set_loops(3)
+			tw.tween_method(func(v: float) -> void: _set_tilt(group, v), 0.0, 0.09, 0.3).set_trans(Tween.TRANS_SINE)
+			tw.tween_method(func(v: float) -> void: _set_tilt(group, v), 0.09, 0.0, 0.3).set_trans(Tween.TRANS_SINE)
+		"chip":
+			var st: Sprite2D = (group.get_meta("lights") as Dictionary).get(Vector2(-36, 34))
+			var tw := st.create_tween().set_loops(4)
+			tw.tween_property(st, "modulate", Color(Pal.LEMON, 1.0), 0.2)
+			tw.tween_property(st, "modulate", Color.WHITE, 0.3)
+		"wag":
+			await s.wait(1.0)
+			var tail: Sprite2D = (group.get_meta("lights") as Dictionary).get(Vector2(30, -22))
+			var line: Node2D = null
+			for ch in group.get_node("art").get_children():
+				if ch.has_meta("pts") and (ch.get_meta("pts") as Array).size() == 4:
+					line = ch
+			if line == null or tail == null:
+				return
+			var tw := group.create_tween().set_loops(5)
+			for leg in [[Vector2(30, -22), Vector2(35, -15)], [Vector2(35, -15), Vector2(30, -22)]]:
+				tw.tween_method(func(v: Vector2) -> void:
+					(line.get_meta("pts") as Array)[3] = v.round()
+					line.queue_redraw()
+					tail.position = v.round() - Vector2(2, 2), leg[0], leg[1], 0.16)
 
 
 func _rooftop_scene() -> void:

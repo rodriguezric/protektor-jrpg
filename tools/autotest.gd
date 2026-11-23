@@ -1259,6 +1259,28 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[wing] back in %s; flags stargazed=%s tomato=%s" % [main.world.def.id, Game.story.get("stargazed"), Game.story.get("midas_tomato")])
 			get_tree().quit()
+		"stargaze":
+			# the observation deck's first visit: up to the glass with Pala,
+			# then the sky view and her constellations drawn as she names them
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			Game.story.completed_levels["terra_virex"] = 3
+			Game.story.relationships = {"hiro": 1, "pala": 1, "midas": 1}
+			main.fade_rect.color.a = 0.0
+			main.load_map(Building.map("room_observation"), Vector2i(10, 6), 1)
+			await wait(0.5)
+			var snap := {"on": true, "k": 0}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(0.35)
+					await shot("sg_%03d" % snap.k)
+					snap.k += 1
+			snapper.call()
+			await main.story.wing._stargazing()
+			snap.on = false
+			print("[stargaze] done; stargazed=%s pala=%s busy=%s" % [Game.story.get("stargazed"), main.world.actor("pala") != null, main.world.busy])
+			get_tree().quit()
 		"doorshots":
 			# every map with doors: one shot looking at each run of door tiles
 			# (and the home's bedroom doors, shut and swung open)
