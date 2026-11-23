@@ -401,14 +401,25 @@ func _build_right() -> void:
 	ps.set_meta("spin", true)
 	pb.add_child(ps)
 	var nm := Label.new()
-	nm.text = "\n".join(str(header.get("planet_name", info.get("name", planet_type))).to_upper().split(" "))
-	nm.position = Vector2(20, 1)
+	var words := str(header.get("planet_name", info.get("name", planet_type))).to_upper().split(" ")
+	nm.text = "\n".join(words)
+	nm.position = Vector2(20, 3)
 	nm.add_theme_constant_override("line_spacing", -2)
 	nm.add_theme_color_override("font_color", Pal.TEXT)
 	pb.add_child(nm)
 	var lv := Art.label("LEVEL %02d" % level_index, Pal.SYNC)
 	lv.position = Vector2(4, 22)
 	pb.add_child(lv)
+	var widest := 0
+	for wd in words:
+		widest = maxi(widest, Art.text_width(wd))
+	if widest > int(pb.size.x) - 20 - 4:
+		# a long one-word name (TEMPESTRIS) gets the whole top row, with the
+		# planet and the level beneath it
+		nm.text = " ".join(words)
+		nm.position = Vector2(roundf((pb.size.x - Art.text_width(nm.text)) / 2.0), 4)
+		ps.position = Vector2(4, 16)
+		lv.position = Vector2(21, 18)
 	var ib := Art.make_box("box")
 	ib.position = Vector2(0, 40)
 	ib.size = Vector2(68, 30)

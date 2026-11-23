@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-23 15:59 EST — `bugfix_tempestris_name_overflows_mission_hud` (v0.64.2)
+
+Long planet names fit inside the mission HUD's top-right box.
+
+- TEMPESTRIS was wider than the space beside the planet icon and ran off the right edge of the box. A name whose longest word won't fit beside the icon now gets the whole top row, with the planet and LEVEL beneath it.
+- All planet names sit 2 px lower so they clear the box's top border.
+- Code: `Mission._build_right` in scripts/mission.gd measures each word with `Art.text_width`.
+
 ## 2026-11-23 15:57 EST — `bugfix_npc_under_pala_maintenance_bot_scene` (v0.64.1)
 
 NPCs step out of the way when a cutscene walks you onto their spot.
