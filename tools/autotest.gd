@@ -1311,6 +1311,19 @@ func _run(scenario: String) -> void:
 			await wait(0.4)
 			await shot("door_%02d_home_up_open" % k)
 			get_tree().quit()
+		"stairshots":
+			# every staircase, from just below it
+			Game.new_game()
+			Game.player_name = "Ari"
+			main.fade_rect.color.a = 0.0
+			var spots := [[Maps.home(), Vector2i(20, 5)], [Building.map("concourse"), Vector2i(26, 4)],
+				[Building.map("concourse"), Vector2i(4, 5)], [Building.map("rec_deck"), Vector2i(4, 4)],
+				[Building.map("upper_deck"), Vector2i(4, 5)]]
+			for i in spots.size():
+				main.load_map(spots[i][0], spots[i][1], 3)
+				await wait(0.3)
+				await shot("stairs_%d_%s" % [i, spots[i][0].id])
+			get_tree().quit()
 		"afterhours":
 			# after the interval's conversation: the pilots leave the Commons,
 			# turn up around the building, their dorm scenes, and Midas' letter
