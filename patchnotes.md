@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-23 08:27 EST — `bugfix_single_wide_doors` (v0.63.5)
+
+Every door to a room is now one wide door a person fits through, not two narrow doors side by side.
+
+- Doors in walls (the hub's rooms and dorms, the academy corridor and waiting room, home's front door, Block 7, Midas' home) are drawn as one door across the whole doorway: steel ones are a single panel with a lit glass strip, a pull bar and a kick plate; wooden ones have two inset panels and one knob. The steel doors are no longer split down the middle.
+- Open doorways (the Orientation Hall, Recovery Bay and Commons exits, the room doorways) have one frame around the whole opening instead of a post in the middle.
+- The three bedroom doors in the upstairs hall at home are each one wide door that swings open as one.
+- Code: `ArtTiles._run_x` finds a pixel's place across a run of door tiles; `_door`, `_doorway` and `_threshold` draw across the run (scripts/art_tiles.gd). `ArtProps.door(v, w)` and the new "widedoor" prop (scripts/art_props.gd); home_up uses one widedoor per doorway (scripts/maps.gd); World door props open by their width (scripts/world.gd). New autotest `PK_TEST=doorshots`.
+
 ## 2026-11-23 07:14 EST — `bugfix_door_entrances_and_exits` (v0.63.4)
 
 People in scenes come and go through real doors, never through walls or out into the dark around a room, and every door is wide enough to walk through.

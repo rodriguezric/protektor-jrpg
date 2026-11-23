@@ -65,6 +65,7 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"workshop": return workshop(v)
 		"memorial": return memorial()
 		"door": return door(v)
+		"widedoor": return door(v, 32)
 		"tv": return tv()
 		"clock": return clock()
 		"calendar": return calendar()
@@ -352,23 +353,25 @@ static func cup() -> PixBuf:
 
 # ------------------------------------------------------------ home, more ---
 
-static func door(v: int) -> PixBuf:
-	## An interior door filling a doorway (d). 0 = shut, 1 = swung open into
-	## the room, seen edge-on against the frame.
-	var b := PixBuf.new(16, 29)
+static func door(v: int, w: int = 16) -> PixBuf:
+	## An interior door filling a doorway (d), w px wide: "widedoor" is one
+	## door across a two-tile doorway. 0 = shut, 1 = swung open into the
+	## room, seen edge-on against the frame.
+	var b := PixBuf.new(w, 29)
 	var c := Pal.WOOD.lerp(Pal.PEACH, 0.1)
 	if v == 1:
 		b.rect(2, 1, 3, 28, Pal.shade(c))
 		b.rect(2, 1, 1, 28, c)
 		b.outline()
 		return b
-	b.rect(2, 1, 12, 28, c)
-	b.rect(2, 1, 12, 1, Pal.hi(c))
-	b.rect(4, 3, 8, 10, Pal.shade(c))
-	b.rect(5, 4, 6, 8, c)
-	b.rect(4, 16, 8, 10, Pal.shade(c))
-	b.rect(5, 17, 6, 8, c)
-	b.rect(11, 14, 2, 2, Pal.HONEY)
+	b.rect(2, 1, w - 4, 28, c)
+	b.rect(2, 1, w - 4, 1, Pal.hi(c))
+	var pw := w - 8 - (4 if w > 16 else 0)
+	b.rect(4, 3, pw, 10, Pal.shade(c))
+	b.rect(5, 4, pw - 2, 8, c)
+	b.rect(4, 16, pw, 10, Pal.shade(c))
+	b.rect(5, 17, pw - 2, 8, c)
+	b.rect(w - 5, 14, 2, 2, Pal.HONEY)
 	b.outline()
 	return b
 

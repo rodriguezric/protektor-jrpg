@@ -58,7 +58,7 @@ static func ground(rows: Array, theme: String) -> Image:
 						"top":
 							c = _wall_top(theme, x, y, lx, ly, at.call(tx, ty + 1) == " " or ty == th - 1)
 							if ch == "d":
-								c = _threshold(theme, x, y, lx)
+								c = _threshold(theme, x, y, _run_x(at, tx, ty, lx))
 						"face_high", "face_low":
 							c = _wall_face(theme, ch, x, y, lx, ly + (0 if mode == "face_high" else TILE), at, tx, ty)
 						_:
@@ -145,30 +145,47 @@ static func _wall_face(theme: String, ch: String, x: int, y: int, lx: int, fy: i
 	if ch == "W":
 		c = _window(theme, x, y, lx, fy, c)
 	elif ch == "D":
-		c = _door(theme, lx, fy, c)
+		c = _door(theme, _run_x(at, tx, ty, lx), fy, c)
 	elif ch == "d":
-		c = _doorway(theme, x, y, lx, fy, c)
+		c = _doorway(theme, x, y, _run_x(at, tx, ty, lx), fy, c)
 	elif ch == "U":
 		c = _stairwell(theme, x, lx, fy)
 	return c
 
 
-static func _threshold(theme: String, x: int, y: int, lx: int) -> Color:
+static func _run_x(at: Callable, tx: int, ty: int, lx: int) -> Vector2i:
+	## Where this pixel sits across a run of the same door/doorway tile
+	## (x: pixels from the run's left edge, y: the run's width in pixels), so
+	## a two-tile doorway is drawn as one wide door, not two narrow ones.
+	var ch: String = at.call(tx, ty)
+	var x0 := tx
+	while at.call(x0 - 1, ty) == ch:
+		x0 -= 1
+	var x1 := tx
+	while at.call(x1 + 1, ty) == ch:
+		x1 += 1
+	return Vector2i((tx - x0) * TILE + lx, (x1 - x0 + 1) * TILE)
+
+
+static func _threshold(theme: String, x: int, y: int, r: Vector2i) -> Color:
 	## The floor running through a doorway where the wall top would be.
-	var c := _base_floor(theme, x, y, lx, 0, 0.0, 0.0)
-	if lx == 0 or lx == 15:
+	var lx := r.x
+	var c := _base_floor(theme, x, y, lx % TILE, 0, 0.0, 0.0)
+	if lx == 0 or lx == r.y - 1:
 		return Pal.WOOD.lerp(Pal.BARK, 0.3)
-	return Pal.shade(c) if lx == 1 or lx == 14 else c
+	return Pal.shade(c) if lx == 1 or lx == r.y - 2 else c
 
 
-static func _doorway(theme: String, x: int, y: int, lx: int, fy: int, wall: Color) -> Color:
-	## An open doorway in a wall face: a wooden frame around the dim room beyond.
+static func _doorway(theme: String, x: int, y: int, r: Vector2i, fy: int, wall: Color) -> Color:
+	## An open doorway in a wall face: one wooden frame around the whole
+	## opening (r: x across the run, run width) and the dim room beyond.
 	if fy < 3:
 		return wall
+	var lx := r.x
 	var frame := Pal.WOOD if theme == "home" else Pal.SLATE
-	if lx <= 1 or lx >= 14 or fy == 3:
+	if lx <= 1 or lx >= r.y - 2 or fy == 3:
 		return Pal.hi(frame) if lx == 1 or fy == 3 else frame
-	var beyond := _base_floor(theme, x, y, lx, fy % TILE, 0.0, 0.0)
+	var beyond := _base_floor(theme, x, y, lx % TILE, fy % TILE, 0.0, 0.0)
 	return beyond.lerp(Pal.INK, 0.55 - fy / 31.0 * 0.3)
 
 
@@ -227,21 +244,36 @@ static func _window(theme: String, x: int, y: int, lx: int, fy: int, wall: Color
 	return c
 
 
-static func _door(theme: String, lx: int, fy: int, wall: Color) -> Color:
-	if lx < 2 or lx > 13 or fy < 6:
+static func _door(theme: String, r: Vector2i, fy: int, wall: Color) -> Color:
+	## One door filling the whole run of D tiles (r: x across it, its width):
+	## a two-tile doorway gets a single wide door, never a pair.
+	var lx := r.x
+	var w := r.y
+	if lx < 2 or lx > w - 3 or fy < 6:
 		return wall
 	if theme == "block":
 		theme = "home"
 	var c := Pal.STEEL.lerp(Pal.NAVY, 0.4) if theme != "home" else Pal.WOOD
-	if lx == 2 or lx == 13 or fy == 6:
+	if lx == 2 or lx == w - 3 or fy == 6:
 		return Pal.deep(c)
-	if theme != "home" and (lx == 7 or lx == 8):
-		return Pal.INK2
-	if theme != "home" and fy == 12 and (lx == 4 or lx == 11):
-		return Pal.SYNC.lerp(Pal.TEAL, 0.4)
-	if theme == "home" and lx == 11 and fy == 18:
+	if theme != "home":
+		# one steel panel: a lit glass strip across the top, a pull bar on
+		# the latch side and a kick plate
+		if fy >= 10 and fy <= 12 and lx >= 5 and lx <= w - 6:
+			return Pal.SYNC.lerp(Pal.TEAL, 0.4) if fy == 11 else Pal.TEAL.lerp(Pal.INK, 0.3)
+		if lx == w - 6 and fy >= 16 and fy <= 22:
+			return Pal.hi(Pal.STEEL)
+		if fy >= 27:
+			return Pal.shade(c)
+		return c
+	# wood: two inset panels and one knob
+	if lx == w - 6 and fy == 19:
 		return Pal.HONEY
-	return c if fy % 8 != 7 else Pal.shade(c)
+	var inset_x := lx >= 5 and lx <= w - 9
+	if inset_x and ((fy >= 9 and fy <= 16) or (fy >= 21 and fy <= 28)):
+		var edge := lx == 5 or lx == w - 9 or fy == 9 or fy == 16 or fy == 21 or fy == 28
+		return Pal.shade(c) if edge else c.lerp(Pal.PEACH, 0.08)
+	return c
 
 
 static func _floor(theme: String, ch: String, x: int, y: int, lx: int, ly: int, at: Callable, tx: int, ty: int) -> Color:
