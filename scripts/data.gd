@@ -70,7 +70,7 @@ static var EXTRAS := [
 
 static var CROWD := [
 	{"skin": Pal.SKIN, "hair": Pal.BARK, "style": "short", "top": Pal.ROSE, "adult": true},
-	{"skin": Pal.SKIN2, "hair": Pal.INK2, "style": "bun", "top": Pal.SAGE, "skirt": true, "bottom": Pal.PLUM, "adult": true},
+	{"skin": Pal.SKIN2, "hair": Pal.HONEY, "style": "bun", "top": Pal.SAGE, "skirt": true, "bottom": Pal.TEAL, "adult": true},
 	{"skin": Pal.SKIN3, "hair": Pal.INK2, "style": "curly", "top": Pal.HONEY, "adult": true},
 	{"skin": Pal.SKIN, "hair": Pal.STONE, "style": "slick", "top": Pal.BLUE, "adult": true},
 	{"skin": Pal.SKIN2, "hair": Pal.WOOD, "style": "long", "top": Pal.LILAC, "adult": true},

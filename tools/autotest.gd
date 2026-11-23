@@ -1373,6 +1373,26 @@ func _run(scenario: String) -> void:
 				await talk_all.call()
 			snap.on = false
 			get_tree().quit()
+		"paradecheck":
+			# nobody at the parade stands on (or right against) anyone else
+			var mp := Maps.parade()
+			var tiles := []
+			for n in mp.npcs:
+				tiles.append([n.get("id", n.get("who", "")), n.tile])
+			var close := []
+			for i in tiles.size():
+				for j in range(i + 1, tiles.size()):
+					var d: Vector2i = (tiles[i][1] as Vector2i) - (tiles[j][1] as Vector2i)
+					if absi(d.x) + absi(d.y) < 2 and not (absi(d.x) == 0 and absi(d.y) == 1):
+						close.append("%s %s / %s %s" % [tiles[i][0], tiles[i][1], tiles[j][0], tiles[j][1]])
+			var fam := []
+			for t in tiles:
+				var tt: Vector2i = t[1]
+				if tt.y >= 12 and tt.x >= 3 and tt.x <= 7:
+					fam.append("%s %s" % [t[0], tt])
+			print("[paradecheck] %d people, side by side or stacked: %s" % [tiles.size(), close])
+			print("[paradecheck] around the family: %s" % [fam])
+			get_tree().quit()
 		"buildcheck":
 			# static checks on every hub-building map: arrivals land on open
 			# floor, and every door, exit and interactable can be reached

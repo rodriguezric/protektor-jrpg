@@ -264,7 +264,9 @@ static func parade() -> Dictionary:
 		npcs.append({"id": "rec%d" % i, "spec": ex[i], "tile": Vector2i(xs[i], 9), "dir": 1})
 	for i in 16:
 		var cx := 1 + i * 2 + (i % 2)
-		if cx >= 29:
+		# the family's patch of the crowd (your parents, and the barrier
+		# your mother pushes to) is left clear
+		if cx >= 29 or (cx >= 3 and cx <= 7):
 			continue
 		var spec: Dictionary = Data.CROWD[i % Data.CROWD.size()]
 		npcs.append({"id": "crowd%d" % i, "spec": spec, "tile": Vector2i(cx, 12 + (i % 2)), "dir": 1, "no_turn": true})
