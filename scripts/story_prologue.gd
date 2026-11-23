@@ -501,11 +501,11 @@ func _night() -> void:
 	evening = false
 	var pl := s.w.player
 	pl.visible = false
-	var sleeper := s.w.add_npc({"id": "sleeper", "spec": Game.player_spec("home"), "tile": Vector2i(2, 2), "dir": 0, "offset": Vector2(0, 6), "ghost": true})
+	var sleeper := s.w.add_npc({"id": "sleeper", "spec": Game.player_spec("home"), "tile": Vector2i(1, 2), "dir": 0, "offset": Vector2(8, 6), "ghost": true})
 	sleeper.z_index = 1
 	var quilt := Sprite2D.new()
 	quilt.texture = Art.prop("quilt")
-	quilt.position = s.w.tile_center(Vector2i(2, 2)) + Vector2(0, 2)
+	quilt.position = s.w.tile_center(Vector2i(1, 2)) + Vector2(8, 2)
 	quilt.z_index = 2
 	s.w.add_child(quilt)
 	# your mother comes up the stairs and waits outside your door
