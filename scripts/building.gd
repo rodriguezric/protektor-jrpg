@@ -25,7 +25,8 @@ const PARENT := {
 	"dorm_you": "dorms", "dorm_hiro": "dorms", "dorm_pala": "dorms", "dorm_midas": "dorms", "dorm_wash": "dorms",
 }
 
-## Doors in a map's top wall: map id -> {where it leads: tile x}.
+## Doors in a map's top wall: map id -> {where it leads: tile x of its left
+## half}. Every door is two tiles wide (DD), so people fit through it.
 const DOORS := {
 	"commons": {"concourse": 21, "ops": 25},
 	"concourse": {"engineering": 6, "dorms": 19},
@@ -125,12 +126,13 @@ static func _finish(id: String, rows: Array, d: Dictionary) -> Dictionary:
 	var doors: Dictionary = DOORS.get(id, {})
 	for to in doors:
 		var x: int = doors[to]
-		_put(rows, x, 0, "D")
-		_put(rows, x, 1, "D")
-		events.append({"tile": Vector2i(x, 1), "id": "go:" + to})
+		for k in 2:
+			_put(rows, x + k, 0, "D")
+			_put(rows, x + k, 1, "D")
+			events.append({"tile": Vector2i(x + k, 1), "id": "go:" + to})
 		var label := _sign_text(to)
 		if label != "":
-			signs.append({"x": x * 16 + 8, "y": 1, "text": label})
+			signs.append({"x": x * 16 + 16, "y": 1, "text": label})
 	d.events = events
 	d.signs = signs
 	d.rows = rows
@@ -212,8 +214,10 @@ static func commons() -> Dictionary:
 		"#..........::::::..........#",
 		"#..........::==::..........#",
 		"#............==............#",
-		"###########DD###############",
-		"###########DD###############",
+		# the double doors back to the briefing halls: a real doorway people
+		# walk through in scenes, locked to you (solid_tiles below)
+		"###########dd###############",
+		"############################",
 	]
 	var props := [
 		p("couch", 4, 5, {"offset": Vector2(8, 0), "area": Rect2i(4, 5, 2, 1)}),
@@ -224,7 +228,7 @@ static func commons() -> Dictionary:
 		p("board", 9, 1, {"wall": true, "id": "board", "area": Rect2i(), "offset": Vector2(8, 0)}),
 		p("shelf", 16, 2, {"event": {"id": "games"}}),
 		p("plant", 1, 2, {"v": 1, "event": {"id": "plant"}}),
-		p("plant", 26, 2, {}),
+		p("plant", 26, 5, {}),
 		p("plant", 26, 12, {"v": 1}),
 		p("plant", 1, 12, {}),
 		p("table", 21, 7, {"v": 1, "offset": Vector2(8, 0), "area": Rect2i(21, 7, 2, 1)}),
@@ -238,7 +242,7 @@ static func commons() -> Dictionary:
 	for x in [5, 6, 13, 14, 17, 18]:
 		events.append({"tile": Vector2i(x, 1), "id": "spacewindow"})
 	return _finish("commons", rows, {"name": "Pilot Commons", "tint": Color(0.82, 0.88, 1.0), "props": props, "events": events,
-		"route": Vector2i(25, 2)})
+		"solid_tiles": [Vector2i(11, 13), Vector2i(12, 13)], "route": Vector2i(25, 2)})
 
 
 # ------------------------------------------------------------ operations ---
@@ -460,7 +464,7 @@ static func upper_deck() -> Dictionary:
 		p("bench", 9, 5, {"offset": Vector2(8, 0), "area": Rect2i(9, 5, 2, 1)}),
 		p("bench", 15, 5, {"offset": Vector2(8, 0), "area": Rect2i(15, 5, 2, 1)}),
 		p("plant", 4, 2, {"v": 1}), p("plant", 24, 5, {}),
-		p("lamp", 24, 2, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "pulse": 1.5}),
+		p("lamp", 21, 5, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "pulse": 1.5}),
 	]
 	var events := []
 	for x in [9, 10, 15, 16, 20, 21]:

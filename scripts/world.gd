@@ -134,6 +134,9 @@ func _build_tiles() -> void:
 			var ch: String = (rows[y] as String)[x]
 			if ArtTiles.is_solid(ch):
 				solid[Vector2i(x, y)] = true
+	# doorways people in scenes use but the player can't (a locked way out)
+	for t in def.get("solid_tiles", []):
+		solid[t] = true
 
 
 func _build_props() -> void:
@@ -287,6 +290,66 @@ func door_sill(t: Vector2i) -> Variant:
 	while char_at(Vector2i(x1 + 1, t.y)) == "D":
 		x1 += 1
 	return Vector2((x0 + x1 + 1) * TILE / 2.0, below.y * TILE - 1)
+
+
+func entrance(t: Vector2i) -> Variant:
+	## The entrance at tile t, or null: {pos, step}. pos is where someone
+	## appears or vanishes (inside the opening, faded), step the way into the
+	## room from there. Entrances: a door in a top wall (D, stepping down off
+	## its sill), a doorway in a bottom wall (d or D with floor above it,
+	## stepping up into the room) and stairs (S at the top, v at the bottom).
+	var ch := char_at(t)
+	var sill = door_sill(t)
+	if sill != null:
+		return {"pos": sill, "step": Vector2(0, 14)}
+	if ch == "d" or ch == "D":
+		var up := t
+		while char_at(up) == ch:
+			up.y -= 1
+		var above := char_at(up)
+		if above != " " and not ArtTiles.is_wall(above) and up.y < t.y:
+			var top := up.y + 1
+			var x0 := t.x
+			while char_at(Vector2i(x0 - 1, top)) == ch:
+				x0 -= 1
+			var x1 := t.x
+			while char_at(Vector2i(x1 + 1, top)) == ch:
+				x1 += 1
+			return {"pos": Vector2((x0 + x1 + 1) * TILE / 2.0, top * TILE + 10), "step": Vector2(0, -14)}
+	if ch == "v" or ch == "S":
+		var end := t
+		var dy := 1 if ch == "v" else -1
+		while char_at(end + Vector2i(0, dy)) == ch:
+			end.y += dy
+		return {"pos": tile_center(end), "step": Vector2(0, -14 if ch == "v" else 14)}
+	return null
+
+
+func open_edge(t: Vector2i) -> bool:
+	## A walkable tile on the map's rim: someone can really walk off here.
+	var ch := char_at(t)
+	if ch == " " or ArtTiles.is_solid(ch):
+		return false
+	return t.x <= 0 or t.y <= 0 or t.x >= tw - 1 or t.y >= th - 1
+
+
+func nearest_entrance(p: Vector2) -> Variant:
+	## The entrance closest to point p (in pixels), or null if the map has none.
+	var best = null
+	var best_d := INF
+	for y in th:
+		for x in tw:
+			var ch: String = (rows[y] as String)[x]
+			if not "DdvS".contains(ch):
+				continue
+			var e = entrance(Vector2i(x, y))
+			if e == null:
+				continue
+			var d: float = (e.pos as Vector2).distance_to(p)
+			if d < best_d:
+				best_d = d
+				best = e
+	return best
 
 
 func offstage(t: Vector2i) -> Vector2:

@@ -1,5 +1,16 @@
 # Patch Notes
 
+## 2026-11-23 07:14 EST — `bugfix_door_entrances_and_exits` (v0.63.4)
+
+People in scenes come and go through real doors, never through walls or out into the dark around a room, and every door is wide enough to walk through.
+
+- Characters only faded in and out at doors in a room's top wall. Anywhere else they walked in a straight line until they were off camera: through the bottom wall of a room, into the black around small rooms, or through the Commons wall. Now every opening counts as an entrance and gets the fade: doors in a top wall, doorways in a bottom wall, and stairs. Walking off the edge of the screen is only for an open edge, like the plaza or the street. Inside a room, people head for the nearest door.
+- Every door someone walks through is now two tiles wide, so a character fits through it: the hub building (Commons, Concourse, both decks, the dorm corridor), the pod wing and staging room at the Academy, the front doors at home and on Block 7, the three bedroom doors upstairs (now pairs of doors), and Midas' kitchen doorway.
+- Rooms that people walked out of without a door now have one. The Orientation Hall and the Recovery Bay each have a doorway in the bottom wall, which the player can't use. The Commons' double doors back to the briefing halls are now an actual opening.
+- Scene paths go around furniture. The recruits leaving the Orientation Hall step out of their bench row into the centre aisle, the badge officer leaves down the aisle, and the pilots leave the Commons along the open row below the archive console.
+- The house standard has these rules now: godot-jrpg-style skill v1.4.0 and jrpg_art_style docs v1.3.0. `.standards.json` is re-stamped.
+- Code: `scripts/world.gd` (entrance(), open_edge(), nearest_entrance(); map `solid_tiles`), `scripts/story.gd` (enter()/leave() through _way_in(); PK_TRACE=1 audit _trace()), `scripts/building.gd` (DD doors from DOORS, Commons south doorway, two props off the new sills), `scripts/maps.gd` (home, home_up, midas_home, block7, hall, corridor, waiting, recovery), `scripts/story_prologue.gd` (front-door exit), `scripts/story_academy.gd` (hall paths), `scripts/story_hub.gd` (pilots' walk-out path, exit door line).
+
 ## 2026-11-23 06:51 EST — `bugfix_emote_alignment` (v0.63.3)
 
 Emote bubbles sit right on top of whoever is emoting.

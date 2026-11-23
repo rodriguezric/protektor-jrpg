@@ -22,8 +22,8 @@ static func home() -> Dictionary:
 	## The ground floor: the kitchen on the left, the living room on the
 	## right, the front door, and the stairs up to the bedrooms.
 	var rows := [
-		"#WW############D##WW#U##",
-		"#WW############D##WW#U##",
+		"#WW############DD#WW#U##",
+		"#WW############DD#WW#U##",
 		"#::::::::#...........S.#",
 		"#::::::::#...........S.#",
 		"#::::::::#...........S.#",
@@ -64,7 +64,7 @@ static func home() -> Dictionary:
 	return {"id": "home", "name": "Home, Block 7", "theme": "home", "tint": WARM, "outfit": "home", "rows": rows, "props": props,
 		"npcs": [], "triggers": [], "music": "letter_discussion",
 		"exits": [{"rect": Rect2i(21, 2, 1, 1), "to": "home_up", "tile": Vector2i(20, 9), "dir": 3}],
-		"events": [{"tile": Vector2i(15, 1), "id": "frontdoor"}, {"tile": Vector2i(1, 1), "id": "window"}, {"tile": Vector2i(2, 1), "id": "window"},
+		"events": [{"tile": Vector2i(15, 1), "id": "frontdoor"}, {"tile": Vector2i(16, 1), "id": "frontdoor"}, {"tile": Vector2i(1, 1), "id": "window"}, {"tile": Vector2i(2, 1), "id": "window"},
 			{"tile": Vector2i(18, 1), "id": "window"}, {"tile": Vector2i(19, 1), "id": "window"},
 			{"tile": Vector2i(11, 1), "id": "tv"}, {"tile": Vector2i(12, 1), "id": "tv"}, {"tile": Vector2i(13, 1), "id": "clock"},
 			{"tile": Vector2i(8, 1), "id": "calendar"}]}
@@ -76,8 +76,8 @@ static func midas_home() -> Dictionary:
 	## where the toys were hidden, and the doorway Mom came through each
 	## morning (in the top wall, so it stays above the dialog box).
 	var rows := [
-		"#WW#####WW##D####WW##",
-		"#WW#####WW##D####WW##",
+		"#WW#####WW##DD###WW##",
+		"#WW#####WW##DD###WW##",
 		"#:::::::::::::::::::#",
 		"#:::::::::::::::::::#",
 		"#::::::,,,,,,:::::::#",
@@ -115,9 +115,9 @@ static func home_up() -> Dictionary:
 		"#......#......#::::::#",
 		"#......#......#::::::#",
 		"#......#......#::::::#",
-		"####d######d#####d####",
-		"####d######d#####d####",
-		"####d######d#####d####",
+		"####dd#####dd####dd###",
+		"####dd#####dd####dd###",
+		"####dd#####dd####dd###",
 		"#....................#",
 		"#...................v#",
 		"####################v#",
@@ -131,7 +131,7 @@ static func home_up() -> Dictionary:
 		# the Starbox on the floor, facing into the room, clear of the bed
 		p("starbox", 5, 4, {"anim": 2, "fps": 1.5, "event": {"id": "starbox"}, "light": Pal.SYNC, "lr": 8, "light_off": Vector2(0, -14), "pulse": 2.0}),
 		p("toy", 1, 5, {"event": {"id": "toy"}}),
-		p("bag", 5, 5, {"event": {"id": "bag"}}),
+		p("bag", 3, 5, {"event": {"id": "bag"}}),
 		p("lamp", 6, 5, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "id": "kidlamp"}),
 		# your parents' room
 		p("bigbed", 10, 3, {"offset": Vector2(8, 0), "area": Rect2i(10, 2, 2, 2), "event": {"id": "parentsbed"}}),
@@ -144,8 +144,11 @@ static func home_up() -> Dictionary:
 		p("toilet", 20, 4, {"event": {"id": "toilet"}}),
 		# hallway
 		p("door", 4, 8, {"door": true, "area": Rect2i(), "shadow": false}),
+		p("door", 5, 8, {"door": true, "area": Rect2i(), "shadow": false}),
 		p("door", 11, 8, {"door": true, "area": Rect2i(), "shadow": false}),
+		p("door", 12, 8, {"door": true, "area": Rect2i(), "shadow": false}),
 		p("door", 17, 8, {"door": true, "area": Rect2i(), "shadow": false}),
+		p("door", 18, 8, {"door": true, "area": Rect2i(), "shadow": false}),
 		p("drawings", 7, 8, {"offset": Vector2(8, 0), "wall": true, "lift": 10, "area": Rect2i()}),
 		p("basket", 14, 10, {"event": {"id": "basket"}}),
 		p("plant", 1, 10, {}),
@@ -166,7 +169,7 @@ static func block7(time: String = "evening") -> Dictionary:
 	## the ration kiosk and the noticeboard on the paving and a scrap of park
 	## with swings and a slide. time: "evening" (neighbours out, friends on
 	## the bench, kids playing) or "dawn" (everyone lined up to see you off).
-	var rows := ["##WW##WW#D##WW####WW##WW#D##WW", "##WW##WW#D##WW####WW##WW#D##WW"]
+	var rows := ["##WW##WW#DD#WW####WW##WW#DD#WW", "##WW##WW#DD#WW####WW##WW#DD#WW"]
 	for i in 3:
 		rows.append("..............................")
 	for i in 2:
@@ -217,8 +220,9 @@ static func block7(time: String = "evening") -> Dictionary:
 	return {"id": "block7", "name": "Block 7", "theme": "block", "tint": Color(0.86, 0.78, 0.86) if time == "evening" else Color(1.0, 0.86, 0.78),
 		"outfit": "home", "rows": rows, "props": props, "npcs": npcs, "music": "mellow_loop",
 		"triggers": [{"rect": Rect2i(15, 7, 15, 6), "id": "kids_game"}] if time == "evening" else [],
-		"exits": [{"rect": Rect2i(9, 2, 1, 1), "to": "home", "tile": Vector2i(15, 3), "dir": 0}],
-		"events": [{"tile": Vector2i(9, 1), "id": "homedoor"}, {"tile": Vector2i(25, 1), "id": "okafordoor"},
+		"exits": [{"rect": Rect2i(9, 2, 2, 1), "to": "home", "tile": Vector2i(15, 3), "dir": 0}],
+		"events": [{"tile": Vector2i(9, 1), "id": "homedoor"}, {"tile": Vector2i(10, 1), "id": "homedoor"},
+			{"tile": Vector2i(25, 1), "id": "okafordoor"}, {"tile": Vector2i(26, 1), "id": "okafordoor"},
 			{"tile": Vector2i(2, 1), "id": "nwindow"}, {"tile": Vector2i(3, 1), "id": "nwindow"}, {"tile": Vector2i(18, 1), "id": "nwindow"},
 			{"tile": Vector2i(19, 1), "id": "nwindow"}, {"tile": Vector2i(28, 1), "id": "dark_window"}, {"tile": Vector2i(29, 1), "id": "dark_window"}]}
 
@@ -295,7 +299,7 @@ static func hall() -> Dictionary:
 		"#..................#",
 		"#..................#",
 		"#........==........#",
-		"####################",
+		"#########dd#########",
 	]
 	var props := [
 		p("podium", 10, 4, {"offset": Vector2(-8, 0), "area": Rect2i(9, 4, 2, 1)}),
@@ -317,15 +321,16 @@ static func hall() -> Dictionary:
 		Vector2i(13, 9), Vector2i(14, 9), Vector2i(15, 9), Vector2i(4, 11), Vector2i(6, 11), Vector2i(13, 11), Vector2i(15, 11)]
 	for i in seats.size():
 		npcs.append({"id": "rec%d" % i, "spec": Data.EXTRAS[i % Data.EXTRAS.size()], "tile": seats[i], "dir": 1, "pose": "sit"})
-	return {"id": "hall", "name": "Orientation Hall", "theme": "academy", "tint": STERILE, "rows": rows, "props": props, "npcs": npcs}
+	return {"id": "hall", "name": "Orientation Hall", "theme": "academy", "tint": STERILE, "rows": rows, "props": props, "npcs": npcs,
+		"solid_tiles": [Vector2i(9, 13), Vector2i(10, 13)]}
 
 
 # -------------------------------------------------------------- corridor ---
 
 static func corridor() -> Dictionary:
 	var rows := [
-		"#####D#####D#####D######WW#WW#####",
-		"#####D#####D#####D######WW#WW#####",
+		"#####DD####DD####DD#####WW#WW#####",
+		"#####DD####DD####DD#####WW#WW#####",
 		"#................................#",
 		"#................................#",
 		"#=====================...........#",
@@ -392,8 +397,8 @@ static func briefing() -> Dictionary:
 
 static func waiting() -> Dictionary:
 	var rows := [
-		"############",
-		"#####D######",
+		"#####DD#####",
+		"#####DD#####",
 		"#..........#",
 		"#..........#",
 		"#..........#",
@@ -426,7 +431,7 @@ static func recovery() -> Dictionary:
 		"#::::::::::::#",
 		"#::::::::::::#",
 		"#::::::::::::#",
-		"##############",
+		"######dd######",
 	]
 	var props := [
 		p("medbed", 2, 3, {"area": Rect2i(2, 2, 1, 2)}), p("medbed", 4, 3, {"area": Rect2i(4, 2, 1, 2)}),
@@ -440,7 +445,8 @@ static func recovery() -> Dictionary:
 		{"id": "pala", "who": "pala", "tile": Vector2i(10, 7), "dir": 0, "pose": "sit", "offset": Vector2(0, 3), "mood": "closed"},
 		{"id": "midas", "who": "midas", "tile": Vector2i(6, 2), "dir": 0, "mood": "sad"},
 	]
-	return {"id": "recovery", "name": "Recovery Bay", "theme": "academy", "tint": Color(1.0, 1.0, 1.02), "rows": rows, "props": props, "npcs": npcs}
+	return {"id": "recovery", "name": "Recovery Bay", "theme": "academy", "tint": Color(1.0, 1.0, 1.02), "rows": rows, "props": props, "npcs": npcs,
+		"solid_tiles": [Vector2i(6, 8), Vector2i(7, 8)]}
 
 
 # ------------------------------------------------------- the hub building ---

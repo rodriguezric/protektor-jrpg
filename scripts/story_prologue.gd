@@ -144,7 +144,7 @@ func _house(id: String) -> Dictionary:
 			]
 			# the front door opens onto the street for the evening
 			mp.exits = mp.exits.duplicate()
-			mp.exits.append({"rect": Rect2i(15, 2, 1, 1), "to": "block7", "tile": Vector2i(9, 3), "dir": 0})
+			mp.exits.append({"rect": Rect2i(15, 2, 2, 1), "to": "block7", "tile": Vector2i(9, 3), "dir": 0})
 	return mp
 
 
