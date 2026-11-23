@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-23 15:57 EST — `bugfix_npc_under_pala_maintenance_bot_scene` (v0.64.1)
+
+NPCs step out of the way when a cutscene walks you onto their spot.
+
+- In the Commons scene where the maintenance unit rolls toward Pala, the recruit standing where you walk to now steps two tiles aside before you arrive, then turns to watch.
+- This works in every scripted walk: anyone standing on (or just above/below) the spot a walk ends on moves to the nearest free tile first, and their wander home moves with them.
+- Code: `Story.walk` calls new `Story.make_way` / `Story._free_spot` in scripts/story.gd.
+
 ## 2026-11-23 08:21 EST — `feature_stargazing_window_scene` (v0.64.0)
 
 Stargazing with Pala is now a proper scene: you go up to the observation deck's window together, then the view turns to the night sky and her constellations are drawn star by star as she describes them.

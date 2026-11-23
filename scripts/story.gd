@@ -257,9 +257,68 @@ func walk(id: String, tiles: Array, speed: float = 48.0) -> void:
 	var pts := []
 	for t in tiles:
 		pts.append(w.tile_center(t) if t is Vector2i else t)
+	if not pts.is_empty():
+		make_way(act, pts[-1])
 	touch()
 	await act.walk_to(pts, speed)
 	touch()
+
+
+func make_way(walker: Actor, dest: Vector2) -> void:
+	## Anyone standing where a scripted walk will end steps aside to the
+	## nearest free tile, so the walker doesn't stop on top of them.
+	var everyone: Array = w.npcs.duplicate()
+	everyone.append(w.player)
+	for n: Actor in everyone:
+		if n == walker or n == null or not n.visible or n.info.get("ghost", false):
+			continue
+		# on the spot, or close enough above/below that the sprites overlap
+		if absf(n.position.x - dest.x) >= 12 or absf(n.position.y - dest.y) >= 20:
+			continue
+		var spot := _free_spot(n, dest, walker)
+		if spot == Vector2.INF:
+			continue
+		n.walk_target = null
+		if n != w.player:
+			n.home_tile = Vector2i(floori(spot.x / 16.0), floori(spot.y / 16.0))
+		var go := func() -> void:
+			await n.walk_to([spot], 60.0)
+			n.face_toward(dest)
+		go.call()
+
+
+func _free_spot(n: Actor, dest: Vector2, walker: Actor) -> Vector2:
+	var here := Vector2i(floori(n.position.x / 16.0), floori((n.position.y - 3.0) / 16.0))
+	var best := Vector2.INF
+	var bd := 1e9
+	for r in range(1, 4):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var t := here + Vector2i(dx, dy)
+				var c: Vector2 = w.tile_center(t)
+				if w.blocked_by_map(c) or ArtTiles.is_wall(w.char_at(t)) or c.distance_to(dest) < 24.0:
+					continue
+				var taken := false
+				var others: Array = w.npcs.duplicate()
+				others.append(w.player)
+				for o: Actor in others:
+					if o != n and o.visible and o.position.distance_to(c) < 14.0:
+						taken = true
+						break
+				if taken:
+					continue
+				# straight moves first, and not back into the walker's way
+				var d := c.distance_to(n.position) + (6.0 if dx != 0 and dy != 0 else 0.0)
+				if c.distance_to(walker.position) < dest.distance_to(walker.position):
+					d += 10.0
+				if d < bd:
+					bd = d
+					best = c
+		if best != Vector2.INF:
+			return best
+	return best
 
 
 func walk_bg(id: String, tiles: Array, speed: float = 48.0) -> void:
