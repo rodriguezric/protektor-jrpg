@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-23 16:00 EST — `bugfix_sign_letters_bleed_top_border` (v0.64.3)
+
+Sign letters sit inside the plate instead of over its top border.
+
+- Wall signs (CONCOURSE, ARCHIVE, the dorm names...) had their letters drawn a pixel too high, so the tops ran over the sign's top border. The plate is a pixel taller and the letters sit inside it with a pixel of plate above and below.
+- Code: `World._build_signs` in scripts/world.gd (rim 11 px, plate 9 px, label at y 2).
+
 ## 2026-11-23 15:59 EST — `bugfix_tempestris_name_overflows_mission_hud` (v0.64.2)
 
 Long planet names fit inside the mission HUD's top-right box.

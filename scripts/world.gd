@@ -193,15 +193,16 @@ func _build_signs() -> void:
 		x = clampf(roundf(x), 1.0, tw * TILE - w - 1.0)
 		var rim := ColorRect.new()
 		rim.color = Pal.STEEL
-		rim.size = Vector2(w, 10)
-		rim.position = Vector2(x, int(sg.get("y", 1)) * TILE - 14)
+		rim.size = Vector2(w, 11)
+		rim.position = Vector2(x, int(sg.get("y", 1)) * TILE - 15)
 		var plate := ColorRect.new()
 		plate.color = Pal.INK2
-		plate.size = Vector2(w - 2, 8)
+		plate.size = Vector2(w - 2, 9)
 		plate.position = Vector2(1, 1)
 		rim.add_child(plate)
+		# caps are 7 px tall from the label's top: one px of plate above and below
 		var l := Art.label(text, Pal.LEMON)
-		l.position = Vector2(3, -1)
+		l.position = Vector2(3, 2)
 		rim.add_child(l)
 		decals.add_child(rim)
 
