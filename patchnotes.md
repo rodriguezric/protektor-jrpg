@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-23 06:43 EST — `bugfix_parade_mother_merges_with_crowd` (v0.63.1)
+
+At the parade, your mother no longer walks into strangers or a look-alike.
+
+- The crowd leaves your parents a patch of their own. Before, one woman in the crowd stood on your mother's own spot, dressed almost like her, so the two read as a copy of each other. Another stood exactly where your mother pushes to the barrier, so she walked into a stranger and back into her double.
+- That crowd woman now has honey hair and a teal skirt, so she no longer reads as your mother.
+- The guard who tells her to step back now walks along the open pavement in front of the barriers instead of on top of them.
+- Code: `scripts/maps.gd` (parade() skips crowd slots around the family), `scripts/data.gd` (CROWD[1] colours), `scripts/story_scenes.gd` (barrier() guard path). New autotest `PK_TEST=paradecheck` (no two parade people stacked or side by side).
+
 ## 2026-11-23 06:32 EST — `feature_pilots_after_hours` (v0.63.0)
 
 Once the interval's conversation is spent, the pilots leave the Commons and can be found around the building. Each pilot's room has a one-time scene.
