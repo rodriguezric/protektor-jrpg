@@ -10,6 +10,8 @@ class_name ArtTiles
 
 const TILE := 16
 const WALLS := "#WDdU "
+## px of wall left on each side of a door across a two-tile run (Art.prop "widedoor" matches)
+const DOOR_INSET := 3
 
 
 static func is_wall(ch: String) -> bool:
@@ -58,7 +60,9 @@ static func ground(rows: Array, theme: String) -> Image:
 						"top":
 							c = _wall_top(theme, x, y, lx, ly, at.call(tx, ty + 1) == " " or ty == th - 1)
 							if ch == "d":
-								c = _threshold(theme, x, y, _run_x(at, tx, ty, lx))
+								var rd := _narrow(_run_x(at, tx, ty, lx))
+								if rd.x >= 0 and rd.x < rd.y:
+									c = _threshold(theme, x, y, rd)
 						"face_high", "face_low":
 							c = _wall_face(theme, ch, x, y, lx, ly + (0 if mode == "face_high" else TILE), at, tx, ty)
 						_:
@@ -144,10 +148,10 @@ static func _wall_face(theme: String, ch: String, x: int, y: int, lx: int, fy: i
 			c = panel.lerp(Pal.SLATE, 0.3)
 	if ch == "W":
 		c = _window(theme, x, y, lx, fy, c)
-	elif ch == "D":
-		c = _door(theme, _run_x(at, tx, ty, lx), fy, c)
-	elif ch == "d":
-		c = _doorway(theme, x, y, _run_x(at, tx, ty, lx), fy, c)
+	elif ch == "D" or ch == "d":
+		var r := _narrow(_run_x(at, tx, ty, lx))
+		if r.x >= 0 and r.x < r.y:
+			c = _door(theme, r, fy, c) if ch == "D" else _doorway(theme, x, y, r, fy, c)
 	elif ch == "U":
 		c = _stairwell(theme, x, lx, fy)
 	return c
@@ -165,6 +169,14 @@ static func _run_x(at: Callable, tx: int, ty: int, lx: int) -> Vector2i:
 	while at.call(x1 + 1, ty) == ch:
 		x1 += 1
 	return Vector2i((tx - x0) * TILE + lx, (x1 - x0 + 1) * TILE)
+
+
+static func _narrow(r: Vector2i) -> Vector2i:
+	## A door across a two-tile run is drawn a little narrower than the run:
+	## DOOR_INSET px of wall stay on each side (x outside 0..width = wall).
+	if r.y <= TILE:
+		return r
+	return Vector2i(r.x - DOOR_INSET, r.y - DOOR_INSET * 2)
 
 
 static func _threshold(theme: String, x: int, y: int, r: Vector2i) -> Color:
