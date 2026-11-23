@@ -1,5 +1,15 @@
 # Patch Notes
 
+## 2026-11-23 08:21 EST — `feature_stargazing_window_scene` (v0.64.0)
+
+Stargazing with Pala is now a proper scene: you go up to the observation deck's window together, then the view turns to the night sky and her constellations are drawn star by star as she describes them.
+
+- You walk up to the glass; Pala comes in through the door and stands right beside you, both of you looking out.
+- The view cuts to a full-screen night sky through the deck's window frame, with the two of you seen from behind, leaning on the sill. The sky pans from one constellation to the next.
+- Her stars are already there in the sky; each line she says joins the ones she's describing: the Kitchen Chair (back, seat, legs, and it rocks on its short leg), the Cup My Brother Broke (rim, sides, handle, and the broken-off chip blinks), and a dog (head, back, tail, legs, and the tail wags). Each one's name lights up over it.
+- Back on the deck, Pala tells you it's your turn to make one up next time, then leaves through the door.
+- Code: `StoryWing._stargazing` rewritten; new `STAR_SHAPES`, `_sky_view`, `_strokes`/`_stroke`/`_draw_stroke` (drawn a pixel at a time: 1 px Line2D loses slanted runs to pixel snapping), `_tilted`/`_set_tilt`, `_star_trick` in scripts/story_wing.gd. New autotest scenario `PK_TEST=stargaze` in tools/autotest.gd.
+
 ## 2026-11-23 07:14 EST — `bugfix_door_entrances_and_exits` (v0.63.4)
 
 People in scenes come and go through real doors, never through walls or out into the dark around a room, and every door is wide enough to walk through.
