@@ -89,7 +89,9 @@ func orientation() -> void:
 		var act := s.a("rec%d" % i)
 		if act:
 			act.set_pose("walk")
-			s.leave("rec%d" % i, [Vector2(act.position.x, s.w.tile_center(Vector2i(0, 12)).y), Vector2i(10, 12), Vector2i(10, 13)], 50.0, true)
+			# out along their bench row into the centre aisle, then down it
+			var aisle: float = s.w.tile_center(Vector2i(8 if act.position.x < 160.0 else 11, 0)).x
+			s.leave("rec%d" % i, [Vector2(aisle, act.position.y), Vector2(aisle, s.w.tile_center(Vector2i(0, 12)).y), Vector2i(10, 12), Vector2i(10, 13)], 50.0, true)
 			await s.wait(0.12)
 	m.shake(1.0, 1.2)
 	Sfx.play("heavy_door", 0.6, -10.0)
@@ -186,8 +188,8 @@ func badge() -> void:
 	for id in ["hiro", "pala", "midas"]:
 		s.a(id).set_spec(Game.cast(id))
 	s.w.player.emote("sync", 1.4)
-	# the officer's round is done: he walks back out the way he came
-	s.leave("officer", [Vector2i(2, 5)], 50.0)
+	# the officer's round is done: down the centre aisle and out the doorway
+	s.leave("officer", [Vector2i(8, 6), Vector2i(9, 12), Vector2i(9, 13)], 50.0)
 	await s.say("instructor", ["Synchronization complete.", "Do not remove the badge."])
 	await s.say("", ["The badge is warm now.", "Almost pulsing."])
 	s.face("hiro", 2)
@@ -508,7 +510,7 @@ func aftermath(res: Dictionary) -> void:
 	await s.say("midas", ["I kept thinking about the people down there.", "Even when the rocks stopped coming."], "uneasy")
 	pacing[0] = false
 	Sfx.play("door", 1.0, -6.0)
-	# the ward has no door of its own on screen: the Instructor walks in from below
+	# the Instructor comes in through the ward's doorway
 	await s.enter({"id": "instructor", "who": "instructor", "dir": 1}, Vector2i(7, 8), [Vector2i(7, 7)], 40.0)
 	await s.say("instructor", ["Good work.", "Recovery time will be brief. Your next assignment will be scheduled shortly."])
 	await s.w.player.walk_to([s.w.tile_center(Vector2i(7, 5)) + Vector2(8, 0)], 40.0)

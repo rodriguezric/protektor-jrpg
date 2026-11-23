@@ -320,30 +320,45 @@ func wait(t: float) -> void:
 ## and step down; from any other tile they walk in from beyond the camera's
 ## view. leave(): the reverse, then they're removed (or just hidden, keep).
 
+func _way_in(t: Vector2i) -> Variant:
+	## The entrance someone uses at tile t: the one at t, or (when t is
+	## inside the map and not an open edge) the nearest one, so nobody walks
+	## through a wall or out into the void. Null = walk off the open edge.
+	var e = w.entrance(t)
+	if e == null and not w.open_edge(t):
+		e = w.nearest_entrance(w.tile_center(t))
+	return e
+
+
 func enter(n: Dictionary, from: Vector2i, path: Array = [], speed: float = 48.0) -> Actor:
 	## n: an npc dict ({id, who|spec, dir, mood, ...}); path: tiles or points
 	## to walk to after arriving. Await it to wait until they're in place.
+	## Through a door, doorway or stairs they fade in inside the opening and
+	## step through it; from an open map edge they walk in from off screen.
 	touch()
 	var d := n.duplicate()
 	d.tile = from
 	var act := w.add_npc(d)
 	act.scripted = true
-	var sill = w.door_sill(from)
+	var ent = _way_in(from)
 	var pts := []
-	if sill != null:
-		act.position = sill
-		act.face(0)
+	if ent != null:
+		act.position = ent.pos
+		act.face(0 if (ent.step as Vector2).y > 0 else 1)
 		act.modulate.a = 0.0
 		Sfx.play("door", 1.0, -10.0)
 		var tw := act.create_tween()
 		tw.tween_property(act, "modulate:a", 1.0, 0.35)
 		await tw.finished
-		pts.append((sill as Vector2) + Vector2(0, 14))
+		pts.append((ent.pos as Vector2) + (ent.step as Vector2))
+		if w.entrance(from) == null:
+			pts.append(w.tile_center(from))
 	else:
 		act.position = w.offstage(from)
 		pts.append(w.tile_center(from))
 	for t in path:
 		pts.append(w.tile_center(t) if t is Vector2i else t)
+	_trace("enter", str(n.get("id", n.get("who", ""))), [act.position] + pts, ent == null)
 	if is_instance_valid(act):
 		await act.walk_to(pts, speed)
 		if is_instance_valid(act) and n.has("dir"):
@@ -351,10 +366,42 @@ func enter(n: Dictionary, from: Vector2i, path: Array = [], speed: float = 48.0)
 	return act
 
 
+func _trace(kind: String, who: String, pts: Array, via_edge: bool) -> void:
+	## PK_TRACE=1 (autotests): audit a walk-on / walk-off. Every step must
+	## stay on the map and off solid wall, except inside a door, doorway or
+	## stairs, or on the final stretch off an open map edge.
+	if OS.get_environment("PK_TRACE") == "":
+		return
+	var walls := 0
+	var outside := 0
+	var props := 0
+	for i in range(1, pts.size()):
+		var a: Vector2 = pts[i - 1]
+		var b: Vector2 = pts[i]
+		var n := maxi(1, int(a.distance_to(b) / 2.0))
+		var last_leg := i == pts.size() - 1
+		for k in n + 1:
+			var p := a.lerp(b, float(k) / n)
+			var t := Vector2i(floori(p.x / World.TILE), floori((p.y - 3.0) / World.TILE))
+			var ch := w.char_at(t)
+			if t.x < 0 or t.y < 0 or t.x >= w.tw or t.y >= w.th:
+				if not (via_edge and ((kind == "leave" and last_leg) or (kind == "enter" and i == 1))):
+					outside += 1
+			elif ArtTiles.is_solid(ch) and not "DdvSU".contains(ch):
+				if not (via_edge and ((kind == "leave" and last_leg) or (kind == "enter" and i == 1))):
+					walls += 1
+			elif w.solid.has(t) and not "DdvSU".contains(ch):
+				props += 1
+	var ok := walls == 0 and outside == 0
+	print("[trace] %s %s %s on %s: %s%s" % ["ok " if ok else "BAD", kind, who, w.def.id,
+		"clean" if ok else "walls=%d outside=%d" % [walls, outside], "" if props == 0 else " (crosses furniture x%d)" % props])
+
+
 func leave(id: String, path: Array = [], speed: float = 48.0, keep: bool = false) -> void:
-	## Walks someone out: along path, then through the door at its last tile
-	## (fading out in the doorway) or on past the view edge; then removes
-	## them (keep: just hides them, for people who come back later).
+	## Walks someone out: along path, then out through the entrance at its
+	## last tile (or the nearest one), fading out in the opening; walking on
+	## past the view edge only at an open map edge. Then removes them (keep:
+	## just hides them, for people who come back later).
 	var act := a(id)
 	if act == null:
 		return
@@ -363,18 +410,26 @@ func leave(id: String, path: Array = [], speed: float = 48.0, keep: bool = false
 	var pts := []
 	for t in path:
 		pts.append(w.tile_center(t) if t is Vector2i else t)
-	var last: Variant = path[-1] if not path.is_empty() else null
-	var sill = w.door_sill(last) if last is Vector2i else null
-	if sill != null:
-		pts[-1] = (sill as Vector2) + Vector2(0, 14)
-		pts.append(sill)
+	var last: Vector2i
+	if not path.is_empty() and path[-1] is Vector2i:
+		last = path[-1]
+	elif not pts.is_empty():
+		last = Vector2i(floori((pts[-1] as Vector2).x / World.TILE), floori((pts[-1] as Vector2).y / World.TILE))
 	else:
-		var from: Vector2i = last if last is Vector2i else Vector2i(floori(act.position.x / World.TILE), floori(act.position.y / World.TILE))
-		pts.append(w.offstage(from))
+		last = Vector2i(floori(act.position.x / World.TILE), floori(act.position.y / World.TILE))
+	var ent = _way_in(last)
+	if ent != null:
+		if w.entrance(last) != null and not pts.is_empty():
+			pts.pop_back()
+		pts.append((ent.pos as Vector2) + (ent.step as Vector2))
+		pts.append(ent.pos)
+	else:
+		pts.append(w.offstage(last))
+	_trace("leave", id, [act.position] + pts, ent == null)
 	await act.walk_to(pts, speed)
 	if not is_instance_valid(act):
 		return
-	if sill != null:
+	if ent != null:
 		Sfx.play("door", 0.9, -10.0)
 		var tw := act.create_tween()
 		tw.tween_property(act, "modulate:a", 0.0, 0.35)

@@ -179,7 +179,9 @@ func _pilots_leave() -> void:
 		var act := s.a(gone[i])
 		act.scripted = true
 		var from := Vector2i(floori(act.position.x / 16.0), floori(act.position.y / 16.0))
-		var path := [Vector2i(from.x, 3), Vector2i(21, 3), Vector2i(21, 1)]
+		# along the open row under the windows and the archive console, then
+		# up through the Concourse doors
+		var path := [Vector2i(from.x, 4), Vector2i(21, 4), Vector2i(21, 1)]
 		var slow := 28.0 if gone[i] == "midas" else 44.0
 		if i == gone.size() - 1:
 			await s.leave(gone[i], path, slow)
@@ -725,7 +727,7 @@ func examine(ev: Dictionary) -> void:
 			else:
 				await s.say("", "Stars, slow and enormous. Somewhere out there, worlds are waiting to be defended.")
 		"exitdoor":
-			await s.say("", "The door to the briefing halls. It only opens from the other side.")
+			await s.say("", "The way back to the briefing halls. A shutter is down just beyond the doorway. It only lifts from the other side.")
 		_:
 			# doors, and everything else in the building
 			await s.wing.examine(ev)
