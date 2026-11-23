@@ -65,7 +65,7 @@ static func make(kind: String, v: int = 0) -> PixBuf:
 		"workshop": return workshop(v)
 		"memorial": return memorial()
 		"door": return door(v)
-		"widedoor": return door(v, 32)
+		"widedoor": return door(v, 32 - ArtTiles.DOOR_INSET * 2)
 		"tv": return tv()
 		"clock": return clock()
 		"calendar": return calendar()

@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-23 16:03 EST — `bugfix_doors_slightly_narrower` (v0.64.4)
+
+Two-tile doors are a little narrower.
+
+- Doors across two-tile doorways were a bit too wide. They are now drawn 3 px in from each side (26 px opening, 22 px door), still wide enough for a character, with the wall filling the edges. Single-tile doors are unchanged.
+- The swinging bedroom doors upstairs at home are narrowed to match their frames.
+- Code: new `ArtTiles.DOOR_INSET` and `ArtTiles._narrow` (scripts/art_tiles.gd) applied to `_door`, `_doorway` and `_threshold`; the `widedoor` prop in scripts/art_props.gd is `32 - DOOR_INSET * 2` wide. doorwalk: 108 checks, 0 stuck.
+
 ## 2026-11-23 16:00 EST — `bugfix_sign_letters_bleed_top_border` (v0.64.3)
 
 Sign letters sit inside the plate instead of over its top border.
