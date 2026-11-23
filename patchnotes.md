@@ -1,5 +1,18 @@
 # Patch Notes
 
+## 2026-11-23 05:26 EST — `feature_hub_building_layout` (v0.62.0)
+
+The between-mission hub is now laid out like a real building, and the dormitories are open.
+
+- The Pilot Commons is just the lounge now: couches, windows, the vending machine, the roster board and the people. Hiro, Pala, Midas and the recruits still hang out there, and that's still where you have your one conversation each interval.
+- New Operations room, through the OPERATIONS door in the Commons: the deploy terminal, the comm booth for calls home, the sim pod, a planet hologram and the deployment log. The first time you use the terminal, the other pilots crowd in behind you.
+- New Main Concourse, through the CONCOURSE door: a T-shaped hall with a building directory. Off it are the Engineering Bay (the workshop, parts shelves, diagnostics, and the sealed launch-cradle door), the Dormitories, stairs down to the Lower Deck and stairs up to the Upper Deck.
+- Lower Deck: the rec room, mess hall and training gym. Upper Deck: the archive, observation deck, memorial hall and roof access. The rooms are no longer all one size: the mess hall is big, the archive narrow and deep, and the observation deck wide with a full window wall. The sealed doors and their unlock rules are unchanged.
+- Dormitories: your room (your locker and its drawing moved here, plus your bunk and desk), Hiro's, Pala's and Midas' rooms, and a washroom. You knock before going into someone else's room. Each room shows who lives there and changes with the story: Hiro's doodles get torn down, Pala's binders disappear, and after Midas dies his room is stripped and his nameplate removed.
+- Nameplates over every door and stairwell show where they lead. Each area flashes its name when you walk in. Once your conversation is spent, the marker points to the next step back toward the Operations terminal from wherever you are.
+- Hiro, when he's far gone, now stands at the Commons window instead of the old sim pod.
+- Code: new `scripts/building.gd` (Building: every hub map, PARENT/DOORS/ARRIVE links, arrival(), room sizes, room_door()/room_out()). `scripts/maps.gd`: commons() and wing_room() delegate to Building, and the old wing() corridor is gone. `scripts/world.gd`: _build_signs() for wall plaques. `scripts/story.gd`: routes commons/ops to StoryHub and the rest of the building to StoryWing. `scripts/story_wing.gd`: build(), go(), mark_route(), _knock(), first visits and _building_examine(); replaces enter_wing/_enter_room. `scripts/story_hub.gd`: terminal, comm and sim pod handled in Operations, mark_route() replaces the fixed marker, the pilots walk in for the first terminal visit, exit() and an examine fallthrough to StoryWing. `scripts/story_scenes.gd`: hiro_alone and room-scene positions and exit paths. `tools/autotest.gd`: `PK_TEST=building` (alias `wing`) tours every map through its doors; new `PK_TEST=buildcheck` checks that each map's arrivals are on open floor and that every exit, door, interactable and NPC can be reached. doorwalk, stuckcheck, hub and loop were updated for the new layout.
+
 ## 2026-11-19 21:08 EST — `bugfix_free_missions_no_powerups` (v0.61.5)
 
 Free Missions are flown with no power-ups.

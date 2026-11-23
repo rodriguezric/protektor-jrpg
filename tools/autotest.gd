@@ -1197,9 +1197,10 @@ func _run(scenario: String) -> void:
 			snap.on = false
 			print("[block7] departure done, map=%s" % main.world.def.id)
 			get_tree().quit()
-		"wing":
-			# the pilot wing: the corridor, then every room (all unlocked), its
-			# first-visit scene and a couple of its things. PK_DEAD=1 kills Midas.
+		"wing", "building":
+			# the whole hub building: every map, entered the way a player
+			# would (doors examined, the same handler), its first-visit scene
+			# and a couple of its things. PK_DEAD=1 kills Midas.
 			Game.new_game()
 			Game.player_name = "Ari"
 			Game.chapter = "hub"
@@ -1210,7 +1211,7 @@ func _run(scenario: String) -> void:
 				Game.story.midas_dead = true
 				Game.story.midas_death_announced = true
 			main.fade_rect.color.a = 0.0
-			main.load_map(main.story.hub._map(), Vector2i(22, 2), 1)
+			main.load_map(main.story.hub._map(), Vector2i(21, 2), 1)
 			await wait(0.5)
 			var snap := {"on": true, "k": 0}
 			var snapper := func() -> void:
@@ -1219,28 +1220,114 @@ func _run(scenario: String) -> void:
 					await shot("wing_%03d" % snap.k)
 					snap.k += 1
 			snapper.call()
-			await main.story.examine({"id": "wing"})
-			await wait(0.6)
+			var skip := ["rec_tv", "rec_starbox", "simpod", "lore", "workshop", "terminal", "comm", "pingpong", "cards", "drill"]
+			var tour := ["ops", "commons", "concourse", "engineering", "concourse", "dorms", "dorm_you", "dorms", "dorm_hiro", "dorms",
+				"dorm_pala", "dorms", "dorm_midas", "dorms", "dorm_wash", "dorms", "concourse", "rec_deck", "room_rec", "rec_deck",
+				"room_mess", "rec_deck", "room_gym", "rec_deck", "concourse", "upper_deck", "room_archive", "upper_deck",
+				"room_observation", "upper_deck", "room_memorial", "upper_deck", "room_rooftop", "upper_deck", "concourse", "commons"]
 			var only := OS.get_environment("PK_ROOM")
-			for id in Maps.WING_ROOMS:
-				if only != "" and id != only:
+			var looked := {}
+			for to in tour:
+				if only != "" and to != only and Building.PARENT.has(to) and Building.PARENT[to] != "commons" and not to.ends_with("deck") and to != "dorms":
 					continue
-				await main.story.examine({"id": "room:" + id})
-				await wait(1.0)
+				var from: String = main.world.def.id
+				var e := {"id": "go:" + to}
+				# going back up the tree is a walk-out exit, like a player leaving
+				for ex in main.world.def.get("exits", []):
+					if ex.to == to:
+						e = {}
+						await main.story.exit(ex)
+						break
+				if not e.is_empty():
+					await main.story.examine(e)
+				await wait(0.8)
 				var w = main.world
-				for ev in w.def.get("events", []).slice(0, 1):
-					if not ["rec_tv"].has(ev.id):
+				var pt := Vector2i(floori(w.player.position.x / 16.0), floori((w.player.position.y - 3) / 16.0))
+				print("[wing] %s -> %s (map %s, at %s, solid=%s)" % [from, to, w.def.id, pt, w.solid.has(pt)])
+				if looked.has(to):
+					continue
+				looked[to] = true
+				var n := 0
+				for ev in w.def.get("events", []):
+					if n < 1 and not str(ev.id).begins_with("go:") and not skip.has(ev.id):
 						await main.story.examine(ev)
+						n += 1
 				for pr in w.def.props:
-					if pr.has("event") and not ["rec_tv", "rec_starbox", "simpod", "lore"].has(pr.event.id):
+					if pr.has("event") and not skip.has(pr.event.id):
 						await main.story.examine(pr.event)
 						break
-				print("[wing] %s ok (map %s)" % [id, w.def.id])
-				await main.story.exit({"to": "wing"})
-				await wait(0.4)
-			await main.story.exit({"to": "commons", "tile": Vector2i(22, 2), "dir": 0})
 			snap.on = false
 			print("[wing] back in %s; flags stargazed=%s tomato=%s" % [main.world.def.id, Game.story.get("stargazed"), Game.story.get("midas_tomato")])
+			get_tree().quit()
+		"buildcheck":
+			# static checks on every hub-building map: arrivals land on open
+			# floor, and every door, exit and interactable can be reached
+			# from where you arrive
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "hub"
+			main.fade_rect.color.a = 0.0
+			var ids := ["commons"]
+			ids.append_array(Building.PARENT.keys())
+			var bad := []
+			for id in ids:
+				var mp: Dictionary = main.story.wing.build(id)
+				var arrivals := []
+				var froms: Array = [Building.PARENT.get(id, "")]
+				froms.append_array(Building.DOORS.get(id, {}).keys())
+				for ex in mp.get("exits", []):
+					froms.append(ex.to)
+				for fr in froms:
+					if fr != "":
+						arrivals.append([fr, Building.arrival(id, fr, mp)])
+				var w = main.load_map(mp, (arrivals[0][1][0] as Vector2i), 1)
+				await wait(0.05)
+				var open_t := func(t: Vector2i) -> bool:
+					return t.x >= 0 and t.y >= 0 and t.x < w.tw and t.y < w.th and not w.solid.has(t)
+				for arr in arrivals:
+					if not open_t.call(arr[1][0]):
+						bad.append("%s: arrival from %s at %s is blocked" % [id, arr[0], arr[1][0]])
+					for ex in mp.get("exits", []):
+						if (ex.rect as Rect2i).has_point(arr[1][0]):
+							bad.append("%s: arrival from %s at %s is on an exit" % [id, arr[0], arr[1][0]])
+				# flood fill from the first arrival
+				var start: Vector2i = arrivals[0][1][0]
+				var seen := {start: true}
+				var q := [start]
+				while not q.is_empty():
+					var c: Vector2i = q.pop_back()
+					for dv in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+						var nt: Vector2i = c + dv
+						if not seen.has(nt) and open_t.call(nt):
+							seen[nt] = true
+							q.append(nt)
+				var near := func(t: Vector2i) -> bool:
+					for dv in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
+						if seen.has(t + dv):
+							return true
+					return false
+				for ex in mp.get("exits", []):
+					var ok := false
+					var r: Rect2i = ex.rect
+					for yy in range(r.position.y, r.end.y):
+						for xx in range(r.position.x, r.end.x):
+							if seen.has(Vector2i(xx, yy)):
+								ok = true
+					if not ok:
+						bad.append("%s: exit to %s unreachable" % [id, ex.to])
+				for t in w.events:
+					if not seen.has(t) and not near.call(t):
+						bad.append("%s: event %s at %s unreachable" % [id, w.events[t].id, t])
+				for a in arrivals:
+					if not seen.has(a[1][0]):
+						bad.append("%s: arrival from %s not connected" % [id, a[0]])
+				for npc in mp.get("npcs", []):
+					if not near.call(npc.tile) and not seen.has(npc.tile):
+						bad.append("%s: npc %s unreachable" % [id, npc.get("id", npc.get("who"))])
+				print("[buildcheck] %s %dx%d arrivals=%d reachable=%d events=%d" % [id, w.tw, w.th, arrivals.size(), seen.size(), w.events.size()])
+			print("[buildcheck] %d maps, %d problems" % [ids.size(), bad.size()])
+			for b in bad:
+				print("[buildcheck] BAD ", b)
 			get_tree().quit()
 		"hubgame":
 			# a Pilot Wing game (PK_HG = pingpong / cards / drill) played by a bot
@@ -1410,15 +1497,31 @@ func _run(scenario: String) -> void:
 				await step.call("front door out", Vector2i(15, 3), "up", "walk")
 				await step.call("Block 7 door home", Vector2i(9, 3), "up", "walk")
 				Game.chapter = "hub"
-				main.load_map(main.story.hub._map(), Vector2i(22, 3), 1)
+				main.load_map(main.story.hub._map(), Vector2i(21, 3), 1)
 				await wait(0.4)
-				await step.call("Commons door to the wing", Vector2i(22, 2), "up", "examine")
-				for id in Maps.WING_ROOMS:
+				await step.call("Commons door to Operations", Vector2i(25, 2), "up", "examine")
+				await step.call("leave Operations", Vector2i(8, 8), "down", "walk")
+				await step.call("Commons door to the Concourse", Vector2i(21, 2), "up", "examine")
+				await step.call("Concourse door to Engineering", Vector2i(6, 2), "up", "examine")
+				await step.call("leave Engineering", Vector2i(9, 8), "down", "walk")
+				await step.call("Concourse door to the dorms", Vector2i(19, 2), "up", "examine")
+				for dr in ["dorm_you", "dorm_hiro", "dorm_wash"]:
+					await step.call("dorm door " + dr, Vector2i(Building.DOORS.dorms[dr], 2), "up", "examine")
+					await step.call("leave " + dr, Vector2i(4, 5), "down", "walk")
+				await step.call("dorms back to the Concourse", Vector2i(12, 4), "down", "walk")
+				await step.call("stairs down to the lower deck", Vector2i(1, 4), "down", "walk")
+				for id in ["rec", "mess", "gym"]:
+					await step.call("lower deck door " + id, Vector2i(Building.DOORS.rec_deck["room_" + id], 2), "up", "examine")
+					await step.call("leave " + id, Building.room_door(id) + Vector2i(0, -1), "down", "walk")
+				await step.call("stairs up from the lower deck", Vector2i(1, 3), "up", "walk")
+				await step.call("stairs up to the upper deck", Vector2i(27, 3), "up", "walk")
+				for id in ["archive", "observation", "memorial", "rooftop"]:
 					if not StoryWing.unlocked(id):
 						continue
-					await step.call("wing door " + id, Vector2i(Maps.WING_DOOR_X[id], 2), "up", "examine")
-					await step.call("leave " + id, Vector2i(7, 7), "down", "walk")
-				await step.call("wing back to the Commons", Vector2i(14, 4), "down", "walk")
+					await step.call("upper deck door " + id, Vector2i(Building.DOORS.upper_deck["room_" + id], 2), "up", "examine")
+					await step.call("leave " + id, Building.room_door(id) + Vector2i(0, -1), "down", "walk")
+				await step.call("stairs down from the upper deck", Vector2i(1, 5), "down", "walk")
+				await step.call("Concourse back to the Commons", Vector2i(13, 8), "down", "walk")
 				Game.chapter = "prologue"
 			print("[doorwalk] path: %s" % ", ".join(checks.log.slice(0, 14)))
 			print("[doorwalk] %d door checks, %d stuck: %s" % [checks.n, fails.size(), fails])
@@ -1457,7 +1560,7 @@ func _run(scenario: String) -> void:
 			print("[stuck] overlapped by Pip: stepped away %.0f px (want > 0)" % w.player.position.distance_to(b2))
 			# a map-changing interaction: entering a Pilot Wing room
 			Game.chapter = "hub"
-			main.load_map(Maps.wing(), Vector2i(2, 2), 1)
+			main.load_map(Building.rec_deck(), Vector2i(7, 2), 1)
 			await wait(0.4)
 			var unlocked_mid := []
 			var watch := {"on": true}
@@ -1708,7 +1811,11 @@ func _run(scenario: String) -> void:
 			await shot("hub_menu")
 			await tap("accept", 0.5)
 			auto_talk = true
-			w.player.position = w.tile_center(Vector2i(14, 11))
+			await main.story.wing.go("ops")
+			await wait(0.5)
+			await shot("hub_ops")
+			w = main.world
+			w.player.position = w.tile_center(Vector2i(9, 6))
 			w.player.face(1)
 			await wait(0.5)
 			await tap("accept", 1.0)
@@ -1743,7 +1850,10 @@ func _run(scenario: String) -> void:
 			await tap("accept", 0.5)
 			await wait(14.0)
 			await shot("loop_after_pala")
-			w.player.position = w.tile_center(Vector2i(14, 11))
+			await main.story.wing.go("ops")
+			await wait(0.5)
+			w = main.world
+			w.player.position = w.tile_center(Vector2i(9, 6))
 			w.player.face(1)
 			await wait(0.3)
 			await tap("accept", 0.5)

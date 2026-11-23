@@ -62,17 +62,17 @@ func begin(chapter: String) -> void:
 func _owner() -> Object:
 	if w == null:
 		return null
-	if str(w.def.id).begins_with("room_"):
-		return wing
 	match w.def.id:
 		"home", "home_up", "parade", "block7":
 			return prologue
-		"commons":
+		"commons", "ops":
+			# the pilots, the terminal and the comm booth
 			return hub
-		"wing":
-			return wing
 		"launch_wing":
 			return endings
+	if Building.is_building(str(w.def.id)):
+		# the rest of the building: halls, dorms, rooms
+		return wing
 	return academy
 
 
