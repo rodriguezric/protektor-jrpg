@@ -439,181 +439,21 @@ static func recovery() -> Dictionary:
 	return {"id": "recovery", "name": "Recovery Bay", "theme": "academy", "tint": Color(1.0, 1.0, 1.02), "rows": rows, "props": props, "npcs": npcs}
 
 
-# --------------------------------------------------------------- commons ---
+# ------------------------------------------------------- the hub building ---
+## Between missions the Academy is one building (scripts/building.gd): the
+## Commons, Operations, the Main Concourse, the Engineering Bay, the dorms
+## and the two decks of rooms. These stay as shorthands.
+
+const WING_ROOMS := Building.ROOMS
+const WING_NAMES := Building.ROOM_NAMES
+
 
 static func commons() -> Dictionary:
-	var rows := [
-		"#####WW##WW##WW##WW###D#D###",
-		"#####WW##WW##WW##WW###D#D###",
-		"#..........................#",
-		"#..........................#",
-		"#.,,,,,,,..................#",
-		"#.,,,,,,,..................#",
-		"#.,,,,,,,..................#",
-		"#.,,,,,,,..................#",
-		"#..........................#",
-		"#..........::::::..........#",
-		"#..........::::::..........#",
-		"#..........::==::..........#",
-		"#............==............#",
-		"###########DD###############",
-		"###########DD###############",
-	]
-	var props := [
-		p("simpod", 2, 3, {"anim": 2, "fps": 1.0, "area": Rect2i(2, 2, 2, 2), "offset": Vector2(8, 0), "light": Pal.SYNC, "lr": 14, "pulse": 2.0, "event": {"id": "simpod"}}),
-		p("workshop", 6, 11, {"anim": 2, "fps": 1.5, "area": Rect2i(6, 11, 1, 1), "light": Pal.LEMON, "lr": 16, "pulse": 2.0, "event": {"id": "workshop"}, "id": "workshop"}),
-		p("couch", 4, 5, {"offset": Vector2(8, 0), "area": Rect2i(4, 5, 2, 1)}),
-		p("couch", 4, 8, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(4, 8, 2, 1)}),
-		p("vending", 21, 2, {"anim": 2, "fps": 1.5, "event": {"id": "vending"}, "light": Pal.GLOW, "lr": 10}),
-		p("console", 23, 3, {"anim": 2, "fps": 2.0, "area": Rect2i(22, 3, 2, 1), "offset": Vector2(-8, 0), "light": Pal.SYNC, "lr": 14, "event": {"id": "archive"}}),
-		p("crate", 26, 2, {}), p("crate", 26, 3, {}),
-		p("board", 9, 1, {"wall": true, "id": "board", "area": Rect2i(), "offset": Vector2(8, 0)}),
-		p("comm", 26, 8, {"anim": 2, "fps": 2.0, "event": {"id": "comm"}, "light": Pal.GLOW, "lr": 10, "id": "comm"}),
-		p("terminal", 14, 10, {"anim": 2, "fps": 3.0, "event": {"id": "terminal"}, "light": Pal.SYNC, "lr": 22, "pulse": 3.0, "id": "terminal"}),
-		p("locker", 18, 12, {}), p("locker", 19, 12, {"v": 1, "event": {"id": "locker"}}), p("locker", 20, 12, {}),
-		p("plant", 1, 2, {"v": 1, "event": {"id": "plant"}}),
-		p("table", 21, 7, {"v": 1, "offset": Vector2(8, 0), "area": Rect2i(21, 7, 2, 1)}),
-		p("chair", 20, 7, {"v": 1, "offset": Vector2(2, 0), "area": Rect2i()}),
-		p("pillar", 9, 9, {}), p("pillar", 18, 9, {}),
-	]
-	return {"id": "commons", "name": "Pilot Commons", "theme": "academy", "tint": Color(0.82, 0.88, 1.0), "rows": rows, "props": props, "npcs": [],
-		"music": "low_mechanical_ambient",
-		"events": [{"tile": Vector2i(9, 1), "id": "board"}, {"tile": Vector2i(10, 1), "id": "board"}, {"tile": Vector2i(24, 1), "id": "dorm"},
-			{"tile": Vector2i(22, 1), "id": "wing"},
-			{"tile": Vector2i(11, 13), "id": "exitdoor"}, {"tile": Vector2i(12, 13), "id": "exitdoor"},
-			{"tile": Vector2i(5, 1), "id": "spacewindow"}, {"tile": Vector2i(6, 1), "id": "spacewindow"}, {"tile": Vector2i(13, 1), "id": "spacewindow"},
-			{"tile": Vector2i(14, 1), "id": "spacewindow"}, {"tile": Vector2i(17, 1), "id": "spacewindow"}, {"tile": Vector2i(18, 1), "id": "spacewindow"}]}
-
-
-# ------------------------------------------------------------ pilot wing ---
-## Off the Commons: a corridor with a door to each room. Doors are opened by
-## examining them (face the door, Z); rooms are left by walking out of the
-## doorway at the bottom.
-
-const WING_ROOMS := ["rec", "mess", "archive", "gym", "observation", "memorial", "rooftop"]
-const WING_DOOR_X := {"rec": 2, "mess": 6, "archive": 10, "gym": 14, "observation": 18, "memorial": 22, "rooftop": 26}
-const WING_NAMES := {"rec": "Rec Room", "mess": "Mess Hall", "archive": "Archive", "gym": "Training Gym",
-	"observation": "Observation Deck", "memorial": "Memorial Hall", "rooftop": "Rooftop Garden"}
-
-
-static func wing() -> Dictionary:
-	var top := "##D###D###D###D###D###D###D###"
-	var rows := [top, top, "#............................#", "#............................#", "#............................#",
-		"#############dd###############"]
-	var props := [
-		p("bench", 4, 4, {"offset": Vector2(8, 0), "area": Rect2i(4, 4, 2, 1)}),
-		p("bench", 20, 4, {"offset": Vector2(8, 0), "area": Rect2i(20, 4, 2, 1)}),
-		p("plant", 1, 2, {"v": 1}), p("plant", 28, 2, {}),
-		p("pillar", 8, 4, {}), p("pillar", 24, 4, {}),
-	]
-	var events := []
-	for id in WING_ROOMS:
-		events.append({"tile": Vector2i(WING_DOOR_X[id], 1), "id": "room:" + id})
-	return {"id": "wing", "name": "Pilot Wing", "theme": "academy", "tint": Color(0.84, 0.88, 1.0), "rows": rows, "props": props, "npcs": [],
-		"music": "low_mechanical_ambient", "events": events,
-		"exits": [{"rect": Rect2i(13, 5, 2, 1), "to": "commons", "tile": Vector2i(22, 2), "dir": 0}]}
+	return Building.commons()
 
 
 static func wing_room(id: String) -> Dictionary:
-	## One room off the wing: 16x9, the way out at the bottom middle.
-	var rows := ["################", "################"]
-	for i in 6:
-		rows.append("#..............#")
-	rows.append("#######dd#######")
-	var props := []
-	var npcs := []
-	var events := []
-	var tint := Color(0.86, 0.9, 1.0)
-	var music := "low_mechanical_ambient"
-	match id:
-		"rec":
-			rows[0] = "####WW####WW####"
-			rows[1] = rows[0]
-			props = [
-				p("tv", 7, 1, {"offset": Vector2(8, 0), "wall": true, "lift": 7, "area": Rect2i(), "light": Pal.SYNC, "lr": 16, "light_off": Vector2(0, -14), "pulse": 1.2}),
-				p("couch", 7, 4, {"offset": Vector2(8, 0), "area": Rect2i(7, 4, 2, 1), "v": 1}),
-				p("starbox", 2, 2, {"anim": 2, "fps": 1.5, "event": {"id": "rec_starbox"}, "light": Pal.SYNC, "lr": 8, "light_off": Vector2(0, -14)}),
-				p("pingpong", 12, 6, {"offset": Vector2(8, 0), "area": Rect2i(11, 6, 3, 1), "event": {"id": "pingpong"}}),
-				p("table", 3, 6, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(3, 6, 2, 1), "event": {"id": "cards"}}),
-				p("chair", 2, 6, {"v": 1, "offset": Vector2(2, 0), "area": Rect2i()}),
-				p("plant", 14, 2, {}),
-			]
-			events = [{"tile": Vector2i(7, 1), "id": "rec_tv"}, {"tile": Vector2i(8, 1), "id": "rec_tv"}]
-			npcs = [{"id": "fan", "spec": Data.EXTRAS[1], "tile": Vector2i(9, 4), "dir": 1, "pose": "sit", "no_turn": true}]
-		"mess":
-			props = [
-				p("counter", 3, 2, {"offset": Vector2(8, 0), "area": Rect2i(3, 2, 2, 1), "event": {"id": "tray"}}),
-				p("counter", 5, 2, {"offset": Vector2(8, 0), "v": 1, "area": Rect2i(5, 2, 2, 1), "event": {"id": "cereal"}}),
-				p("vending", 12, 2, {"anim": 2, "fps": 1.5, "event": {"id": "dispenser"}, "light": Pal.GLOW, "lr": 10}),
-				p("board", 9, 1, {"wall": true, "area": Rect2i(), "offset": Vector2(8, 0)}),
-				p("table", 4, 5, {"offset": Vector2(8, 0), "area": Rect2i(3, 5, 4, 1), "v": 1}),
-				p("table", 10, 5, {"offset": Vector2(8, 0), "area": Rect2i(9, 5, 4, 1), "v": 1}),
-			]
-			events = [{"tile": Vector2i(9, 1), "id": "quota"}, {"tile": Vector2i(10, 1), "id": "quota"}]
-			npcs = [{"id": "gossip0", "spec": Data.EXTRAS[0], "tile": Vector2i(4, 6), "dir": 1},
-				{"id": "gossip1", "spec": Data.EXTRAS[2], "tile": Vector2i(11, 6), "dir": 1}]
-		"archive":
-			tint = Color(0.8, 0.84, 0.98)
-			props = [
-				p("shelf", 2, 2, {"event": {"id": "shelf"}}), p("shelf", 4, 2, {"event": {"id": "shelf"}}),
-				p("shelf", 11, 2, {"event": {"id": "shelf"}}), p("shelf", 13, 2, {"event": {"id": "shelf"}}),
-				p("terminal", 7, 4, {"anim": 2, "fps": 2.0, "event": {"id": "lore"}, "light": Pal.SYNC, "lr": 18, "pulse": 2.0}),
-				p("terminal", 9, 4, {"anim": 2, "fps": 2.5, "event": {"id": "lore"}, "light": Pal.SYNC, "lr": 18, "pulse": 2.5}),
-				p("locker", 14, 6, {"v": 1, "event": {"id": "cabinet"}}),
-				p("crate", 2, 7, {"event": {"id": "pala_stack"}}),
-			]
-		"gym":
-			props = [
-				p("simpod", 2, 3, {"anim": 2, "fps": 1.0, "area": Rect2i(2, 2, 2, 2), "offset": Vector2(8, 0), "light": Pal.SYNC, "lr": 14, "pulse": 2.0, "event": {"id": "simpod"}}),
-				p("treadmill", 7, 3, {"anim": 2, "fps": 3.0, "offset": Vector2(8, 0), "area": Rect2i(7, 3, 2, 1), "event": {"id": "treadmill"}}),
-				p("punchbag", 12, 3, {"event": {"id": "punchbag"}}),
-				p("console", 13, 6, {"anim": 2, "fps": 2.0, "area": Rect2i(12, 6, 2, 1), "offset": Vector2(-8, 0), "light": Pal.GLOW, "lr": 12, "event": {"id": "drill"}}),
-				p("board", 9, 1, {"wall": true, "area": Rect2i(), "offset": Vector2(8, 0)}),
-			]
-			events = [{"tile": Vector2i(9, 1), "id": "times"}, {"tile": Vector2i(10, 1), "id": "times"}]
-		"observation":
-			tint = Color(0.72, 0.76, 0.98)
-			rows[0] = "#WWWWWWWWWWWWWW#"
-			rows[1] = rows[0]
-			props = [
-				p("bench", 4, 5, {"offset": Vector2(8, 0), "area": Rect2i(4, 5, 2, 1)}),
-				p("bench", 10, 5, {"offset": Vector2(8, 0), "area": Rect2i(10, 5, 2, 1)}),
-				p("telescope", 13, 3, {"event": {"id": "telescope"}}),
-				p("plant", 1, 7, {}),
-			]
-			for x in range(1, 15):
-				events.append({"tile": Vector2i(x, 1), "id": "deckwindow"})
-		"memorial":
-			tint = Color(0.78, 0.74, 0.86)
-			music = ""
-			props = [
-				p("board", 7, 1, {"wall": true, "area": Rect2i(), "offset": Vector2(8, 0), "v": 12, "id": "wall"}),
-				p("candles", 7, 3, {"anim": 2, "fps": 3.0, "offset": Vector2(8, 0), "area": Rect2i(7, 3, 2, 1), "light": Pal.LEMON, "lr": 20, "pulse": 4.0, "event": {"id": "candles"}}),
-				p("podium", 12, 5, {"event": {"id": "guestbook"}}),
-				p("bench", 3, 6, {"offset": Vector2(8, 0), "area": Rect2i(3, 6, 2, 1)}),
-				p("plant", 14, 2, {}), p("plant", 1, 2, {}),
-			]
-			events = [{"tile": Vector2i(7, 1), "id": "names"}, {"tile": Vector2i(8, 1), "id": "names"}]
-		"rooftop":
-			tint = Maps.NIGHT.lerp(Color.WHITE, 0.35)
-			rows = ["................", "................"]
-			for i in 6:
-				rows.append("gggggggggggggggg")
-			rows.append("#######dd#######")
-			props = [
-				p("planter", 3, 3, {"offset": Vector2(8, 0), "area": Rect2i(2, 3, 3, 1), "event": {"id": "planter"}}),
-				p("planter", 12, 3, {"offset": Vector2(8, 0), "area": Rect2i(11, 3, 3, 1), "event": {"id": "planter"}}),
-				# Midas' tomatoes: fruiting while he's alive, wilted once he's
-				# gone, green again once someone waters them
-				p("planter", 3, 6, {"offset": Vector2(8, 0), "area": Rect2i(2, 6, 3, 1), "id": "tomato", "event": {"id": "tomato"},
-					"v": 1 if not Game.midas_dead() else (0 if bool(Game.story.get("watered_tomato", false)) else 2)}),
-				p("bench", 11, 6, {"offset": Vector2(8, 0), "area": Rect2i(11, 6, 2, 1)}),
-				p("streetlamp", 8, 3, {"light": Pal.LEMON, "lr": 26, "light_off": Vector2(0, -38), "pulse": 1.0}),
-			]
-			events = [{"tile": Vector2i(7, 1), "id": "rooftop_sky"}]
-	return {"id": "room_" + id, "name": WING_NAMES[id], "theme": "academy" if id != "rooftop" else "outdoor", "tint": tint, "rows": rows,
-		"props": props, "npcs": npcs, "music": music, "events": events,
-		"exits": [{"rect": Rect2i(7, 8, 2, 1), "to": "wing", "tile": Vector2i(WING_DOOR_X[id], 2), "dir": 0}]}
+	return Building.room(id)
 
 
 # ----------------------------------------------------------- launch wing ---

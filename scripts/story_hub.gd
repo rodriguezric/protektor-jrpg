@@ -45,16 +45,20 @@ func enter(res: Dictionary) -> void:
 			s.w.player.emote("sync")
 			await s.say("", "You take a Neural Stabilizer. The cold settles. The failure is cleared from your record.")
 	elif r == "win" and int(res.get("credits", 0)) > 0 and int(Game.story.interval_count) <= 2:
-		await s.say("system", "Deployment credits issued. Engineering will accept them at the terminal by the lockers.")
+		await s.say("system", "Deployment credits issued. Engineering will accept them at the workbench in the Engineering Bay.")
 	if int(Game.story.interval_count) == 1:
 		await s.say("", ["They don't send you back to the dorms right away.", "There's time.", "Not much. But enough."])
+	if not bool(Game.story.get("building_told", false)):
+		Game.story.building_told = true
+		await s.say("system", ["Operations and the deployment terminal: through the door marked OPERATIONS.",
+			"Dormitories, Engineering and both decks: through the CONCOURSE."])
 	if Game.midas_dead() and not bool(Game.story.midas_death_announced):
 		await _midas_announcement()
 	await s.scenes.commons_scene()
 	s.w.busy = true
 	if used:
-		await s.say("system", "Report to the deployment terminal.")
-		s.w.show_marker(Vector2i(14, 9))
+		await s.say("system", "Report to the deployment terminal in Operations.")
+		s.wing.mark_route()
 	else:
 		await s.say("system", "Post-mission interval available. One interaction recommended.")
 	s.w.busy = false
@@ -65,7 +69,8 @@ func _map() -> Dictionary:
 	var npcs := []
 	var hr := Game.relationship("hiro")
 	if hr >= 2:
-		npcs.append({"who": "hiro", "tile": Vector2i(3, 4), "dir": 1, "no_turn": hr >= 3, "turn_back": true})
+		# at the window, as if he could see the next deployment from here
+		npcs.append({"who": "hiro", "tile": Vector2i(5, 2), "dir": 1, "no_turn": hr >= 3, "turn_back": true})
 	else:
 		npcs.append({"who": "hiro", "tile": Vector2i(5, 3), "dir": 3, "mood": "smile" if hr == 0 else ""})
 	if not bool(Game.story.pala_unavailable) and not bool(Game.story.pala_escape_chosen):
@@ -149,8 +154,8 @@ func _close(choice: String) -> void:
 	await s.say("", ["The interval ends.", "Whatever you chose, it stays with you."])
 	Sfx.music("low_mechanical_ambient", 1.5)
 	Sfx.play("chime", 1.0, -6.0)
-	await s.say("system", "Report to the deployment terminal.")
-	s.w.show_marker(Vector2i(14, 9))
+	await s.say("system", "Report to the deployment terminal in Operations.")
+	s.wing.mark_route()
 
 
 func _record(choice: String, response: String) -> void:
@@ -308,7 +313,10 @@ func _midas() -> void:
 			await s.say("midas", "Don't thank me yet. Just promise you'll use it.", "smile")
 		await s.say("midas", ["I'll put my name on your request before the interval ends.", "Talk to your family while you still can. Home feels farther away after every mission."], "sad")
 		Sfx.play("beep", 1.1, -6.0)
-		s.w.prop_sprite("comm").modulate = Color(1.4, 1.6, 1.4)
+		var booth := s.w.prop_sprite("comm")
+		if booth:
+			booth.modulate = Color(1.4, 1.6, 1.4)
+		await s.say("", "Somewhere in Operations, the comm booth's light turns green.")
 	else:
 		await s.say("midas", ["I miss home so much it hurts. I keep seeing my mother's kitchen every time I close my eyes.", "Do you want to hear a kind of funny memory about my mother?"], "sad")
 		var c := await s.ask("Do you want to hear it?", ["Tell me.", "Not now."])
@@ -669,16 +677,12 @@ func examine(ev: Dictionary) -> void:
 			var c := await s.ask("Run a training module? Clears pay a few credits.", ["Train", "Not now"], "system")
 			if c == 0:
 				await s.m.training()
-		"workshop":
-			await s.m.workshop()
 		"vending":
 			Sfx.play("beep", 1.3, -8.0)
 			await s.say("", ["NUTRITION PASTE, flavor: BLUE. The machine thanks you for your service.", "A sticker on its side: a robot giving a thumbs up. 'PROTEKTORS NEVER SLEEP. NEITHER DO I.'"])
 			Propaganda.find("vending")
 		"archive":
 			await s.say("", "The archive console asks for clearance you don't have. Pala's fingerprints are all over the glass.")
-		"locker":
-			await s.say("", "Your locker. A drawing is taped inside the door. You don't remember putting it there, but it is yours.")
 		"plant":
 			await s.say("", "A plastic plant. Perfect. Dusty. Someone has been watering it anyway.")
 		"spacewindow":
@@ -686,12 +690,15 @@ func examine(ev: Dictionary) -> void:
 				await s.say("", "Stars. The window where Midas used to stand. It looks out at nothing in particular.")
 			else:
 				await s.say("", "Stars, slow and enormous. Somewhere out there, worlds are waiting to be defended.")
-		"dorm":
-			await s.say("", "The dormitory. Lights-out has not been called.")
-		"wing":
-			await s.wing.enter_wing()
 		"exitdoor":
 			await s.say("", "The door to the briefing halls. It only opens from the other side.")
+		_:
+			# doors, and everything else in the building
+			await s.wing.examine(ev)
+
+
+func exit(e: Dictionary) -> void:
+	await s.wing.exit(e)
 
 
 func _terminal() -> void:
@@ -707,12 +714,35 @@ func _terminal() -> void:
 		Sfx.play("beep", 1.0, -4.0)
 		await s.say("", ["A screen activates as you approach.", "It recognizes your badge immediately."])
 		await s.say("system", ["Pilot recognized. Mission access granted.", "Active defense requests available. Select assignment.", "Unaddressed requests will be reassigned. Delays may increase risk."])
-		await s.say("hiro", "High-density debris field. That'd be intense.", "still_smiling")
+		# the others heard it from the Commons and crowd in behind you
+		var who := ["hiro"]
 		if not bool(Game.story.pala_unavailable):
-			await s.say("pala", "Some of them are blinking. That means we don't have all the information.", "anxious")
+			who.append("pala")
 		if not Game.midas_dead():
+			who.append("midas")
+		var spots := [Vector2i(11, 6), Vector2i(7, 6), Vector2i(10, 7)]
+		var in_ops: bool = s.w.def.id == "ops"
+		if in_ops:
+			for i in who.size():
+				var spot: Vector2i = spots[i]
+				if i == who.size() - 1:
+					await s.enter({"id": "ops_" + who[i], "who": who[i], "dir": 1}, Vector2i(8 + i % 2, 9), [Vector2i(8 + i % 2, 8), spot], 70.0)
+				else:
+					s.enter({"id": "ops_" + who[i], "who": who[i], "dir": 1}, Vector2i(8 + i % 2, 9), [Vector2i(8 + i % 2, 8), spot], 70.0)
+					await s.wait(0.35)
+		await s.say("hiro", "High-density debris field. That'd be intense.", "still_smiling")
+		if who.has("pala"):
+			await s.say("pala", "Some of them are blinking. That means we don't have all the information.", "anxious")
+		if who.has("midas"):
 			await s.say("midas", "I wish they told us how many people live on each one.", "uneasy")
 		await s.say("", "The system does not respond.")
+		if in_ops:
+			for i in who.size():
+				var path := [Vector2i(8 + i % 2, 8), Vector2i(8 + i % 2, 9)]
+				if i == who.size() - 1:
+					await s.leave("ops_" + who[i], path, 70.0)
+				else:
+					s.leave("ops_" + who[i], path, 70.0)
 		Game.story.terminal_seen = true
 	var pick: String = await m.starmap(false, first)
 	if pick == "":

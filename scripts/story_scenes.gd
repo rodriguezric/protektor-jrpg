@@ -126,9 +126,9 @@ func _pala_files() -> void:
 
 func _hiro_alone() -> void:
 	await s.w.set_tint(Color(0.6, 0.66, 0.9), 0.6)
-	await s.pan(Vector2i(3, 4), 0.8)
+	await s.pan(Vector2i(5, 3), 0.8)
 	s.face("hiro", 1)
-	await s.say("", "Hiro stands at the sim pod with his eyes shut, one hand sweeping the air in arcs, blocking things that aren't there.")
+	await s.say("", "Hiro stands at the window with his eyes shut, one hand sweeping the air in arcs, blocking things that aren't there.")
 	for k in 4:
 		s.emote("hiro", "sync", 0.5)
 		s.a("hiro").hop(1.5, 0.15)
@@ -195,12 +195,12 @@ func room_cast(id: String) -> Array:
 	## the map before it fades in (StoryWing), so nobody pops in.
 	match room_key(id):
 		"midas_bread":
-			return [{"id": "scene_midas", "who": "midas", "tile": Vector2i(10, 6), "dir": 1}]
+			return [{"id": "scene_midas", "who": "midas", "tile": Vector2i(18, 6), "dir": 1}]
 		"argument":
 			return [{"id": "scene_hiro", "who": "hiro", "tile": Vector2i(9, 4), "dir": 2},
 				{"id": "scene_pala", "who": "pala", "tile": Vector2i(11, 4), "dir": 3, "mood": "angry"}]
 		"pala_note":
-			return [{"id": "scene_pala", "who": "pala", "tile": Vector2i(6, 2), "dir": 1}]
+			return [{"id": "scene_pala", "who": "pala", "tile": Vector2i(4, 2), "dir": 1}]
 	return []
 
 
@@ -234,7 +234,7 @@ func room_scene(id: String) -> void:
 
 func _midas_bread() -> void:
 	var mid := s.a("scene_midas")
-	await s.pan(Vector2i(10, 6), 0.6)
+	await s.pan(Vector2i(17, 6), 0.6)
 	await s.say("", "Midas is at the far table, sliding a bread roll into his jacket, very slowly, as if slowness made it invisible.")
 	mid.face_toward(s.w.player.position)
 	mid.emote("!", 0.8)
@@ -242,7 +242,7 @@ func _midas_bread() -> void:
 	await s.say("midas", "...You can have half. Later.", "smile")
 	mid.emote("heart", 1.2)
 	await s.wait(0.6)
-	await s.leave("scene_midas", [Vector2i(8, 7), Vector2i(8, 8)], 40.0)
+	await s.leave("scene_midas", [Vector2i(13, 6)] + Building.room_out("mess"), 40.0)
 
 
 func _argument() -> void:
@@ -256,23 +256,23 @@ func _argument() -> void:
 	await s.say("pala", "That's what scares me.", "sad")
 	hiro.face_toward(s.w.player.position)
 	await s.wait(0.4)
-	s.leave("scene_hiro", [Vector2i(8, 6), Vector2i(8, 8)], 50.0)
+	s.leave("scene_hiro", Building.room_out("rooftop"), 50.0)
 	await s.say("", "He walks past you without looking.")
 	pala.face_toward(s.w.player.position)
 	await s.say("pala", "...He used to laugh at everything. Do you remember? He used to laugh.", "sad")
-	await s.leave("scene_pala", [Vector2i(8, 6), Vector2i(8, 8)], 40.0)
+	await s.leave("scene_pala", Building.room_out("rooftop"), 40.0)
 
 
 func _pala_note() -> void:
 	var pala := s.a("scene_pala")
-	await s.pan(Vector2i(7, 3), 0.6)
+	await s.pan(Vector2i(5, 3), 0.6)
 	await s.say("", "Pala is at the wall of names, tucking a folded paper into the gap beside MIDAS.")
 	pala.face_toward(s.w.player.position)
 	await s.say("pala", "His mom's tomato recipe. He told it to me once, start to finish, like a prayer.", "sad")
 	await s.say("pala", "Somebody should have it written down. Somebody here.", "sad")
 	pala.emote("...", 1.2)
 	await s.wait(0.6)
-	await s.leave("scene_pala", [Vector2i(8, 6), Vector2i(8, 8)], 40.0)
+	await s.leave("scene_pala", Building.room_out("memorial"), 40.0)
 
 
 # ----------------------------------------------------------------- parade ---

@@ -61,6 +61,7 @@ func setup(map_def: Dictionary, tile: Vector2i, facing: int, p_handler: Object) 
 	add_child(lights)
 	_build_tiles()
 	_build_props()
+	_build_signs()
 	_build_npcs()
 	player = Actor.new(Game.player_spec(def.get("outfit", "")))
 	player.position = tile_center(tile)
@@ -173,6 +174,33 @@ func _build_props() -> void:
 			_holo_planet(pos + Vector2(0, -28), p.get("planet", "green_planet"), p.get("id", "holo") + "_planet")
 	for e in def.get("events", []):
 		events[e.tile] = e
+
+
+func _build_signs() -> void:
+	## Plaques on the walls: a dark plate with the name in lemon, over a door
+	## or beside the stairs. {x, y (tile row), text, left/right: x is that edge}
+	for sg in def.get("signs", []):
+		var text: String = sg.text
+		var w := Art.text_width(text) + 6
+		var x: float = float(sg.x) - w / 2.0
+		if sg.get("left", false):
+			x = float(sg.x)
+		elif sg.get("right", false):
+			x = float(sg.x) - w
+		x = clampf(roundf(x), 1.0, tw * TILE - w - 1.0)
+		var rim := ColorRect.new()
+		rim.color = Pal.STEEL
+		rim.size = Vector2(w, 10)
+		rim.position = Vector2(x, int(sg.get("y", 1)) * TILE - 14)
+		var plate := ColorRect.new()
+		plate.color = Pal.INK2
+		plate.size = Vector2(w - 2, 8)
+		plate.position = Vector2(1, 1)
+		rim.add_child(plate)
+		var l := Art.label(text, Pal.LEMON)
+		l.position = Vector2(3, -1)
+		rim.add_child(l)
+		decals.add_child(rim)
 
 
 func _holo_planet(pos: Vector2, key: String, id: String) -> void:
