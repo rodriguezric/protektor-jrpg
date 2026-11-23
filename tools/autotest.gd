@@ -1393,6 +1393,48 @@ func _run(scenario: String) -> void:
 			print("[paradecheck] %d people, side by side or stacked: %s" % [tiles.size(), close])
 			print("[paradecheck] around the family: %s" % [fam])
 			get_tree().quit()
+		"homecheck":
+			# upstairs at home: every event reachable from the hallway, and
+			# no two pieces of furniture drawn on top of each other
+			Game.new_game()
+			Game.player_name = "Ari"
+			main.fade_rect.color.a = 0.0
+			var w = main.load_map(main.story.prologue._house("home_up"), Vector2i(4, 9), 1)
+			await wait(0.3)
+			var seen := {Vector2i(4, 9): true}
+			var q := [Vector2i(4, 9)]
+			while not q.is_empty():
+				var c: Vector2i = q.pop_back()
+				for dv in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+					var nt: Vector2i = c + dv
+					if nt.x >= 0 and nt.y >= 0 and nt.x < w.tw and nt.y < w.th and not w.solid.has(nt) and not seen.has(nt):
+						seen[nt] = true
+						q.append(nt)
+			var bad := []
+			# an event counts if any of its tiles can be faced from open floor
+			var reach := {}
+			for t in w.events:
+				for dv in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
+					if seen.has(t + dv):
+						reach[str(w.events[t].id) + str(t.x / 7)] = true
+			for t in w.events:
+				if not reach.has(str(w.events[t].id) + str(t.x / 7)):
+					bad.append("event %s at %s unreachable" % [w.events[t].id, t])
+			var rects := []
+			for c in w.ents.get_children():
+				if c is Sprite2D and (c as Sprite2D).texture:
+					var sp: Sprite2D = c
+					rects.append(Rect2(sp.position + sp.offset, sp.texture.get_size()))
+			for i in rects.size():
+				for j in range(i + 1, rects.size()):
+					var r: Rect2 = (rects[i] as Rect2).intersection(rects[j])
+					if r.size.x > 2 and r.size.y > 2:
+						bad.append("sprites overlap at %s (%s / %s)" % [r, rects[i], rects[j]])
+			print("[homecheck] %d events, %d sprites, problems: %s" % [w.events.size(), rects.size(), bad])
+			w.player.position = w.tile_center(Vector2i(4, 4))
+			await wait(0.3)
+			await shot("home_up_room")
+			get_tree().quit()
 		"buildcheck":
 			# static checks on every hub-building map: arrivals land on open
 			# floor, and every door, exit and interactable can be reached

@@ -1,5 +1,14 @@
 # Patch Notes
 
+## 2026-11-23 06:46 EST — `bugfix_bedroom_console_in_bed` (v0.63.2)
+
+Your bedroom at home is rearranged so nothing is squashed into anything else.
+
+- The Starbox was jammed into the side of the bed. The room now has the bed in the corner (with its whole footprint blocked, since it's wider than one tile), the desk under the window, the wardrobe against the right wall, and the Starbox on the floor facing into the room, with the lamp beside it. The packed bag waits by the door and the toy sits in the open corner.
+- The bedroom window moved over the desk, so you can look out of it now. It used to be behind the bed and the console.
+- The bedtime scene matches: you're tucked into the bed in its new spot, and your mother comes to its side.
+- Code: `scripts/maps.gd` (home_up() bedroom props and window), `scripts/story_prologue.gd` (_night() sleeper and quilt). New autotest `PK_TEST=homecheck` (every upstairs event reachable from the hallway, no two furniture sprites overlapping).
+
 ## 2026-11-23 06:43 EST — `bugfix_parade_mother_merges_with_crowd` (v0.63.1)
 
 At the parade, your mother no longer walks into strangers or a look-alike.

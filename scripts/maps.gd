@@ -109,8 +109,8 @@ static func home_up() -> Dictionary:
 	## Upstairs: your room, your parents' room and the bathroom, each behind a
 	## door off the hallway, and the stairs back down.
 	var rows := [
-		"##WW######WW#####W####",
-		"##WW######WW#####W####",
+		"####WW####WW#####W####",
+		"####WW####WW#####W####",
 		"#......#......#::::::#",
 		"#......#......#::::::#",
 		"#......#......#::::::#",
@@ -123,14 +123,16 @@ static func home_up() -> Dictionary:
 		"####################v#",
 	]
 	var props := [
-		# your room
-		p("kidbed", 2, 3, {"area": Rect2i(2, 2, 1, 2), "event": {"id": "bed"}}),
-		p("desk", 4, 2, {"offset": Vector2(8, 0), "area": Rect2i(4, 2, 2, 1), "event": {"id": "desk"}}),
+		# your room: each piece on its own tiles, laid out from its real
+		# sprite size (the bed is 22 px wide, so it gets two columns)
+		p("kidbed", 1, 3, {"offset": Vector2(8, 0), "area": Rect2i(1, 2, 2, 2), "event": {"id": "bed"}}),
+		p("desk", 3, 2, {"offset": Vector2(8, 0), "area": Rect2i(3, 2, 2, 1), "event": {"id": "desk"}}),
 		p("wardrobe", 6, 2, {"event": {"id": "wardrobe"}}),
-		p("toy", 6, 4, {"event": {"id": "toy"}}),
-		p("starbox", 3, 2, {"anim": 2, "fps": 1.5, "event": {"id": "starbox"}, "light": Pal.SYNC, "lr": 8, "light_off": Vector2(0, -14), "pulse": 2.0}),
+		# the Starbox on the floor, facing into the room, clear of the bed
+		p("starbox", 5, 4, {"anim": 2, "fps": 1.5, "event": {"id": "starbox"}, "light": Pal.SYNC, "lr": 8, "light_off": Vector2(0, -14), "pulse": 2.0}),
+		p("toy", 1, 5, {"event": {"id": "toy"}}),
 		p("bag", 5, 5, {"event": {"id": "bag"}}),
-		p("lamp", 1, 5, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "id": "kidlamp"}),
+		p("lamp", 6, 5, {"light": Pal.LEMON, "lr": 20, "light_off": Vector2(0, -24), "id": "kidlamp"}),
 		# your parents' room
 		p("bigbed", 10, 3, {"offset": Vector2(8, 0), "area": Rect2i(10, 2, 2, 2), "event": {"id": "parentsbed"}}),
 		p("dresser", 13, 2, {"event": {"id": "dresser"}}),
@@ -151,7 +153,7 @@ static func home_up() -> Dictionary:
 	return {"id": "home_up", "name": "Home, Upstairs", "theme": "home", "tint": WARM, "outfit": "home", "rows": rows, "props": props,
 		"npcs": [], "triggers": [], "music": "letter_discussion",
 		"exits": [{"rect": Rect2i(20, 11, 1, 1), "to": "home", "tile": Vector2i(21, 5), "dir": 0}],
-		"events": [{"tile": Vector2i(2, 1), "id": "window"}, {"tile": Vector2i(3, 1), "id": "window"},
+		"events": [{"tile": Vector2i(4, 1), "id": "window"}, {"tile": Vector2i(5, 1), "id": "window"},
 			{"tile": Vector2i(10, 1), "id": "window"}, {"tile": Vector2i(11, 1), "id": "window"}, {"tile": Vector2i(17, 1), "id": "window"},
 			{"tile": Vector2i(7, 8), "id": "drawings"}, {"tile": Vector2i(8, 8), "id": "drawings"}]}
 
