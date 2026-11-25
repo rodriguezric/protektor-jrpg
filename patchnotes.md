@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-25 14:53 EST — `bugfix_richer_graphics_outside_academy` (v0.64.7)
+
+The outside of the Academy is a detailed pixel-art painting instead of flat blocks.
+
+- The Academy exterior that opens chapter 1 ("The Academy doesn't look like a school.") was a few flat grey rectangles over a white gap. It is now a full painting: a stepped concrete block with two wings, a beacon tower and spire, rows of mostly dark windows with a few lit, red banners either side of the seal, a lit gate with steps, a floodlit perimeter wall, searchlights sweeping the sky, a transport crossing overhead, rim-lit mountains, mist along the wall and a lamp-lined plaza leading to the gate.
+- The building sits above the dialog box so none of it is hidden while the line is on screen.
+- Code: `ArtCine.academy_ext` rewritten with new helpers `_block`, `_glow`, `_beam` in scripts/art_cine.gd.
+
 ## 2026-11-25 14:50 EST — `bugfix_orientation_hall_leaving` (v0.64.6)
 
 Recruits leave the orientation hall down the middle aisle instead of through the seats.

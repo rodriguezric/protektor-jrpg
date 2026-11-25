@@ -335,21 +335,165 @@ static func ascend() -> PixBuf:
 
 
 static func academy_ext() -> PixBuf:
+	## The Academy at night: a stepped concrete block with a beacon tower,
+	## floodlit walls and searchlights, the lit gate at the end of a long
+	## plaza. Lit from the upper left, four bands per surface.
 	var b := PixBuf.new(W, H)
-	gradient(b, [Color("0b0d18"), Color("162036"), Color("243656")], 0, 120)
-	stars(b, 90, 100, 41)
-	ridge(b, 150, 14, 0.04, 0.3, Pal.INK2)
-	var c := Pal.STEEL.lerp(Pal.NAVY, 0.4)
-	b.rect(80, 70, 160, 80, c)
-	b.rect(120, 40, 80, 40, c)
-	b.rect(150, 14, 20, 30, Pal.shade(c))
-	b.circ(160, 14, 6, Pal.SYNC)
-	for x in range(86, 236, 12):
-		for y in range(78, 146, 10):
-			b.rect(x, y, 6, 3, Pal.SYNC.lerp(Pal.NAVY, 0.3 + Pal.hash2(x, y) * 0.5))
-	ArtProps._emblem(b, 156, 52, Pal.HONEY, Pal.SYNC)
-	b.outline()
+	gradient(b, [Color("080a14"), Color("111a30"), Color("1c2c4a"), Color("2e4262")], 0, 122)
+	stars(b, 110, 96, 41)
+	# a transport crossing high up, nav light blinking
+	b.rect(38, 28, 9, 2, Pal.INK2)
+	b.rect(41, 27, 3, 1, Pal.INK2)
+	b.pset(47, 28, Pal.BLOOD)
+	# searchlights sweeping up from the roof
+	_beam(b, Vector2(132, 46), Vector2(60, -10), 18.0, 0.4)
+	_beam(b, Vector2(188, 46), Vector2(272, -6), 16.0, 0.34)
+	# mountains: far (rim lit), near
+	ridge(b, 112, 26, 0.03, 1.2, Pal.PLUM.lerp(Pal.NAVY, 0.5), Pal.LILAC.lerp(Pal.NAVY, 0.3))
+	ridge(b, 124, 12, 0.07, 2.6, Pal.NAVY.lerp(Pal.INK, 0.45), Pal.SLATE.lerp(Pal.NAVY, 0.4))
+	# the plaza
+	for y in range(122, H):
+		for x in W:
+			var c := Pal.ASPHALT.lerp(Pal.INK, 0.35 + (H - y) / 140.0)
+			if (x + y * 3) % 23 == 0 and Pal.hash2(x, y, 3) > 0.5:
+				c = Pal.shade(c)
+			b.pset(x, y, c)
+	# light spilling from the gate down the plaza
+	for y in range(131, H):
+		var half := 12 + (y - 131) * 0.9
+		for x in range(int(160 - half), int(160 + half)):
+			var k := 0.55 - (y - 131) / 70.0 - absf(x - 160) / half * 0.35
+			if k * 16.0 > BAYER[y % 4][x % 4]:
+				b.pset(x, y, b.pget(x, y).lerp(Pal.SYNC.lerp(Pal.STEEL, 0.5), 0.35))
+	# the long path to the gate, edged with lamps
+	for y in range(132, H):
+		var half := 6 + (y - 132) * 0.45
+		for x in range(int(160 - half), int(160 + half)):
+			if x == int(160 - half) or x == int(160 + half) - 1:
+				b.pset(x, y, Pal.SLATE.lerp(Pal.INK, 0.2))
+			elif (y - 132) % 6 == 0:
+				b.pset(x, y, b.pget(x, y).lerp(Pal.INK, 0.25))
+	for i in 4:
+		for side in [-1, 1]:
+			var ly := 140 + i * 9
+			var lx := int(160 + side * (12 + (ly - 132) * 0.45 + 3 + i))
+			b.rect(lx, ly - 6 - i, 1, 6 + i, Pal.SLATE)
+			b.pset(lx, ly - 7 - i, Pal.LEMON)
+			_glow(b, lx, ly - 7 - i, 3 + i / 2, Pal.LEMON, 0.35)
+	# perimeter wall with floodlit pylons
+	var wall := Pal.STEEL.lerp(Pal.NAVY, 0.55)
+	b.rect(0, 120, W, 11, wall)
+	b.rect(0, 120, W, 1, Pal.hi(wall))
+	b.rect(0, 129, W, 2, Pal.deep(wall))
+	for x in range(6, W, 26):
+		if absi(x + 3 - 160) < 22:
+			continue
+		b.rect(x, 114, 6, 17, Pal.shade(wall))
+		b.rect(x, 114, 1, 17, wall)
+		b.rect(x, 114, 6, 1, Pal.hi(wall))
+		b.rect(x + 1, 112, 4, 2, Pal.INK2)
+		b.pset(x + 2, 112, Pal.LEMON)
+		b.pset(x + 3, 112, Pal.LEMON)
+		_glow(b, x + 3, 113, 5, Pal.LEMON, 0.25)
+	# the building: two wings, the main block, the tower
+	_block(b, Rect2i(54, 78, 68, 42), 9, 7)
+	_block(b, Rect2i(198, 78, 68, 42), 9, 7)
+	_block(b, Rect2i(114, 54, 92, 66), 8, 6)
+	_block(b, Rect2i(122, 46, 76, 9), 0, 0)
+	_block(b, Rect2i(146, 22, 28, 25), 7, 5)
+	# setbacks: rooftop edges and vents
+	for vx in [64, 92, 210, 240]:
+		b.rect(vx, 74, 8, 4, Pal.SLATE.lerp(Pal.INK, 0.4))
+		b.rect(vx, 74, 8, 1, Pal.SLATE)
+	# antenna spire and beacon
+	b.tri(154, 22, 166, 22, 160, 8, Pal.STEEL.lerp(Pal.NAVY, 0.3))
+	b.line(160, 8, 160, 22, Pal.hi(Pal.STEEL))
+	b.rect(159, 4, 2, 5, Pal.SLATE)
+	_glow(b, 160, 4, 8, Pal.SYNC, 0.5)
+	b.circ(160, 4, 2, Pal.SYNC)
+	b.pset(160, 3, Pal.WHITE)
+	# banners either side of the seal
+	for bx in [130, 182]:
+		b.rect(bx, 58, 8, 30, Pal.RED.lerp(Pal.ROSE, 0.35))
+		b.rect(bx, 58, 1, 30, Pal.RED.lerp(Pal.WHITE, 0.15))
+		b.rect(bx + 7, 58, 1, 30, Pal.deep(Pal.RED))
+		b.rect(bx, 58, 8, 2, Pal.HONEY)
+		b.tri(bx, 88, bx + 8, 88, bx + 4, 92, Pal.RED.lerp(Pal.ROSE, 0.35))
+		b.rect(bx + 3, 66, 2, 2, Pal.HONEY)
+	# the seal over the gate
+	b.circ(160, 72, 8, Pal.NAVY.lerp(Pal.INK, 0.3))
+	ArtProps._emblem(b, 157, 69, Pal.HONEY, Pal.SYNC)
+	_glow(b, 160, 72, 12, Pal.SYNC, 0.15)
+	# the gate: a tall lit arch, steps down to the plaza
+	b.rect(148, 96, 24, 24, Pal.deep(Pal.STEEL))
+	b.rect(150, 98, 20, 22, Pal.SYNC.lerp(Pal.NAVY, 0.45))
+	b.rect(150, 98, 20, 6, Pal.SYNC.lerp(Pal.WHITE, 0.1).lerp(Pal.NAVY, 0.25))
+	b.rect(159, 98, 2, 22, Pal.NAVY.lerp(Pal.INK, 0.3))
+	b.rect(146, 94, 28, 2, Pal.hi(Pal.STEEL))
+	for k in 4:
+		b.rect(146 - k * 2, 120 + k * 3, 28 + k * 4, 3, Pal.STEEL.lerp(Pal.NAVY, 0.3 + k * 0.1))
+		b.rect(146 - k * 2, 120 + k * 3, 28 + k * 4, 1, Pal.hi(Pal.STEEL.lerp(Pal.NAVY, 0.3 + k * 0.1)))
+	# low mist along the foot of the wall
+	for y in range(124, 136):
+		for x in W:
+			var k := 0.3 - absf(y - 129) / 20.0 + sin(x * 0.05 + y) * 0.08
+			if k * 16.0 > BAYER[y % 4][x % 4]:
+				b.pset(x, y, b.pget(x, y).lerp(Pal.SKY, 0.3))
 	return b
+
+
+static func _block(b: PixBuf, r: Rect2i, row_h: int, col_w: int) -> void:
+	## One concrete mass of the Academy: lit top edge and left face, a
+	## shaded right return, ribs, and rows of mostly dark windows.
+	var base := Pal.STEEL.lerp(Pal.NAVY, 0.45)
+	b.rect(r.position.x, r.position.y, r.size.x, r.size.y, base)
+	b.rect(r.position.x, r.position.y, r.size.x, 1, Pal.hi(base))
+	b.rect(r.position.x, r.position.y + 1, 1, r.size.y - 1, base.lerp(Pal.hi(base), 0.5))
+	b.rect(r.end.x - 4, r.position.y + 1, 4, r.size.y - 1, Pal.shade(base))
+	b.rect(r.end.x - 1, r.position.y + 1, 1, r.size.y - 1, Pal.deep(base))
+	b.rect(r.position.x, r.end.y - 2, r.size.x, 2, Pal.shade(base))
+	if row_h == 0:
+		return
+	for x in range(r.position.x + col_w, r.end.x - 4, col_w * 2):
+		b.rect(x, r.position.y + 3, 1, r.size.y - 5, Pal.shade(base))
+	for y in range(r.position.y + 4, r.end.y - 5, row_h):
+		b.rect(r.position.x + 2, y + 3, r.size.x - 6, 1, Pal.shade(base).lerp(base, 0.4))
+		for x in range(r.position.x + 3, r.end.x - 7, col_w):
+			var h := Pal.hash2(x, y, 77)
+			var c := Pal.NAVY.lerp(Pal.INK, 0.45)
+			if h > 0.93:
+				c = Pal.LEMON.lerp(Pal.HONEY, 0.4)
+			elif h > 0.68:
+				c = Pal.SYNC.lerp(Pal.NAVY, 0.25 + Pal.hash2(x, y, 78) * 0.35)
+			b.rect(x, y, col_w - 3, 2, c)
+			b.pset(x, y + 2, Pal.shade(base))
+
+
+static func _glow(b: PixBuf, cx: int, cy: int, r: int, c: Color, k: float) -> void:
+	## A dithered halo, densest at the centre.
+	for y in range(cy - r, cy + r + 1):
+		for x in range(cx - r, cx + r + 1):
+			var d := Vector2(x - cx, y - cy).length() / r
+			if d < 1.0 and (1.0 - d) * k * 16.0 > BAYER[posmod(y, 4)][posmod(x, 4)]:
+				b.pset(x, y, b.pget(x, y).lerp(c, 0.45))
+
+
+static func _beam(b: PixBuf, from: Vector2, to: Vector2, width: float, k: float) -> void:
+	## A searchlight: a dithered cone widening away from the lamp.
+	var dir := (to - from)
+	var n := dir.length()
+	var u := dir / n
+	var side := Vector2(-u.y, u.x)
+	for y in H:
+		for x in W:
+			var v := Vector2(x, y) - from
+			var t := v.dot(u) / n
+			if t < 0.0 or t > 1.0:
+				continue
+			var off := absf(v.dot(side))
+			var half := 1.0 + width * t
+			if off < half and (1.0 - off / half) * (1.0 - t * 0.7) * k * 16.0 > BAYER[y % 4][x % 4]:
+				b.pset(x, y, b.pget(x, y).lerp(Pal.SKY.lerp(Pal.WHITE, 0.3), 0.3))
 
 
 static func transport_sky() -> PixBuf:
