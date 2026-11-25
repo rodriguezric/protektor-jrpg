@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-25 15:00 EST — `bugfix_animate_father_mother` (v0.64.10)
+
+Your father taking your mother's hand at the parade is shown, not narrated.
+
+- At the parade, after the guard sends your mother back behind the line, the line "Your father takes her hand without looking at it." is gone. Instead your father steps in beside her, still facing the parade, reaches across and takes her hand, and they stand holding hands for the rest of the parade.
+- Code: new `reach_l` / `reach_r` poses in `ArtPeople.render` (scripts/art_people.gd); the barrier scene in `StoryScenes.barrier` (scripts/story_scenes.gd).
+
 ## 2026-11-25 14:58 EST — `bugfix_parade_field_animations` (v0.64.9)
 
 The parade shows the transport door opening and the Protektor raising its arm instead of describing them.
