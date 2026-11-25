@@ -510,7 +510,9 @@ func _night() -> void:
 	quilt.z_index = 2
 	s.w.add_child(quilt)
 	# your mother comes up the stairs and waits outside your door
-	s.w.add_npc({"id": "mother", "who": "mother", "tile": Vector2i(4, 10), "dir": 1})
+	# (centred on the two-tile doorway, x 4-5, so she comes through the
+	# middle of the door)
+	s.w.add_npc({"id": "mother", "who": "mother", "tile": Vector2i(4, 10), "dir": 1, "offset": Vector2(8, 0)})
 	s.w.tint.color = Maps.NIGHT
 	s.w.cam_follow = false
 	s.w.cam_focus = s.w.tile_center(Vector2i(5, 5))
@@ -530,7 +532,8 @@ func _night() -> void:
 	await s.wait(0.5)
 	await s.say("mother", "Can I come in?", "gentle")
 	await s.say("you", "Yeah.")
-	await s.walk("mother", [Vector2i(4, 5), Vector2i(3, 4), Vector2i(3, 3)], 34.0)
+	var door_x: float = s.w.tile_center(Vector2i(4, 0)).x + 8.0
+	await s.walk("mother", [Vector2(door_x, s.w.tile_center(Vector2i(4, 5)).y), Vector2i(3, 4), Vector2i(3, 3)], 34.0)
 	s.face("mother", 3)
 	await s.say("mother", "You don't have to be strong for us.", "gentle")
 	var r := await s.ask("How do you respond?", ["I am scared.", "I'll be fine."])
