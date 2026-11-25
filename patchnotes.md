@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-25 14:56 EST — `bugfix_parade_transport` (v0.64.8)
+
+Everyone walks up the ramp into the transport before the hatch closes and it takes off.
+
+- At the end of the parade the recruits used to walk to a spot short of the transport and fade out there, and the transport took off on a timer while the last of them were still walking. Now they file to it nearest-first, keeping their places: off the carpet, along the front of the transport to the foot of the ramp, up the ramp and in through the hatch.
+- The transport waits until every one of them (you included) is aboard, then the hatch closes (the door slides down and the ramp folds up, with a clunk), and only then does it lift off.
+- Code: the boarding block in `StoryPrologue.trigger("lineup")` (scripts/story_prologue.gd); new closing frame `shuttle(2)` in scripts/art_props.gd. New autotest scenario `PK_TEST=paradeboard` (PK_EVERY sets the frame interval).
+
 ## 2026-11-25 14:53 EST — `bugfix_richer_graphics_outside_academy` (v0.64.7)
 
 The outside of the Academy is a detailed pixel-art painting instead of flat blocks.

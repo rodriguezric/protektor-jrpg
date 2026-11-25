@@ -1088,12 +1088,20 @@ static func shuttle(v: int) -> PixBuf:
 		b.rect(56 + k * 7, 15, 4, 4, Pal.SKY.lerp(Pal.INK, 0.35))
 	b.poly([Vector2(84, 13), Vector2(96, 22), Vector2(86, 22)], Pal.SKY.lerp(Pal.INK, 0.2))
 	_emblem(b, 20, 27, Pal.HONEY, Pal.SYNC)
-	# hatch
+	# hatch: 1 open with the ramp down, 2 closing (door sliding down, ramp
+	# folding up), 0 shut
 	if v == 1:
 		b.rect(34, 24, 16, 20, Pal.INK2)
 		b.rect(35, 25, 14, 19, Pal.LEMON.lerp(Pal.INK2, 0.55))
 		b.poly([Vector2(33, 44), Vector2(51, 44), Vector2(56, 56), Vector2(28, 56)], Pal.STEEL)
 		b.rect(28, 55, 28, 1, Pal.shade(Pal.STEEL))
+	elif v == 2:
+		b.rect(34, 24, 16, 20, Pal.INK2)
+		b.rect(35, 34, 14, 10, Pal.LEMON.lerp(Pal.INK2, 0.55))
+		b.rect(34, 24, 16, 10, Pal.shade(hull))
+		b.rect(34, 33, 16, 1, Pal.deep(hull))
+		b.poly([Vector2(33, 44), Vector2(51, 44), Vector2(53, 49), Vector2(31, 49)], Pal.STEEL)
+		b.rect(31, 48, 22, 1, Pal.shade(Pal.STEEL))
 	else:
 		b.rect(34, 24, 16, 20, Pal.shade(hull))
 		b.rect(41, 24, 2, 20, Pal.deep(hull))

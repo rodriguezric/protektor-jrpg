@@ -2068,6 +2068,32 @@ func _run(scenario: String) -> void:
 				elif k > 0:
 					break
 			get_tree().quit()
+		"paradeboard":
+			# the parade from taking your place in line to the transport
+			# leaving; a frame every PK_EVERY s (default 0.4)
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "prologue"
+			main.fade_rect.color.a = 0.0
+			main.load_map(Maps.parade(), Vector2i(17, 9), 1)
+			await wait(0.3)
+			var every := float(OS.get_environment("PK_EVERY")) if OS.get_environment("PK_EVERY") != "" else 0.4
+			var snap := {"on": true, "k": 0}
+			var snapper := func() -> void:
+				while snap.on:
+					await wait(every)
+					await shot("pb_%03d" % snap.k)
+					snap.k += 1
+			snapper.call()
+			var go := func() -> void:
+				await main.story.prologue.trigger("lineup")
+			go.call()
+			for i in 300:
+				await wait(0.2)
+				if main.world == null or main.world.def.get("id", "") != "parade":
+					break
+			snap.on = false
+			get_tree().quit()
 		"academy":
 			Game.new_game()
 			Game.player_name = "Ari"

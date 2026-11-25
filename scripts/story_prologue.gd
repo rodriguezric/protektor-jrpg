@@ -643,29 +643,45 @@ func trigger(id: String) -> void:
 		await s.say("", "You try to hold onto the brave thing you said in the kitchen. It feels smaller out here.")
 	await s.pan_back(0.5)
 	await s.say("announcer", "Welcome... to the Academy.")
-	# Board, in line.
-	var line := ["rec0", "rec1", "rec2", "hiro", "pala", "midas", "player", "rec3", "rec4"]
-	var door := s.w.tile_center(Vector2i(25, 9)) + Vector2(-6, 0)
-	for i in line.size():
-		var aid: String = line[i]
+	# Board, in line: nearest the transport first, everyone keeping their
+	# place, down off the carpet, along the front of the transport to the
+	# foot of the ramp, up it and in through the hatch.
+	var line := ["rec4", "rec3", "player", "midas", "pala", "hiro", "rec2", "rec1", "rec0"]
+	var hatch := sh.position + Vector2(-10, 0)
+	var boarded := {"n": 0}
+	var walkers := 0
+	for aid in line:
 		var act := s.a(aid)
 		if act == null:
 			continue
+		walkers += 1
+		act.z_index = 1
 		var go := func() -> void:
-			if await act.walk_to([Vector2(act.position.x, s.w.tile_center(Vector2i(0, 9)).y), door], 60.0):
-				# up the ramp and into the dark of the shuttle door
+			var ok := await act.walk_to([Vector2(372, act.position.y), Vector2(376, hatch.y - 6), Vector2(hatch.x, hatch.y - 4),
+				Vector2(hatch.x, hatch.y - 18)], 60.0)
+			if ok and is_instance_valid(act):
+				Sfx.play("step", 1.3, -16.0)
 				var tw := act.create_tween()
-				tw.tween_property(act, "modulate:a", 0.0, 0.3)
+				tw.tween_property(act, "position:y", hatch.y - 24, 0.3)
+				tw.parallel().tween_property(act, "modulate:a", 0.0, 0.3)
 				await tw.finished
 				if is_instance_valid(act):
 					act.visible = false
 					act.modulate.a = 1.0
-			Sfx.play("step", 1.3, -16.0)
+					act.z_index = 0
+			boarded.n += 1
 		go.call()
-		await s.wait(0.25)
-	await s.wait(2.4)
-	s.w.player.visible = false
+		await s.wait(0.05)
+	while boarded.n < walkers:
+		await s.wait(0.1)
+	await s.wait(0.4)
+	# the hatch closes: door slides down, ramp folds up
+	Sfx.play("heavy_door", 1.1, -4.0)
+	sh.texture = Art.prop("shuttle", 2)
+	await s.wait(0.35)
 	sh.texture = Art.prop("shuttle", 0)
+	m.shake(1.0, 0.3)
+	await s.wait(0.7)
 	Sfx.play("thrust", 1.0, -2.0)
 	m.shake(3.0, 1.6)
 	var fx := Fx.new()
