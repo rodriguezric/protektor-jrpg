@@ -2106,6 +2106,23 @@ func _run(scenario: String) -> void:
 					break
 			snap.on = false
 			get_tree().quit()
+		"walldoor":
+			# doors in a wall face open as you reach them and close behind you
+			Game.new_game()
+			Game.player_name = "Ari"
+			main.fade_rect.color.a = 0.0
+			for spec in [[Maps.block7("evening"), Vector2i(9, 3)], [Building.map("commons"), Vector2i(21, 3)]]:
+				var w = main.load_map(spec[0], spec[1], 0)
+				await wait(0.4)
+				await shot("wd_%s_0_arrive" % w.def.id)
+				await hold("down", 0.7)
+				await wait(0.2)
+				await shot("wd_%s_1_away" % w.def.id)
+				await hold("up", 0.45)
+				await wait(0.2)
+				await shot("wd_%s_2_back" % w.def.id)
+				print("[walldoor] %s doors=%d open=%s" % [w.def.id, w.doors.size(), w.doors.map(func(d): return d.open)])
+			get_tree().quit()
 		"academy":
 			Game.new_game()
 			Game.player_name = "Ari"

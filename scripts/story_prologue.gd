@@ -152,7 +152,8 @@ func exit(e: Dictionary) -> void:
 	## The stairs between the floors, and the front door to the street.
 	var to: String = e.get("to", "")
 	if to == "block7" or (to == "home" and s.w.def.id == "block7"):
-		Sfx.play("door", 1.0, -8.0)
+		# the front door opens and latches like every other door (World doors)
+		await s.wait(0.15)
 		if to == "block7":
 			await s.m.change_map(Maps.block7("evening"), e.tile, e.dir)
 			if not bool(Game.story.get("block7_seen", false)):

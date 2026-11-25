@@ -61,6 +61,7 @@ func setup(map_def: Dictionary, tile: Vector2i, facing: int, p_handler: Object) 
 	add_child(lights)
 	_build_tiles()
 	_build_props()
+	_build_wall_doors()
 	_build_signs()
 	_build_npcs()
 	player = Actor.new(Game.player_spec(def.get("outfit", "")))
@@ -177,6 +178,36 @@ func _build_props() -> void:
 			_holo_planet(pos + Vector2(0, -28), p.get("planet", "green_planet"), p.get("id", "holo") + "_planet")
 	for e in def.get("events", []):
 		events[e.tile] = e
+
+
+func _build_wall_doors() -> void:
+	## Doors drawn into a wall face (D runs with a sill below) open and close
+	## like the prop doors: an overlay of the open doorway shows whenever
+	## someone is at the door (see _update_doors).
+	var theme: String = def.get("theme", "academy")
+	var seen := {}
+	for y in th:
+		for x in tw:
+			var t := Vector2i(x, y)
+			if seen.has(t) or char_at(t) != "D" or char_at(t + Vector2i(0, -1)) == "D" or char_at(t + Vector2i(-1, 0)) == "D":
+				continue
+			var sill = door_sill(t)
+			if sill == null:
+				continue
+			var x1 := x
+			while char_at(Vector2i(x1 + 1, y)) == "D":
+				x1 += 1
+			for xx in range(x, x1 + 1):
+				seen[Vector2i(xx, y)] = true
+			var w := (x1 - x + 1) * TILE
+			var s := Sprite2D.new()
+			s.centered = false
+			s.position = Vector2(x * TILE, y * TILE)
+			s.texture = ImageTexture.create_from_image(ArtTiles.open_door(theme, x * TILE, y * TILE, w))
+			s.visible = false
+			decals.add_child(s)
+			var half := w / 2.0 - (ArtTiles.DOOR_INSET if w > TILE else 0)
+			doors.append({"sprite": s, "kind": "", "pos": sill, "open": false, "half": half, "wall": true})
 
 
 func _build_signs() -> void:
@@ -639,12 +670,18 @@ func _update_doors() -> void:
 			if not a.visible or a.info.get("ghost", false):
 				continue
 			var v: Vector2 = a.position - d.pos
-			if absf(v.x) < float(d.half) + 4.0 and v.y > -44.0 and v.y < 6.0:
+			# prop doors: standing in the doorway; wall doors: on the sill or
+			# the tile below it (and anyone fading in or out inside it)
+			var reach: bool = (v.y > -8.0 and v.y < 30.0) if d.get("wall", false) else (v.y > -44.0 and v.y < 6.0)
+			if absf(v.x) < float(d.half) + 4.0 and reach:
 				near = true
 				break
 		if near != d.open:
 			d.open = near
-			(d.sprite as Sprite2D).texture = Art.prop(d.kind, 1 if near else 0)
+			if d.get("wall", false):
+				(d.sprite as Sprite2D).visible = near
+			else:
+				(d.sprite as Sprite2D).texture = Art.prop(d.kind, 1 if near else 0)
 			Sfx.play("latch", 1.0 if near else 0.88, -8.0)
 
 

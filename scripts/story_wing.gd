@@ -122,7 +122,8 @@ func go(to: String) -> void:
 	if stairs:
 		Sfx.play("step", 0.8, -8.0)
 	else:
-		Sfx.play("door", 1.0 if Building.PARENT.get(to, "") == from else 0.9, -8.0)
+		# the door itself opens and latches as you reach it (World doors)
+		await s.wait(0.15)
 	var mp := build(to)
 	var arr := Building.arrival(to, from, mp)
 	await s.m.change_map(mp, arr[0], arr[1])
