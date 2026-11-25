@@ -5,7 +5,8 @@ class_name ArtPeople
 ## (flipped for left). frame: 0..3 walk cycle, 4 = standing, breathing in
 ## (head, body and arms rise a pixel, feet stay planted).
 ## mood changes only the face: "", smile, sad, hollow, closed, shock, cry, angry.
-## pose: walk (default), sit (legs tucked behind a seat), lie (flat, for pods).
+## pose: walk (default), sit (legs tucked behind a seat), lie (flat, for pods),
+## reach_l / reach_r (front/back views: one arm out to the side, holding hands).
 
 const W := 32
 const H := 32
@@ -136,10 +137,16 @@ static func render(s: Dictionary, dir: int, frame: int, mood: String = "", pose:
 			b.circ(cx - 2.6, by - 3.6, 1.2, skin)
 			b.circ(cx + 2.6, by - 3.6, 1.2, skin)
 		else:
-			b.cap(cx - 3.8, by - 7 + bob, cx - 4.8, by - 4.5 + bob + swing, 1.2, sleeve)
-			b.cap(cx + 3.8, by - 7 + bob, cx + 4.8, by - 4.5 + bob - swing, 1.2, sleeve)
-			b.circ(cx - 4.8, by - 3.8 + bob + swing, 1.2, skin)
-			b.circ(cx + 4.8, by - 3.8 + bob - swing, 1.2, skin)
+			# reach_l / reach_r: that arm held out to the side, low, to take
+			# the hand of someone standing a tile away
+			var lx := cx - (8.0 if pose == "reach_l" else 4.8)
+			var rx := cx + (8.0 if pose == "reach_r" else 4.8)
+			var ly := by - 4.5 + bob + (0.5 if pose == "reach_l" else swing)
+			var ry := by - 4.5 + bob - (-0.5 if pose == "reach_r" else swing)
+			b.cap(cx - 3.8, by - 7 + bob, lx, ly, 1.2, sleeve)
+			b.cap(cx + 3.8, by - 7 + bob, rx, ry, 1.2, sleeve)
+			b.circ(lx, ly + 0.7, 1.2, skin)
+			b.circ(rx, ry + 0.7, 1.2, skin)
 
 	# --- head --------------------------------------------------------------
 	b.scale_about(Vector2(hx, hy), HEAD_K)
