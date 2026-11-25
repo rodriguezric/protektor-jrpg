@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-25 14:50 EST — `bugfix_orientation_hall_leaving` (v0.64.6)
+
+Recruits leave the orientation hall down the middle aisle instead of through the seats.
+
+- When the orientation hall empties, the recruits no longer walk sideways along their bench rows through the other seats. Each one steps down into the gap below their bench, walks along it to the middle of the hall, then straight down the middle aisle and out the door.
+- They leave one at a time, nearest the door first, and the scene waits until the last one is through before the floor rumbles and it fades.
+- Code: the exit loop in `StoryAcademy.orientation` (scripts/story_academy.gd). New autotest scenario `PK_TEST=hallexit`.
+
 ## 2026-11-23 16:04 EST — `bugfix_stairs_split_into_two_sets` (v0.64.5)
 
 Wide staircases read as one flight all the way up.
