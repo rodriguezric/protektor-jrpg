@@ -661,7 +661,7 @@ func _animate(_delta: float) -> void:
 			s.modulate.a = 0.62 + (0.2 if fmod(t * 7.3, 1.0) > 0.12 else -0.25)
 			s.position.y += sin(t * 2.0) * 0.02
 		elif s.has_meta("frames"):
-			s.texture = Art.prop(s.get_meta("kind"), int(t * s.get_meta("fps")) % int(s.get_meta("frames")))
+			s.texture = Art.prop(s.get_meta("kind"), int(s.get_meta("base", 0)) + int(t * s.get_meta("fps")) % int(s.get_meta("frames")))
 	if marker:
 		marker.position.y = marker.get_meta("y") + (1.0 if fmod(t, 0.6) < 0.3 else -1.0)
 

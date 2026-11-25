@@ -627,16 +627,38 @@ func trigger(id: String) -> void:
 			await s.pan(Vector2i(9, 8), 0.9)
 			await s.say("", "You watch the other recruits match their breathing to the march, each of them pretending not to look afraid.")
 	await s.pan(Vector2i(25, 8), 0.8)
-	Sfx.play("heavy_door", 1.0, -2.0)
-	m.shake(2.0, 0.8)
+	# the transport's hatch opens: seals hiss, the door slides up, the ramp
+	# drops to the ground with a thud
 	var sh := s.w.prop_sprite("shuttle")
+	var hatch_at: Vector2 = sh.position + Vector2(-10, -26)
+	var puff := Fx.new()
+	s.w.add_child(puff)
+	Sfx.play("door", 0.7, -6.0)
+	puff.burst(hatch_at, 14, [Pal.WHITE, Pal.FROST, Pal.STONE], Vector2(10, 30), Vector2(0.4, 0.9), {"drag": 0.9})
+	await s.wait(0.5)
+	sh.texture = Art.prop("shuttle", 2)
+	Sfx.play("heavy_door", 1.0, -2.0)
+	await s.wait(0.35)
 	sh.texture = Art.prop("shuttle", 1)
-	await s.say("", "A transport door opens.")
+	m.shake(2.0, 0.5)
+	puff.burst(sh.position + Vector2(-10, -4), 18, [Pal.STONE, Pal.CREAM], Vector2(20, 50), Vector2(0.4, 0.8), {"flat": true, "drag": 0.93})
+	await s.wait(0.9)
 	match Game.vars.parade_focus:
 		"parents":
 			await s.say("", "You look one last time for your parents. The light is too bright, or they are already gone.")
 		"protektors":
-			await s.say("", "One Protektor raises a hand toward the transport. The gesture is efficient, almost mechanical.")
+			# the nearer Protektor lifts its arm toward the transport, in two
+			# exact movements, and holds it there
+			var mech := s.w.prop_sprite("mech2")
+			await s.pan(Vector2i(24, 7), 0.5)
+			for pose_base in [2, 4]:
+				Sfx.play("plate", 0.6, -8.0)
+				mech.set_meta("base", pose_base)
+				mech.texture = Art.prop("mech", pose_base)
+				await s.wait(0.45)
+			await s.wait(0.5)
+			await s.say("", "The gesture is efficient, almost mechanical.")
+			await s.pan(Vector2i(25, 8), 0.4)
 		_:
 			await s.say("", "Midas swallows hard. Hiro keeps grinning. No one breaks rank.")
 	if Game.vars.get("letter_choice", "") == "resolve":

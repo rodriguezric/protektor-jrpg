@@ -1027,13 +1027,27 @@ static func mech(v: int) -> PixBuf:
 	b.rect(26, 66, 13, 5, Pal.shade(plate))
 	b.ball(18, 50, 4, 4, plate)
 	b.ball(30, 50, 4, 4, Pal.shade(plate))
-	# arms
+	# arms; v / 2 is the right arm's pose: 0 at its side, 1 lifting,
+	# 2 raised high with the hand open (pointing the way to the transport)
+	var pose := v / 2
 	b.poly([Vector2(6, 20), Vector2(12, 18), Vector2(12, 44), Vector2(5, 46)], dark)
-	b.poly([Vector2(36, 18), Vector2(42, 20), Vector2(43, 46), Vector2(36, 44)], Pal.shade(dark))
 	b.ball(9, 20, 6, 5, plate)
-	b.ball(39, 20, 6, 5, Pal.shade(plate))
 	b.ball(8, 46, 3.5, 4, plate)
-	b.ball(40, 46, 3.5, 4, Pal.shade(plate))
+	if pose == 0:
+		b.poly([Vector2(36, 18), Vector2(42, 20), Vector2(43, 46), Vector2(36, 44)], Pal.shade(dark))
+		b.ball(40, 46, 3.5, 4, Pal.shade(plate))
+	else:
+		var hand := Vector2(45, 34) if pose == 1 else Vector2(44, 5)
+		var elbow := Vector2(43, 30) if pose == 1 else Vector2(44, 16)
+		b.cap(39, 21, elbow.x, elbow.y, 3.2, Pal.shade(dark))
+		b.cap(elbow.x, elbow.y, hand.x, hand.y, 3.0, dark)
+		b.ball(elbow.x, elbow.y, 2.5, 2.5, Pal.shade(plate))
+		b.ball(hand.x, hand.y, 3.5, 3.5, plate)
+		if pose == 2:
+			# open palm, fingers up
+			for f in 3:
+				b.rect(hand.x - 2 + f * 2, hand.y - 5, 1, 3, plate)
+	b.ball(39, 20, 6, 5, Pal.shade(plate))
 	# torso
 	b.ball(24, 30, 13, 15, plate)
 	b.poly([Vector2(16, 36), Vector2(32, 36), Vector2(28, 46), Vector2(20, 46)], dark)
