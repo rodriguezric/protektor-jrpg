@@ -2052,6 +2052,22 @@ func _run(scenario: String) -> void:
 					w.player.position = w.tile_center(Vector2i(18, 9))
 					await hold("left", 0.4)
 			get_tree().quit()
+		"hallexit":
+			# the recruits filing out of the orientation hall, a frame every 0.3 s
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "academy"
+			main.story.begin("academy")
+			var k := 0
+			for i in 400:
+				await wait(0.3)
+				var w = main.world
+				if w and w.def.get("id", "") == "hall" and w.actor("rec0") != null and w.actor("rec0").scripted:
+					await shot("hallexit_%03d" % k)
+					k += 1
+				elif k > 0:
+					break
+			get_tree().quit()
 		"academy":
 			Game.new_game()
 			Game.player_name = "Ari"

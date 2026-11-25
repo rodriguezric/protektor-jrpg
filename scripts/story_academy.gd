@@ -85,14 +85,27 @@ func orientation() -> void:
 	Sfx.music("low_sync_hum", 1.5)
 	await s.w.set_tint(Maps.COLD, 1.0)
 	await s.say("", "The room empties in neat lines.")
+	# nearest the door first, one at a time, so they file out instead of
+	# crowding the aisle
+	var order := []
 	for i in 13:
-		var act := s.a("rec%d" % i)
-		if act:
-			act.set_pose("walk")
-			# out along their bench row into the centre aisle, then down it
-			var aisle: float = s.w.tile_center(Vector2i(8 if act.position.x < 160.0 else 11, 0)).x
-			s.leave("rec%d" % i, [Vector2(aisle, act.position.y), Vector2(aisle, s.w.tile_center(Vector2i(0, 12)).y), Vector2i(10, 12), Vector2i(10, 13)], 50.0, true)
-			await s.wait(0.12)
+		if s.a("rec%d" % i):
+			order.append("rec%d" % i)
+	order.sort_custom(func(p: String, q: String) -> bool: return s.a(p).position.y > s.a(q).position.y)
+	for id in order:
+		var act := s.a(id)
+		act.set_pose("walk")
+		# off the bench into the gap below it, along the gap to the middle
+		# of the hall, then straight down the middle and out
+		var gap: float = act.position.y + 16.0
+		var mid: float = s.w.tile_center(Vector2i(9 if act.position.x < 160.0 else 10, 0)).x
+		var go := func() -> void:
+			await s.leave(id, [Vector2(act.position.x, gap), Vector2(mid, gap), Vector2(mid, s.w.tile_center(Vector2i(0, 12)).y),
+				Vector2(mid, s.w.tile_center(Vector2i(0, 13)).y)], 50.0, true)
+		go.call()
+		await s.wait(0.35)
+	while order.any(func(id: String) -> bool: return s.a(id) != null and s.a(id).visible):
+		await s.wait(0.1)
 	m.shake(1.0, 1.2)
 	Sfx.play("heavy_door", 0.6, -10.0)
 	await s.say("", "Somewhere beneath the floor... something is waiting.")
