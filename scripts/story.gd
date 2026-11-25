@@ -405,7 +405,10 @@ func enter(n: Dictionary, from: Vector2i, path: Array = [], speed: float = 48.0)
 		act.position = ent.pos
 		act.face(0 if (ent.step as Vector2).y > 0 else 1)
 		act.modulate.a = 0.0
-		Sfx.play("door", 1.0, -10.0)
+		# doors open and latch by themselves as someone reaches them (World
+		# doors); only stairs need a sound of their own
+		if w.char_at(from) in ["S", "v"]:
+			Sfx.play("step", 0.9, -12.0)
 		var tw := act.create_tween()
 		tw.tween_property(act, "modulate:a", 1.0, 0.35)
 		await tw.finished
@@ -489,7 +492,8 @@ func leave(id: String, path: Array = [], speed: float = 48.0, keep: bool = false
 	if not is_instance_valid(act):
 		return
 	if ent != null:
-		Sfx.play("door", 0.9, -10.0)
+		if w.char_at(last) in ["S", "v"]:
+			Sfx.play("step", 0.9, -12.0)
 		var tw := act.create_tween()
 		tw.tween_property(act, "modulate:a", 0.0, 0.35)
 		await tw.finished

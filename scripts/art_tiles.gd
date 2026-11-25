@@ -179,6 +179,32 @@ static func _narrow(r: Vector2i) -> Vector2i:
 	return Vector2i(r.x - DOOR_INSET, r.y - DOOR_INSET * 2)
 
 
+static func open_door(theme: String, x0: int, y0: int, w: int) -> Image:
+	## The open look of a door in a wall face: a run of D tiles w px wide
+	## whose top-left pixel is (x0, y0), drawn as the doorway it opens onto
+	## (frame and the dim room beyond); transparent where the closed tiles
+	## should show through (above the frame, and the wall either side).
+	## The door itself stands swung open against the hinge side, edge-on,
+	## like the prop doors' open frame.
+	if theme == "block":
+		theme = "home"
+	var leaf := Pal.WOOD if theme == "home" else Pal.STEEL.lerp(Pal.NAVY, 0.4)
+	var img := Image.create_empty(w, TILE * 2, false, Image.FORMAT_RGBA8)
+	for fy in TILE * 2:
+		for lx in w:
+			var r := _narrow(Vector2i(lx, w))
+			if r.x < 0 or r.x >= r.y:
+				continue
+			var c := _doorway(theme, x0 + lx, y0 + fy, r, fy, Color(0, 0, 0, 0))
+			if c.a > 0.0 and r.x > 1 and r.x < r.y - 2 and fy > 3:
+				# the room beyond, dim
+				c = c.lerp(Pal.INK, 0.3)
+				if r.x <= 4 and fy >= 5:
+					c = Pal.shade(leaf) if r.x == 4 else (leaf if r.x == 3 else Pal.hi(leaf))
+			img.set_pixel(lx, fy, c)
+	return img
+
+
 static func _threshold(theme: String, x: int, y: int, r: Vector2i) -> Color:
 	## The floor running through a doorway where the wall top would be.
 	var lx := r.x

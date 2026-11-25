@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-25 15:06 EST — `bugfix_door_fixes` (v0.64.11)
+
+Every door opens, closes and sounds the same, the front door included.
+
+- Doors in walls (the front door at home and on Block 7, and every door in the Academy buildings) now work like the upstairs bedroom doors: they swing open with the latch sound when you (or anyone else) reach them, showing the frame, the dim room beyond and the door standing open, and close with the latch again once you've moved on. Going out the front door no longer plays a different sound.
+- Characters entering or leaving through a door no longer play their own door sound on top of the latch; stairs get a footstep instead.
+- Code: new `World._build_wall_doors` (an open-doorway overlay per D run, opened in `_update_doors`) in scripts/world.gd and `ArtTiles.open_door` in scripts/art_tiles.gd; the separate door sounds removed from `StoryPrologue.exit`, `StoryWing` room changes and `Story.enter` / `Story.leave`. New autotest `PK_TEST=walldoor`. doorwalk: 108 checks, 0 stuck.
+
 ## 2026-11-25 15:00 EST — `bugfix_animate_father_mother` (v0.64.10)
 
 Your father taking your mother's hand at the parade is shown, not narrated.
