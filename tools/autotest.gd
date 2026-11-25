@@ -2123,6 +2123,21 @@ func _run(scenario: String) -> void:
 				await shot("wd_%s_2_back" % w.def.id)
 				print("[walldoor] %s doors=%d open=%s" % [w.def.id, w.doors.size(), w.doors.map(func(d): return d.open)])
 			get_tree().quit()
+		"nightdoor":
+			# the night before the parade: your mother comes in through your door
+			Game.new_game()
+			Game.player_name = "Ari"
+			Game.chapter = "prologue"
+			main.fade_rect.color.a = 0.0
+			main.load_map(Maps.home_up(), Vector2i(2, 4), 0)
+			await wait(0.3)
+			var go := func() -> void:
+				await main.story.prologue._night()
+			go.call()
+			for i in 50:
+				await wait(0.3)
+				await shot("nd_%03d" % i)
+			get_tree().quit()
 		"academy":
 			Game.new_game()
 			Game.player_name = "Ari"

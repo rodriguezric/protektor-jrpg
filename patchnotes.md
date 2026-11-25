@@ -1,5 +1,12 @@
 # Patch Notes
 
+## 2026-11-25 15:07 EST — `bugfix_mom_door_alignment` (v0.64.12)
+
+Your mother comes through the middle of your bedroom door.
+
+- The night before the parade, your mother came into your room half a tile off to the left of the door, walking through its frame. She now starts in line with the middle of the two-tile doorway and comes straight up through the centre of the door before crossing to your bed.
+- Code: her spawn offset and first waypoint in `StoryPrologue._night` (scripts/story_prologue.gd). New autotest `PK_TEST=nightdoor`.
+
 ## 2026-11-25 15:06 EST — `bugfix_door_fixes` (v0.64.11)
 
 Every door opens, closes and sounds the same, the front door included.
