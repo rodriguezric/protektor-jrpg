@@ -1,5 +1,13 @@
 # Patch Notes
 
+## 2026-11-25 14:58 EST — `bugfix_parade_field_animations` (v0.64.9)
+
+The parade shows the transport door opening and the Protektor raising its arm instead of describing them.
+
+- The transport door opening is shown instead of narrated: the seals hiss out a puff of steam, the door slides up, and the ramp drops to the ground with a thud and a puff of dust. The line "A transport door opens." is gone.
+- If you chose to watch the Protektors, the nearer one now visibly lifts its arm toward the transport in two exact movements and holds it raised with an open hand. The narration keeps only "The gesture is efficient, almost mechanical."
+- Code: arm poses in `ArtProps.mech` (v / 2 = pose), a `base` frame offset for animated props in `World._animate`, and the parade's door and arm beats in scripts/story_prologue.gd. The `paradeboard` autotest takes PK_PICK to choose the focus answer.
+
 ## 2026-11-25 14:56 EST — `bugfix_parade_transport` (v0.64.8)
 
 Everyone walks up the ramp into the transport before the hatch closes and it takes off.

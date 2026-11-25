@@ -2088,8 +2088,20 @@ func _run(scenario: String) -> void:
 			var go := func() -> void:
 				await main.story.prologue.trigger("lineup")
 			go.call()
-			for i in 300:
-				await wait(0.2)
+			# PK_PICK: which answer to "Where do you focus?" (0 parents,
+			# 1 Protektors, 2 recruits)
+			var pick := int(OS.get_environment("PK_PICK")) if OS.get_environment("PK_PICK") != "" else 0
+			var picked := false
+			for i in 1500:
+				await wait(0.04)
+				if not picked and main.dialog.get_children().any(func(c): return c is Menu):
+					picked = true
+					auto_talk = false
+					await wait(0.3)
+					for j in pick:
+						await tap("down", 0.15)
+					await tap("accept", 0.2)
+					auto_talk = true
 				if main.world == null or main.world.def.get("id", "") != "parade":
 					break
 			snap.on = false
